@@ -1,6 +1,7 @@
-<h3 align="center">Reservoir Market v2</h3>
+<h3 align="center">NFTEarth Marketplace v2</h3>
   <p align="center">
-An open source NFT marketplace built on Reservoir.
+    
+Open-source NFT marketplace built on top of Reservoir.
 
 <!-- ABOUT THE PROJECT -->
 
