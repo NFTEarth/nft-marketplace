@@ -7,7 +7,7 @@ import {
   FormatCurrency,
   Text,
 } from 'components/primitives'
-import { mainnet, polygon, optimism } from 'wagmi/chains'
+import { mainnet, polygon, optimism, arbitrum } from 'wagmi/chains'
 import { useAccount, useContractReads, erc20ABI, useBalance } from 'wagmi'
 import useCoinConversion from 'hooks/useCoinConversion'
 import { useMemo, useState } from 'react'
@@ -65,6 +65,26 @@ const currencies = [
       name: optimism.name,
     },
     coinGeckoId: 'weth',
+  },
+  {
+    address: '0x4200000000000000000000000000000000000006',
+    symbol: 'WETH',
+    decimals: arbitrum.nativeCurrency.decimals,
+    chain: {
+      id: arbitrum.id,
+      name: arbitrum.name,
+    },
+    coinGeckoId: 'weth',
+  },
+  {
+    address: '0x912ce59144191c1204e64559fe8253a0e49e6548',
+    symbol: 'ARB',
+    decimals: arbitrum.nativeCurrency.decimals,
+    chain: {
+      id: arbitrum.id,
+      name: arbitrum.name,
+    },
+    coinGeckoId: 'arbitrum',
   },
 ]
 

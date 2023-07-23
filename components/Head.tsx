@@ -14,7 +14,7 @@ type Props = {
  * @param description - The description of the page.
  */
 export const Head: FC<Props> = ({
-  ogImage = 'https://explorer.reservoir.tools/og-image.png',
+  ogImage = 'https://token-icons.s3.amazonaws.com/0x0f9b80fc3c8b9123d0aef43df58ebdbc034a8901.png',
   title = 'NFTEarth | Omnichain NFT Hub',
   description = 'NFTEarth is an open-source NFT hub built with Reservoir.',
 }) => {
@@ -30,20 +30,20 @@ export const Head: FC<Props> = ({
       <meta name="description" content={description} />
 
       {/* Twitter */}
-      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:card" content="NFTEarth" />
       <meta name="twitter:site" content="@NFTEarth_L2" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={ogImage} />
 
       {/* Open Graph */}
-      <meta property="og:type" content="website" />
+      <meta property="og:type" content="https://nftearth.exchange" />
       <meta property="og:determiner" content="the" />
       <meta property="og:locale" content="en" />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={ogImage} />
-      <meta property="og:image:type" content="image/png" />
+      <meta property="og:image:type" content="https://token-icons.s3.amazonaws.com/0x0f9b80fc3c8b9123d0aef43df58ebdbc034a8901.png" />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:image:alt" content="NFTEarth" />
