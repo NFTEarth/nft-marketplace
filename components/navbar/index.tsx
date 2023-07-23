@@ -62,7 +62,7 @@ const Navbar = () => {
           <Link href={`/${routePrefix}`}>
             <Box css={{ width: 34, cursor: 'pointer' }}>
               <Image
-                src="/reservoirLogo.svg"
+                src="/res2.png"
                 width={34}
                 height={39}
                 alt="NFTEarth"
@@ -102,14 +102,14 @@ const Navbar = () => {
             <Box css={{ width: 112, cursor: 'pointer' }}>
               {theme == 'dark' ? (
                 <Image
-                  src="/reservoirMarketLogo.svg"
+                  src="/res2.png"
                   width={112}
                   height={36}
                   alt="NFTEarth"
                 />
               ) : (
                 <Image
-                  src="/reservoirMarketLogoLight.svg"
+                  src="/res2.png"
                   width={112}
                   height={36}
                   alt="NFTEarth"
@@ -120,7 +120,7 @@ const Navbar = () => {
           <Box css={{ flex: 1, px: '$5', maxWidth: 460 }}>
             <GlobalSearch
               ref={searchRef}
-              placeholder="Search collections and addresses"
+              placeholder="Search for NFTs and collections"
               containerCss={{ width: '100%' }}
               key={router.asPath}
             />
@@ -128,7 +128,7 @@ const Navbar = () => {
           <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
             <Link href={`/${routePrefix}/collection-rankings`}>
               <NavItem active={router.pathname.includes('collection-rankings')}>
-                Collections
+                Create
               </NavItem>
             </Link>
             <Link href="/portfolio">
