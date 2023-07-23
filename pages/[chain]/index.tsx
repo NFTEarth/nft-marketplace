@@ -196,7 +196,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             color="subtle"
             css={{ mb: 48, textAlign: 'left' }}
           >
-            Multi-Chain Explorer, powered by Reservoir
+            Omnichain NFT hub | Powered by NFTEarth
           </Text>
         </Flex>
         {!isSmallDevice ? <ChainStats /> : null}
