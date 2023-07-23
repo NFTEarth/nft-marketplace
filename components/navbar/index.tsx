@@ -65,7 +65,7 @@ const Navbar = () => {
                 src="/reservoirLogo.svg"
                 width={34}
                 height={39}
-                alt="Reservoir"
+                alt="NFTEarth"
               />
             </Box>
           </Link>
@@ -105,14 +105,14 @@ const Navbar = () => {
                   src="/reservoirMarketLogo.svg"
                   width={112}
                   height={36}
-                  alt="Reservoir"
+                  alt="NFTEarth"
                 />
               ) : (
                 <Image
                   src="/reservoirMarketLogoLight.svg"
                   width={112}
                   height={36}
-                  alt="Reservoir"
+                  alt="NFTEarth"
                 />
               )}
             </Box>
@@ -132,10 +132,10 @@ const Navbar = () => {
               </NavItem>
             </Link>
             <Link href="/portfolio">
-              <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
+              <NavItem active={router.pathname == '/portfolio'}>Trade</NavItem>
             </Link>
-            <Link href="https://docs.reservoir.tools/docs">
-              <NavItem active={false}>Docs</NavItem>
+            <Link href="https://staking.nftearth.exchange">
+              <NavItem active={false}>Staking</NavItem>
             </Link>
           </Flex>
         </Flex>
