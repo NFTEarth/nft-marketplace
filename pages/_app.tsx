@@ -68,8 +68,8 @@ const wagmiClient = createConfig({
 const reservoirKitThemeOverrides = {
   headlineFont: inter.style.fontFamily,
   font: inter.style.fontFamily,
-  primaryColor: '#6E56CB',
-  primaryHoverColor: '#644fc1',
+  primaryColor: '#79ffa8',
+  primaryHoverColor: '#79ffa8',
 }
 
 function AppWrapper(props: AppProps & { baseUrl: string }) {
@@ -169,8 +169,8 @@ function MyApp({
             normalizeRoyalties: NORMALIZE_ROYALTIES,
             //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)
             // Note that this impacts orders created on your marketplace (offers/listings)
-            // marketplaceFee: 250,
-            // marketplaceFeeRecipient: "0xabc"
+            marketplaceFee: 250,
+            marketplaceFeeRecipient: "0xd55c6b0a208362b18beb178e1785cf91c4ce937a"
           }}
           theme={reservoirKitTheme}
         >

@@ -35,7 +35,7 @@ class MyDocument extends Document {
         <link
           rel="shortcut icon"
           type="image/svg"
-          href="https://marketplace.reservoir.tools/reservoir.svg"
+          href="https://app.nftearth.exchange/reservoirMarketLogo.svg"
         />
 
         {/* Reservoir meta tags */}
