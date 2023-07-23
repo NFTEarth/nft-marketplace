@@ -1,7 +1,9 @@
 <h3 align="center">NFTEarth Marketplace v2</h3>
   <p align="center">
     
-Open-source NFT marketplace built on top of Reservoir W3Modal.
+Open-source NFT marketplace built on top of Reservoir.
+
+Marketplace, Launchpad, and NFT-applications - all at NFTEarth.
 
 ## About The Project
 
