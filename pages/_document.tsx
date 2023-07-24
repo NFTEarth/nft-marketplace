@@ -38,8 +38,8 @@ class MyDocument extends Document {
           href="https://app.nftearth.exchange/reservoirMarketLogo.svg"
         />
 
-        {/* Reservoir meta tags */}
-        <meta property="reservoir:title" content="Reservoir NFT Explorer" />
+        {/* NFTEarth meta tags */}
+        <meta property="nftearth:title" content="NFTEarth NFT Hub" />
         <meta property="reservoir:icon" content="/reservoir-source-icon.png" />
         <meta
           property="reservoir:token-url-mainnet"
