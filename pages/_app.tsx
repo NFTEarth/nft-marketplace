@@ -165,7 +165,7 @@ function MyApp({
               }
             }),
             logLevel: 4,
-            source: nftearth.exchange,
+            source: source,
             normalizeRoyalties: NORMALIZE_ROYALTIES,
             //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)
             // Note that this impacts orders created on your marketplace (offers/listings)
