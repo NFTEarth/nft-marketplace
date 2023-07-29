@@ -327,7 +327,6 @@ export default ({
           css={{
             width: '100%',
             transition: 'bottom 0.25s ease-in-out',
-            position: 'absolute',
             '@sm': {
               position: 'relative'
             },
