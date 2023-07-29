@@ -35,7 +35,7 @@ export const initializeAnalytics = async () => {
 
   if (typeof window !== 'undefined' && posthogClientToken !== '') {
     const posthog = (await import('posthog-js')).default
-    posthog.init(posthogClientToken, {
+    posthog.init(posthogClientToken || '', {
       api_host: 'https://app.posthog.com',
       disable_session_recording: true,
       mask_all_text: false,
