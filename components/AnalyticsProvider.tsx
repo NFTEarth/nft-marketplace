@@ -11,7 +11,7 @@ type Props = {
   children: ReactElement
 }
 
-export const initializeAnalytics = () => {
+export const initializeAnalytics = async () => {
   if (typeof window !== 'undefined' && !datadogRum.getInitConfiguration()) {
     if (ddApplicationId && ddClientToken) {
       datadogRum.init({
