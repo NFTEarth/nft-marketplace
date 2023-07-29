@@ -1,4 +1,4 @@
-import AnalyticsProvider, {
+8import AnalyticsProvider, {
   initializeAnalytics,
 } from 'components/AnalyticsProvider'
 initializeAnalytics()
@@ -169,7 +169,7 @@ function MyApp({
             normalizeRoyalties: NORMALIZE_ROYALTIES,
             //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)
             // Note that this impacts orders created on your marketplace (offers/listings)
-            marketplaceFee: 250,
+            marketplaceFees: 250,
             marketplaceFeeRecipient: "0xd55c6b0a208362b18beb178e1785cf91c4ce937a"
           }}
           theme={reservoirKitTheme}
