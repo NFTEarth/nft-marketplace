@@ -52,14 +52,20 @@ export const initializeAnalytics = async () => {
 
 const AnalyticsProvider: FC<Props> = ({ children }) => {
   const accountData = useAccount()
-
+  
   useEffect(() => {
     const address = accountData?.address?.toLowerCase()
     if (address) {
       datadogRum.setUser({
         id: address,
       })
-      posthog.identify(address)
+      
+      if (posthogClientToken !== '') {
+        (async () => {
+         const posthog = (await import('posthog-js')).default
+          posthog.identify(address) 
+        })
+      }
     }
   }, [accountData])
 
