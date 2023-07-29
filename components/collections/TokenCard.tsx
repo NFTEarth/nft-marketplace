@@ -1,4 +1,5 @@
-import { faCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
+import { faCheck, faBolt, faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
+import { useMediaQuery } from 'react-responsive'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   extractMediaType,
@@ -44,6 +45,7 @@ export default ({
   tokenCount,
 }: TokenCardProps) => {
   const { addToast } = useContext(ToastContext)
+  const isSmallDevice = useMediaQuery({ maxWidth: 900 })
   const mediaType = extractMediaType(token?.token)
   const showPreview =
     mediaType === 'other' || mediaType === 'html' || mediaType === null
@@ -350,7 +352,7 @@ export default ({
             buttonProps={{
               corners: 'square',
             }}
-            buttonChildren="Buy Now"
+            buttonChildren={isSmallDevice ? <FontAwesomeIcon icon={faBolt} /> : "Buy Now"}
           />
           {addToCartEnabled ? (
             <AddToCart
