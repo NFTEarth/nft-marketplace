@@ -49,7 +49,7 @@ export default ({
     mediaType === 'other' || mediaType === 'html' || mediaType === null
   const { routePrefix, proxyApi } = useMarketplaceChain()
   const tokenIsInCart = token && token?.isInCart
-  const isOwner = token?.token?.owner?.toLowerCase() !== address?.toLowerCase()
+  const isNotOwner = token?.token?.owner?.toLowerCase() !== address?.toLowerCase()
 
   const is1155 = token?.token?.kind === 'erc1155'
 
@@ -321,16 +321,22 @@ export default ({
           ) : null}
         </Flex>
       </Link>
-      {isOwner && token?.market?.floorAsk?.price?.amount ? (
+      {isNotOwner && token?.market?.floorAsk?.price?.amount ? (
         <Flex
           className="token-button-container"
           css={{
             width: '100%',
             transition: 'bottom 0.25s ease-in-out',
             position: 'absolute',
-            bottom: -44,
-            left: 0,
-            right: 0,
+            '@sm': {
+              position: 'relative'
+            },
+            '@lg': {
+              position: 'absolute',
+              bottom: -44,
+              left: 0,
+              right: 0,
+            },
             gap: 1,
           }}
         >
