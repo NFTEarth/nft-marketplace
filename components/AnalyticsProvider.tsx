@@ -1,7 +1,6 @@
 import { FC, ReactElement, useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { datadogRum } from '@datadog/browser-rum'
-import posthog from 'posthog-js'
 
 const env = process.env.NODE_ENV
 const ddApplicationId = process.env.NEXT_PUBLIC_DATADOG_APPLICATION_ID
@@ -34,7 +33,8 @@ export const initializeAnalytics = () => {
     }
   }
 
-  if (typeof window !== 'undefined' && posthogClientToken) {
+  if (typeof window !== 'undefined' && posthogClientToken !== '') {
+    const posthog = (await import('posthog-js')).default
     posthog.init(posthogClientToken, {
       api_host: 'https://app.posthog.com',
       disable_session_recording: true,
