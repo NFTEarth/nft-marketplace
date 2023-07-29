@@ -1,4 +1,4 @@
-8import AnalyticsProvider, {
+import AnalyticsProvider, {
   initializeAnalytics,
 } from 'components/AnalyticsProvider'
 initializeAnalytics()
