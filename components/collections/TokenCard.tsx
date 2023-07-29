@@ -190,7 +190,7 @@ export default ({
         href={`/${routePrefix}/asset/${token?.token?.contract}:${token?.token?.tokenId}`}
       >
         <Flex
-          css={{ p: '$4', minHeight: 132, cursor: 'pointer' }}
+          css={{ p: '$4', cursor: 'pointer', '@lg': { minHeight: 132 } }}
           direction="column"
         >
           <Flex css={{ mb: '$4' }} align="center" justify="between">
