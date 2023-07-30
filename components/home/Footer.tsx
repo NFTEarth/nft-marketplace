@@ -44,16 +44,16 @@ const developerSectionLinks = [
 
 const companySectionLinks = [
   {
-    name: 'Careers',
-    href: 'https://twitter.com/NFTEarth_L2',
+    name: 'Contact: team@layer2nfts.org',
+    href: 'https://nftearth.exhange',
   },
   {
-    name: 'Terms of Use',
-    href: 'https://reservoir.tools/terms',
+    name: 'Terms',
+    href: 'https://nftearth.exchange/terms',
   },
   {
-    name: 'Privacy Policy',
-    href: 'https://reservoir.tools/privacy',
+    name: 'Privacy',
+    href: 'https://nftearth.exchange/privacy',
   },
 ]
 
