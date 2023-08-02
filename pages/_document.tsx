@@ -34,8 +34,8 @@ class MyDocument extends Document {
         {/* Favicon */}
         <link
           rel="shortcut icon"
-          type="image/svg"
-          href="https://app.nftearth.exchange/reservoirMarketLogo.svg"
+          type="image/png"
+          href="https://i.ibb.co/3WmYdg9/NFTE-Icon.png"
         />
 
         {/* NFTEarth meta tags */}
