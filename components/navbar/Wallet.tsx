@@ -67,18 +67,18 @@ const currencies = [
     coinGeckoId: 'weth',
   },
   {
-    address: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-    symbol: 'WETH',
+    address: '0x912ce59144191c1204e64559fe8253a0e49e6548',
+    symbol: 'ARB',
     decimals: arbitrum.nativeCurrency.decimals,
     chain: {
       id: arbitrum.id,
       name: arbitrum.name,
     },
-    coinGeckoId: 'weth',
+    coinGeckoId: 'arbitrum',
   },
   {
-    address: '0x912ce59144191c1204e64559fe8253a0e49e6548',
-    symbol: 'ARB',
+    address: '0x51b902f19a56f0c8e409a34a215ad2673edf3284',
+    symbol: 'NFTE',
     decimals: arbitrum.nativeCurrency.decimals,
     chain: {
       id: arbitrum.id,

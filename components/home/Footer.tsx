@@ -49,11 +49,11 @@ const companySectionLinks = [
   },
   {
     name: 'Terms',
-    href: 'https://nftearth.exchange/terms',
+    href: 'https://docs.nftearth.exchange/resources-and-features/terms-of-use',
   },
   {
     name: 'Privacy',
-    href: 'https://nftearth.exchange/privacy',
+    href: 'https://docs.nftearth.exchange/resources-and-features/privacy-policy',
   },
 ]
 

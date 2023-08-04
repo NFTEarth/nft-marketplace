@@ -14,9 +14,9 @@ type Props = {
  * @param description - The description of the page.
  */
 export const Head: FC<Props> = ({
-  ogImage = 'https://token-icons.s3.amazonaws.com/0x0f9b80fc3c8b9123d0aef43df58ebdbc034a8901.png',
+  ogImage = 'https://i.ibb.co/7Gd9bTY/NFTE-Icon-1.png',
   title = 'NFTEarth | Omnichain NFT Hub',
-  description = 'NFTEarth is an open-source NFT hub built with Reservoir.',
+  description = 'NFTEarth is an open-source NFT protocl built on Reservoir.',
 }) => {
   return (
     <NextHead>
@@ -43,7 +43,7 @@ export const Head: FC<Props> = ({
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={ogImage} />
-      <meta property="og:image:type" content="https://token-icons.s3.amazonaws.com/0x0f9b80fc3c8b9123d0aef43df58ebdbc034a8901.png" />
+      <meta property="og:image:type" content="https://i.ibb.co/7Gd9bTY/NFTE-Icon-1.png" />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:image:alt" content="NFTEarth" />
