@@ -9,7 +9,7 @@ type Props = {
 
 const FormatCurrency: FC<ComponentPropsWithoutRef<typeof Text> & Props> = ({
   amount,
-  maximumFractionDigits = 2,
+  maximumFractionDigits = 4,
   currency = 'USD',
   ...props
 }) => {

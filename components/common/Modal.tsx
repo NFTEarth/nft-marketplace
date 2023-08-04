@@ -112,12 +112,12 @@ export const Modal = forwardRef<ElementRef<typeof Dialog>, Props>(
             borderBottomLeftRadius: '$borderRadius',
           }}
         >
-          <Anchor href="https://reservoir.tools/" target="_blank">
+          <Anchor href="https://nftearth.exchange/" target="_blank">
             <Text
               style="body3"
               css={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}
             >
-              Powered by <Logo />
+              Powered by NFTEarth
             </Text>
           </Anchor>
         </Flex>
