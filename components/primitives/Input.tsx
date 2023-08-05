@@ -8,7 +8,7 @@ import {
 } from 'react'
 import { CSS } from '@stitches/react'
 
-const StyledInput = styled('input', {
+export const StyledInput = styled('input', {
   all: 'unset',
   width: '100%',
   px: 16,

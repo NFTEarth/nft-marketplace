@@ -23,6 +23,7 @@ import useTopSellingCollections from 'hooks/useTopSellingCollections'
 import { CollectionTopSellingTable } from 'components/home/CollectionTopSellingTable'
 import { FillTypeToggle } from 'components/home/FillTypeToggle'
 import { TimeFilterToggle } from 'components/home/TimeFilterToggle'
+import HeroSection from "components/HeroSection";
 import fetcher from 'utils/fetcher'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
@@ -83,6 +84,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   return (
     <Layout>
       <Head />
+      <HeroSection />
       <Box
         css={{
           p: 24,
