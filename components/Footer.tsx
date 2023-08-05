@@ -1,7 +1,8 @@
 import { FC } from 'react'
-import { Text, Box, Flex, Anchor, Button } from '../primitives'
+import { Box, Text, Flex, Anchor, Button } from './primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faDiscord, faTwitter} from '@fortawesome/free-brands-svg-icons'
+import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
+import {useTheme} from "next-themes";
 
 type SectionTitleProps = {
   title: string
@@ -54,25 +55,27 @@ const developerSectionLinks = [
     name: 'GitHub',
     href: 'https://github.com/NFTEarth',
   },
- 
+
 ]
 
 const companySectionLinks = [
   {
     name: 'Contact: team@layer2nfts.org',
-    href: 'https://nftearth.exhange',
+    href: 'mailto:team@layer2nfts.org',
   },
   {
     name: 'Terms',
-    href: 'https://docs.nftearth.exchange/resources-and-features/terms-of-use',
+    href: '/terms',
   },
   {
     name: 'Privacy',
-    href: 'https://docs.nftearth.exchange/resources-and-features/privacy-policy',
+    href: '/privacy',
   },
 ]
 
 export const Footer = () => {
+  const { theme }  = useTheme()
+
   return (
     <Flex
       justify="between"
@@ -89,7 +92,7 @@ export const Footer = () => {
         },
       }}
     >
-      <Flex css={{ gap: 80, '@bp600': { gap: 136 } }}>
+      <Flex css={{ gap: 40, '@bp600': { gap: 136 }, flexWrap: 'wrap' }}>
         <Flex direction="column">
           <SectionTitle title="Developers" />
           {developerSectionLinks.map((props) => (
@@ -115,7 +118,7 @@ export const Footer = () => {
         direction="column"
         css={{ alignItems: 'flex-start', '@bp600': { alignItems: 'flex-end' } }}
       >
-        <SectionTitle title="Join the NFTEarth Community" />
+        <SectionTitle title="Community" />
         <Flex css={{ gap: '$4', mt: 16 }}>
           <a
             target="_blank"
@@ -139,7 +142,7 @@ export const Footer = () => {
           <a
             target="_blank"
             rel="noopener noreferrer"
-            href="https://discord.gg/nftksarth-1062256160264171520"
+            href="https://discord.gg/nftearth"
             aria-label="Discord"
           >
             <Button
