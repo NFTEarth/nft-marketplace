@@ -10,7 +10,7 @@ import {
   useImperativeHandle,
   useMemo,
 } from 'react'
-import { useMediaQuery } from 'react-responsive'
+import {useMediaQuery} from 'react-responsive'
 import {
   Text,
   Flex,
@@ -23,9 +23,9 @@ import {
   Box,
   Grid,
 } from '../primitives'
-import { List, AcceptBid } from 'components/buttons'
+import {List, AcceptBid} from 'components/buttons'
 import Image from 'next/image'
-import { useIntersectionObserver } from 'usehooks-ts'
+import {useIntersectionObserver} from 'usehooks-ts'
 import LoadingSpinner from '../common/LoadingSpinner'
 import {
   EditListingModal,
@@ -34,7 +34,7 @@ import {
   useTokens,
   useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {
   faBolt,
   faEdit,
@@ -44,25 +44,26 @@ import {
   faRefresh,
 } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
-import { MutatorCallback } from 'swr'
-import { Address } from 'wagmi'
-import { useMarketplaceChain } from 'hooks'
-import { NAVBAR_HEIGHT } from 'components/navbar'
+import {MutatorCallback} from 'swr'
+import {Address} from 'wagmi'
+import {useMarketplaceChain} from 'hooks'
+import {NAVBAR_HEIGHT} from 'components/navbar'
 import Checkbox from 'components/primitives/Checkbox'
-import { UserToken } from 'pages/portfolio/[[...address]]'
-import { ChainContext } from 'context/ChainContextProvider'
-import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
-import { PortfolioSortingOption } from 'components/common/PortfolioSortDropdown'
+import {UserToken} from 'pages/portfolio/[[...address]]'
+import {ChainContext} from 'context/ChainContextProvider'
+import {Dropdown, DropdownMenuItem} from 'components/primitives/Dropdown'
+import {PortfolioSortingOption} from 'components/common/PortfolioSortDropdown'
 import CancelListing from 'components/buttons/CancelListing'
-import { ToastContext } from 'context/ToastContextProvider'
+import {ToastContext} from 'context/ToastContextProvider'
 import fetcher from 'utils/fetcher'
-import { DATE_REGEX, timeTill } from 'utils/till'
-import { spin } from 'components/common/LoadingSpinner'
-import { formatDollar, formatNumber } from 'utils/numbers'
-import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
-import { ItemView } from './ViewToggle'
+import {DATE_REGEX, timeTill} from 'utils/till'
+import {spin} from 'components/common/LoadingSpinner'
+import {formatDollar, formatNumber} from 'utils/numbers'
+import {OpenSeaVerified} from 'components/common/OpenSeaVerified'
+import {ItemView} from './ViewToggle'
 import PortfolioTokenCard from './PortfolioTokenCard'
 import optimizeImage from 'utils/optimizeImage'
+import Transfer from '../buttons/Transfer'
 
 type Props = {
   address: Address | undefined
@@ -100,9 +101,7 @@ export const TokenTable = forwardRef<TokenTableRef, Props>(
     const client = useReservoirClient()
     const [acceptBidModalOpen, setAcceptBidModalOpen] = useState(false)
 
-    const [playingElement, setPlayingElement] = useState<
-      HTMLAudioElement | HTMLVideoElement | null
-    >()
+    const [playingElement, setPlayingElement] = useState<HTMLAudioElement | HTMLVideoElement | null>()
 
     let tokenQuery: Parameters<typeof useUserTokens>['1'] = {
       limit: 20,
@@ -113,7 +112,7 @@ export const TokenTable = forwardRef<TokenTableRef, Props>(
       includeAttributes: true,
     }
 
-    const { chain } = useContext(ChainContext)
+    const {chain} = useContext(ChainContext)
 
     if (chain.collectionSetId) {
       tokenQuery.collectionsSetId = chain.collectionSetId
@@ -127,7 +126,7 @@ export const TokenTable = forwardRef<TokenTableRef, Props>(
       mutate,
       isFetchingPage,
       isValidating,
-    } = useUserTokens(address, tokenQuery, { revalidateIfStale: true })
+    } = useUserTokens(address, tokenQuery, {revalidateIfStale: true})
 
     useEffect(() => {
       const isVisible = !!loadMoreObserver?.isIntersecting
@@ -137,9 +136,7 @@ export const TokenTable = forwardRef<TokenTableRef, Props>(
     }, [loadMoreObserver?.isIntersecting])
 
     useEffect(() => {
-      const eventListener: Parameters<
-        NonNullable<ReturnType<typeof useReservoirClient>>['addEventListener']
-      >['0'] = (event, chainId) => {
+      const eventListener: Parameters<NonNullable<ReturnType<typeof useReservoirClient>>['addEventListener']>['0'] = (event, chainId) => {
         switch (event.name) {
           case 'accept_offer_complete': {
             if (!acceptBidModalOpen && !selectedItems.length) {
@@ -173,18 +170,18 @@ export const TokenTable = forwardRef<TokenTableRef, Props>(
           <Flex
             direction="column"
             align="center"
-            css={{ py: '$6', gap: '$4', width: '100%' }}
+            css={{py: '$6', gap: '$4', width: '100%'}}
           >
-            <Text css={{ color: '$gray11' }}>
-              <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
+            <Text css={{color: '$gray11'}}>
+              <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl"/>
             </Text>
-            <Text css={{ color: '$gray11' }}>No items found</Text>
+            <Text css={{color: '$gray11'}}>No items found</Text>
           </Flex>
         ) : (
-          <Flex direction="column" css={{ width: '100%' }}>
+          <Flex direction="column" css={{width: '100%'}}>
             {isLoading ? null : itemView === 'list' ? (
               <>
-                <TableHeading isOwner={isOwner} />
+                <TableHeading isOwner={isOwner}/>
                 {tokens.map((token, i) => {
                   if (!token) return null
 
@@ -253,8 +250,8 @@ export const TokenTable = forwardRef<TokenTableRef, Props>(
           </Flex>
         )}
         {isValidating && (
-          <Flex align="center" justify="center" css={{ py: '$6' }}>
-            <LoadingSpinner />
+          <Flex align="center" justify="center" css={{py: '$6'}}>
+            <LoadingSpinner/>
           </Flex>
         )}
       </>
@@ -272,18 +269,18 @@ type TokenTableRowProps = {
 }
 
 const TokenTableRow: FC<TokenTableRowProps> = ({
-  token,
-  selectedItems,
-  isOwner,
-  onAcceptBidModalOpened,
-  mutate,
-  setSelectedItems,
-}) => {
-  const { routePrefix, proxyApi } = useMarketplaceChain()
-  const { addToast } = useContext(ToastContext)
+                                                 token,
+                                                 selectedItems,
+                                                 isOwner,
+                                                 onAcceptBidModalOpened,
+                                                 mutate,
+                                                 setSelectedItems,
+                                               }) => {
+  const {routePrefix, proxyApi} = useMarketplaceChain()
+  const {addToast} = useContext(ToastContext)
 
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const isSmallDevice = useMediaQuery({ maxWidth: 900 })
+  const isSmallDevice = useMediaQuery({maxWidth: 900})
 
   const addSelectedItem = (item: UserToken) => {
     setSelectedItems([...selectedItems, item])
@@ -312,7 +309,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
   const imageSrc = useMemo(() => {
     return token?.token?.tokenId
       ? token?.token?.imageSmall ||
-          optimizeImage(token?.token?.collection?.imageUrl, 250)
+      optimizeImage(token?.token?.collection?.imageUrl, 250)
       : optimizeImage(token?.token?.collection?.imageUrl, 250)
   }, [
     token?.token?.tokenId,
@@ -352,7 +349,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                   objectFit: 'cover',
                   aspectRatio: '1/1',
                 }}
-                loader={({ src }) => src}
+                loader={({src}) => src}
                 src={imageSrc}
                 alt={`${token?.token?.name}`}
                 width={36}
@@ -376,8 +373,8 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
             </Flex>
           </Flex>
         </Link>
-        <Flex justify="between" css={{ width: '100%', gap: '$3' }}>
-          <Flex direction="column" align="start" css={{ width: '100%' }}>
+        <Flex justify="between" css={{width: '100%', gap: '$3'}}>
+          <Flex direction="column" align="start" css={{width: '100%'}}>
             <Text style="subtitle3" color="subtle">
               Floor
             </Text>
@@ -393,7 +390,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
               logoHeight={14}
             />
           </Flex>
-          <Flex direction="column" align="start" css={{ width: '100%' }}>
+          <Flex direction="column" align="start" css={{width: '100%'}}>
             <Text style="subtitle3" color="subtle">
               Top Offer
             </Text>
@@ -406,7 +403,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
             />
           </Flex>
         </Flex>
-        <Flex css={{ gap: '$2', width: '100%' }}>
+        <Flex css={{gap: '$2', width: '100%'}}>
           {token?.token?.topBid?.price?.amount?.decimal && isOwner ? (
             <AcceptBid
               tokenId={token.token.tokenId}
@@ -433,30 +430,36 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                 },
               }}
               buttonChildren={
-                <Flex align="center" css={{ gap: '$2' }}>
-                  <FontAwesomeIcon icon={faBolt} />
+                <Flex align="center" css={{gap: '$2'}}>
+                  <FontAwesomeIcon icon={faBolt}/>
                   Sell
                 </Flex>
               }
             />
           ) : null}
           {isOwner ? (
-            <List
-              token={token as ReturnType<typeof useTokens>['data'][0]}
-              mutate={mutate}
-              buttonCss={{
-                width: '100%',
-                maxWidth: '300px',
-                justifyContent: 'center',
-                px: '20px',
-                backgroundColor: '$gray3',
-                color: '$gray12',
-                '&:hover': {
-                  backgroundColor: '$gray4',
-                },
-              }}
-              buttonChildren="List"
-            />
+            <>
+              <Transfer
+                token={token as ReturnType<typeof useTokens>['data'][0]}
+                mutate={mutate}
+              />
+              <List
+                token={token as ReturnType<typeof useTokens>['data'][0]}
+                mutate={mutate}
+                buttonCss={{
+                  width: '100%',
+                  maxWidth: '300px',
+                  justifyContent: 'center',
+                  px: '20px',
+                  backgroundColor: '$gray3',
+                  color: '$gray12',
+                  '&:hover': {
+                    backgroundColor: '$gray4',
+                  },
+                }}
+                buttonChildren="List"
+              />
+            </>
           ) : null}
           <Dropdown
             modal={false}
@@ -471,13 +474,13 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                   flexShrink: 0,
                 }}
               >
-                <FontAwesomeIcon icon={faEllipsis} />
+                <FontAwesomeIcon icon={faEllipsis}/>
               </Button>
             }
-            contentProps={{ asChild: true, forceMount: true }}
+            contentProps={{asChild: true, forceMount: true}}
           >
             <DropdownMenuItem
-              css={{ py: '$3', width: '100%' }}
+              css={{py: '$3', width: '100%'}}
               onClick={(e) => {
                 if (isRefreshing) {
                   e.preventDefault()
@@ -497,7 +500,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                     }),
                   }
                 )
-                  .then(({ data, response }) => {
+                  .then(({data, response}) => {
                     if (response.status === 200) {
                       addToast?.({
                         title: 'Refresh token',
@@ -516,8 +519,8 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                       title: 'Refresh token failed',
                       description: ratelimit
                         ? `This token was recently refreshed. The next available refresh is ${timeTill(
-                            ratelimit
-                          )}.`
+                          ratelimit
+                        )}.`
                         : `This token was recently refreshed. Please try again later.`,
                     })
 
@@ -526,7 +529,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                   })
               }}
             >
-              <Flex align="center" css={{ gap: '$2' }}>
+              <Flex align="center" css={{gap: '$2'}}>
                 <Box
                   css={{
                     color: '$gray10',
@@ -535,7 +538,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                       : 'none',
                   }}
                 >
-                  <FontAwesomeIcon icon={faRefresh} width={16} height={16} />
+                  <FontAwesomeIcon icon={faRefresh} width={16} height={16}/>
                 </Box>
                 <Text>Refresh</Text>
               </Flex>
@@ -564,8 +567,8 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                       },
                     }}
                   >
-                    <Box css={{ color: '$gray10' }}>
-                      <FontAwesomeIcon icon={faEdit} />
+                    <Box css={{color: '$gray10'}}>
+                      <FontAwesomeIcon icon={faEdit}/>
                     </Box>
                     <Text>Edit Listing</Text>
                   </Flex>
@@ -608,9 +611,9 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                           </Text>
                         }
                       >
-                        <Flex align="center" css={{ gap: '$2' }}>
-                          <Box css={{ color: '$gray10' }}>
-                            <FontAwesomeIcon icon={faGasPump} />
+                        <Flex align="center" css={{gap: '$2'}}>
+                          <Box css={{color: '$gray10'}}>
+                            <FontAwesomeIcon icon={faGasPump}/>
                           </Box>
                           <Text color="error">Cancel</Text>
                         </Flex>
@@ -637,8 +640,8 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
           : desktopTemplateColumns,
       }}
     >
-      <TableCell css={{ minWidth: 0, overflow: 'hidden' }}>
-        <Flex align="center" css={{ gap: '$3' }}>
+      <TableCell css={{minWidth: 0, overflow: 'hidden'}}>
+        <Flex align="center" css={{gap: '$3'}}>
           {isOwner ? (
             <Checkbox
               checked={isSelectedItem(token)}
@@ -662,7 +665,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                     objectFit: 'cover',
                     aspectRatio: '1/1',
                   }}
-                  loader={({ src }) => src}
+                  loader={({src}) => src}
                   src={imageSrc}
                   alt={`${token?.token?.name}`}
                   width={48}
@@ -676,30 +679,30 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                   overflow: 'hidden',
                 }}
               >
-                <Flex justify="between" align="center" css={{ gap: '$2' }}>
+                <Flex justify="between" align="center" css={{gap: '$2'}}>
                   <Text style="subtitle3" ellipsify color="subtle">
                     {token?.token?.collection?.name}
                   </Text>
                   {token?.token?.kind === 'erc1155' &&
-                    token?.ownership?.tokenCount && (
-                      <Flex
-                        justify="center"
-                        align="center"
-                        css={{
-                          borderRadius: 9999,
-                          backgroundColor: '$gray4',
-                          maxWidth: '50%',
-                        }}
+                  token?.ownership?.tokenCount && (
+                    <Flex
+                      justify="center"
+                      align="center"
+                      css={{
+                        borderRadius: 9999,
+                        backgroundColor: '$gray4',
+                        maxWidth: '50%',
+                      }}
+                    >
+                      <Text
+                        ellipsify
+                        style="subtitle3"
+                        css={{px: '$2', fontSize: 10}}
                       >
-                        <Text
-                          ellipsify
-                          style="subtitle3"
-                          css={{ px: '$2', fontSize: 10 }}
-                        >
-                          x{formatNumber(token?.ownership?.tokenCount, 0, true)}
-                        </Text>
-                      </Flex>
-                    )}
+                        x{formatNumber(token?.ownership?.tokenCount, 0, true)}
+                      </Text>
+                    </Flex>
+                  )}
                   <OpenSeaVerified
                     openseaVerificationStatus={
                       token?.token?.collection?.openseaVerificationStatus
@@ -724,8 +727,8 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
               : false
           }
           content={
-            <Flex direction="column" css={{ gap: '$2' }}>
-              <Flex justify="between" css={{ gap: '$3' }}>
+            <Flex direction="column" css={{gap: '$2'}}>
+              <Flex justify="between" css={{gap: '$3'}}>
                 <Text style="body3">Total Listed Price</Text>
                 <FormatCryptoCurrency
                   amount={token?.ownership?.floorAsk?.price?.amount?.decimal}
@@ -739,7 +742,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                   logoHeight={14}
                 />
               </Flex>
-              <Flex justify="between" css={{ gap: '$2' }}>
+              <Flex justify="between" css={{gap: '$2'}}>
                 <Text style="body3">You Get</Text>
                 <FormatCryptoCurrency
                   amount={token?.ownership?.floorAsk?.price?.netAmount?.decimal}
@@ -756,12 +759,12 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
             </Flex>
           }
         >
-          <Flex align="center" css={{ gap: '$2' }}>
+          <Flex align="center" css={{gap: '$2'}}>
             {token.ownership?.floorAsk?.source?.icon ? (
               <img
                 src={token.ownership.floorAsk.source.icon as string}
                 alt="Listing Source Icon"
-                style={{ height: 16, width: 16 }}
+                style={{height: 16, width: 16}}
               />
             ) : null}
             <FormatCryptoCurrency
@@ -791,8 +794,8 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
             token?.token?.topBid?.price?.amount?.decimal ? undefined : false
           }
           content={
-            <Flex direction="column" css={{ gap: '$2' }}>
-              <Flex justify="between" css={{ gap: '$3' }}>
+            <Flex direction="column" css={{gap: '$2'}}>
+              <Flex justify="between" css={{gap: '$3'}}>
                 <Text style="body3">Total Offer</Text>
                 <FormatCryptoCurrency
                   amount={token?.token?.topBid?.price?.amount?.decimal}
@@ -802,7 +805,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                   logoHeight={14}
                 />
               </Flex>
-              <Flex justify="between" css={{ gap: '$2' }}>
+              <Flex justify="between" css={{gap: '$2'}}>
                 <Text style="body3">You Get</Text>
                 <FormatCryptoCurrency
                   amount={token?.token?.topBid?.price?.netAmount?.decimal}
@@ -816,13 +819,13 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
           }
         >
           <Flex direction="column" align="start">
-            <Flex css={{ gap: '$2' }} align="center">
+            <Flex css={{gap: '$2'}} align="center">
               {/* TODO: Replace this when the api is patched */}
               {(token.token?.topBid as any)?.source?.icon ? (
                 <img
                   src={(token?.token?.topBid as any).source.icon as string}
                   alt="Listing Source Icon"
-                  style={{ height: 16, width: 16 }}
+                  style={{height: 16, width: 16}}
                 />
               ) : null}
               <FormatCryptoCurrency
@@ -834,7 +837,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
               />
             </Flex>
             {token?.token?.topBid?.price?.amount?.usd ? (
-              <Text style="subtitle3" css={{ color: '$gray11' }} ellipsify>
+              <Text style="subtitle3" css={{color: '$gray11'}} ellipsify>
                 {formatDollar(
                   token?.token?.topBid?.price?.amount?.usd as number
                 )}
@@ -845,7 +848,12 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
       </TableCell>
       {isOwner && (
         <TableCell>
-          <Flex justify="end" css={{ gap: '$3' }}>
+          <Flex justify="end" css={{gap: '$3'}}>
+            <Transfer
+              token={token as ReturnType<typeof useTokens>['data'][0]}
+              mutate={mutate}
+            />
+
             {token?.token?.topBid?.price?.amount?.decimal && (
               <AcceptBid
                 openState={[
@@ -868,8 +876,8 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                   },
                 }}
                 buttonChildren={
-                  <Flex align="center" css={{ gap: '$2' }}>
-                    <FontAwesomeIcon icon={faBolt} />
+                  <Flex align="center" css={{gap: '$2'}}>
+                    <FontAwesomeIcon icon={faBolt}/>
                     Sell
                   </Flex>
                 }
@@ -896,15 +904,15 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                 <Button
                   color="gray3"
                   size="xs"
-                  css={{ width: 44, justifyContent: 'center' }}
+                  css={{width: 44, justifyContent: 'center'}}
                 >
-                  <FontAwesomeIcon icon={faEllipsis} />
+                  <FontAwesomeIcon icon={faEllipsis}/>
                 </Button>
               }
-              contentProps={{ asChild: true, forceMount: true }}
+              contentProps={{asChild: true, forceMount: true}}
             >
               <DropdownMenuItem
-                css={{ py: '$3', width: '100%' }}
+                css={{py: '$3', width: '100%'}}
                 onClick={(e) => {
                   if (isRefreshing) {
                     e.preventDefault()
@@ -924,7 +932,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                       }),
                     }
                   )
-                    .then(({ data, response }) => {
+                    .then(({data, response}) => {
                       if (response.status === 200) {
                         addToast?.({
                           title: 'Refresh token',
@@ -943,8 +951,8 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                         title: 'Refresh token failed',
                         description: ratelimit
                           ? `This token was recently refreshed. The next available refresh is ${timeTill(
-                              ratelimit
-                            )}.`
+                            ratelimit
+                          )}.`
                           : `This token was recently refreshed. Please try again later.`,
                       })
 
@@ -953,7 +961,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                     })
                 }}
               >
-                <Flex align="center" css={{ gap: '$2' }}>
+                <Flex align="center" css={{gap: '$2'}}>
                   <Box
                     css={{
                       color: '$gray10',
@@ -962,7 +970,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                         : 'none',
                     }}
                   >
-                    <FontAwesomeIcon icon={faRefresh} width={16} height={16} />
+                    <FontAwesomeIcon icon={faRefresh} width={16} height={16}/>
                   </Box>
                   <Text>Refresh</Text>
                 </Flex>
@@ -991,8 +999,8 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                         },
                       }}
                     >
-                      <Box css={{ color: '$gray10' }}>
-                        <FontAwesomeIcon icon={faEdit} />
+                      <Box css={{color: '$gray10'}}>
+                        <FontAwesomeIcon icon={faEdit}/>
                       </Box>
                       <Text>Edit Listing</Text>
                     </Flex>
@@ -1035,9 +1043,9 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                             </Text>
                           }
                         >
-                          <Flex align="center" css={{ gap: '$2' }}>
-                            <Box css={{ color: '$gray10' }}>
-                              <FontAwesomeIcon icon={faGasPump} />
+                          <Flex align="center" css={{gap: '$2'}}>
+                            <Box css={{color: '$gray10'}}>
+                              <FontAwesomeIcon icon={faGasPump}/>
                             </Box>
                             <Text color="error">Cancel</Text>
                           </Flex>
@@ -1056,11 +1064,11 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
     </TableRow>
   )
 }
-const TableHeading: FC<{ isOwner: boolean }> = ({ isOwner }) => (
+const TableHeading: FC<{ isOwner: boolean }> = ({isOwner}) => (
   <HeaderRow
     css={{
       display: 'none',
-      '@md': { display: 'grid' },
+      '@md': {display: 'grid'},
       gridTemplateColumns: isOwner
         ? ownerDesktopTemplateColumns
         : desktopTemplateColumns,
