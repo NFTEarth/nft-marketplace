@@ -1,10 +1,15 @@
-<h3 align="center">Reservoir Market v2</h3>
+<h3 align="center">NFTEarth Marketplace v2</h3>
   <p align="center">
-An open source NFT marketplace built on Reservoir.
+    
+Open-source NFT marketplace built on top of Reservoir.
 
-<!-- ABOUT THE PROJECT -->
+Marketplace, Launchpad, and NFT-applications - all at NFTEarth.
 
 ## About The Project
+
+![(500 × 500 px)](https://github.com/NFTEarth/nft-marketplace/assets/29180454/27aeaddc-8507-4c5c-88c8-15d2fa14f2e5)
+
+
 
 Reservoir Market v2 is an open source marketplace built with Reservoir APIs that enables access to instant liquidity aggregated from major marketplace. We encourage developers to use this project as a reference for their own implementation or even fork the project and make their own meaningful changes. The project is lightly configurable refer to the configuration variables below. If you're looking for a no-code solution check out our [v1 marketplace](https://github.com/reservoirprotocol/marketplace-v1).
 

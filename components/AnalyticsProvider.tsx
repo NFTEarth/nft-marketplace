@@ -1,7 +1,6 @@
 import { FC, ReactElement, useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { datadogRum } from '@datadog/browser-rum'
-import posthog from 'posthog-js'
 
 const env = process.env.NODE_ENV
 const ddApplicationId = process.env.NEXT_PUBLIC_DATADOG_APPLICATION_ID
@@ -12,7 +11,7 @@ type Props = {
   children: ReactElement
 }
 
-export const initializeAnalytics = () => {
+export const initializeAnalytics = async () => {
   if (typeof window !== 'undefined' && !datadogRum.getInitConfiguration()) {
     if (ddApplicationId && ddClientToken) {
       datadogRum.init({
@@ -34,8 +33,9 @@ export const initializeAnalytics = () => {
     }
   }
 
-  if (typeof window !== 'undefined' && posthogClientToken) {
-    posthog.init(posthogClientToken, {
+  if (typeof window !== 'undefined' && posthogClientToken !== '') {
+    const posthog = (await import('posthog-js')).default
+    posthog.init(posthogClientToken || '', {
       api_host: 'https://app.posthog.com',
       disable_session_recording: true,
       mask_all_text: false,
@@ -59,8 +59,12 @@ const AnalyticsProvider: FC<Props> = ({ children }) => {
       datadogRum.setUser({
         id: address,
       })
-      if (posthogClientToken) {
-        posthog.identify(address)
+
+      if (posthogClientToken !== '') {
+        (async () => {
+         const posthog = (await import('posthog-js')).default
+          posthog.identify(address)
+        })
       }
     }
   }, [accountData])
