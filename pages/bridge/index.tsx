@@ -8,7 +8,6 @@ import artifact from 'artifact/NFTELaunchpad.json';
 import { ethers } from 'ethers';
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { getContractAddress } from '@ethersproject/address';
-import detectEthereumProvider from '@metamask/detect-provider'
 import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi'
 import {ExternalProvider} from "@ethersproject/providers";
 import supportedChains, {DefaultChain} from 'utils/chains'
@@ -80,97 +79,6 @@ const LaunchpadDeployPage = () => {
     publicMintPrice
   ])
 
-  const handleDeployContract = async (e: any) => {
-    e.preventDefault();
-    try {
-      // Approve Wallet
-      setError(undefined);
-
-      if (!isConnected && !isConnectModalOpened) {
-        setStep(1);
-        setConnectModalOpen?.();
-        return;
-      }
-
-      if (activeChain?.id !== marketChainId) {
-        setStep(2);
-        await switchNetworkAsync?.();
-        if (activeChain?.id !== marketChainId) {
-          setStep(0)
-          return
-        }
-      }
-
-      setStep(3);
-      const browserProvider = await detectEthereumProvider() as ExternalProvider;
-      console.log('browserProvider', browserProvider);
-      const provider = new ethers.providers.Web3Provider(browserProvider, {
-        chainId: activeChain.id,
-        name: activeChain.name
-      });
-      console.log('provider', provider);
-      const signer = provider.getSigner()
-      console.log('signer', signer);
-      const transactionCount = await signer.getTransactionCount()
-      console.log('transactionCount', transactionCount);
-      const deployer = await signer.getAddress();
-      console.log('deployer', deployer);
-      const futureAddress = getContractAddress({
-        from: deployer,
-        nonce: transactionCount
-      })
-      console.log('futureAddress', futureAddress);
-      // // Using the signing account to deploy the contract
-      const factory = new ethers.ContractFactory(artifact.abi, artifact.data.bytecode.object, signer);
-
-      const contract = await factory.deploy(constructorArgs);
-      // Deploying Contract...
-      // Check your transaction at [activeChain?.blockExplorers?.default?.name] = `${activeChain?.blockExplorers?.default?.url}/tx/${contract.deployTransaction.hash}`
-      setStep(4);
-
-      setTxHash(contract.deployTransaction.hash)
-
-      await fetch(`${proxyApi}/launchpad/create/v1`,{
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          id: futureAddress.toLowerCase(),
-          name,
-          constructor_args: JSON.stringify(constructorArgs),
-          bytecode: artifact.data.bytecode.object,
-          deployer: deployer
-        })
-      }).catch(console.error)
-
-      await fetch(`/api/launchpad/verify`,{
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          chainId: activeChain?.id,
-          id: futureAddress,
-          constructor_args: constructorArgs,
-          deployer: deployer
-        })
-      }).catch(console.error)
-
-      // Waiting for the transaction to be mined
-      await contract.deployTransaction.wait(6);
-
-      // Contract Deployed
-      // Your contract deployed at [0xsadsadasdasdsad] = `${activeChain?.blockExplorers?.default?.url}/address/${futureAddress}`
-      setDeployedAddress(futureAddress);
-      setStep(5);
-    } catch (e: any) {
-      console.log(e.stack);
-      setError(e.reason || e.message);
-      setStep(0);
-    }
-  }
-
   useEffect(() => {
     if (isMounted && step > 1) {
       setOpen(true)
@@ -206,7 +114,7 @@ const LaunchpadDeployPage = () => {
 
   return (
     <Layout>
-      <form onSubmit={handleDeployContract} autoComplete="off">
+      <form autoComplete="off">
         <Box
           css={{
             p: 14,
