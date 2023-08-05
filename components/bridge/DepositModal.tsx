@@ -12,14 +12,14 @@ import {
 } from "wagmi";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { faCheck, faClose } from "@fortawesome/free-solid-svg-icons";
-import moment from "moment";
+import dayjs from "dayjs";
 import {
   Text,
   Box,
   Button,
   Flex
 } from 'components/primitives';
-import L2ERC721BridgeAbi from 'abi/L2ERC721BridgeAbi.json';
+import L2ERC721BridgeAbi from 'artifact/L2ERC721BridgeAbi.json';
 import {L1BridgeProxyAddress} from "../../pages/bridge";
 import {
   Root as DialogRoot,
@@ -32,7 +32,7 @@ import LoadingSpinner from "../common/LoadingSpinner";
 import {AddressZero} from "@ethersproject/constants";
 import {FullscreenModal} from "../common/FullscreenModal";
 
-import ERC721Abi from 'abi/ERC721Abi.json'
+import ERC721Abi from 'artifact/ERC721Abi.json'
 
 type DepositProps = {
   fromChain: number

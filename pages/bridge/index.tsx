@@ -208,6 +208,30 @@ const BridgePage = () => {
     <Layout>
       <Box
         css={{
+          p: 14,
+          height: '100%',
+          '@bp800': {
+            p: '$5',
+          },
+        }}
+      >
+        <Flex
+          justify="center"
+          align="center"
+          css={{
+            padding: 80
+          }}
+        >
+          <Text style="h2">COMING SOON</Text>
+        </Flex>
+      </Box>
+    </Layout>
+  )
+
+  return (
+    <Layout>
+      <Box
+        css={{
           p: 24,
           height: '100%',
           '@bp800': {
