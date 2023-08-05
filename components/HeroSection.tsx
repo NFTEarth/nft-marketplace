@@ -40,11 +40,11 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
           },
         }}
       >
-        <Flex>
+        <Flex align="center" css={{ gap: 20 }}>
           <Text
             style={{
               '@initial': 'h2',
-              '@lg': 'h1',
+              '@lg': 'h1'
             }}
             as="h1"
             css={{
@@ -53,14 +53,12 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
           >
             NFTEarth
           </Text>
-          <Box css={{ width: 60, cursor: 'pointer', marginLeft: 10, marginTop: 10 }}>
-            <Image
-              src="/res2.png"
-              width={68}
-              height={68}
-              alt="NFTEarth Logo"
-            />
-          </Box>
+          <Image
+            src="/res2.png"
+            width={55}
+            height={55}
+            alt="NFTEarth Logo"
+          />
         </Flex>
 
         <Text

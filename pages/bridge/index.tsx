@@ -531,7 +531,7 @@ const LaunchpadDeployPage = () => {
               )}
             </Box>
             {error && (
-              <Text css={{ color: 'red', mb: '$4' }}>{/429/.test(error) ? 'Please try again in 1 minute' : error}</Text>
+              <Text css={{ color: 'red', mb: '$4' }}>{/429/.test(error || '') ? 'Please try again in 1 minute' : error}</Text>
             )}
             <Button
               type="submit"
