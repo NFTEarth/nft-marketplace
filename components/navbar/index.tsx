@@ -62,10 +62,10 @@ const Navbar = () => {
           <Link href={`/${routePrefix}`}>
             <Box css={{ width: 34, cursor: 'pointer' }}>
               <Image
-                src="/reservoirLogo.svg"
-                width={34}
+                src="/res2.png"
+                width={39}
                 height={39}
-                alt="Reservoir"
+                alt="NFTEarth"
               />
             </Box>
           </Link>
@@ -102,17 +102,17 @@ const Navbar = () => {
             <Box css={{ width: 112, cursor: 'pointer' }}>
               {theme == 'dark' ? (
                 <Image
-                  src="/reservoirMarketLogo.svg"
-                  width={112}
-                  height={36}
-                  alt="Reservoir"
+                  src="/res2.png"
+                  width={50}
+                  height={50}
+                  alt="NFTEarth"
                 />
               ) : (
                 <Image
-                  src="/reservoirMarketLogoLight.svg"
-                  width={112}
-                  height={36}
-                  alt="Reservoir"
+                  src="/res2.png"
+                  width={50}
+                  height={50}
+                  alt="NFTEarth"
                 />
               )}
             </Box>
@@ -120,7 +120,7 @@ const Navbar = () => {
           <Box css={{ flex: 1, px: '$5', maxWidth: 600 }}>
             <GlobalSearch
               ref={searchRef}
-              placeholder="Search collections and addresses"
+              placeholder="Search for NFTs and collections"
               containerCss={{ width: '100%' }}
               key={router.asPath}
             />
@@ -128,14 +128,14 @@ const Navbar = () => {
           <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
             <Link href={`/${routePrefix}/collection-rankings`}>
               <NavItem active={router.pathname.includes('collection-rankings')}>
-                Collections
+                Explore
               </NavItem>
             </Link>
             <Link href="/portfolio">
-              <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
+              <NavItem active={router.pathname == '/portfolio'}>Trade</NavItem>
             </Link>
-            <Link href="https://docs.reservoir.tools/docs">
-              <NavItem active={false}>Docs</NavItem>
+            <Link href="https://www.sushi.com/pool/42161:0xd2aaa8fc5c39dbe68344bc42d4513ea344e5d696">
+              <NavItem active={false}>SushiSwap Farming Rewards</NavItem>
             </Link>
           </Flex>
         </Flex>

@@ -15,7 +15,7 @@ export default async function handler() {
     const response = await fetchWithTimeout(
       `https://api.coingecko.com/api/v3/coins/markets?vs_currency=USD&ids=${ids}`,
       {},
-      5000 // Timeout in milliseconds (5 seconds)
+      10000 // Timeout in milliseconds (5 seconds)
     )
 
     prices = await response.json()

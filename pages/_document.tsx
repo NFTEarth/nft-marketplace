@@ -34,12 +34,12 @@ class MyDocument extends Document {
         {/* Favicon */}
         <link
           rel="shortcut icon"
-          type="image/svg"
-          href="https://marketplace.reservoir.tools/reservoir.svg"
+          type="image/png"
+          href="https://i.ibb.co/3WmYdg9/NFTE-Icon.png"
         />
 
-        {/* Reservoir meta tags */}
-        <meta property="reservoir:title" content="Reservoir NFT Explorer" />
+        {/* NFTEarth meta tags */}
+        <meta property="nftearth:title" content="NFTEarth NFT Hub" />
         <meta property="reservoir:icon" content="/reservoir-source-icon.png" />
         <meta
           property="reservoir:token-url-mainnet"
