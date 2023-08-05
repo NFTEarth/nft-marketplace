@@ -404,6 +404,12 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
           </Flex>
         </Flex>
         <Flex css={{gap: '$2', width: '100%'}}>
+          {isOwner && (
+            <Transfer
+              token={token as ReturnType<typeof useTokens>['data'][0]}
+              mutate={mutate}
+            />
+          )}
           {token?.token?.topBid?.price?.amount?.decimal && isOwner ? (
             <AcceptBid
               tokenId={token.token.tokenId}
@@ -438,28 +444,22 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
             />
           ) : null}
           {isOwner ? (
-            <>
-              <Transfer
-                token={token as ReturnType<typeof useTokens>['data'][0]}
-                mutate={mutate}
-              />
-              <List
-                token={token as ReturnType<typeof useTokens>['data'][0]}
-                mutate={mutate}
-                buttonCss={{
-                  width: '100%',
-                  maxWidth: '300px',
-                  justifyContent: 'center',
-                  px: '20px',
-                  backgroundColor: '$gray3',
-                  color: '$gray12',
-                  '&:hover': {
-                    backgroundColor: '$gray4',
-                  },
-                }}
-                buttonChildren="List"
-              />
-            </>
+            <List
+              token={token as ReturnType<typeof useTokens>['data'][0]}
+              mutate={mutate}
+              buttonCss={{
+                width: '100%',
+                maxWidth: '300px',
+                justifyContent: 'center',
+                px: '20px',
+                backgroundColor: '$gray3',
+                color: '$gray12',
+                '&:hover': {
+                  backgroundColor: '$gray4',
+                },
+              }}
+              buttonChildren="List"
+            />
           ) : null}
           <Dropdown
             modal={false}
@@ -869,10 +869,10 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                 collectionId={token?.token?.contract}
                 buttonCss={{
                   px: '32px',
-                  backgroundColor: '$primary9',
-                  color: 'white',
+                  backgroundColor: '$primary13',
+                  color: '#000',
                   '&:hover': {
-                    backgroundColor: '$primary10',
+                    backgroundColor: '$primary14',
                   },
                 }}
                 buttonChildren={
