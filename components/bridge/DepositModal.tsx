@@ -20,7 +20,7 @@ import {
   Flex
 } from 'components/primitives';
 import L2ERC721BridgeAbi from 'artifact/L2ERC721BridgeAbi.json';
-import {L1BridgeProxyAddress} from "../../pages/bridge";
+import {L1BridgeProxyAddress} from "../../pages/bridge/nft";
 import {
   Root as DialogRoot,
   DialogTrigger,
