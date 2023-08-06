@@ -165,6 +165,9 @@ const BridgePage = () => {
         description: e.cause?.reason || e.shortMessage || e.message
       })
     })
+
+    setBridgePercent(0)
+    setValueEth('0.0')
   }
 
   const handleSetFromChain = useCallback((id: string) => {
