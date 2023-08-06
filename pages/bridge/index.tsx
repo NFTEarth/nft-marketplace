@@ -74,8 +74,7 @@ const BridgePage = () => {
   const { data: nfteData } : { data: any } = useContractReads<
     [
       ContractFunctionConfig<typeof NFTEOFT, 'balanceOf', 'view'>,
-      ContractFunctionConfig<typeof NFTEOFT, 'estimateSendFee', 'view'>,
-      ContractFunctionConfig<typeof NFTEOFT, 'allowance', 'view'>
+      ContractFunctionConfig<typeof NFTEOFT, 'estimateSendFee', 'view'>
     ],
     true
   >({
@@ -102,23 +101,13 @@ const BridgePage = () => {
             [1, BigInt(minDstGasLookup ? minDstGasLookup.toString() : 100000)]
           )
         ],
-      },
-      {
-        abi: NFTEOFT,
-        address: chain.address as `0x${string}`,
-        chainId: chain.id,
-        functionName: 'allowance',
-        args: [
-          address as `0x${string}`,
-          chain.address as `0x${string}`
-        ],
-      },
+      }
     ],
     watch: true,
     enabled: !!address && !!chain && !!toChain,
   })
 
-  const [nfteBalance, estimateFee, allowance] = useMemo(() => {
+  const [nfteBalance, estimateFee] = useMemo(() => {
     return nfteData || []
   }, [nfteData])
 
@@ -140,16 +129,6 @@ const BridgePage = () => {
       ethers.utils.hexZeroPad(address || '0x', 32),
       BigInt(ethers.utils.parseEther(debouncedValueEth || '0').toString()),
       [address, zeroAddress, '0x']
-    ],
-  })
-
-  const { writeAsync: approveAllowance } = useContractWrite<typeof NFTEOFTAbi, 'approve', undefined>({
-    address: chain.address as `0x${string}`,
-    abi: NFTEOFTAbi,
-    functionName: 'approve',
-    args: [
-      chain.address,
-      ethers.utils.parseEther(debouncedValueEth || '0')
     ],
   })
 
@@ -177,10 +156,6 @@ const BridgePage = () => {
 
     if (!signer) {
       openConnectModal?.()
-    }
-
-    if (!BigNumber.from(allowance?.result?.toString() || 0).gte(ethers.utils.parseEther(debouncedValueEth))) {
-      await approveAllowance?.();
     }
 
     await writeAsync?.().catch(e => {
