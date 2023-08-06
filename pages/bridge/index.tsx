@@ -5,7 +5,7 @@ import {
   useContractReads,
   useContractWrite,
   useWalletClient,
-  useWaitForTransaction, useContractRead
+  useWaitForTransaction, useContractRead, useNetwork
 } from "wagmi";
 import {ChangeEvent, useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {useConnectModal} from "@rainbow-me/rainbowkit";
@@ -22,65 +22,73 @@ import NumericalInput from "components/bridge/NumericalInput";
 import NFTEOFTAbi from 'artifact/NFTEOFTAbi.json'
 import {ChainContext} from "context/ChainContextProvider";
 import {formatBN} from "utils/numbers";
-import supportedChains, {LZ_CHAIN_IDS} from "utils/chains";
+import {BRIGED_CHAINS} from "utils/chains";
 import {ToastContext} from "../../context/ToastContextProvider";
 import {Abi} from "abitype";
+import {ContractFunctionConfig} from "viem";
 
 const BridgePage = () => {
   const { theme } = useTheme()
   const { addToast } = useContext(ToastContext)
-  const { chain, switchCurrentChain } = useContext(ChainContext)
-  const [toChainId, setToChainId] = useState<number>(supportedChains[1].id)
+  const [ fromChainId, setFromChainId ] = useState<number>(BRIGED_CHAINS[0].id)
+  const [ toChainId, setToChainId ] = useState<number>(BRIGED_CHAINS[1].id)
   const { openConnectModal } = useConnectModal()
   const [bridgePercent, setBridgePercent] = useState(0);
   const [valueEth, setValueEth] = useState<string>('0.0')
   const { switchNetworkAsync } = useSwitchNetwork({
-    chainId: chain.id,
+    chainId: fromChainId,
   })
   const { data: signer } = useWalletClient()
   const isMounted = useMounted()
-  const activeChain = useChainId()
+  const { chain: activeChain } = useNetwork()
   const { address } = useAccount()
 
   const NFTEOFT = NFTEOFTAbi as Abi
 
-  // const { data: balanceData } = useContractReads<
-  //   [
-  //     ContractFunctionConfig<typeof NFTEOFT, 'balanceOf', 'view'>,
-  //     ContractFunctionConfig<typeof NFTEOFT, 'estimateSendFee', 'view'>
-  //   ],
-  //   true
-  //   >(
+  const chain = useMemo(() => {
+    return BRIGED_CHAINS.find((chain) => chain.id === fromChainId) || BRIGED_CHAINS[0];
+  }, [fromChainId]);
 
-  const { data: minDstGasLookup } = useContractRead<typeof NFTEOFT, 'minDstGasLookup', number>({
+  const toChain = useMemo(() => {
+    return BRIGED_CHAINS.find((chain) => chain.id === toChainId) || BRIGED_CHAINS[1];
+  }, [toChainId]);
+
+  const { data: minDstGasLookup } = useContractRead<typeof NFTEOFT, 'minDstGasLookup'>({
     abi: NFTEOFT,
-    address: chain.contracts?.nfte?.address,
+    address: chain?.address as `0x${string}`,
     functionName: 'minDstGasLookup',
     args: [
-      LZ_CHAIN_IDS[toChainId],
-      '0'
+      toChain.lzId,
+      0
     ],
-    watch: true
+    account: address,
+    watch: true,
+    chainId: fromChainId,
+    enabled: !!chain && !!toChain && !!address,
   })
 
-  console.log('minDstGasLookup', minDstGasLookup);
-
-  const { data: balanceData } = useContractReads({
+  const { data: balanceData } = useContractReads<
+    [
+      ContractFunctionConfig<typeof NFTEOFT, 'balanceOf', 'view'>,
+      ContractFunctionConfig<typeof NFTEOFT, 'estimateSendFee', 'view'>
+    ],
+    true
+  >({
     contracts: [
       {
         abi: NFTEOFT,
-        address: chain.contracts?.nfte?.address,
+        address: chain.address as `0x${string}`,
         chainId: chain.id,
         functionName: 'balanceOf',
         args: [address as `0x${string}`],
       },
       {
         abi: NFTEOFT,
-        address: chain.contracts?.nfte?.address,
+        address: chain.address as `0x${string}`,
         chainId: chain.id,
         functionName: 'estimateSendFee',
         args: [
-          LZ_CHAIN_IDS[toChainId],
+          toChain.lzId,
           ethers.utils.hexZeroPad(address || '0x', 32),
           ethers.utils.parseEther(valueEth || '0'),
           false,
@@ -92,12 +100,10 @@ const BridgePage = () => {
       }
     ],
     watch: true,
-    enabled: !!address && !!chain.contracts?.nfte,
+    enabled: !!address && !!chain && !!toChain,
   })
 
   const [nfteBalance, estimateFee] = balanceData || []
-
-  console.log('estimateFee', estimateFee);
 
   useEffect(() => {
     if (nfteBalance?.result) {
@@ -106,20 +112,14 @@ const BridgePage = () => {
     }
   }, [bridgePercent])
 
-  const bridgeEnabledChains = supportedChains.filter(p => !!p.contracts?.nfte);
-
-  const toChain = useMemo(() => {
-    return bridgeEnabledChains.find((chain) => chain.id === toChainId) || supportedChains[1];
-  }, [toChainId]);
-
-  const { writeAsync, data, isLoading, error: error } = useContractWrite<typeof NFTEOFTAbi, 'sendFrom', undefined>({
-    address: chain.contracts?.nfte?.address || '0x0',
+  const { writeAsync, data, isLoading } = useContractWrite<typeof NFTEOFTAbi, 'sendFrom', undefined>({
+    address: chain.address as `0x${string}`,
     abi: NFTEOFTAbi,
     functionName: 'sendFrom',
     value: ((estimateFee?.result || [BigNumber.from(200000)]) as bigint[])[0],
     args: [
       address || '0x',
-      LZ_CHAIN_IDS[toChainId],
+      toChain.lzId,
       ethers.utils.hexZeroPad(address || '0x', 32),
       ethers.utils.parseEther(valueEth || '0'),
       [address, '0xcd0b087e113152324fca962488b4d9beb6f4caf6', '0x']
@@ -141,12 +141,14 @@ const BridgePage = () => {
   }
 
   const handleBridge = async () => {
-    if (switchNetworkAsync && activeChain !== chain.id) {
-      const newChain = await switchNetworkAsync(chain.id)
-      if (newChain.id !== chain.id) {
+    console.log(activeChain, fromChainId);
+    if (switchNetworkAsync && activeChain?.id !== fromChainId) {
+      const newChain = await switchNetworkAsync(fromChainId)
+      if (newChain.id !== fromChainId) {
         return false
       }
     }
+
     if (!signer) {
       openConnectModal?.()
     }
@@ -154,7 +156,7 @@ const BridgePage = () => {
     await writeAsync?.().catch(e => {
       addToast?.({
         title: 'Error',
-        description: e.cause.reason || e.shortMessage || e.message
+        description: e.cause?.reason || e.shortMessage || e.message
       })
     })
   }
@@ -162,10 +164,10 @@ const BridgePage = () => {
   const handleSetFromChain = useCallback((id: string) => {
     const idInt = parseInt(id);
 
-    switchCurrentChain(idInt);
+    setFromChainId(idInt);
 
     if (toChainId === idInt) {
-      setToChainId(bridgeEnabledChains.find((chain) => chain.id !== idInt)?.id || 10)
+      setToChainId(BRIGED_CHAINS.find((chain) => chain.id !== idInt)?.id || 10)
     }
   }, [toChainId])
 
@@ -175,7 +177,7 @@ const BridgePage = () => {
     setToChainId(idInt);
 
     if (chain.id === idInt) {
-      switchCurrentChain(bridgeEnabledChains.find((chain) => chain.id !== idInt)?.id || 1)
+      setFromChainId(BRIGED_CHAINS.find((chain) => chain.id !== idInt)?.id || 1)
     }
   }, [chain])
 
@@ -193,7 +195,7 @@ const BridgePage = () => {
         </Flex>
       </Select.Value>
     </Select.Trigger>
-  ), [chain])
+  ), [chain, theme])
 
   const trigger2 = useMemo(() => (
     <Select.Trigger
@@ -209,7 +211,7 @@ const BridgePage = () => {
         </Flex>
       </Select.Value>
     </Select.Trigger>
-  ), [toChain])
+  ), [toChain, theme])
 
   if (!isMounted) {
     return null;
@@ -287,7 +289,7 @@ const BridgePage = () => {
                       onValueChange={handleSetFromChain}
                       trigger={trigger}
                     >
-                      {bridgeEnabledChains.map((option) => (
+                      {BRIGED_CHAINS.map((option) => (
                         <Select.Item key={`chain-from-${option.id}`} value={`${option.id}`}>
                           <Select.ItemText css={{ whiteSpace: 'nowrap' }}>
                             <Flex css={{ gap: 10 }}>
@@ -306,7 +308,7 @@ const BridgePage = () => {
                       onValueChange={handleSetToChain}
                       trigger={trigger2}
                     >
-                      {bridgeEnabledChains.map((option) => (
+                      {BRIGED_CHAINS.map((option) => (
                         <Select.Item key={`chain-to-${option.id}`} value={`${option.id}`}>
                           <Select.ItemText css={{ whiteSpace: 'nowrap' }}>
                             <Flex css={{ gap: 10 }}>
