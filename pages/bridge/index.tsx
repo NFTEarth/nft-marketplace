@@ -116,7 +116,7 @@ const BridgePage = () => {
     address: chain.contracts?.nfte?.address || '0x0',
     abi: NFTEOFTAbi,
     functionName: 'sendFrom',
-    value: BigInt(`${ethers.utils.parseEther('0.00001')}`),
+    value: ((estimateFee?.result || [BigNumber.from(200000)]) as bigint[])[0],
     args: [
       address || '0x',
       LZ_CHAIN_IDS[toChainId],
@@ -353,7 +353,7 @@ const BridgePage = () => {
                       }}
                     >NFTE</Text>
                   </Box>
-                  <Text>{`Estimated Fee : ${ethers.utils.formatEther(((estimateFee?.result || [BigNumber.from(0)]) as number[])[0]) || '-'} Ξ`}</Text>
+                  <Text>{`Estimated Fee : ${ethers.utils.formatEther(((estimateFee?.result || [BigNumber.from(200000)]) as number[])[0]) || '-'} Ξ`}</Text>
                   <Flex justify="center" direction="column" css={{ gap: 40 }}>
                     <Button onClick={handleBridge} disabled={isLoading || isLoadingTransaction}>Bridge</Button>
                     {isLoadingTransaction && (
