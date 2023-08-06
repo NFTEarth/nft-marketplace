@@ -85,7 +85,6 @@ const BridgePage = () => {
       {
         abi: NFTEOFT,
         address: chain.address as `0x${string}`,
-        chainId: chain.id,
         functionName: 'estimateSendFee',
         args: [
           toChain.lzId,
@@ -112,6 +111,7 @@ const BridgePage = () => {
     }
   }, [bridgePercent])
 
+  console.log(estimateFee?.result?.[0]);
   const { writeAsync, data, isLoading } = useContractWrite<typeof NFTEOFTAbi, 'sendFrom', undefined>({
     address: chain.address as `0x${string}`,
     abi: NFTEOFTAbi,
@@ -141,7 +141,6 @@ const BridgePage = () => {
   }
 
   const handleBridge = async () => {
-    console.log(activeChain, fromChainId);
     if (switchNetworkAsync && activeChain?.id !== fromChainId) {
       const newChain = await switchNetworkAsync(fromChainId)
       if (newChain.id !== fromChainId) {
