@@ -362,14 +362,17 @@ const BridgePage = () => {
                     >NFTE</Text>
                   </Box>
                   <Text>{`Estimated Fee : ${ethers.utils.formatEther(BigNumber.from(estimateFee?.result?.[0]?.toString() || 300000000000000).div(100).mul(200)) || '-'}`}</Text>
-                  <Flex justify="center" direction="column" css={{ gap: 40 }}>
-                    <Box><Button onClick={handleBridge} disabled={isLoading || isLoadingTransaction}>Bridge</Button></Box>
+                  <Flex align="center" direction="column" css={{ gap: 40 }}>
+                    <Box>
+                      <Button onClick={handleBridge} disabled={isLoading || isLoadingTransaction}>Bridge</Button>
+                    </Box>
                     {isLoadingTransaction && (
                       <Text as="h4">Bridging...</Text>
                     )}
                     {isSuccess && (
                       <Text css={{ color: '$primary14'}}>Token bridged, you should receive the token after the blockchain confirmations</Text>
                     )}
+                    <Text css={{ color: '$primary14'}}>Token bridged, you should receive the token after the blockchain confirmations</Text>
                   </Flex>
                 </Flex>
               </Box>
