@@ -363,7 +363,7 @@ const BridgePage = () => {
                   </Box>
                   <Text>{`Estimated Fee : ${ethers.utils.formatEther(BigNumber.from(estimateFee?.result?.[0]?.toString() || 300000000000000).div(100).mul(200)) || '-'}`}</Text>
                   <Flex justify="center" direction="column" css={{ gap: 40 }}>
-                    <Button onClick={handleBridge} disabled={isLoading || isLoadingTransaction}>Bridge</Button>
+                    <Box><Button onClick={handleBridge} disabled={isLoading || isLoadingTransaction}>Bridge</Button></Box>
                     {isLoadingTransaction && (
                       <Text as="h4">Bridging...</Text>
                     )}
