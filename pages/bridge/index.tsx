@@ -67,10 +67,11 @@ const BridgePage = () => {
     enabled: !!chain && !!toChain && !!address,
   })
 
-  const { data: balanceData } = useContractReads<
+  const { data: balanceData } : { data: any } = useContractReads<
     [
       ContractFunctionConfig<typeof NFTEOFT, 'balanceOf', 'view'>,
-      ContractFunctionConfig<typeof NFTEOFT, 'estimateSendFee', 'view'>
+      ContractFunctionConfig<typeof NFTEOFT, 'estimateSendFee', 'view'>,
+      ContractFunctionConfig<typeof NFTEOFT, 'allowance', 'view'>
     ],
     true
   >({
@@ -96,13 +97,23 @@ const BridgePage = () => {
           [1, minDstGasLookup || 20000]
           )
         ],
-      }
+      },
+      {
+        abi: NFTEOFT,
+        address: chain.address as `0x${string}`,
+        chainId: chain.id,
+        functionName: 'allowance',
+        args: [
+          address as `0x${string}`,
+          chain.address as `0x${string}`
+        ],
+      },
     ],
     watch: true,
     enabled: !!address && !!chain && !!toChain,
   })
 
-  const [nfteBalance, estimateFee] = balanceData || []
+  const [nfteBalance, estimateFee, allowance] = balanceData || []
 
   useEffect(() => {
     if (nfteBalance?.result) {
@@ -115,13 +126,23 @@ const BridgePage = () => {
     address: chain.address as `0x${string}`,
     abi: NFTEOFTAbi,
     functionName: 'sendFrom',
-    value: ((estimateFee?.result || [BigNumber.from(200000)]) as bigint[])[0],
+    value: BigNumber.from(estimateFee?.result?.[0] || 300000000000000).mul(1.2).toBigInt(),
     args: [
       address || '0x',
       toChain.lzId,
       ethers.utils.hexZeroPad(address || '0x', 32),
       ethers.utils.parseEther(valueEth || '0'),
       [address, '0xcd0b087e113152324fca962488b4d9beb6f4caf6', '0x']
+    ],
+  })
+
+  const { writeAsync: approveAllowance } = useContractWrite<typeof NFTEOFTAbi, 'approve', undefined>({
+    address: chain.address as `0x${string}`,
+    abi: NFTEOFTAbi,
+    functionName: 'approve',
+    args: [
+      chain.address,
+      ethers.utils.parseEther(valueEth || '0')
     ],
   })
 
@@ -149,6 +170,10 @@ const BridgePage = () => {
 
     if (!signer) {
       openConnectModal?.()
+    }
+
+    if (!BigNumber.from(allowance?.result || 0).gte(ethers.utils.parseEther(valueEth))) {
+      await approveAllowance?.();
     }
 
     await writeAsync?.().catch(e => {
@@ -353,7 +378,7 @@ const BridgePage = () => {
                       }}
                     >NFTE</Text>
                   </Box>
-                  <Text>{`Estimated Fee : ${ethers.utils.formatEther(((estimateFee?.result || [BigNumber.from(200000)]) as number[])[0]) || '-'} Ξ`}</Text>
+                  <Text>{`Estimated Fee : ${ethers.utils.formatEther(BigNumber.from(estimateFee?.result?.[0] || 300000000000000).mul(1.2)) || '-'} Ξ`}</Text>
                   <Flex justify="center" direction="column" css={{ gap: 40 }}>
                     <Button onClick={handleBridge} disabled={isLoading || isLoadingTransaction}>Bridge</Button>
                     {isLoadingTransaction && (
