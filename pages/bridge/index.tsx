@@ -372,7 +372,6 @@ const BridgePage = () => {
                     {isSuccess && (
                       <Text css={{ color: '$primary14'}}>Token bridged, you should receive the token after the blockchain confirmations</Text>
                     )}
-                    <Text css={{ color: '$primary14'}}>Token bridged, you should receive the token after the blockchain confirmations</Text>
                   </Flex>
                 </Flex>
               </Box>
