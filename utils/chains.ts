@@ -308,16 +308,79 @@ const CHAINS = [
   },
 ] as ReservoirChain[]
 
-export const LZ_CHAIN_IDS: Record<number, number> = {
-  [mainnet.id]: 101,
-  [fantom.id]: 112,
-  [optimism.id]: 111,
-  [arbitrum.id]: 110,
-  [canto.id]: 159,
-  [bsc.id]: 102,
-  [avalanche.id]: 106,
-  [polygon.id]: 109,
-  [zkSync.id]: 165
-}
+export const BRIGED_CHAINS = [
+  {
+    id: mainnet.id,
+    lzId: 101,
+    name: mainnet.name,
+    address: '0x8c223a82E07feCB49D602150d7C2B3A4c9630310',
+    lightIconUrl: '/icons/eth-icon-dark.svg',
+    darkIconUrl: '/icons/eth-icon-light.svg',
+  },
+  {
+    id: polygon.id,
+    lzId: 109,
+    name: polygon.name,
+    address: '0x492Fa53b88614923937B7197C87E0F7F8EEb7B20',
+    lightIconUrl: '/icons/polygon-icon-dark.svg',
+    darkIconUrl: '/icons/polygon-icon-light.svg'
+  },
+  {
+    id: arbitrum.id,
+    lzId: 110,
+    name: arbitrum.name,
+    address: '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
+    lightIconUrl: '/icons/arbitrum-icon-dark.svg',
+    darkIconUrl: '/icons/arbitrum-icon-light.svg'
+  },
+  {
+    id: optimism.id,
+    lzId: 111,
+    name: optimism.name,
+    address: '0x8637725aDa78db0674a679CeA2A5e0A0869EF4A1',
+    lightIconUrl: '/icons/optimism-icon-dark.svg',
+    darkIconUrl: '/icons/optimism-icon-light.svg',
+  },
+  {
+    id: bsc.id,
+    lzId: 102,
+    name: bsc.name,
+    address: '0x1912A3504E59d1C1B060bf2d371DEB00b70E8796',
+    lightIconUrl: '/icons/bsc-icon-dark.svg',
+    darkIconUrl: '/icons/bsc-icon-light.svg',
+  },
+  {
+    id: base.id,
+    lzId: 184,
+    name: base.name,
+    address: '0xc2106ca72996e49bBADcB836eeC52B765977fd20',
+    lightIconUrl: '/icons/base-icon-dark.svg',
+    darkIconUrl: '/icons/base-icon-light.svg',
+  },
+  {
+    id: linea.id,
+    lzId: 183,
+    name: linea.name,
+    address: '0x2140Ea50bc3B6Ac3971F9e9Ea93A1442665670e4',
+    lightIconUrl: '/icons/linea-icon-dark.svg',
+    darkIconUrl: '/icons/linea-icon-light.svg'
+  },
+  {
+    id: avalanche.id,
+    lzId: 106,
+    name: avalanche.name,
+    address: '0xD47E4F1ef1AA4090bc27420BDD5cB379Ced81440',
+    lightIconUrl: '/icons/avalanche-icon-dark.svg',
+    darkIconUrl: '/icons/avalanche-icon-light.svg'
+  },
+  // {
+  //   id: 5000,
+  //   lzId: 181,
+  //   name: 'Mantle',
+  //   address: '0x3E173b825ADEeF9661920B91A8d50B075Ad51bA5',
+  //   lightIconUrl: '/icons/mantle-icon-dark.svg',
+  //   darkIconUrl: '/icons/mantle-icon-light.svg'
+  // }
+]
 
 export default CHAINS
