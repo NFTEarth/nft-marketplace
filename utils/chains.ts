@@ -1,4 +1,4 @@
-import { arbitrum, mainnet, polygon, optimism, Chain, bsc } from 'wagmi/chains'
+import { arbitrum, mainnet, polygon, optimism, fantom, avalanche, zkSync, canto, Chain, bsc } from 'wagmi/chains'
 import {BigNumber} from "ethers";
 
 //Chains that are missing from wagmi:
@@ -307,5 +307,17 @@ const CHAINS = [
     }
   },
 ] as ReservoirChain[]
+
+export const LZ_CHAIN_IDS: Record<number, number> = {
+  [mainnet.id]: 101,
+  [fantom.id]: 112,
+  [optimism.id]: 111,
+  [arbitrum.id]: 110,
+  [canto.id]: 159,
+  [bsc.id]: 102,
+  [avalanche.id]: 106,
+  [polygon.id]: 109,
+  [zkSync.id]: 165
+}
 
 export default CHAINS

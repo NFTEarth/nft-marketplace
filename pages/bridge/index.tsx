@@ -5,7 +5,7 @@ import {
   useContractReads,
   useContractWrite,
   useWalletClient,
-  useWaitForTransaction
+  useWaitForTransaction, useContractRead
 } from "wagmi";
 import {ChangeEvent, useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {useConnectModal} from "@rainbow-me/rainbowkit";
@@ -22,7 +22,7 @@ import NumericalInput from "components/bridge/NumericalInput";
 import NFTEOFTAbi from 'artifact/NFTEOFTAbi.json'
 import {ChainContext} from "context/ChainContextProvider";
 import {formatBN} from "utils/numbers";
-import supportedChains from "utils/chains";
+import supportedChains, {LZ_CHAIN_IDS} from "utils/chains";
 import {ToastContext} from "../../context/ToastContextProvider";
 import {Abi} from "abitype";
 
@@ -52,6 +52,19 @@ const BridgePage = () => {
   //   true
   //   >(
 
+  const { data: minDstGasLookup } = useContractRead<typeof NFTEOFT, 'minDstGasLookup', number>({
+    abi: NFTEOFT,
+    address: chain.contracts?.nfte?.address,
+    functionName: 'minDstGasLookup',
+    args: [
+      LZ_CHAIN_IDS[toChainId],
+      '0'
+    ],
+    watch: true
+  })
+
+  console.log('minDstGasLookup', minDstGasLookup);
+
   const { data: balanceData } = useContractReads({
     contracts: [
       {
@@ -67,13 +80,13 @@ const BridgePage = () => {
         chainId: chain.id,
         functionName: 'estimateSendFee',
         args: [
-          toChainId,
+          LZ_CHAIN_IDS[toChainId],
           ethers.utils.hexZeroPad(address || '0x', 32),
           ethers.utils.parseEther(valueEth || '0'),
           false,
           ethers.utils.solidityPack(
           ['uint16','uint256'],
-          [1, 200000]
+          [1, minDstGasLookup || 20000]
           )
         ],
       }
@@ -84,7 +97,7 @@ const BridgePage = () => {
 
   const [nfteBalance, estimateFee] = balanceData || []
 
-  console.log(estimateFee);
+  console.log('estimateFee', estimateFee);
 
   useEffect(() => {
     if (nfteBalance?.result) {
@@ -106,7 +119,7 @@ const BridgePage = () => {
     value: BigInt(`${ethers.utils.parseEther('0.00001')}`),
     args: [
       address || '0x',
-      toChainId,
+      LZ_CHAIN_IDS[toChainId],
       ethers.utils.hexZeroPad(address || '0x', 32),
       ethers.utils.parseEther(valueEth || '0'),
       [address, '0xcd0b087e113152324fca962488b4d9beb6f4caf6', '0x']
@@ -340,7 +353,7 @@ const BridgePage = () => {
                       }}
                     >NFTE</Text>
                   </Box>
-                  <Text>{`Estimated Fee : ${ethers.utils.formatEther(estimateFee?.result as number || BigNumber.from(0)) || '-'}`}</Text>
+                  <Text>{`Estimated Fee : ${ethers.utils.formatEther(((estimateFee?.result || [BigNumber.from(0)]) as number[])[0]) || '-'} Ξ`}</Text>
                   <Flex justify="center" direction="column" css={{ gap: 40 }}>
                     <Button onClick={handleBridge} disabled={isLoading || isLoadingTransaction}>Bridge</Button>
                     {isLoadingTransaction && (
