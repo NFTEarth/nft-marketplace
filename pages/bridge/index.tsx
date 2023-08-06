@@ -25,7 +25,8 @@ import {formatBN} from "utils/numbers";
 import {BRIGED_CHAINS} from "utils/chains";
 import {ToastContext} from "../../context/ToastContextProvider";
 import {Abi} from "abitype";
-import {ContractFunctionConfig} from "viem";
+import {ContractFunctionConfig, zeroAddress} from "viem";
+import {useDebounce} from "usehooks-ts";
 
 const BridgePage = () => {
   const { theme } = useTheme()
@@ -43,6 +44,9 @@ const BridgePage = () => {
   const { chain: activeChain } = useNetwork()
   const { address } = useAccount()
 
+  const debouncedPercent = useDebounce(bridgePercent, 500);
+  const debouncedValueEth = useDebounce(valueEth, 500);
+
   const NFTEOFT = NFTEOFTAbi as Abi
 
   const chain = useMemo(() => {
@@ -58,7 +62,7 @@ const BridgePage = () => {
     address: chain?.address as `0x${string}`,
     functionName: 'minDstGasLookup',
     args: [
-      toChain.lzId,
+      chain.lzId,
       0
     ],
     account: address,
@@ -67,7 +71,14 @@ const BridgePage = () => {
     enabled: !!chain && !!toChain && !!address,
   })
 
-  const { data: balanceData } : { data: any } = useContractReads<
+  const adapterParams = useMemo(() => {
+    return ethers.utils.solidityPack(
+      ['uint16', 'uint256'],
+      [1, BigInt(minDstGasLookup ? minDstGasLookup.toString() : 100000)]
+    );
+  }, [minDstGasLookup])
+
+  const { data: nfteData } : { data: any } = useContractReads<
     [
       ContractFunctionConfig<typeof NFTEOFT, 'balanceOf', 'view'>,
       ContractFunctionConfig<typeof NFTEOFT, 'estimateSendFee', 'view'>,
@@ -87,15 +98,13 @@ const BridgePage = () => {
         abi: NFTEOFT,
         address: chain.address as `0x${string}`,
         functionName: 'estimateSendFee',
+        chainId: chain.id,
         args: [
           toChain.lzId,
           ethers.utils.hexZeroPad(address || '0x', 32),
-          ethers.utils.parseEther(valueEth || '0'),
+          BigInt(ethers.utils.parseEther(debouncedValueEth || '0').toString()),
           false,
-          ethers.utils.solidityPack(
-          ['uint16','uint256'],
-          [1, minDstGasLookup || 20000]
-          )
+          adapterParams
         ],
       },
       {
@@ -113,26 +122,28 @@ const BridgePage = () => {
     enabled: !!address && !!chain && !!toChain,
   })
 
-  const [nfteBalance, estimateFee, allowance] = balanceData || []
+  const [nfteBalance, estimateFee, allowance] = useMemo(() => {
+    return nfteData || []
+  }, [nfteData])
 
   useEffect(() => {
     if (nfteBalance?.result) {
-      const val = ethers.utils.formatUnits(BigNumber.from(bridgePercent).mul(nfteBalance?.result as number).div(100), 18)
+      const val = ethers.utils.formatUnits(BigNumber.from(bridgePercent).mul(nfteBalance?.result?.toString()).div(100), 18)
       setValueEth(val)
     }
-  }, [bridgePercent])
+  }, [debouncedPercent])
 
   const { writeAsync, data, isLoading } = useContractWrite<typeof NFTEOFTAbi, 'sendFrom', undefined>({
     address: chain.address as `0x${string}`,
     abi: NFTEOFTAbi,
     functionName: 'sendFrom',
-    value: BigNumber.from(estimateFee?.result?.[0] || 300000000000000).div(100).mul(120).toBigInt(),
+    value: BigInt(BigNumber.from(estimateFee?.result?.[0]?.toString() || 300000000000000).toString()),
     args: [
       address || '0x',
       toChain.lzId,
       ethers.utils.hexZeroPad(address || '0x', 32),
-      ethers.utils.parseEther(valueEth || '0'),
-      [address, '0xcd0b087e113152324fca962488b4d9beb6f4caf6', '0x']
+      BigInt(ethers.utils.parseEther(debouncedValueEth || '0').toString()),
+      [address, zeroAddress, adapterParams]
     ],
   })
 
@@ -142,7 +153,7 @@ const BridgePage = () => {
     functionName: 'approve',
     args: [
       chain.address,
-      ethers.utils.parseEther(valueEth || '0')
+      ethers.utils.parseEther(debouncedValueEth || '0')
     ],
   })
 
@@ -172,7 +183,7 @@ const BridgePage = () => {
       openConnectModal?.()
     }
 
-    if (!BigNumber.from(allowance?.result || 0).gte(ethers.utils.parseEther(valueEth))) {
+    if (!BigNumber.from(allowance?.result?.toString() || 0).gte(ethers.utils.parseEther(debouncedValueEth))) {
       await approveAllowance?.();
     }
 
@@ -304,7 +315,7 @@ const BridgePage = () => {
                   }}
                 >
                   <Flex css={{ width: '100%' }}>
-                    <Text>{`Available : ${formatBN(nfteBalance?.result as number || 0, 4, 18 || 10)}`}</Text>
+                    <Text>{`Available : ${formatBN(nfteBalance?.result?.toString() || 0, 4, 18 || 10)}`}</Text>
                   </Flex>
                   <Flex align="center" justify="center" css={{ gap: 20 }}>
                     <Select
@@ -378,7 +389,7 @@ const BridgePage = () => {
                       }}
                     >NFTE</Text>
                   </Box>
-                  <Text>{`Estimated Fee : ${ethers.utils.formatEther(BigNumber.from(estimateFee?.result?.[0] || 300000000000000).div(100).mul(120)) || '-'} Ξ`}</Text>
+                  <Text>{`Estimated Fee : ${ethers.utils.formatEther(BigNumber.from(estimateFee?.result?.[0]?.toString() || 300000000000000)) || '-'}`}</Text>
                   <Flex justify="center" direction="column" css={{ gap: 40 }}>
                     <Button onClick={handleBridge} disabled={isLoading || isLoadingTransaction}>Bridge</Button>
                     {isLoadingTransaction && (
