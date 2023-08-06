@@ -111,7 +111,6 @@ const BridgePage = () => {
     }
   }, [bridgePercent])
 
-  console.log(estimateFee?.result?.[0]);
   const { writeAsync, data, isLoading } = useContractWrite<typeof NFTEOFTAbi, 'sendFrom', undefined>({
     address: chain.address as `0x${string}`,
     abi: NFTEOFTAbi,
