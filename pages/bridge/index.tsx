@@ -1,32 +1,33 @@
+import {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {
   useAccount,
   useSwitchNetwork,
-  useChainId,
   useContractReads,
   useContractWrite,
   useWalletClient,
-  useWaitForTransaction, useContractRead, useNetwork
+  useWaitForTransaction,
+  useContractRead,
+  useNetwork
 } from "wagmi";
-import {ChangeEvent, useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {useConnectModal} from "@rainbow-me/rainbowkit";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowRight} from "@fortawesome/free-solid-svg-icons";
 import { ethers, BigNumber } from 'ethers';
 import {useTheme} from "next-themes";
-
-import Layout from "components/Layout";
-import { Select, Box, Button, Flex, Text, Input } from "components/primitives";
-import {useMarketplaceChain, useMounted} from "hooks";
-import Slider from "components/primitives/Slider";
-import NumericalInput from "components/bridge/NumericalInput";
-import NFTEOFTAbi from 'artifact/NFTEOFTAbi.json'
-import {ChainContext} from "context/ChainContextProvider";
-import {formatBN} from "utils/numbers";
-import {BRIGED_CHAINS} from "utils/chains";
-import {ToastContext} from "../../context/ToastContextProvider";
-import {Abi} from "abitype";
 import {ContractFunctionConfig, zeroAddress} from "viem";
 import {useDebounce} from "usehooks-ts";
+import {Abi} from "abitype";
+
+import Layout from "components/Layout";
+import { Select, Box, Button, Flex, Text } from "components/primitives";
+import Slider from "components/primitives/Slider";
+import NumericalInput from "components/bridge/NumericalInput";
+
+import {useMounted} from "hooks";
+import {formatBN} from "utils/numbers";
+import {BRIGED_CHAINS} from "utils/chains";
+import {ToastContext} from "context/ToastContextProvider";
+import NFTEOFTAbi from 'artifact/NFTEOFTAbi.json'
 
 const BridgePage = () => {
   const { theme } = useTheme()
@@ -98,7 +99,7 @@ const BridgePage = () => {
           false,
           ethers.utils.solidityPack(
             ['uint16', 'uint256'],
-            [1, BigInt(minDstGasLookup ? minDstGasLookup.toString() : 100000)]
+            [1, BigInt(minDstGasLookup ? minDstGasLookup.toString() : 200000)]
           )
         ],
       }
@@ -122,7 +123,7 @@ const BridgePage = () => {
     address: chain.address as `0x${string}`,
     abi: NFTEOFTAbi,
     functionName: 'sendFrom',
-    value: BigInt(BigNumber.from(estimateFee?.result?.[0]?.toString() || 300000000000000).toString()),
+    value: BigInt(BigNumber.from(estimateFee?.result?.[0]?.toString() || 300000000000000).div(100).mul(200).toString()),
     args: [
       address || '0x',
       toChain.lzId,
@@ -360,7 +361,7 @@ const BridgePage = () => {
                       }}
                     >NFTE</Text>
                   </Box>
-                  <Text>{`Estimated Fee : ${ethers.utils.formatEther(BigNumber.from(estimateFee?.result?.[0]?.toString() || 300000000000000)) || '-'}`}</Text>
+                  <Text>{`Estimated Fee : ${ethers.utils.formatEther(BigNumber.from(estimateFee?.result?.[0]?.toString() || 300000000000000).div(100).mul(200)) || '-'}`}</Text>
                   <Flex justify="center" direction="column" css={{ gap: 40 }}>
                     <Button onClick={handleBridge} disabled={isLoading || isLoadingTransaction}>Bridge</Button>
                     {isLoadingTransaction && (
