@@ -143,7 +143,7 @@ const BridgePage = () => {
       toChain.lzId,
       ethers.utils.hexZeroPad(address || '0x', 32),
       BigInt(ethers.utils.parseEther(debouncedValueEth || '0').toString()),
-      [address, zeroAddress, adapterParams]
+      [address, zeroAddress, '0x']
     ],
   })
 
