@@ -71,13 +71,6 @@ const BridgePage = () => {
     enabled: !!chain && !!toChain && !!address,
   })
 
-  const adapterParams = useMemo(() => {
-    return ethers.utils.solidityPack(
-      ['uint16', 'uint256'],
-      [1, BigInt(minDstGasLookup ? minDstGasLookup.toString() : 100000)]
-    );
-  }, [minDstGasLookup])
-
   const { data: nfteData } : { data: any } = useContractReads<
     [
       ContractFunctionConfig<typeof NFTEOFT, 'balanceOf', 'view'>,
@@ -104,7 +97,10 @@ const BridgePage = () => {
           ethers.utils.hexZeroPad(address || '0x', 32),
           BigInt(ethers.utils.parseEther(debouncedValueEth || '0').toString()),
           false,
-          adapterParams
+          ethers.utils.solidityPack(
+            ['uint16', 'uint256'],
+            [1, BigInt(minDstGasLookup ? minDstGasLookup.toString() : 100000)]
+          )
         ],
       },
       {
