@@ -159,15 +159,15 @@ const BridgePage = () => {
       openConnectModal?.()
     }
 
-    await writeAsync?.().catch(e => {
+    await writeAsync?.().then(() => {
+      setBridgePercent(0)
+      setValueEth('0.0')
+    }).catch(e => {
       addToast?.({
         title: 'Error',
         description: e.cause?.reason || e.shortMessage || e.message
       })
     })
-
-    setBridgePercent(0)
-    setValueEth('0.0')
   }
 
   const handleSetFromChain = useCallback((id: string) => {
