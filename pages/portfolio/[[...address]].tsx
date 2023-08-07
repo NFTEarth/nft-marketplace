@@ -415,7 +415,7 @@ const IndexPage: NextPage = () => {
               css={{ mx: 'auto', py: '120px', maxWidth: '350px', gap: '$4' }}
             >
               <Text style="h4" css={{ mb: '$3' }}>
-                Sell your NFT instantly
+                Sell you NFTs
               </Text>
               <Text css={{ color: '$gray11' }}>
                 <FontAwesomeIcon icon={faWallet} size="2xl" />
@@ -424,8 +424,7 @@ const IndexPage: NextPage = () => {
                 style="body1"
                 css={{ color: '$gray11', textAlign: 'center', mb: '$4' }}
               >
-                Connect wallet to instant sell your token across all major
-                marketplaces.
+                Connect your wallet to sell your NFTs
               </Text>
               <ConnectWalletButton />
             </Flex>
