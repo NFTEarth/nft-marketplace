@@ -73,8 +73,8 @@ const reservoirKitThemeOverrides = {
   font: inter.style.fontFamily,
   buttonTextColor: '#000',
   buttonTextHoverColor: '#000',
-  primaryColor: '#4B7C5F',
-  primaryHoverColor: '#7AFFA9',
+  primaryColor: '#79FFA8',
+  primaryHoverColor: '#79FFEB',
 }
 
 function AppWrapper(props: AppProps & { baseUrl: string }) {

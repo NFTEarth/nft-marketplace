@@ -261,7 +261,7 @@ const BridgePage = () => {
               justify="center"
             >
               <Text style="h4" as="h2">
-                OFT Bridge
+                NFTEarth Omnichain Bridge
               </Text>
             </Flex>
             <Flex
@@ -374,7 +374,7 @@ const BridgePage = () => {
                       <Text as="h4">Bridging...</Text>
                     )}
                     {isSuccess && (
-                      <Text css={{ color: '$primary14'}}>Token bridged, you should receive the token after the blockchain confirmations</Text>
+                      <Text css={{ color: '$primary14'}}>Bridge transacton complete. Check your address on the destination chain block explorer in the ERC20 tab to view your tokens, you Omnichain crypto wizard!</Text>
                     )}
                   </Flex>
                 </Flex>

@@ -128,17 +128,17 @@ const Navbar = () => {
           <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
             <Link href={`/${routePrefix}/collection-rankings`}>
               <NavItem active={router.pathname.includes('collection-rankings')}>
-                Explore
+                Collections
               </NavItem>
             </Link>
             <Link href="/portfolio">
-              <NavItem active={router.pathname == '/portfolio'}>Trade</NavItem>
+              <NavItem active={router.pathname == '/portfolio'}>Profile</NavItem>
             </Link>
             <Link href="/bridge">
               <NavItem active={router.pathname == '/bridge'}>Bridge</NavItem>
             </Link>
             <Link href="https://www.sushi.com/pool/42161:0xd2aaa8fc5c39dbe68344bc42d4513ea344e5d696" target="_blank">
-              <NavItem>Farming Rewards</NavItem>
+              <NavItem>Staking</NavItem>
             </Link>
           </Flex>
         </Flex>
