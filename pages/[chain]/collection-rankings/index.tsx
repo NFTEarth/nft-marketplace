@@ -19,7 +19,7 @@ import { paths } from '@reservoir0x/reservoir-sdk'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import fetcher from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES } from '../../_app'
-import supportedChains from 'utils/chains'
+import supportedChains, {DefaultChain} from 'utils/chains'
 import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
 import { useIntersectionObserver } from 'usehooks-ts'
 import LoadingSpinner from 'components/common/LoadingSpinner'
@@ -70,7 +70,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     collectionQuery.community = chain.community
   }
 
-  const { data, fetchNextPage, isFetchingPage, isValidating } = useCollections(
+  const { data, fetchNextPage, isFetchingPage, isValidating, isFetchingInitialData } = useCollections(
     collectionQuery,
     {
       fallbackData: [ssr.collections[marketplaceChain.id]],
@@ -144,7 +144,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               <ChainToggle />
             </Flex>
           </Flex>
-          {isSSR || !isMounted ? null : (
+          {(isSSR || !isMounted || isFetchingInitialData) ? null : (
             <CollectionRankingsTable
               collections={collections}
               volumeKey={volumeKey}
@@ -156,7 +156,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             css={{
               display: isFetchingPage ? 'none' : 'block',
             }}
-          ></Box>
+          />
         </Flex>
         {(isFetchingPage || isValidating) && (
           <Flex align="center" justify="center" css={{ py: '$4' }}>
@@ -183,7 +183,7 @@ export const getStaticProps: GetStaticProps<{
   ssr: {
     collections: ChainCollections
   }
-}> = async () => {
+}> = async ({ params }) => {
   const collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
     {
       sortBy: '1DayVolume',
@@ -192,27 +192,30 @@ export const getStaticProps: GetStaticProps<{
       includeTopBid: true,
     }
 
-  const promises: ReturnType<typeof fetcher>[] = []
-  supportedChains.forEach((chain) => {
-    const query = { ...collectionQuery }
-    if (chain.collectionSetId) {
-      query.collectionsSetId = chain.collectionSetId
-    } else if (chain.community) {
-      query.community = chain.community
-    }
-    promises.push(
-      fetcher(`${chain.reservoirBaseUrl}/collections/v5`, query, {
-        headers: {
-          'x-api-key': chain.apiKey || '',
-        },
-      })
-    )
+  const chain = supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
+    DefaultChain
+  const query = { ...collectionQuery }
+  if (chain.collectionSetId) {
+    query.collectionsSetId = chain.collectionSetId
+  } else if (chain.community) {
+    query.community = chain.community
+  }
+  const response = await fetcher(`${chain.reservoirBaseUrl}/collections/top-selling/v1`, query, {
+    headers: {
+      'x-api-key': chain.apiKey || '',
+    },
   })
-  const responses = await Promise.allSettled(promises)
+
   const collections: ChainCollections = {}
-  responses.forEach((response, i) => {
-    if (response.status === 'fulfilled') {
-      collections[supportedChains[i].id] = response.value.data
+
+  supportedChains.forEach((c) => {
+    if (c.id === chain.id) {
+      collections[c.id] = response.data
+      return
+    }
+
+    collections[c.id] = {
+      collections: []
     }
   })
 

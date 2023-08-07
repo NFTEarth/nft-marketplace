@@ -1,10 +1,10 @@
 import useSWR from "swr";
 
-export default function ({ chainId, contract } : { chainId: number, contract: string, tokenId: string }) {
+export default function ({ dstChainId, contract } : { dstChainId: number, contract: string, tokenId: string }) {
   return useSWR(
-    `/api/bridge/collection?chainId=${chainId}&contract=${contract}`,
+    `/api/bridge/collection?dstChainId=${dstChainId}&contract=${contract}`,
     (url: string) => {
-      if (!chainId || !contract) {
+      if (!dstChainId || !contract) {
         return null
       }
       return fetch(url).then((response) => response.json())
