@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useState} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
   faChevronDown,
@@ -15,7 +15,7 @@ import {Label} from "@radix-ui/react-label";
 
 import Layout from 'components/Layout'
 import { Footer } from 'components/Footer'
-import {Box, Button, Flex, Input, Text, Tooltip} from "components/primitives";
+import {Box, Button, Flex, Input, Select, Text, Tooltip} from "components/primitives";
 import {Dropdown, DropdownMenuItem} from "components/primitives/Dropdown";
 
 import {useMounted} from "hooks";
@@ -38,101 +38,103 @@ import ERC721Abi from "artifact/ERC721Abi.json";
 import L2ERC721BridgeAbi from "artifact/L2ERC721BridgeAbi.json";
 import LoadingSpinner from "components/common/LoadingSpinner";
 import {FullscreenModal} from "components/common/FullscreenModal";
+import baseSupportedChains, {NFT_BRIDGE} from "../../utils/chains";
+import {useTheme} from "next-themes";
 
-// export const L1BridgeContractAddress = '0x3E173b825ADEeF9661920B91A8d50B075Ad51bA5'
-// export const L2BridgeContractAddress = '0xf1F839fdd467E4087eADBbB330990077889e79c5'
-export const L1BridgeProxyAddress = '0x90aEC282ed4CDcAab0934519DE08B56F1f2aB4d7';
-export const L2BridgeProxyAddress = '0x653b58c9D23De54E44dCBFbD94C6759CdDa7f93D';
-export const OptimismMintableERC721FactoryAddress = '0xc2106ca72996e49bBADcB836eeC52B765977fd20';
-
-export const supportedChains = [
-  {
-    id: 1,
-    name: 'Ethereum',
-    iconUrl: '/icons/eth-icon-light.svg',
-    etherscanUrl: 'https://etherscan.io'
-  },
-  {
-    id: 10,
-    name: 'Optimism',
-    iconUrl: `/icons/optimism-icon-light.svg`,
-    etherscanUrl: 'https://optimistic.etherscan.io'
-  }
-]
+const SUPPORTED_NFT_CHAINS = [1,10,42161]
+const supportedChains = baseSupportedChains.filter(f => SUPPORTED_NFT_CHAINS.includes(f.id))
 
 const NFTBridgePage = () => {
+  const { theme } = useTheme()
   const isMounted = useMounted()
   const { address, isConnecting } = useAccount()
   const { chain: activeChain } = useNetwork()
   const isSmallDevice = useMediaQuery({ maxWidth: 600 }) && isMounted
-  const [chainId, setChainId] = useState(1);
+  const [ fromChainId, setFromChainId ] = useState<number>(supportedChains[0].id)
+  const [ toChainId, setToChainId ] = useState<number>(supportedChains[1].id)
   const [contract, setContract] = useState('');
   const [tokenId, setTokenId] = useState('');
   const [disabled, setDisabled] = useState(false);
-
-  if (supportedChains.length === 1) {
-    return null
-  }
+  const [openModal, setOpenModal] = useState(false);
 
   const chain = useMemo(() => {
-    return supportedChains.find((chain) => chain.id === chainId) || supportedChains[0];
-  }, [chainId]);
+    return supportedChains.find((chain) => chain.id === fromChainId) || supportedChains[0];
+  }, [fromChainId]);
 
   const toChain = useMemo(() => {
-    return supportedChains.find((chain) => chain.id !== chainId) || supportedChains[1];
-  }, [chainId]);
+    return supportedChains.find((chain) => chain.id === toChainId) || supportedChains[1];
+  }, [toChainId]);
 
   const { data: token, isLoading: isLoadingToken } = useBridgeToken({
-    chain: chain.name,
+    chain: fromChainId,
     contract,
     tokenId,
   })
 
   const { data: bridgeCollection, isLoading: isLoadingCollection } = useBridgeCollection({
-    chainId: chain.id,
+    dstChainId: toChain.id,
     contract,
     tokenId,
   })
 
-  const fromL1 = useMemo(() => chain.id === 1, [chain]);
-  const bridgeAddress = useMemo(() => fromL1 ? L1BridgeProxyAddress : L2BridgeProxyAddress, [fromL1]);
-  const collectionAddress = useMemo(() => fromL1 ? contract : bridgeCollection, [fromL1, bridgeCollection])
-  const mirrorCollectionAddress = useMemo(() => fromL1 ? bridgeCollection : contract, [fromL1, bridgeCollection])
+  const handleSetFromChain = useCallback((id: string) => {
+    const idInt = parseInt(id);
+
+    setFromChainId(idInt);
+
+    if (toChainId === idInt) {
+      setToChainId(supportedChains.find((chain) => chain.id !== idInt)?.id || 10)
+    }
+  }, [toChainId])
+
+  const handleSetToChain = useCallback((id: string) => {
+    const idInt = parseInt(id);
+
+    setToChainId(idInt);
+
+    if (chain.id === idInt) {
+      setFromChainId(supportedChains.find((chain) => chain.id !== idInt)?.id || 1)
+    }
+  }, [chain])
+
+  const bridge = useMemo(() => NFT_BRIDGE[fromChainId], [fromChainId]);
 
   const { switchNetworkAsync } = useSwitchNetwork()
   const [timestamp, setTimestamp] = useState(dayjs().add(15, 'minutes'));
 
   const { data: isApproved, refetch: refetchApproval } = useContractRead({
-    enabled: !!(address && bridgeAddress),
+    enabled: !!bridge && !!bridgeCollection && !!address,
     abi: ERC721Abi,
-    address: collectionAddress,
+    address: contract as `0x${string}`,
     functionName: 'isApprovedForAll',
-    args: [address, bridgeAddress]
+    args: [address, bridge?.proxy],
   })
 
   const { writeAsync: approveAll, error: approvalError } = useContractWrite({
     abi: ERC721Abi,
-    address: collectionAddress,
+    address: contract as `0x${string}`,
     functionName: 'setApprovalForAll',
-    args: [bridgeAddress, true]
+    args: [bridge?.proxy, true],
   })
 
   const { config, error: preparedError } = usePrepareContractWrite({
+    enabled: !!bridge && !!bridgeCollection && contract !== '' && tokenId !== '',
     abi: L2ERC721BridgeAbi,
-    address: bridgeAddress,
+    address: bridge?.proxy,
     functionName: 'bridgeERC721',
-    args: [collectionAddress, mirrorCollectionAddress, parseInt(tokenId), 1_200_000, 0x0]
+    args: [contract, bridgeCollection?.[toChainId], parseInt(tokenId), 1_200_000, 0x0]
   })
   const { data: sendData, sendTransactionAsync: depositToken, isLoading: isLoadingSend, error } = useSendTransaction(config)
   const { isLoading: isLoadingTransaction, isSuccess = true, data: txData } = useWaitForTransaction({
     hash: sendData?.hash,
+    enabled: !!sendData
   })
 
   useEffect(() => {
     if (address) {
       refetchApproval?.();
     }
-  }, [address, contract, bridgeAddress])
+  }, [address, contract, bridge])
 
   const depositNFT = async () => {
     if (isLoading) {
@@ -152,17 +154,9 @@ const NFTBridgePage = () => {
     await depositToken?.();
   };
 
-  const trigger = (
-    <Button color="gray3" size="small" css={{ py: '$3' }}>
-      <img style={{ height: 17 }} src={chain?.iconUrl} />
-      <Text style="body1">{chain?.name}</Text>
-      <Text css={{ color: '$slate10' }}>
-        <FontAwesomeIcon icon={faChevronDown} width={16} height={16} />
-      </Text>
-    </Button>
-  )
+  let isLoading = isLoadingToken || isConnecting || isLoadingCollection;
 
-  const isLoading = isLoadingToken || isConnecting || isLoadingCollection;
+  console.log('address === token?.token?.owner', address, token?.token?.owner, address === token?.token?.owner)
 
   const buttonText = useMemo(() => {
     setDisabled(false);
@@ -187,20 +181,62 @@ const NFTBridgePage = () => {
       return 'Token not found';
     }
 
-    const owner = token.owners?.find((owner: any) => owner.owner_address === address)
-
-    if (bridgeAddress === owner?.owner_address) {
+    if (token?.token?.kind === 'erc1155') {
       setDisabled(true);
-      return 'Token already bridged';
+      return 'ERC1155 Collection is not yet supported';
     }
 
-    if (address === owner?.owner_address) {
+    if ((address || '').toLowerCase() !== (token?.token?.owner || '').toLowerCase()) {
       setDisabled(true);
       return 'Not your token';
     }
 
     return 'Enable Collection for Bridging';
-  }, [contract, tokenId, token, isLoading, address, bridgeAddress])
+  }, [contract, tokenId, token, isLoading, address])
+
+  const trigger = useMemo(() => (
+    <Select.Trigger
+      title={chain.name}
+      css={{
+        py: '$3',
+        width: 'auto'
+      }}
+    >
+      <Select.Value asChild>
+        <Flex align="center" justify="center" css={{ gap: 10 }}>
+          <img style={{ height: 17 }} src={theme === 'dark' ? chain?.darkIconUrl : chain?.lightIconUrl} />
+          <Text>{chain?.name}</Text>
+        </Flex>
+      </Select.Value>
+    </Select.Trigger>
+  ), [chain, theme])
+
+  const trigger2 = useMemo(() => (
+    <Select.Trigger
+      title={toChain.name}
+      css={{
+        py: '$3',
+        width: 'auto'
+      }}
+    >
+      <Select.Value asChild>
+        <Flex align="center" justify="center" css={{ gap: 10 }} title={toChain.name}>
+          <img style={{ height: 17 }} src={theme === 'dark' ? toChain?.darkIconUrl : toChain?.lightIconUrl } />
+          <Text>{chain?.name}</Text>
+        </Flex>
+      </Select.Value>
+    </Select.Trigger>
+  ), [toChain, theme])
+
+  const modalTrigger = (
+    <Button
+      css={{ justifyContent: 'center' }}
+      onClick={depositNFT}
+      disabled={disabled}
+    >
+      {buttonText}
+    </Button>
+  )
 
   return (
     <Layout>
@@ -265,25 +301,24 @@ const NFTBridgePage = () => {
                 }}>
                   <Flex align="center">
                     <Text css={{ mr: '$2' }}>{`From : `}</Text>
-                    <Dropdown trigger={trigger} contentProps={{ sideOffset: 5 }}>
-                      {supportedChains.map((chainOption) => {
-                        return (
-                          <DropdownMenuItem
-                            key={chainOption.id}
-                            onClick={() => {
-                              setChainId(chainOption.id)
-                            }}
-                          >
-                            <Flex align="center" css={{ cursor: 'pointer' }}>
-                              <img style={{ width: 17 }} src={chainOption.iconUrl} />
+                    <Select
+                      value={`${chain.id}`}
+                      onValueChange={handleSetFromChain}
+                      trigger={trigger}
+                    >
+                      {supportedChains.map((option) => (
+                        <Select.Item key={`chain-from-${option.id}`} value={`${option.id}`}>
+                          <Select.ItemText css={{ whiteSpace: 'nowrap' }}>
+                            <Flex css={{ gap: 10 }}>
+                              <img style={{ width: 17 }} src={theme === 'dark' ? option?.darkIconUrl : option?.lightIconUrl} />
                               <Text style="body1" css={{ ml: '$2' }}>
-                                {chainOption.name}
+                                {option.name}
                               </Text>
                             </Flex>
-                          </DropdownMenuItem>
-                        )
-                      })}
-                    </Dropdown>
+                          </Select.ItemText>
+                        </Select.Item>
+                      ))}
+                    </Select>
                   </Flex>
                   <Label>
                     <Text style="subtitle3">{`Contract Address`}</Text>
@@ -312,19 +347,19 @@ const NFTBridgePage = () => {
                   <>
                     <Flex justify="between">
                       <Text style="subtitle3">{`Contract Name`}</Text>
-                      <Text style="subtitle3">{token?.collection?.name}</Text>
+                      <Text style="subtitle3">{token?.token?.collection?.name}</Text>
                     </Flex>
                     <Flex justify="between">
                       <Text style="subtitle3">{`Ethereum Address`}</Text>
-                      <Text style="subtitle3" as="a" href={`${chain.etherscanUrl}/address/${contract}`}>{truncateAddress(contract || '')}</Text>
+                      <Text style="subtitle3" as="a" href={`${chain.blockExplorers?.default}/address/${contract}`}>{truncateAddress(contract || '')}</Text>
                     </Flex>
                     <Flex justify="between">
                       <Text style="subtitle3">{`Token ID`}</Text>
-                      <Text style="subtitle3" as="a" href={`${chain.etherscanUrl}/address/${contract}?a=${tokenId}`}>{token?.token_id || ''}</Text>
+                      <Text style="subtitle3" as="a" href={`${chain.blockExplorers?.default}/address/${contract}?a=${tokenId}`}>{token?.token?.tokenId || ''}</Text>
                     </Flex>
                     <Flex justify="between">
                       <Text style="subtitle3">{`Optimism Address`}</Text>
-                      <Text style="subtitle3" as="a" href={`${toChain.etherscanUrl}/address/${mirrorCollectionAddress}`}>{truncateAddress(mirrorCollectionAddress || '')} </Text>
+                      <Text style="subtitle3" as="a" href={`${toChain.blockExplorers?.default}/address/${bridgeCollection[toChainId]}`}>{truncateAddress(bridgeCollection[toChainId] || '')} </Text>
                     </Flex>
                     <Flex justify="between">
                       <Text style="subtitle3">{`Bridge Time`}</Text>
@@ -363,10 +398,24 @@ const NFTBridgePage = () => {
                 }}>
                 <Flex align="center" justify="center" css={{ mb: '$4' }}>
                   <Text css={{ mr: '$2' }}>{`To : `}</Text>
-                  <img style={{ width: 17, height: 17 }} src={toChain.iconUrl} />
-                  <Text style="body1" css={{ ml: '$2' }}>
-                    {toChain.name}
-                  </Text>
+                  <Select
+                    value={`${toChainId}`}
+                    onValueChange={handleSetToChain}
+                    trigger={trigger2}
+                  >
+                    {supportedChains.map((option) => (
+                      <Select.Item key={`chain-to-${option.id}`} value={`${option.id}`}>
+                        <Select.ItemText css={{ whiteSpace: 'nowrap' }}>
+                          <Flex css={{ gap: 10 }}>
+                            <img style={{ width: 17 }} src={theme === 'dark' ? option?.darkIconUrl : option?.lightIconUrl} />
+                            <Text style="body1" css={{ ml: '$2' }}>
+                              {option.name}
+                            </Text>
+                          </Flex>
+                        </Select.ItemText>
+                      </Select.Item>
+                    ))}
+                  </Select>
                 </Flex>
                 <Box css={{ background: '$gray3', overflow: 'hidden', borderRadius: 8 }}>
                   <TokenMedia
@@ -374,8 +423,8 @@ const NFTBridgePage = () => {
                       () => <img src={'https://via.placeholder.com/230/AAAAAA/FFFFFF/?text='} width={230} height={230}/>
                     }
                     token={{
-                      image: token?.image_url || 'https://via.placeholder.com/230/AAAAAA/FFFFFF/?text=',
-                      tokenId: token?.token_id
+                      image: token?.token?.image || 'https://via.placeholder.com/230/AAAAAA/FFFFFF/?text=',
+                      tokenId: token?.token?.tokenId || ''
                     }}
                     style={{
                       width: '100%',
@@ -401,7 +450,7 @@ const NFTBridgePage = () => {
                             flex: 1,
                           }}
                         >
-                          {token?.collection?.name || '-'}
+                          {token?.token?.collection?.name || '-'}
                         </Text>
                       </Flex>
                       <Flex align="center" css={{ gap: '$1', minWidth: 0 }}>
@@ -414,7 +463,7 @@ const NFTBridgePage = () => {
                             flex: 1,
                           }}
                         >
-                          {token?.name || `#${token?.token_id || ''}`}
+                          {token?.token?.name || `#${token?.token?.tokenId || ''}`}
                         </Text>
                       </Flex>
                     </Flex>
@@ -423,147 +472,128 @@ const NFTBridgePage = () => {
               </Flex>
             </Flex>
             <FullscreenModal
-              trigger={<Button css={{ justifyContent: 'center' }} onClick={depositNFT} disabled={disabled}>{buttonText}</Button>}
+              trigger={modalTrigger}
+              onOpenChange={setOpenModal}
+              open={openModal}
             >
-              {`Approved : ${isApproved}`}
-              <Flex direction="column">
-                {!isLoading && (
-                  <>
-                    <Box className="wallet">
-                      <Box>
-                        {isApproved ? (
-                          <>
-                            <FontAwesomeIcon  icon={faCheck}/>
-                          </>
-                        ) : (
-                          <>
-                            <LoadingSpinner />1
-                          </>
-                        )}
-                      </Box>
+              <Flex justify="center">
+                <Flex direction="column" css={{ gap: 40, p: 40 }}>
+                  {!isLoading && (
+                    <>
+                      <Flex align="start" css={{ gap: 20 }}>
+                        <Flex align="center" css={{ gap: 20 }}>
+                          {isApproved ? (
+                            <FontAwesomeIcon icon={faCheck} style={{ fontSize: 40, color: 'hsl(142,34%,40%)' }}/>
+                          ) : (
+                            <LoadingSpinner />
+                          )}
+                          <Text style="h3">1</Text>
+                        </Flex>
 
-                      {!isApproved ? (
                         <Box>
-                          <Text style="h3" as="h3">Approve collection</Text>
+                          <Text style="h4" as="h4">Approve collection</Text>
                           <Box>
-                            Waiting for collection approval transaction to complete
+                            {!isApproved ?
+                              'Waiting for collection approval transaction to complete' :
+                              'Confirm this one-time transaction to bridge items from this collection'}
                           </Box>
                         </Box>
-                      ) : (
-                        <Box>
-                          <Text style="h3" as="h3">Approve collection</Text>
-                          <Box>
-                            Confirm this one-time transaction to bridge items from
-                            this collection
-                          </Box>
-                        </Box>
-                      )}
-                    </Box>
-
-                    <Flex>
-                      <Box>
-                        {(isApproved && isSuccess) ? (
-                          <>
-                            <FontAwesomeIcon  icon={faCheck}/>
-                          </>
-                        ) : (
-                          <>
-                            {isApproved ? (
-                              <>
-                                <LoadingSpinner />2
-                              </>
-                            ) : (
-                              <>
-                                <Box />2
-                              </>
-                            )}
-                          </>
-                        )}
-                      </Box>
-                      <Box>
-                        <Text>Initiate bridge process</Text>
-                        <Text>
-                          Confirm the transaction in your wallet to initiate the
-                          bridge process
-                        </Text>
-                      </Box>
-                    </Flex>
-                    <Close>
-                      <Button color="secondary">Cancel</Button>
-                    </Close>
-                  </>
-                )}
-
-                {(isLoading || isSuccess) && (
-                  <>
-                    {"Your bridge transaction is processing. Please allow up to 15 minutes for the transfer to finalize."}
-                    <Flex>
-                      <Box>
-                        Status
-                        {isLoadingTransaction && (
-                          <span>
-                        <LoadingSpinner />
-                        Bridging
-                      </span>
-                        )}
-                        {isSuccess && (
-                          <Box>
-                            <FontAwesomeIcon  icon={faCheck}/>
-                            Complete
-                          </Box>
-                        )}
-                      </Box>
-                      <Box>
-                        Est. Completion
-                        <span>
-                      {timestamp.toDate().toLocaleString([], {
-                        dateStyle: "short",
-                        timeStyle: "short",
-                      })}
-                    </span>
-                      </Box>
-                      <Flex>
-                        Transaction ID
-                        <a
-                          href={`${activeChain?.blockExplorers?.default?.url}/tx/${sendData?.hash}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {sendData?.hash.slice(0, 6)}...{sendData?.hash.slice(-4)}
-                        </a>
                       </Flex>
-                    </Flex>
-                    <Flex>
-                      {isLoadingTransaction && (
-                        <>
-                          <Button disabled>View NFT</Button>
-                          <Link
-                            href={`${activeChain?.blockExplorers?.default?.url}/tx/${txData?.transactionHash}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            passHref
-                          >
-                            <Button className="outline">View Transaction</Button>
-                          </Link>
-                        </>
-                      )}
-                      {(isSuccess && tokenId) && (
-                        <>
-                          <Link href={`/collection/optimism/${mirrorCollectionAddress}/${tokenId}`} passHref target="_blank">
-                            <Button>View NFT</Button>
-                          </Link>
+
+                      <Flex align="start" css={{ gap: 20 }}>
+                        <Flex align="center" css={{ gap: 20 }}>
+                          {(isApproved && isSuccess) ? (
+                            <FontAwesomeIcon icon={faCheck} style={{ fontSize: 40, color: 'hsl(142,34%,40%)' }}/>
+                          ) : (isApproved ?
+                              <LoadingSpinner /> : <Box css={{ content: '', width: 40 }}/>
+                          )}
+                          <Text style="h3">2</Text>
+                        </Flex>
+                        <Box>
+                          <Text style="h4" as="h4">Initiate bridge process</Text>
+                          <Text>
+                            Confirm the transaction in your wallet to initiate the
+                            bridge process
+                          </Text>
+                        </Box>
+                      </Flex>
+                      <Close>
+                        <Button color="secondary">Cancel</Button>
+                      </Close>
+                    </>
+                  )}
+
+                  {(isLoading || isSuccess) && (
+                    <>
+                      {"Your bridge transaction is processing. Please allow up to 15 minutes for the transfer to finalize."}
+                      <Flex>
+                        <Box>
+                          Status
+                          {isLoadingTransaction && (
+                            <span>
+                            <LoadingSpinner />
+                              {`Bridging`}
+                          </span>
+                          )}
+                          {isSuccess && (
+                            <Box>
+                              <FontAwesomeIcon  icon={faCheck}/>
+                              {`Complete`}
+                            </Box>
+                          )}
+                        </Box>
+                        <Box>
+                          Est. Completion
+                          <span>
+                          {timestamp.toDate().toLocaleString([], {
+                            dateStyle: "short",
+                            timeStyle: "short",
+                          })}
+                        </span>
+                        </Box>
+                        <Flex>
+                          {`Transaction ID`}
                           <a
-                            href={`https://twitter.com/intent/tweet?text=I%20just%20bridged%20an%20NFT%20to%20@optimismFND%20https://nftearth.exchange/collection/optimism/${mirrorCollectionAddress}/${tokenId}%20via%20@NFTEarth_L2`}
+                            href={`${activeChain?.blockExplorers?.default?.url}/tx/${sendData?.hash}`}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            <Button className="outline">Share on Twitter</Button>
+                            {sendData?.hash.slice(0, 6)}...{sendData?.hash.slice(-4)}
                           </a>
-                        </>
-                      )}
-                    </Flex>
-                  </>
-                )}
+                        </Flex>
+                      </Flex>
+                      <Flex>
+                        {isLoadingTransaction && (
+                          <>
+                            <Button disabled>View NFT</Button>
+                            <Link
+                              href={`${activeChain?.blockExplorers?.default?.url}/tx/${txData?.transactionHash}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              passHref
+                            >
+                              <Button className="outline">View Transaction</Button>
+                            </Link>
+                          </>
+                        )}
+                        {(isSuccess && tokenId) && (
+                          <>
+                            <Link href={`/collection/optimism/${bridgeCollection[toChainId]}/${tokenId}`} passHref target="_blank">
+                              <Button>View NFT</Button>
+                            </Link>
+                            <a
+                              href={`https://twitter.com/intent/tweet?text=I%20just%20bridged%20an%20NFT%20to%20@optimismFND%20https://nftearth.exchange/collection/${chain.network}/${bridgeCollection?.[toChainId]}/${tokenId}%20via%20@NFTEarth_L2`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <Button className="outline">Share on Twitter</Button>
+                            </a>
+                          </>
+                        )}
+                      </Flex>
+                    </>
+                  )}
+                </Flex>
               </Flex>
             </FullscreenModal>
           </Flex>

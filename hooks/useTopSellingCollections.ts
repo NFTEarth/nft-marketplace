@@ -42,7 +42,7 @@ export default function (
     return collection.id as string
   })
 
-  const { data: collections, isValidating: isValidatingCollections } =
+  const { data: collections, isFetchingInitialData, isValidating: isValidatingCollections } =
     useCollections(
       ids && ids.length > 0
         ? { contract: ids, includeMintStages: true }
@@ -61,5 +61,6 @@ export default function (
     collections: collectionsMap,
     data: topSellingData,
     isValidating: isValidatingCollections || topSellingSwr.isValidating,
+    isFetchingInitialData,
   }
 }

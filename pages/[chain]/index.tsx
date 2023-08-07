@@ -11,7 +11,7 @@ import { useContext, useEffect, useMemo, useState } from 'react'
 import { Footer } from 'components/Footer'
 import { useMediaQuery } from 'react-responsive'
 import { useMarketplaceChain, useMounted } from 'hooks'
-import supportedChains from 'utils/chains'
+import supportedChains, {DefaultChain} from 'utils/chains'
 import { Head } from 'components/Head'
 import { ChainContext } from 'context/ChainContextProvider'
 import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
@@ -48,6 +48,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   const {
     data: topSellingCollectionsData,
     collections: collectionsData,
+    isFetchingInitialData,
     isValidating,
   } = useTopSellingCollections(
     {
@@ -220,7 +221,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               setMinutesFilter={setMinutesFilter}
             />
           </Flex>
-          {isSSR || !isMounted ? null : (
+          {(isSSR || !isMounted || isFetchingInitialData) ? null : (
             <CollectionTopSellingTable
               topSellingCollections={topSellingCollections?.collections}
               collections={collections}
@@ -255,7 +256,7 @@ export const getStaticProps: GetStaticProps<{
   ssr: {
     topSellingCollections: ChainTopSellingCollections
   }
-}> = async () => {
+}> = async ({ params }) => {
   const now = new Date()
   const timestamp = Math.floor(now.getTime() / 1000)
   const startTime = timestamp - 1440 * 60 // 24hrs ago
@@ -268,23 +269,24 @@ export const getStaticProps: GetStaticProps<{
       includeRecentSales: true,
     }
 
-  const promises: ReturnType<typeof fetcher>[] = []
-  supportedChains.forEach((chain) => {
-    const query = { ...topSellingCollectionsQuery }
-
-    promises.push(
-      fetcher(`${chain.reservoirBaseUrl}/collections/top-selling/v1`, query, {
-        headers: {
-          'x-api-key': chain.apiKey || '',
-        },
-      })
-    )
+  const chain = supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
+    DefaultChain
+  const response = await fetcher(`${chain.reservoirBaseUrl}/collections/top-selling/v1`, topSellingCollectionsQuery, {
+    headers: {
+      'x-api-key': chain.apiKey || '',
+    },
   })
-  const responses = await Promise.allSettled(promises)
+
   const topSellingCollections: ChainTopSellingCollections = {}
-  responses.forEach((response, i) => {
-    if (response.status === 'fulfilled') {
-      topSellingCollections[supportedChains[i].id] = response.value.data
+
+  supportedChains.forEach((c) => {
+    if (c.id === chain.id) {
+      topSellingCollections[c.id] = response.data
+      return
+    }
+
+    topSellingCollections[c.id] = {
+      collections: []
     }
   })
 

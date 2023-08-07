@@ -261,7 +261,7 @@ const BridgePage = () => {
               justify="center"
             >
               <Text style="h4" as="h2">
-                OFT Bridge
+                Migrate NFTE to NFTE OFT
               </Text>
             </Flex>
             <Flex
