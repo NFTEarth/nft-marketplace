@@ -117,7 +117,7 @@ export const Modal = forwardRef<ElementRef<typeof Dialog>, Props>(
               style="body3"
               css={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}
             >
-              Powered by NFTEarth
+              Powered by NFTΞarth
             </Text>
           </Anchor>
         </Flex>
