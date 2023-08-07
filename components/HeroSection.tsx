@@ -51,7 +51,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
               color: '$whiteA12', lineHeight: 1.2
             }}
           >
-            NFTEarth
+            NFTΞarth
           </Text>
           <Image
             src="/res2.png"
@@ -70,7 +70,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
             '@lg': { width: '50%' },
           }}
         >
-          {`Trade NFTs on the Marketplace Built for L2`}
+          {`Trade and Create NFTs on the Omnichain web3 NFT hub. Earn Rewards.`}
         </Text>
         {hideLink ?? (
           <Flex css={{ gap: 10 }}>
@@ -85,7 +85,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
                   borderRadius: '$lg',
                   color: 'white',
                   justifyContent: 'center',
-                  border: '2px solid #6BE481'
+                  border: '2px solid #79ffA8'
                 }}
               >
                 Trade

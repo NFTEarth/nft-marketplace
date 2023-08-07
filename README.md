@@ -7,7 +7,8 @@ Marketplace, Launchpad, and NFT-applications - all at NFTEarth.
 
 ## About The Project
 
-![(500 × 500 px)](https://github.com/NFTEarth/nft-marketplace/assets/29180454/27aeaddc-8507-4c5c-88c8-15d2fa14f2e5)
+
+![1400 350](https://github.com/NFTEarth/nft-marketplace/assets/29180454/59fe297c-c743-4130-b76c-c641ce941996)
 
 
 
