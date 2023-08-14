@@ -223,6 +223,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
           </Flex>
           {(isSSR || !isMounted || isFetchingInitialData) ? null : (
             <CollectionTopSellingTable
+              key={`${chain.routePrefix}-top-collection`}
               topSellingCollections={topSellingCollections?.collections}
               collections={collections}
               loading={isValidating}
