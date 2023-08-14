@@ -43,6 +43,7 @@ export const CollectionTopSellingTable: FC<Props> = ({
   fillType,
 }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
+  const { routePrefix } = useMarketplaceChain()
 
   return (
     <Flex direction="column" css={{ width: '100%', pb: '$2' }}>
@@ -66,7 +67,7 @@ export const CollectionTopSellingTable: FC<Props> = ({
               case 'sale':
                 return (
                   <SaleTableRow
-                    key={collection.id}
+                    key={`sale-${routePrefix}-${collection.id}`}
                     topSellingCollection={collection}
                     collection={collections[collection.id as string]}
                     rank={i + 1}
@@ -76,7 +77,7 @@ export const CollectionTopSellingTable: FC<Props> = ({
               case 'mint':
                 return (
                   <MintTableRow
-                    key={collection.id}
+                    key={`mint-${routePrefix}-${collection.id}`}
                     topSellingCollection={collection}
                     collection={collections[collection.id as string]}
                     rank={i + 1}
@@ -87,7 +88,7 @@ export const CollectionTopSellingTable: FC<Props> = ({
               default:
                 return (
                   <AllSalesTableRow
-                    key={collection.id}
+                    key={`all-${routePrefix}-${collection.id}`}
                     topSellingCollection={collection}
                     collection={collections[collection.id as string]}
                     rank={i + 1}
@@ -278,7 +279,7 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
           <Link
             href={`/${routePrefix}/collection/${topSellingCollection.id}`}
             style={{ display: 'inline-block', minWidth: 0 }}
-            key={topSellingCollection.id}
+            key={`${routePrefix}-${topSellingCollection.id}`}
           >
             <Flex justify="between" css={{ gap: '$3' }}>
               <Flex
@@ -452,7 +453,7 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
           <Link
             href={`/${routePrefix}/collection/${topSellingCollection.id}`}
             style={{ display: 'inline-block', minWidth: 0 }}
-            key={topSellingCollection.id}
+            key={`${routePrefix}-${topSellingCollection.id}`}
           >
             <Flex justify="between" css={{ gap: '$3' }}>
               <Flex
@@ -542,7 +543,7 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
   } else {
     return (
       <TableRow
-        key={topSellingCollection.id}
+        key={`${routePrefix}-${topSellingCollection.id}`}
         css={{
           gridTemplateColumns: fiveTemplateColumns,
         }}
@@ -616,7 +617,7 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
           <Link
             href={`/${routePrefix}/collection/${topSellingCollection.id}`}
             style={{ display: 'inline-block', minWidth: 0 }}
-            key={topSellingCollection.id}
+            key={`${routePrefix}-${topSellingCollection.id}`}
           >
             <Flex justify="between" css={{ gap: '$3' }}>
               <Flex
