@@ -67,10 +67,10 @@ const List: FC<Props> = ({
         coinGeckoId: 'ethereum',
       },
       {
-        contract: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-        symbol: 'USDC',
-        decimals: 6,
-        coinGeckoId: 'usd-coin',
+        contract: '0x8c223a82E07feCB49D602150d7C2B3A4c9630310',
+        symbol: 'NFTE',
+        decimals: 18,
+        coinGeckoId: 'nftearth',
       },
     ]
   }
