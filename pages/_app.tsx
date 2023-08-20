@@ -128,7 +128,7 @@ function MyApp({
           disablePoweredByReservoir: true,
           //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)
           // Note that this impacts orders created on your marketplace (offers/listings)
-          marketplaceFees: ["0xd55c6b0a208362b18beb178e1785cf91c4ce937a:250"]
+          marketplaceFees: ["0xd55c6b0a208362b18beb178e1785cf91c4ce937a:100"]
         }}
         theme={reservoirDarkTheme(reservoirKitThemeOverrides)}
       >
