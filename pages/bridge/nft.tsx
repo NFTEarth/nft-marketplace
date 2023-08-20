@@ -45,7 +45,6 @@ const SUPPORTED_NFT_CHAINS = [1,10,42161]
 const supportedChains = baseSupportedChains.filter(f => SUPPORTED_NFT_CHAINS.includes(f.id))
 
 const NFTBridgePage = () => {
-  const { theme } = useTheme()
   const isMounted = useMounted()
   const { address, isConnecting } = useAccount()
   const { chain: activeChain } = useNetwork()
@@ -204,12 +203,12 @@ const NFTBridgePage = () => {
     >
       <Select.Value asChild>
         <Flex align="center" justify="center" css={{ gap: 10 }}>
-          <img style={{ height: 17 }} src={theme === 'dark' ? chain?.darkIconUrl : chain?.lightIconUrl} />
+          <img style={{ height: 17 }} src={chain?.darkIconUrl} />
           <Text>{chain?.name}</Text>
         </Flex>
       </Select.Value>
     </Select.Trigger>
-  ), [chain, theme])
+  ), [chain])
 
   const trigger2 = useMemo(() => (
     <Select.Trigger
@@ -221,12 +220,12 @@ const NFTBridgePage = () => {
     >
       <Select.Value asChild>
         <Flex align="center" justify="center" css={{ gap: 10 }} title={toChain.name}>
-          <img style={{ height: 17 }} src={theme === 'dark' ? toChain?.darkIconUrl : toChain?.lightIconUrl } />
+          <img style={{ height: 17 }} src={toChain?.darkIconUrl} />
           <Text>{chain?.name}</Text>
         </Flex>
       </Select.Value>
     </Select.Trigger>
-  ), [toChain, theme])
+  ), [toChain])
 
   const modalTrigger = (
     <Button
@@ -310,7 +309,7 @@ const NFTBridgePage = () => {
                         <Select.Item key={`chain-from-${option.id}`} value={`${option.id}`}>
                           <Select.ItemText css={{ whiteSpace: 'nowrap' }}>
                             <Flex css={{ gap: 10 }}>
-                              <img style={{ width: 17 }} src={theme === 'dark' ? option?.darkIconUrl : option?.lightIconUrl} />
+                              <img style={{ width: 17 }} src={option?.darkIconUrl} />
                               <Text style="body1" css={{ ml: '$2' }}>
                                 {option.name}
                               </Text>
@@ -407,7 +406,7 @@ const NFTBridgePage = () => {
                       <Select.Item key={`chain-to-${option.id}`} value={`${option.id}`}>
                         <Select.ItemText css={{ whiteSpace: 'nowrap' }}>
                           <Flex css={{ gap: 10 }}>
-                            <img style={{ width: 17 }} src={theme === 'dark' ? option?.darkIconUrl : option?.lightIconUrl} />
+                            <img style={{ width: 17 }} src={option?.darkIconUrl} />
                             <Text style="body1" css={{ ml: '$2' }}>
                               {option.name}
                             </Text>

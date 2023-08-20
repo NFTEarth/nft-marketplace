@@ -14,7 +14,6 @@ const breakPoints = [
 ];
 
 const LearnCarousel: FC = () => {
-  const { theme } = useTheme()
   const { elastic } = items;
 
   return (

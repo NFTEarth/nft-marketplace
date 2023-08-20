@@ -10,7 +10,6 @@ import NavItem from './NavItem'
 import ThemeSwitcher from './ThemeSwitcher'
 import HamburgerMenu from './HamburgerMenu'
 import MobileSearch from './MobileSearch'
-import { useTheme } from 'next-themes'
 import { useMediaQuery } from 'react-responsive'
 import { useMarketplaceChain, useMounted } from '../../hooks'
 import { useAccount } from 'wagmi'
@@ -21,7 +20,6 @@ export const NAVBAR_HEIGHT = 81
 export const NAVBAR_HEIGHT_MOBILE = 77
 
 const Navbar = () => {
-  const { theme } = useTheme()
   const { isConnected } = useAccount()
   const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
   const isMounted = useMounted()
@@ -100,21 +98,12 @@ const Navbar = () => {
         <Flex align="center">
           <Link href={`/${routePrefix}`}>
             <Box css={{ width: 112, cursor: 'pointer' }}>
-              {theme == 'dark' ? (
-                <Image
-                  src="/res2.png"
-                  width={50}
-                  height={50}
-                  alt="NFTEarth"
-                />
-              ) : (
-                <Image
-                  src="/res2.png"
-                  width={50}
-                  height={50}
-                  alt="NFTEarth"
-                />
-              )}
+              {<Image
+                src="/res2.png"
+                width={50}
+                height={50}
+                alt="NFTEarth"
+              />}
             </Box>
           </Link>
           <Box css={{ flex: 1, px: '$5', maxWidth: 600 }}>
@@ -131,9 +120,6 @@ const Navbar = () => {
                 Collections
               </NavItem>
             </Link>
-            <Link href="/portfolio">
-              <NavItem active={router.pathname == '/portfolio'}>Profile</NavItem>
-            </Link>
             <Link href="/bridge">
               <NavItem active={router.pathname == '/bridge'}>Bridge</NavItem>
             </Link>
@@ -145,7 +131,6 @@ const Navbar = () => {
       </Box>
 
       <Flex css={{ gap: '$3' }} justify="end" align="center">
-        <ThemeSwitcher />
         <CartButton />
         {isConnected ? (
           <AccountSidebar />

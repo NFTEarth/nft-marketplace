@@ -55,11 +55,10 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
   const isMobile = useMediaQuery({ maxWidth: 600 }) && isMounted
   const [isRefreshing, setIsRefreshing] = useState(false)
   const marketplaceChain = useMarketplaceChain()
-  const { theme } = useTheme()
   const etherscanImage = (
     <img
       src={
-        isMounted && theme === 'dark'
+        isMounted
           ? '/icons/etherscan-logo-light-circle.svg'
           : '/icons/etherscan-logo-circle.svg'
       }

@@ -32,6 +32,7 @@ export const reset = {
 */
 
   body: {
+    backgroundColor: 'hsl(200, 7.0%, 8.8%)',
     margin: 0 /* 1 */,
     lineHeight: 'inherit' /* 2 */,
     height: '100%',
@@ -41,6 +42,7 @@ export const reset = {
 
     // Wallet Connect Modal's zIndex
     '--wcm-z-index': 99999,
+    color: '#fff'
   },
 
   /*

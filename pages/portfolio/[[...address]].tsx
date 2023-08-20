@@ -1,5 +1,5 @@
 import { NextPage } from 'next'
-import { Text, Flex, Box } from '../../components/primitives'
+import {Text, Flex, Box, Button} from '../../components/primitives'
 import Layout from 'components/Layout'
 import { useMediaQuery } from 'react-responsive'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
@@ -12,7 +12,7 @@ import {
   useUserCollections,
   useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'
-import { useENSResolver, useMounted } from '../../hooks'
+import {useENSResolver, useMounted, useProfile} from '../../hooks'
 import { TokenTable, TokenTableRef } from 'components/portfolio/TokenTable'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import { MobileTokenFilters } from 'components/common/MobileTokenFilters'
@@ -21,6 +21,7 @@ import { FilterButton } from 'components/common/FilterButton'
 import { ListingsTable } from 'components/portfolio/ListingsTable'
 import { OffersTable } from 'components/portfolio/OffersTable'
 import { faCopy, faWallet } from '@fortawesome/free-solid-svg-icons'
+import { faTwitter, faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import ChainToggle from 'components/common/ChainToggle'
 import { Head } from 'components/Head'
@@ -40,6 +41,7 @@ import { ToastContext } from 'context/ToastContextProvider'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { Avatar } from 'components/primitives/Avatar'
 import CopyText from 'components/common/CopyText'
+import Link from "next/link";
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -55,6 +57,7 @@ export type UserToken = ReturnType<typeof useUserTokens>['data'][0]
 const IndexPage: NextPage = () => {
   const router = useRouter()
   const { address: accountAddress, isConnected } = useAccount()
+  const { data: profile } = useProfile(accountAddress)
   const address = router.query.address
     ? (router.query.address[0] as `0x${string}`)
     : accountAddress
@@ -80,6 +83,8 @@ const IndexPage: NextPage = () => {
     name: resolvedEnsName,
     shortAddress,
   } = useENSResolver(address)
+  const avatar = profile?.twitter_avatar || profile?.discord_avatar || ensAvatar
+  const banner = profile?.twitter_banner || profile?.discord_banner
 
   let collectionQuery: Parameters<typeof useUserCollections>['1'] = {
     limit: 100,
@@ -169,7 +174,7 @@ const IndexPage: NextPage = () => {
 
   return (
     <>
-      <Head />
+      <Head title={`Profile - ${resolvedEnsName ? resolvedEnsName : shortAddress}`}/>
       <Layout>
         <Flex
           direction="column"
@@ -192,49 +197,105 @@ const IndexPage: NextPage = () => {
               ) : (
                 <>
                   <Flex
-                    align="center"
-                    justify="between"
+                    direction="column"
                     css={{
-                      gap: '$4',
-                      flexDirection: 'column',
-                      alignItems: 'start',
-                      '@sm': { flexDirection: 'row', alignItems: 'center' },
+                      px: '$4',
+                      pt: '$5',
+                      pb: 0,
+                      backgroundColor: '$primary14',
+                      ...(banner ? {
+                        backgroundImage: `url(${banner}?size=1024)`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center'
+                      } : {}),
+                      borderRadius: 10,
+                      content: '',
+                      height: '225px',
+                      '@sm': {
+                        px: '$5',
+                      },
                     }}
-                  >
-                    <Flex align="center">
-                      {ensAvatar ? (
-                        <Avatar size="xxl" src={ensAvatar} />
-                      ) : (
-                        <Jazzicon
-                          diameter={64}
-                          seed={jsNumberForAddress(address as string)}
-                        />
-                      )}
-                      <Flex direction="column" css={{ ml: '$4' }}>
-                        <Text style="h5">
-                          {resolvedEnsName ? resolvedEnsName : shortAddress}
-                        </Text>
-                        <CopyText text={address as string}>
-                          <Flex align="center" css={{ cursor: 'pointer' }}>
-                            <Text
-                              style="subtitle1"
-                              color="subtle"
-                              css={{ mr: '$3' }}
-                            >
-                              {shortAddress}
+                  />
+                  <Flex direction="column" css={{ marginTop: -135, p: '$5' }}>
+                    <Flex justify="between"  css={{
+                      '@xs': {
+                        flexDirection: 'column'
+                      },
+                      '@lg': {
+                        flexDirection: 'row'
+                      },
+                      gap: 20
+                    }}>
+                      <Flex direction="column" css={{ gap: 20 }}>
+                        {avatar ? (
+                          <Avatar size="xxxl" corners="rounded" src={avatar} />
+                        ) : (
+                          <Jazzicon
+                            diameter={150}
+                            paperStyles={{ borderRadius: '10px' }}
+                            seed={jsNumberForAddress(address as string)}
+                          />
+                        )}
+                        <Flex align="center" css={{ flex: 1, alignContent: 'space-between' }}>
+                          <Flex direction="column" css={{ ml: '$4' }}>
+                            <Text style="h5">
+                              {resolvedEnsName ? resolvedEnsName : shortAddress}
                             </Text>
-                            <Box css={{ color: '$gray10' }}>
-                              <FontAwesomeIcon
-                                icon={faCopy}
-                                width={16}
-                                height={16}
-                              />
-                            </Box>
+                            <CopyText text={address as string}>
+                              <Flex align="center" css={{ cursor: 'pointer' }}>
+                                <Text
+                                  style="subtitle1"
+                                  color="subtle"
+                                  css={{ mr: '$3' }}
+                                >
+                                  {shortAddress}
+                                </Text>
+                                <Box css={{ color: '$gray10' }}>
+                                  <FontAwesomeIcon
+                                    icon={faCopy}
+                                    width={16}
+                                    height={16}
+                                  />
+                                </Box>
+                              </Flex>
+                            </CopyText>
                           </Flex>
-                        </CopyText>
+                        </Flex>
+                      </Flex>
+                      <Flex justify="end" align="end" css={{ flex: 1}}>
+                        <Flex direction="column" align="end" css={{ gap: 20 }}>
+                          <ChainToggle />
+                          <Flex align="end" justify="end" direction="column">
+                            <Flex css={{ gap: 24 }}>
+                              {profile?.twitter_id && (
+                                <Link href={`https://twitter.com/${profile?.twitter_username}`}>
+                                  <FontAwesomeIcon icon={faTwitter} size="sm" />
+                                </Link>
+                              )}
+                              {profile?.discord_id && (
+                                <Link href={`https://discord.com/users/${profile?.discord_id}`}>
+                                  <FontAwesomeIcon icon={faDiscord} size="sm" />
+                                </Link>
+                              )}
+                            </Flex>
+                            <Flex css={{ gap: 24 }}>
+                              {(address === accountAddress) && (
+                                <Button as="a" color="secondary" href={`/api/social/twitter?wallet=${accountAddress}`} size="xs" css={{ justifyContent: 'center'}}>
+                                  <FontAwesomeIcon icon={faTwitter} size="sm" />
+                                  {!profile?.twitter_id ? 'Connect Twitter' : 'Re-Connect Twitter'}
+                                </Button>
+                              )}
+                              {(address === accountAddress) && (
+                                <Button as="a" color="secondary" href={`/api/social/discord?wallet=${accountAddress}`} size="xs">
+                                  <FontAwesomeIcon icon={faDiscord} size="sm" />
+                                  {!profile?.discord_id ? 'Connect Discord' : 'Re-Connect Discord'}
+                                </Button>
+                              )}
+                            </Flex>
+                          </Flex>
+                        </Flex>
                       </Flex>
                     </Flex>
-                    <ChainToggle />
                   </Flex>
                   <Tabs.Root
                     defaultValue="items"

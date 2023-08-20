@@ -13,7 +13,7 @@ import {
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons'
 
-type ActivityTypes = Exclude<
+export type ActivityTypes = Exclude<
   NonNullable<
     NonNullable<
       Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>

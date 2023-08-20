@@ -22,7 +22,6 @@ export const SearchChainSwitcher: FC<Props> = ({
   setSearchChain,
 }) => {
   const isMounted = useMounted()
-  const { theme } = useTheme()
 
   if (!isMounted || supportedChains.length === 1) {
     return null
@@ -73,11 +72,7 @@ export const SearchChainSwitcher: FC<Props> = ({
                 }}
               >
                 <img
-                  src={
-                    theme === 'dark'
-                      ? chainOption.darkIconUrl
-                      : chainOption.lightIconUrl
-                  }
+                  src={chainOption.darkIconUrl}
                   style={{ height: 20, flexShrink: 0 }}
                 />
               </Flex>

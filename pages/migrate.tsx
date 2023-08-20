@@ -30,7 +30,6 @@ import {ToastContext} from "context/ToastContextProvider";
 import NFTEOFTAbi from 'artifact/NFTEOFTAbi.json'
 
 const BridgePage = () => {
-  const { theme } = useTheme()
   const { addToast } = useContext(ToastContext)
   const [ fromChainId, setFromChainId ] = useState<number>(OFT_CHAINS[0].id)
   const [ toChainId, setToChainId ] = useState<number>(OFT_CHAINS[1].id)
@@ -201,11 +200,11 @@ const BridgePage = () => {
     >
       <Select.Value asChild>
         <Flex align="center" justify="center" css={{ gap: 10 }}>
-          <img style={{ height: 17 }} src={theme === 'dark' ? chain?.darkIconUrl : chain?.lightIconUrl} />
+          <img style={{ height: 17 }} src={chain?.darkIconUrl} />
         </Flex>
       </Select.Value>
     </Select.Trigger>
-  ), [chain, theme])
+  ), [chain])
 
   const trigger2 = useMemo(() => (
     <Select.Trigger
@@ -217,11 +216,11 @@ const BridgePage = () => {
     >
       <Select.Value asChild>
         <Flex align="center" justify="center" css={{ gap: 10 }} title={toChain.name}>
-          <img style={{ height: 17 }} src={theme === 'dark' ? toChain?.darkIconUrl : toChain?.lightIconUrl } />
+          <img style={{ height: 17 }} src={toChain?.darkIconUrl} />
         </Flex>
       </Select.Value>
     </Select.Trigger>
-  ), [toChain, theme])
+  ), [toChain])
 
   if (!isMounted) {
     return null;
@@ -303,7 +302,7 @@ const BridgePage = () => {
                         <Select.Item key={`chain-from-${option.id}`} value={`${option.id}`}>
                           <Select.ItemText css={{ whiteSpace: 'nowrap' }}>
                             <Flex css={{ gap: 10 }}>
-                              <img style={{ width: 17 }} src={theme === 'dark' ? option?.darkIconUrl : option?.lightIconUrl} />
+                              <img style={{ width: 17 }} src={option?.darkIconUrl} />
                               <Text style="body1" css={{ ml: '$2' }}>
                                 {option.name}
                               </Text>
@@ -322,7 +321,7 @@ const BridgePage = () => {
                         <Select.Item key={`chain-to-${option.id}`} value={`${option.id}`}>
                           <Select.ItemText css={{ whiteSpace: 'nowrap' }}>
                             <Flex css={{ gap: 10 }}>
-                              <img style={{ width: 17 }} src={theme === 'dark' ? option?.darkIconUrl : option?.lightIconUrl} />
+                              <img style={{ width: 17 }} src={option?.darkIconUrl} />
                               <Text style="body1" css={{ ml: '$2' }}>
                                 {option.name}
                               </Text>
