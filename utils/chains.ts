@@ -182,6 +182,7 @@ export const OFT_CHAINS = [
     address: '0x8c223a82E07feCB49D602150d7C2B3A4c9630310',
     lightIconUrl: '/icons/eth-icon-dark.svg',
     darkIconUrl: '/icons/eth-icon-light.svg',
+    coingeckoNetworkId: 'ethereum'
   },
   {
     id: polygon.id,
@@ -189,7 +190,8 @@ export const OFT_CHAINS = [
     name: polygon.name,
     address: '0x492Fa53b88614923937B7197C87E0F7F8EEb7B20',
     lightIconUrl: '/icons/polygon-icon-dark.svg',
-    darkIconUrl: '/icons/polygon-icon-light.svg'
+    darkIconUrl: '/icons/polygon-icon-light.svg',
+    coingeckoNetworkId: 'polygon-pos'
   },
   {
     id: arbitrum.id,
@@ -197,7 +199,8 @@ export const OFT_CHAINS = [
     name: arbitrum.name,
     address: '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
     lightIconUrl: '/icons/arbitrum-icon-dark.svg',
-    darkIconUrl: '/icons/arbitrum-icon-light.svg'
+    darkIconUrl: '/icons/arbitrum-icon-light.svg',
+    coingeckoNetworkId: 'arbitrum-one'
   },
   {
     id: optimism.id,
@@ -206,6 +209,7 @@ export const OFT_CHAINS = [
     address: '0x8637725aDa78db0674a679CeA2A5e0A0869EF4A1',
     lightIconUrl: '/icons/optimism-icon-dark.svg',
     darkIconUrl: '/icons/optimism-icon-light.svg',
+    coingeckoNetworkId: 'optimistic-ethereum'
   },
   {
     id: bsc.id,
@@ -214,6 +218,7 @@ export const OFT_CHAINS = [
     address: '0x1912A3504E59d1C1B060bf2d371DEB00b70E8796',
     lightIconUrl: '/icons/bsc-icon-dark.svg',
     darkIconUrl: '/icons/bsc-icon-light.svg',
+    // coingeckoNetworkId: 'bsc'
   },
   {
     id: base.id,
@@ -222,6 +227,7 @@ export const OFT_CHAINS = [
     address: '0xc2106ca72996e49bBADcB836eeC52B765977fd20',
     lightIconUrl: '/icons/base-icon-dark.svg',
     darkIconUrl: '/icons/base-icon-light.svg',
+    // coingeckoNetworkId: 'base'
   },
   {
     id: linea.id,
@@ -229,7 +235,8 @@ export const OFT_CHAINS = [
     name: linea.name,
     address: '0x2140Ea50bc3B6Ac3971F9e9Ea93A1442665670e4',
     lightIconUrl: '/icons/linea-icon-dark.svg',
-    darkIconUrl: '/icons/linea-icon-light.svg'
+    darkIconUrl: '/icons/linea-icon-light.svg',
+    // coingeckoNetworkId: 'linea'
   },
   {
     id: avalanche.id,
@@ -237,7 +244,8 @@ export const OFT_CHAINS = [
     name: avalanche.name,
     address: '0xD47E4F1ef1AA4090bc27420BDD5cB379Ced81440',
     lightIconUrl: '/icons/avalanche-icon-dark.svg',
-    darkIconUrl: '/icons/avalanche-icon-light.svg'
+    darkIconUrl: '/icons/avalanche-icon-light.svg',
+    // coingeckoNetworkId: 'avalanche'
   },
   // {
   //   id: 5000,

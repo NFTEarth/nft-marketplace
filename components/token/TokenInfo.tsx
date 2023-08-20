@@ -25,7 +25,6 @@ type Props = {
 
 export const TokenInfo: FC<Props> = ({ token, collection }) => {
   const marketplaceChain = useMarketplaceChain()
-  const { theme } = useTheme()
   const [isExpanded, setIsExpanded] = useState(false)
   const descriptionRef = useRef<HTMLParagraphElement | null>(null)
   const isMounted = useMounted()
@@ -57,7 +56,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
   const etherscanImage = (
     <img
       src={
-        isMounted && theme === 'dark'
+        isMounted
           ? '/icons/etherscan-logo-light-circle.svg'
           : '/icons/etherscan-logo-circle.svg'
       }

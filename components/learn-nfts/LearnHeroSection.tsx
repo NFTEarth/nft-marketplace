@@ -4,7 +4,6 @@ import { useTheme } from 'next-themes'
 import { useMediaQuery } from 'react-responsive'
 
 const LearnHeroSection: FC = () => {
-  const { theme } = useTheme()
   const isMobile = useMediaQuery({ query: '(max-width: 968px)' })
 
   return (

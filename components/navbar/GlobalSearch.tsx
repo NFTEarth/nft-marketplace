@@ -43,7 +43,6 @@ type Props = {
 }
 
 const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
-  const { theme } = useTheme()
 
   const tokenCount = useMemo(
     () => formatNumber(collection.tokenCount),
@@ -94,9 +93,7 @@ const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
             <Box css={{ height: 12, minWidth: 'max-content' }}>
               <img
                 src={
-                  theme === 'dark'
-                    ? collection.darkChainIcon
-                    : collection.lightChainIcon
+                  collection.darkChainIcon
                 }
                 style={{ height: 12 }}
               />

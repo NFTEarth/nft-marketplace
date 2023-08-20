@@ -131,10 +131,10 @@ const HamburgerMenu = () => {
                   pt: '24px',
                 }}
               >
-                Explore
+                Collections
               </Text>
             </Link>
-            <Link href="/portfolio" legacyBehavior>
+            <Link href="/bridge" legacyBehavior>
               <Text
                 style="subtitle1"
                 css={{
@@ -144,7 +144,7 @@ const HamburgerMenu = () => {
                   pt: '24px',
                 }}
               >
-                Sell
+                Bridge
               </Text>
             </Link>
             <Link href="/portfolio" legacyBehavior>
@@ -231,19 +231,20 @@ const HamburgerMenu = () => {
                   Portfolio
                 </Text>
               </Link>
-              <Anchor
-                href="https://docs.reservoir.tools/docs"
-                target="_blank"
-                css={{
-                  borderBottom: '1px solid $gray4',
-                  cursor: 'pointer',
-                  pb: '$4',
-                  pt: '24px',
-                  width: '100%',
-                }}
-              >
-                <Text style="subtitle1">Docs</Text>
-              </Anchor>
+              <Link href="/bridge" legacyBehavior>
+                <Text
+                  style="subtitle1"
+                  css={{
+                    borderBottom: '1px solid $gray4',
+                    cursor: 'pointer',
+                    pb: '$4',
+                    pt: '24px',
+                    width: '100%',
+                  }}
+                >
+                  Bridge
+                </Text>
+              </Link>
             </Flex>
             <Box>
               <ConnectWalletButton />
@@ -260,7 +261,7 @@ const HamburgerMenu = () => {
             borderTop: '1px solid $gray4',
           }}
         >
-          <a href="https://twitter.com/reservoir0x" target="_blank">
+          <a href="https://twitter.com/NFTEarth_L2" target="_blank">
             <Button
               css={{ justifyContent: 'center', width: '44px', height: '44px' }}
               type="button"
@@ -270,7 +271,6 @@ const HamburgerMenu = () => {
               <FontAwesomeIcon icon={faTwitter} width={20} height={20} />
             </Button>
           </a>
-          <ThemeSwitcher />
         </Flex>
       </Flex>
     </FullscreenModal>

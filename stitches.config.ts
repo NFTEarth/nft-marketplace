@@ -1,17 +1,11 @@
 import {
-  crimson,
-  slate,
   crimsonDark,
   slateDark,
   greenDark,
-  green,
-  lime,
-  limeA,
   limeDark,
   limeDarkA,
   whiteA,
   redDark,
-  red,
   blackA,
 } from '@radix-ui/colors'
 import { createStitches } from '@stitches/react'
@@ -33,14 +27,15 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
   createStitches({
     theme: {
       colors: {
-        ...crimson,
-        ...slate,
-        ...red,
+        ...crimsonDark,
+        ...limeDark,
+        ...limeDarkA,
+        ...slateDark,
+        ...greenDark,
+        ...redDark,
         ...whiteA,
         ...blackA,
-        ...green,
-        ...lime,
-        ...limeA,
+
         //Aliases
 
         //Primary
@@ -52,12 +47,12 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         primary6: '$lime6',
         primary7: '$lime7',
         primary8: '$lime8',
-        primary9: 'hsl(141,100%,84%)',
-        primary10: 'hsl(141, 100%, 75%)',
-        primary11: 'hsl(141,100%,60%)',
-        primary12: 'hsl(141,100%,50%)',
-        primary13: 'hsl(141, 72%, 47%)',
-        primary14: 'hsl(142,34%,40%)',
+        primary9: '$lime9',
+        primary10: '$lime10',
+        primary11: '$lime11',
+        primary12: '$lime12',
+        primary13: 'hsl(145, 25%, 39%)',
+        primary14: 'hsl(142, 34%, 51%)',
 
         //Secondary
         secondary1: '$limeA1',
@@ -87,26 +82,15 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         gray11: '$slate11',
         gray12: '$slate12',
 
-        //Red
-        red1: '$crimson1',
-        red2: '$crimson2',
-        red3: '$crimson3',
-        red4: '$crimson4',
-        red5: '$crimson5',
-        red6: '$crimson6',
-        red7: '$crimson7',
-        red8: '$crimson8',
-        red9: '$crimson9',
-        red10: '$crimson10',
-        red11: '$crimson11',
-        red12: '$crimson12',
+        accent: '#79ffa8',
 
-        neutralBg: 'white',
-        neutralBgSubtle: 'white',
-        panelShadow: 'rgba(0,0,0,0.1)',
-        panelBg: '$gray2',
-        panelBorder: 'transparent',
-        dropdownBg: 'white',
+        neutralBgSubtle: '$gray3',
+        neutralBg: '$gray1',
+
+        panelBg: '$gray3',
+        panelBorder: '$slate7',
+        panelShadow: 'transparent',
+        dropdownBg: '$gray3',
         sidebarOverlay: 'black',
       },
       space: {
@@ -299,78 +283,8 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
       motion: '(prefers-reduced-motion)',
       hover: '(any-hover: hover)',
       dark: '(prefers-color-scheme: dark)',
-      light: '(prefers-color-scheme: light)',
+      light: '(prefers-color-scheme: dark)',
     },
   })
 
 export const globalReset = globalCss(reset)
-
-export const darkTheme = createTheme({
-  colors: {
-    ...crimsonDark,
-    ...limeDark,
-    ...limeDarkA,
-    ...slateDark,
-    ...greenDark,
-    ...whiteA,
-    ...redDark,
-    ...blackA,
-
-    //Aliases
-
-    //Primary
-    primary1: '$lime1',
-    primary2: '$lime2',
-    primary3: '$lime3',
-    primary4: '$lime4',
-    primary5: '$lime5',
-    primary6: '$lime6',
-    primary7: '$lime7',
-    primary8: '$lime8',
-    primary9: '$lime9',
-    primary10: '$lime10',
-    primary11: '$lime11',
-    primary12: '$lime12',
-    primary13: 'hsl(145, 25%, 39%)',
-    primary14: 'hsl(142, 34%, 51%)',
-
-    //Secondary
-    secondary1: '$limeA1',
-    secondary2: '$limeA2',
-    secondary3: '$limeA3',
-    secondary4: '$limeA4',
-    secondary5: '$limeA5',
-    secondary6: '$limeA6',
-    secondary7: '$limeA7',
-    secondary8: '$limeA8',
-    secondary9: '$limeA9',
-    secondary10: '$limeA10',
-    secondary11: '$limeA11',
-    secondary12: '$limeA12',
-
-    //Gray
-    gray1: '$slate1',
-    gray2: '$slate2',
-    gray3: '$slate3',
-    gray4: '$slate4',
-    gray5: '$slate5',
-    gray6: '$slate6',
-    gray7: '$slate7',
-    gray8: '$slate8',
-    gray9: '$slate9',
-    gray10: '$slate10',
-    gray11: '$slate11',
-    gray12: '$slate12',
-
-    accent: '#79ffa8',
-
-    neutralBgSubtle: '$gray3',
-    neutralBg: '$gray1',
-
-    panelBg: '$gray3',
-    panelBorder: '$slate7',
-    panelShadow: 'transparent',
-    dropdownBg: '$gray3',
-    sidebarOverlay: 'black',
-  },
-})

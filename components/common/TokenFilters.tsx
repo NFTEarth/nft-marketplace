@@ -58,13 +58,12 @@ export const TokenFilters: FC<Props> = ({
       <CollapsibleContent
         css={{
           position: 'sticky',
-          top: 16 + 80,
-          height: `calc(100vh - ${NAVBAR_HEIGHT}px - ${isOwner ? 90 : 32})`,
+          top: 16 + NAVBAR_HEIGHT,
+          height: `calc(100vh - ${NAVBAR_HEIGHT - (isOwner ? 90 : 32)}px)`,
           overflow: 'auto',
         }}
       >
         <Flex direction="column">
-          <Text style="subtitle1" css={{ mb: '$2', ml: '$3' }}></Text>
           {collections?.map((collection) => {
             let selected = collection?.collection?.id == filterCollection
 

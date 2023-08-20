@@ -27,7 +27,6 @@ const ChainToggle: FC = () => {
   const router = useRouter()
   const { chain, switchCurrentChain } = useContext(ChainContext)
   const isMounted = useMounted()
-  const { theme } = useTheme()
 
   const switchChains = useCallback(
     (chainOption: (typeof supportedChains)[0]) => {
@@ -69,7 +68,7 @@ const ChainToggle: FC = () => {
             }}
           >
             <img
-              src={theme === 'dark' ? chain.darkIconUrl : chain.lightIconUrl}
+              src={chain.darkIconUrl}
               style={{ height: 20 }}
             />
             <Text style="body1">{chain.name}</Text>
@@ -111,9 +110,7 @@ const ChainToggle: FC = () => {
               <Flex css={{ width: 30 }} justify="center" align="center">
                 <img
                   src={
-                    theme === 'dark'
-                      ? supportedChain.darkIconUrl
-                      : supportedChain.lightIconUrl
+                    supportedChain.darkIconUrl
                   }
                   style={{ height: 20 }}
                 />
@@ -153,9 +150,7 @@ const ChainToggle: FC = () => {
               >
                 <img
                   src={
-                    theme === 'dark'
-                      ? chainOption.darkIconUrl
-                      : chainOption.lightIconUrl
+                    chainOption.darkIconUrl
                   }
                   style={{ height: 20 }}
                 />

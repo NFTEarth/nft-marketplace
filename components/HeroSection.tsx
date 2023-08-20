@@ -9,8 +9,6 @@ interface IProp {
 }
 
 const HeroSection: FC<IProp> = ({ hideLink }) => {
-  const { theme } = useTheme()
-
   return (
     <Flex
       as="section"

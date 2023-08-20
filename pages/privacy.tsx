@@ -30,7 +30,7 @@ const PrivacyPage = () => {
             <Text style="h2" as="h2">
               Privacy Policy
             </Text>
-            <strong className='dark:text-white mx-3'>Last updated on January 15, 2023</strong>
+            <strong className='text-white mx-3'>Last updated on January 15, 2023</strong>
           </Flex>
 
           <Flex css={{ my: '$6', gap: 20 }} direction="column">

@@ -6,4 +6,5 @@ export { default as useENSResolver } from './useENSResolver'
 export { default as useOpenseaFees } from './useOpenseaFees'
 export { default as useChainStats } from './useChainStats'
 export { default as useRKModalPrepareDeeplink } from './useRKModalPrepareDeeplink'
+export { default as useProfile } from './useProfile'
 

@@ -74,8 +74,6 @@ const companySectionLinks = [
 ]
 
 export const Footer = () => {
-  const { theme }  = useTheme()
-
   return (
     <Flex
       justify="between"
