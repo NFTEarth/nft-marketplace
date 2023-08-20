@@ -68,7 +68,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
             '@lg': { width: '50%' },
           }}
         >
-          {`Trade and Create NFTs on the Omnichain web3 NFT hub. Earn Rewards.`}
+          {`Omnichain NFT Hub. Trade and Create NFTs, Earn Rewards.`}
         </Text>
         {hideLink ?? (
           <Flex css={{ gap: 10 }}>
