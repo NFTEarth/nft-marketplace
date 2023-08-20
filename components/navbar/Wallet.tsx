@@ -37,6 +37,16 @@ const currencies = [
     coinGeckoId: 'weth',
   },
   {
+    address: '0x8c223a82E07feCB49D602150d7C2B3A4c9630310',
+    symbol: 'NFTE',
+    decimals: mainnet.nativeCurrency.decimals,
+    chain: {
+      id: mainnet.id,
+      name: mainnet.name,
+    },
+    coinGeckoId: 'nftearth',
+  },
+  {
     address: zeroAddress,
     symbol: 'MATIC',
     decimals: polygon.nativeCurrency.decimals,
@@ -67,16 +77,6 @@ const currencies = [
     coinGeckoId: 'weth',
   },
   {
-    address: '0x912ce59144191c1204e64559fe8253a0e49e6548',
-    symbol: 'ARB',
-    decimals: arbitrum.nativeCurrency.decimals,
-    chain: {
-      id: arbitrum.id,
-      name: arbitrum.name,
-    },
-    coinGeckoId: 'arbitrum',
-  },
-  {
     address: '0x51b902f19a56f0c8e409a34a215ad2673edf3284',
     symbol: 'NFTE',
     decimals: arbitrum.nativeCurrency.decimals,
@@ -84,7 +84,7 @@ const currencies = [
       id: arbitrum.id,
       name: arbitrum.name,
     },
-    coinGeckoId: 'arbitrum',
+    coinGeckoId: 'nftearth',
   },
 ]
 
