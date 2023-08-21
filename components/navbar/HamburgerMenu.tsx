@@ -88,15 +88,15 @@ const HamburgerMenu = () => {
           </RadixDialog.Close>
         </Flex>
         {isConnected ? (
-          <Flex
-            css={{
-              flexDirection: 'column',
-              justifyContent: 'flex-start',
-              height: '100%',
-              py: '$5',
-              px: '$4',
-            }}
-          >
+        <Flex
+          css={{
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            height: '100%',
+            py: '$5',
+            px: '$4',
+          }}
+        >
             <Link href={`/portfolio/${address}`} legacyBehavior>
               <Flex
                 css={{
@@ -144,22 +144,22 @@ const HamburgerMenu = () => {
                   pt: '24px',
                 }}
               >
-                Quest
-              </Text>
-            </Link>
-            <Link href="/bridge" legacyBehavior>
-              <Text
-                style="subtitle1"
-                css={{
-                  borderBottom: '1px solid $gray4',
-                  cursor: 'pointer',
-                  pb: '$4',
-                  pt: '24px',
-                }}
-              >
-                Bridge
-              </Text>
-            </Link>
+                Quests
+            </Text>
+          </Link>
+          <Link href="/bridge" legacyBehavior>
+            <Text
+              style="subtitle1"
+              css={{
+                borderBottom: '1px solid $gray4',
+                cursor: 'pointer',
+                pb: '$4',
+                pt: '24px',
+              }}
+            >
+              Bridge
+            </Text>
+          </Link>
             <Link href="/portfolio" legacyBehavior>
               <Flex
                 direction="column"
@@ -255,7 +255,7 @@ const HamburgerMenu = () => {
                     width: '100%',
                   }}
                 >
-                  Quest
+                  Quests
                 </Text>
               </Link>
               <Link href="/bridge" legacyBehavior>
