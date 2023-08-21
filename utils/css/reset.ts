@@ -326,7 +326,7 @@ Ensure the default browser behavior of the `hidden` attribute.
     display: 'none',
   },
 
-  '#nprogress .bar': {
-    background: 'hsl(142, 34%, 51%) !important'
+  'body #nprogress .bar': {
+    background: '#58ad77 linear-gradient(-109.6deg, #58ad77 11.2%, #a96ede 91.1%)'
   }
 }
