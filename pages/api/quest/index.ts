@@ -7,9 +7,13 @@ const account = db.collection('account');
 const questEntryListHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { wallet } = req.query;
 
+  if (!wallet) {
+
+  }
+
   const accountData = await account.findOne({
     wallet: {
-      $regex: (wallet as string || '0x'),
+      $regex: wallet,
       $options: 'i'
     }
   })

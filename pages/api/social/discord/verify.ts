@@ -70,7 +70,7 @@ const handleDiscordVerify = async (req: NextApiRequest, res: NextApiResponse) =>
 
     const existingAccount = await account.findOne({
       wallet: {
-        $regex: (wallet as string || '0x'),
+        $regex: wallet,
         $options: 'i'
       }
     }).catch(() => null);

@@ -134,7 +134,7 @@ export const calculateReward: CalculateReward = async (chainId, account, collect
 
   const questEntry = await entry.findOne({
     wallet: {
-      $regex: (account as string || '0x'),
+      $regex: account,
       $options: 'i'
     }
   }).catch(() => null) || []
