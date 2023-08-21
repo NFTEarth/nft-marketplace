@@ -6,10 +6,11 @@ const account = db.collection('account')
 const handleProfile = async (req: NextApiRequest, res: NextApiResponse) => {
   const { address } = req.query;
 
-  console.log('address', address);
-
   const accountData = await account.findOne({
-    wallet: (address as string || '0x').toLowerCase()
+    wallet: {
+      $regex: (address as string || '0x'),
+      $options: 'i'
+    }
   }, {
     projection: {
       twitter_oauth_token: 0,
@@ -18,7 +19,9 @@ const handleProfile = async (req: NextApiRequest, res: NextApiResponse) => {
       discord_refresh_token: 0,
       discord_access_token: 0
     }
-  })
+  }).catch(() => ({
+    error: 'Unknown Error'
+  }))
 
   return res.json(accountData || null)
 }

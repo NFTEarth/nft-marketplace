@@ -2,7 +2,7 @@ import useSWR from "swr";
 
 export default function useProfile(address: string | undefined) {
   const { data, isLoading } = useSWR(
-    (address && address !== '' ) ? `/api/social/profile?address=${address}` :  null,
+    (address && address !== '' ) ? `/api/profile?address=${address}` :  null,
     (url: string) => {
       if (!address) {
         return null

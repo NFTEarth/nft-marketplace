@@ -13,36 +13,6 @@
     "exp": 25
   },
   {
-    "id": 2,
-    "title": "Follow NFTEarth on Twitter",
-    "description": "Link your Twitter handle to your NFTEarth user profile and follow us on Twitter!",
-    "type": "one-time",
-    "tasks": [
-      {
-        "type": "connection",
-        "name": "twitter"
-      },
-      {
-        "type": "twitter_follow",
-        "user": "NFTEarth_L2"
-      }
-    ],
-    "exp": 25
-  },
-  {
-    "id": 3,
-    "title": "Retweet NFTEarth's tweet",
-    "description": "Retweet a specific tweet posted by NFTEarth to earn XP now.",
-    "type": "one-time",
-    "tasks": [
-      {
-        "type": "twitter_retweet",
-        "id": "1634099617821257728"
-      }
-    ],
-    "exp": 125
-  },
-  {
     "id": 4,
     "title": "Join Discord",
     "description": "Join the NFTEarth comunity in Discord and earn XP.",
