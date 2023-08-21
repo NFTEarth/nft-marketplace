@@ -42,7 +42,9 @@ const handleTwitterVerify = async (req: NextApiRequest, res: NextApiResponse) =>
   if (data.username !== 'USER') {
     const otherAccount = await account.findOne({
       twitter_id: data.user_id,
-      wallet: {$ne: wallet}
+      wallet: {
+        $ne: wallet
+      }
     }).catch(() => null)
 
     if (otherAccount) {
