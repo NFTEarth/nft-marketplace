@@ -127,6 +127,10 @@ export const calculateReward: CalculateReward = async (chainId, account, collect
   const isNFTE = paymentToken === chain?.address
   let value = +ethers.utils.formatEther(amount || '0').toString()
 
+  if (!account) {
+    return 0;
+  }
+
   if (isNFTE) {
     const nfteToNative = await fetchNFTEToEthValue(chainId).catch(() => ({ nativePrice: 0 }))
     value = BigNumber.from(value).mul(BigNumber.from(nfteToNative?.nativePrice)).toNumber()
