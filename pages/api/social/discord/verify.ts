@@ -55,7 +55,12 @@ const handleDiscordVerify = async (req: NextApiRequest, res: NextApiResponse) =>
   if (data.username !== 'USER') {
     const otherAccount = await account.findOne({
       discord_id: data.id,
-      wallet: { $ne: wallet }
+      wallet: {
+        $ne: {
+          $regex: wallet,
+          $options: 'i'
+        }
+      }
     }).catch(() => null);
 
     if (otherAccount) {
@@ -67,7 +72,10 @@ const handleDiscordVerify = async (req: NextApiRequest, res: NextApiResponse) =>
     }
 
     const existingAccount = await account.findOne({
-      wallet: wallet
+      wallet: {
+        $regex: (wallet as string || '0x'),
+        $options: 'i'
+      }
     }).catch(() => null);
 
     if (!existingAccount) {

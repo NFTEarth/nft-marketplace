@@ -12,6 +12,7 @@ import { useMemo, useState } from 'react'
 import { zeroAddress, formatUnits } from 'viem'
 import { useCoinConversion } from '@reservoir0x/reservoir-kit-ui'
 import {useProfile} from "../../hooks";
+import {formatNumber} from "../../utils/numbers";
 
 //CONFIGURABLE: Here you may configure currencies that you want to display in the wallet menu. Native currencies,
 //like ETH/MATIC etc need to be fetched in a different way. Configure them below
@@ -118,6 +119,8 @@ const Wallet = () => {
     enabled: !!address,
     allowFailure: false,
   })
+
+  console.log('profile', profile, address);
 
   //CONFIGURABLE: Configure these by just changing the chainId to fetch native balance info, in addition to changing this
   // also make sure you change the enhancedCurrencies function to take into account for these new balances
@@ -230,11 +233,7 @@ const Wallet = () => {
             <Text style="body2" color="subtle" css={{ mb: '$2' }}>
               Total Exp
             </Text>
-            <FormatCurrency
-              style="h4"
-              amount={profile?.exp || 0}
-              css={{ mb: '$4' }}
-            />
+            <Text style="h4" css={{ mb: '$4' }}>{formatNumber(profile?.exp || 0)}</Text>
           </Flex>
         </Flex>
         <Button

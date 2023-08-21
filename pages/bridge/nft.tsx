@@ -155,8 +155,6 @@ const NFTBridgePage = () => {
 
   let isLoading = isLoadingToken || isConnecting || isLoadingCollection;
 
-  console.log('address === token?.token?.owner', address, token?.token?.owner, address === token?.token?.owner)
-
   const buttonText = useMemo(() => {
     setDisabled(false);
 

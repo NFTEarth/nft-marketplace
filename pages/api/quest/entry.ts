@@ -137,7 +137,10 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   let accountData = await account.findOne({
-    wallet: wallet
+    wallet: {
+      $regex: (wallet as string || '0x'),
+      $options: 'i'
+    }
   })
 
   if (!accountData) {
@@ -147,7 +150,10 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
     })
 
     accountData = await account.findOne({
-      wallet: wallet
+      wallet: {
+        $regex: (wallet as string || '0x'),
+        $options: 'i'
+      }
     })
   }
 
@@ -155,7 +161,10 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
     quest_id: questId,
     $or: [
       {
-        wallet: wallet
+        wallet: {
+          $regex: (wallet as string || '0x'),
+          $options: 'i'
+        }
       },
       accountData?.discord_id ?? {
         discord_id: accountData?.discord_id,

@@ -54,7 +54,10 @@ const handleTwitterVerify = async (req: NextApiRequest, res: NextApiResponse) =>
     }
 
     const existingAccount = await account.findOne({
-      wallet: wallet
+      wallet: {
+        $regex: (wallet as string || '0x'),
+        $options: 'i'
+      }
     }).catch(() => null)
 
     if (!existingAccount) {
