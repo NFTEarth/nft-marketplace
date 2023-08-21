@@ -57,10 +57,10 @@ export type UserToken = ReturnType<typeof useUserTokens>['data'][0]
 const IndexPage: NextPage = () => {
   const router = useRouter()
   const { address: accountAddress, isConnected } = useAccount()
-  const { data: profile } = useProfile(accountAddress)
   const address = router.query.address
     ? (router.query.address[0] as `0x${string}`)
     : accountAddress
+  const { data: profile } = useProfile(address)
   const [tabValue, setTabValue] = useState('items')
   const [itemView, setItemView] = useState<ItemView>('list')
 
@@ -198,10 +198,10 @@ const IndexPage: NextPage = () => {
                 <>
                   <Flex
                     direction="column"
+                    align="end"
+                    justify="end"
                     css={{
-                      px: '$4',
-                      pt: '$5',
-                      pb: 0,
+                      p: '$4',
                       backgroundColor: '$primary14',
                       ...(banner ? {
                         backgroundImage: `url(${banner}?size=1024)`,
@@ -210,12 +210,30 @@ const IndexPage: NextPage = () => {
                       } : {}),
                       borderRadius: 10,
                       content: '',
-                      height: '225px',
-                      '@sm': {
-                        px: '$5',
-                      },
+                      height: '225px'
                     }}
-                  />
+                  >
+                    <Flex justify="center" css={{ gap: 24, zIndex: 2 }}>
+                      {profile?.twitter_id && (
+                        <Link target="_blank" href={`https://twitter.com/${profile?.twitter_username}`}>
+                          <FontAwesomeIcon icon={faTwitter} size="sm"  style={{
+                            padding: 5,
+                            border: '1px #fff solid',
+                            borderRadius: 5,
+                          }} />
+                        </Link>
+                      )}
+                      {profile?.discord_id && (
+                        <Link target="_blank" href={`https://discord.com/users/${profile?.discord_id}`}>
+                          <FontAwesomeIcon icon={faDiscord} size="xl" style={{
+                            padding: 5,
+                            border: '1px #fff solid',
+                            borderRadius: 5,
+                          }} />
+                        </Link>
+                      )}
+                    </Flex>
+                  </Flex>
                   <Flex direction="column" css={{ marginTop: -135, p: '$5' }}>
                     <Flex justify="between"  css={{
                       '@xs': {
@@ -236,8 +254,8 @@ const IndexPage: NextPage = () => {
                             seed={jsNumberForAddress(address as string)}
                           />
                         )}
-                        <Flex align="center" css={{ flex: 1, alignContent: 'space-between' }}>
-                          <Flex direction="column" css={{ ml: '$4' }}>
+                        <Flex align="center" justify="center" css={{ flex: 1, alignContent: 'space-between' }}>
+                          <Flex direction="column">
                             <Text style="h5">
                               {resolvedEnsName ? resolvedEnsName : shortAddress}
                             </Text>
@@ -264,27 +282,14 @@ const IndexPage: NextPage = () => {
                       </Flex>
                       <Flex justify="end" align="end" css={{ flex: 1}}>
                         <Flex direction="column" align="end" css={{ gap: 20 }}>
-                          <ChainToggle />
-                          <Flex align="end" justify="end" direction="column">
+                          <Flex align="end" justify="end" direction="column" css={{ gap: 20 }}>
                             <Flex css={{ gap: 24 }}>
-                              {profile?.twitter_id && (
-                                <Link href={`https://twitter.com/${profile?.twitter_username}`}>
-                                  <FontAwesomeIcon icon={faTwitter} size="sm" />
-                                </Link>
-                              )}
-                              {profile?.discord_id && (
-                                <Link href={`https://discord.com/users/${profile?.discord_id}`}>
-                                  <FontAwesomeIcon icon={faDiscord} size="sm" />
-                                </Link>
-                              )}
-                            </Flex>
-                            <Flex css={{ gap: 24 }}>
-                              {(address === accountAddress) && (
-                                <Button as="a" color="secondary" href={`/api/social/twitter?wallet=${accountAddress}`} size="xs" css={{ justifyContent: 'center'}}>
-                                  <FontAwesomeIcon icon={faTwitter} size="sm" />
-                                  {!profile?.twitter_id ? 'Connect Twitter' : 'Re-Connect Twitter'}
-                                </Button>
-                              )}
+                              {/*{(address === accountAddress) && (*/}
+                              {/*  <Button as="a" color="secondary" href={`/api/social/twitter?wallet=${accountAddress}`} size="xs" css={{ justifyContent: 'center'}}>*/}
+                              {/*    <FontAwesomeIcon icon={faTwitter} size="sm" />*/}
+                              {/*    {!profile?.twitter_id ? 'Connect Twitter' : 'Re-Connect Twitter'}*/}
+                              {/*  </Button>*/}
+                              {/*)}*/}
                               {(address === accountAddress) && (
                                 <Button as="a" color="secondary" href={`/api/social/discord?wallet=${accountAddress}`} size="xs">
                                   <FontAwesomeIcon icon={faDiscord} size="sm" />
@@ -293,6 +298,7 @@ const IndexPage: NextPage = () => {
                               )}
                             </Flex>
                           </Flex>
+                          <ChainToggle />
                         </Flex>
                       </Flex>
                     </Flex>
