@@ -120,6 +120,9 @@ const Navbar = () => {
                 Collections
               </NavItem>
             </Link>
+            <Link href="/quest">
+              <NavItem active={router.pathname == '/quest'}>Quest</NavItem>
+            </Link>
             <Link href="/bridge">
               <NavItem active={router.pathname == '/bridge'}>Bridge</NavItem>
             </Link>
