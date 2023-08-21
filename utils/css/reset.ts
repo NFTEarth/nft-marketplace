@@ -325,4 +325,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   '[hidden]': {
     display: 'none',
   },
+
+  '#nprogress .bar': {
+    background: 'hsl(142, 34%, 51%) !important'
+  }
 }
