@@ -134,6 +134,19 @@ const HamburgerMenu = () => {
                 Collections
               </Text>
             </Link>
+            <Link href="/quest" legacyBehavior>
+              <Text
+                style="subtitle1"
+                css={{
+                  borderBottom: '1px solid $gray4',
+                  cursor: 'pointer',
+                  pb: '$4',
+                  pt: '24px',
+                }}
+              >
+                Quest
+              </Text>
+            </Link>
             <Link href="/bridge" legacyBehavior>
               <Text
                 style="subtitle1"
@@ -229,6 +242,20 @@ const HamburgerMenu = () => {
                   }}
                 >
                   Portfolio
+                </Text>
+              </Link>
+              <Link href="/quest" legacyBehavior>
+                <Text
+                  style="subtitle1"
+                  css={{
+                    borderBottom: '1px solid $gray4',
+                    cursor: 'pointer',
+                    pb: '$4',
+                    pt: '24px',
+                    width: '100%',
+                  }}
+                >
+                  Quest
                 </Text>
               </Link>
               <Link href="/bridge" legacyBehavior>

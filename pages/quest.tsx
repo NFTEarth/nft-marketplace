@@ -1,0 +1,150 @@
+import { NextPage } from 'next'
+import { Text, Flex, Box, Button } from 'components/primitives'
+import Layout from 'components/Layout'
+import { useMounted, useProfile, useQuestEntries } from 'hooks'
+import { useRouter } from 'next/router'
+import QuestsOneTime from 'components/quests/QuestsOneTime'
+import QuestSecion from 'components/quests/QuestsSection'
+import * as Dialog from '@radix-ui/react-dialog'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { AnimatedOverlay, AnimatedContent } from 'components/primitives/Dialog'
+import { useState, useEffect } from 'react'
+import { faClose } from '@fortawesome/free-solid-svg-icons'
+import {
+  QuestRegisterUserName,
+  QuestFollowTwitter,
+  QuestRetweet,
+  QuestJoinDiscord,
+  QuestListNFT,
+  QuestBuyNFTInNFTEOnAnyChain,
+  QuestListNFTInNFTEOnAnyChain,
+  QuestMakeOfferForNFT,
+  QuestLeaderboard,
+} from 'components/quests/templates'
+import { useAccount } from "wagmi";
+
+const QuestsPage: NextPage = () => {
+  const isMounted = useMounted()
+  const { address } = useAccount()
+  const [open, setOpen] = useState(false)
+  const [quest, setQuest] = useState<number>(0)
+  const { data: entries } = useQuestEntries()
+  const { data: profile } = useProfile(address);
+
+  const displayContent = (value: number) => {
+    switch (value) {
+      case 1:
+        return <QuestRegisterUserName id={1} disabled={(entries || []).find((q: any) => q.quest_id === 1)} />
+      case 2:
+        return <QuestFollowTwitter id={2} profile={profile} disabled={(entries || []).find((q: any) => q.quest_id === 2)} />
+      case 3:
+        return <QuestRetweet id={3} profile={profile} disabled={(entries || []).find((q: any) => q.quest_id === 3)}/>
+      case 4:
+        return <QuestJoinDiscord id={4} profile={profile} disabled={(entries || []).find((q: any) => q.quest_id === 4)}/>
+      case 5:
+        return <QuestListNFT id={5} disabled={(entries || []).find((q: any) => q.quest_id === 5)}/>
+      case 6:
+        return <QuestMakeOfferForNFT id={6} disabled={(entries || []).find((q: any) => q.quest_id === 6)}/>
+      case 7:
+        return <QuestListNFTInNFTEOnAnyChain id={7} disabled={(entries || []).find((q: any) => q.quest_id === 7)}/>
+      case 8:
+        return <QuestBuyNFTInNFTEOnAnyChain id={8} disabled={(entries || []).find((q: any) => q.quest_id === 8)}/>
+      case 9:
+        return <QuestLeaderboard id={9} disabled={(entries || []).find((q: any) => q.quest_id === 9)}/>
+      default:
+        return null
+    }
+  }
+  
+  return (
+    <Layout>
+      <Box
+        css={{
+          p: 24,
+          height: '100%',
+          '@bp800': {
+            p: '$6',
+          },
+        }}
+      >
+        <QuestSecion />
+        <Box>
+          <Text
+            css={{ mb: 15, ml: 5, mt: 30 }}
+            style="h4"
+            as="h4"
+          >
+            One-time Quests
+          </Text>
+          {isMounted && <QuestsOneTime setOpen={setOpen} setQuest={setQuest} />}
+        </Box>
+        {isMounted && (
+          <Dialog.Root defaultOpen open={open} modal>
+            <Dialog.Portal>
+              <AnimatedOverlay
+                style={{
+                  position: 'fixed',
+                  zIndex: 1000,
+                  inset: 0,
+                  width: '100vw',
+                  height: '100vh',
+                  backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                  backdropFilter: '20px',
+                  opacity: '0.9',
+                }}
+                onClick={() => setOpen( false)}
+              />
+              <AnimatedContent
+                style={{
+                  outline: 'unset',
+                  position: 'fixed',
+                  zIndex: 1000,
+                  transform: 'translate(-50%, 10%)',
+                  height: '70vh',
+                  width: '70vw'
+                }}
+              >
+                <Flex
+                  justify="between"
+                  css={{
+                    position: 'relative',
+                    borderTop: '1px solid $blackA11',
+                    borderStyle: 'solid',
+                    pt: '$5',
+                    background: '$gray1',
+                    padding: '$5',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '20px',
+                    '@bp600': {
+                      flexDirection: 'column',
+                      gap: '20px',
+                    },
+                  }}
+                >
+                  <Dialog.Close asChild>
+                    <button
+                      style={{
+                        position: 'absolute',
+                        top: 10,
+                        right: 15,
+                      }}
+                      onClick={() => setOpen(false)}
+                      className="IconButton"
+                      aria-label="Close"
+                    >
+                      <FontAwesomeIcon icon={faClose} size="xl" />
+                    </button>
+                  </Dialog.Close>
+                  <Box>{displayContent(quest)}</Box>
+                </Flex>
+              </AnimatedContent>
+            </Dialog.Portal>
+          </Dialog.Root>
+        )}
+      </Box>
+    </Layout>
+  )
+}
+
+export default QuestsPage

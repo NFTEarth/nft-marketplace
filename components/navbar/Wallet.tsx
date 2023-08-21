@@ -1,6 +1,5 @@
 import CryptoCurrencyIcon from 'components/primitives/CryptoCurrencyIcon'
 import {
-  Box,
   Button,
   Flex,
   FormatCrypto,
@@ -12,6 +11,7 @@ import { useAccount, useContractReads, erc20ABI, useBalance } from 'wagmi'
 import { useMemo, useState } from 'react'
 import { zeroAddress, formatUnits } from 'viem'
 import { useCoinConversion } from '@reservoir0x/reservoir-kit-ui'
+import {useProfile} from "../../hooks";
 
 //CONFIGURABLE: Here you may configure currencies that you want to display in the wallet menu. Native currencies,
 //like ETH/MATIC etc need to be fetched in a different way. Configure them below
@@ -105,6 +105,7 @@ const currencyCoingeckoIds = currencies
 const Wallet = () => {
   const [viewAll, setViewAll] = useState(false)
   const { address } = useAccount()
+  const { data: profile } = useProfile(address)
   const { data: nonNativeBalances } = useContractReads({
     contracts: nonNativeCurrencies.map((currency) => ({
       abi: erc20ABI,
@@ -114,7 +115,7 @@ const Wallet = () => {
       args: [address as any],
     })),
     watch: true,
-    enabled: address ? true : false,
+    enabled: !!address,
     allowFailure: false,
   })
 
@@ -142,7 +143,7 @@ const Wallet = () => {
       return map
     }, {} as Record<string, (typeof usdConversions)[0]>)
 
-    return currencies.map((currency, i) => {
+    return currencies.map((currency) => {
       let balance: string | number | bigint = 0n
       if (currency.address === zeroAddress) {
         //CONFIGURABLE: Configure these to show the fetched balance results configured above in the useBalance hooks
@@ -213,16 +214,29 @@ const Wallet = () => {
       }}
     >
       <Text css={{ p: '$3' }}>Wallet</Text>
-      <Box css={{ width: '100%', height: 1, background: '$gray1' }}></Box>
       <Flex direction="column" align="center" css={{ p: '$4', width: '100%' }}>
-        <Text style="body2" color="subtle" css={{ mb: '$2' }}>
-          Total Balance
-        </Text>
-        <FormatCurrency
-          style="h4"
-          amount={totalUsdBalance}
-          css={{ mb: '$4' }}
-        />
+        <Flex direction="row" css={{ width: '100%', justifyContent: 'space-around' }}>
+          <Flex direction="column" align="center">
+            <Text style="body2" color="subtle" css={{ mb: '$2' }}>
+              Total Balance
+            </Text>
+            <FormatCurrency
+              style="h4"
+              amount={totalUsdBalance}
+              css={{ mb: '$4' }}
+            />
+          </Flex>
+          <Flex direction="column" align="center">
+            <Text style="body2" color="subtle" css={{ mb: '$2' }}>
+              Total Exp
+            </Text>
+            <FormatCurrency
+              style="h4"
+              amount={profile?.exp || 0}
+              css={{ mb: '$4' }}
+            />
+          </Flex>
+        </Flex>
         <Button
           css={{ width: '100%', justifyContent: 'center' }}
           onClick={() => {
@@ -268,7 +282,6 @@ const Wallet = () => {
                   <Text style="body2" color="subtle">
                     {currency.chain.name}
                   </Text>
-                  <Text style="body2" color="subtle"></Text>
                   <FormatCurrency amount={currency.usdPrice} />
                 </Flex>
               </Flex>
