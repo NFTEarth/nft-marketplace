@@ -6,9 +6,17 @@ const account = db.collection('account')
 const handleProfile = async (req: NextApiRequest, res: NextApiResponse) => {
   const { address } = req.query;
 
+  if (!address) {
+    return res.json({
+      status: 'ERROR',
+      code: 408,
+      message: 'Invalid session, please reconnect your wallet',
+    })
+  }
+
   const accountData = await account.findOne({
     wallet: {
-      $regex: (address as string || '0x'),
+      $regex: address,
       $options: 'i'
     }
   }, {
