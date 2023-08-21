@@ -102,7 +102,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
                 Trade
               </Button>
             </Link>
-            <Link href="/quest" passHref legacyBehavior>
+            <Link href="/quests" passHref legacyBehavior>
               <Button
                 as="a"
                 color="secondary"
