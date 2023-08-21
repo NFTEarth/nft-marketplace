@@ -40,6 +40,9 @@ export const Quest = ({
         padding: '20px 30px',
         border: '2px solid #6BE481',
         background: '$gray1',
+        ...(completed?.(number) ? {
+          filter: 'brightness(50%)'
+        } : {})
       }}
     >
       {locked(number) ? (
