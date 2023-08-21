@@ -134,7 +134,7 @@ const HamburgerMenu = () => {
                 Collections
               </Text>
             </Link>
-            <Link href="/quest" legacyBehavior>
+            <Link href="/quests" legacyBehavior>
               <Text
                 style="subtitle1"
                 css={{
@@ -244,7 +244,7 @@ const HamburgerMenu = () => {
                   Portfolio
                 </Text>
               </Link>
-              <Link href="/quest" legacyBehavior>
+              <Link href="/quests" legacyBehavior>
                 <Text
                   style="subtitle1"
                   css={{

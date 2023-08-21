@@ -138,7 +138,7 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
 
   let accountData = await account.findOne({
     wallet: {
-      $regex: (wallet as string || '0x'),
+      $regex: wallet,
       $options: 'i'
     }
   })
@@ -151,28 +151,34 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
 
     accountData = await account.findOne({
       wallet: {
-        $regex: (wallet as string || '0x'),
+        $regex: wallet,
         $options: 'i'
       }
     })
   }
 
+  const entryQuery: any[] = [{
+    wallet: {
+      $regex: wallet,
+      $options: 'i'
+    }
+  }]
+
+  if (accountData?.discord_id) {
+    entryQuery.push({
+      discord_id: accountData?.discord_id,
+    })
+  }
+
+  if (accountData?.twitter_id) {
+    entryQuery.push({
+      twitter_id: accountData?.twitter_id,
+    })
+  }
+
   const questEntryData = await questEntry.findOne({
     quest_id: questId,
-    $or: [
-      {
-        wallet: {
-          $regex: (wallet as string || '0x'),
-          $options: 'i'
-        }
-      },
-      accountData?.discord_id ?? {
-        discord_id: accountData?.discord_id,
-      },
-      accountData?.twitter_id ?? {
-        twitter_id: accountData?.twitter_id
-      }
-    ].filter(Boolean)
+    $or: entryQuery
   })
 
   if (questEntryData) {
