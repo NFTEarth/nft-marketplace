@@ -56,10 +56,7 @@ const handleDiscordVerify = async (req: NextApiRequest, res: NextApiResponse) =>
     const otherAccount = await account.findOne({
       discord_id: data.id,
       wallet: {
-        $ne: {
-          $regex: wallet,
-          $options: 'i'
-        }
+        $ne: wallet
       }
     }).catch(() => null);
 
@@ -91,8 +88,8 @@ const handleDiscordVerify = async (req: NextApiRequest, res: NextApiResponse) =>
       $set: {
         discord_id: data.id,
         discord_username: `${data.username}#${data.discriminator}`,
-        discord_avatar: `https://cdn.discordapp.com/avatars/${data.id}/${data.avatar}.jpeg`,
-        discord_banner: `https://cdn.discordapp.com/banners/${data.id}/${data.banner}.jpeg`,
+        discord_avatar: `https://cdn.discordapp.com/avatars/${data.id}/${data.avatar}.png?size=512`,
+        discord_banner: `https://cdn.discordapp.com/banners/${data.id}/${data.banner}.png?size=2048`,
         discord_code: code,
         discord_access_token: authData.access_token,
         discord_refresh_token: authData.refresh_token

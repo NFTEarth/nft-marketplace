@@ -204,9 +204,9 @@ const IndexPage: NextPage = () => {
                       p: '$4',
                       backgroundColor: '$primary14',
                       ...(banner ? {
-                        backgroundImage: `url(${banner}?size=1024)`,
+                        backgroundImage: `url(${banner})`,
                         backgroundSize: 'cover',
-                        backgroundPosition: 'center'
+                        backgroundPosition: 'center',
                       } : {}),
                       borderRadius: 10,
                       content: '',
