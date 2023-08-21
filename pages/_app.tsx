@@ -3,12 +3,14 @@ import AnalyticsProvider, {
 } from 'components/AnalyticsProvider'
 initializeAnalytics()
 import ErrorTrackingProvider from 'components/ErrorTrackingProvider'
-
+import nProgress from 'nprogress'
+import { Router } from 'next/router'
 import { Inter } from '@next/font/google'
 import type { AppContext, AppProps } from 'next/app'
 import { default as NextApp } from 'next/app'
 import { globalReset } from 'stitches.config'
 import '@rainbow-me/rainbowkit/styles.css'
+import 'nprogress/nprogress.css'
 import {
   RainbowKitProvider,
   getDefaultWallets,
@@ -72,6 +74,10 @@ const reservoirKitThemeOverrides = {
   primaryColor: '#79FFA8',
   primaryHoverColor: '#79FFEB',
 }
+
+Router.events.on("routeChangeStart", nProgress.start);
+Router.events.on("routeChangeError", nProgress.done);
+Router.events.on("routeChangeComplete", nProgress.done);
 
 function AppWrapper(props: AppProps & { baseUrl: string }) {
   return (
