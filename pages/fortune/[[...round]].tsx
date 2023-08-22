@@ -2,7 +2,7 @@ import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {useCountdown} from 'usehooks-ts'
 import useSound from 'use-sound'
 import {parseEther} from "ethers/lib/utils";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {
   faVolumeUp,
   faVolumeMute,
@@ -12,18 +12,20 @@ import {
   faForwardStep
 } from "@fortawesome/free-solid-svg-icons";
 import { CreateTypes } from 'canvas-confetti'
+import {useMediaQuery} from "react-responsive";
+import {AddressZero} from "@ethersproject/constants";
 import ReactCanvasConfetti from 'react-canvas-confetti'
+import Link from 'next/link'
 
 import Layout from 'components/Layout'
+import { Head } from 'components/Head'
 import Wheel from "components/fortune/Wheel";
-import {Box, Button, Flex, FormatCryptoCurrency, FormatCurrency, Text} from 'components/primitives'
 import Player, {PlayerType} from "components/fortune/Player";
+import FortunePrize, {PrizeType} from "components/fortune/Prize";
 import LoadingSpinner from "components/common/LoadingSpinner";
+import {Box, Button, Flex, FormatCryptoCurrency, FormatCurrency, Text} from 'components/primitives'
+
 import {useMounted} from "hooks";
-import Link from "next/link";
-import {useMediaQuery} from "react-responsive";
-import FortunePrize, {PrizeType} from "../../components/fortune/Prize";
-import {AddressZero} from "@ethersproject/constants";
 
 const convertTimer = (time: number) => {
   const mind = time % (60 * 60);
@@ -164,6 +166,26 @@ const fortunePrizes: PrizeType[] = [
   }
 ]
 
+const getTitleText = (status: number, totalPrize: string, convertedCountdown: any) => {
+  if (status === 0) {
+    return `${convertedCountdown.minutes}:${convertedCountdown.seconds} • Ξ${totalPrize} • Fortune  | NFTEarth`
+  }
+
+  if (status === 1) {
+    return `Generating Random Number... • Ξ${totalPrize} • Fortune  | NFTEarth`
+  }
+
+  if (status === 2) {
+    return `Drawing Winner... • Ξ${totalPrize} • Fortune  | NFTEarth`
+  }
+
+  if (status === 3) {
+    return `Winner Drawn • Ξ${totalPrize} • Fortune  | NFTEarth`
+  }
+
+  return `Preparing Game... • Fortune  | NFTEarth`
+}
+
 const FortunePage = () => {
   const [status, setStatus] = useState(0)
   const [enableAudio, setEnableAudio] = useState(false)
@@ -295,8 +317,11 @@ const FortunePage = () => {
     return null;
   }
 
+  const totalPrize = '0.03'
+
   return (
     <Layout>
+      <Head title={getTitleText(status, totalPrize, convertedCountdown)}/>
       <Box
         css={{
           p: 24,
