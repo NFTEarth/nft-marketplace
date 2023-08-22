@@ -202,7 +202,7 @@ const FortunePage = () => {
   const [countdown, { startCountdown, resetCountdown }] = useCountdown({
     countStart: 60 * 5,
     countStop: 0,
-    intervalMs: 100,
+    intervalMs: 1000,
   })
 
   const convertedCountdown = useMemo(() => convertTimer(countdown), [countdown])
