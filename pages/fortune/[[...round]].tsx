@@ -164,7 +164,7 @@ const fortunePrizes: PrizeType[] = [
   }
 ]
 
-const GamePage = () => {
+const FortunePage = () => {
   const [status, setStatus] = useState(0)
   const [enableAudio, setEnableAudio] = useState(false)
   const [showEntryForm, setShowEntryForm] = useState(false)
@@ -354,23 +354,23 @@ const GamePage = () => {
                 <Flex align="center" justify="between">
                   <Text>Current Round</Text>
                   <Flex css={{ gap: 10 }}>
-                    <Link href="/yolo/history" passHref legacyBehavior>
+                    <Link href="/fortune/history" passHref legacyBehavior>
                       <Button as="a" size="xs" color="secondary">
                         <FontAwesomeIcon icon={faHistory} width={15} height={15}/>
                         {!isMobile && (<Text>History</Text>)}
                       </Button>
                     </Link>
-                    <Link href="/yolo/1" passHref legacyBehavior>
+                    <Link href="/fortune/1" passHref legacyBehavior>
                       <Button as="a" size="xs" color="secondary">
                         <FontAwesomeIcon icon={faArrowLeft} width={15} height={15}/>
                       </Button>
                     </Link>
-                    <Link href="/yolo/3" passHref legacyBehavior>
+                    <Link href="/fortune/3" passHref legacyBehavior>
                       <Button as="a" size="xs" color="secondary">
                         <FontAwesomeIcon icon={faArrowRight} width={15} height={15}/>
                       </Button>
                     </Link>
-                    <Link href="/yolo" passHref legacyBehavior>
+                    <Link href="/fortune" passHref legacyBehavior>
                       <Button as="a" size="xs" color="secondary">
                         <FontAwesomeIcon icon={faForwardStep} width={15} height={15}/>
                       </Button>
@@ -615,4 +615,4 @@ const GamePage = () => {
   )
 }
 
-export default GamePage;
+export default FortunePage;

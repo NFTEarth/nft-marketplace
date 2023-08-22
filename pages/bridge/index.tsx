@@ -13,7 +13,6 @@ import {useConnectModal} from "@rainbow-me/rainbowkit";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowRight} from "@fortawesome/free-solid-svg-icons";
 import { ethers, BigNumber } from 'ethers';
-import {useTheme} from "next-themes";
 import {ContractFunctionConfig, zeroAddress} from "viem";
 import {useDebounce} from "usehooks-ts";
 import {Abi} from "abitype";

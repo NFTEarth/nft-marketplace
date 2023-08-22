@@ -2,7 +2,6 @@ import { FC } from 'react'
 import { Box, Text, Flex, Anchor, Button } from './primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
-import {useTheme} from "next-themes";
 
 type SectionTitleProps = {
   title: string

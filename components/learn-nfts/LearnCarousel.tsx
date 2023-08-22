@@ -2,7 +2,6 @@ import Link from 'next/link'
 
 import { Box, Flex, Text } from '../primitives'
 import { FC } from 'react'
-import { useTheme } from 'next-themes'
 // import Carousel from "react-elastic-carousel";
 import { items } from './styled/resource.json'
 

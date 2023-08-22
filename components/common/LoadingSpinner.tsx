@@ -26,7 +26,7 @@ const LoadingSpinner: FC<Props> = ({ css }) => {
         animation: `${spin} 1s cubic-bezier(0.76, 0.35, 0.2, 0.7) infinite`,
         ...css,
       }}
-    ></Box>
+    />
   )
 }
 

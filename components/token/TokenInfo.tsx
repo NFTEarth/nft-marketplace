@@ -9,7 +9,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { styled } from '../../stitches.config'
-import { useTheme } from 'next-themes'
 import { useMarketplaceChain, useMounted } from 'hooks'
 import { truncateAddress } from 'utils/truncate'
 import ReactMarkdown from 'react-markdown'

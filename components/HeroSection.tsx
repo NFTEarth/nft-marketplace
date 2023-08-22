@@ -2,7 +2,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Box, Button, Flex, Grid, Text } from './primitives'
 import { FC } from 'react'
-import { useTheme } from 'next-themes'
 
 interface IProp {
   hideLink?: boolean
