@@ -67,7 +67,7 @@ const getProgressColor = (percent: number) => {
 const Wheel = (props: WheelProps) => {
   const { container, status, players, countdown, onWheelEnd, ...restProps } = props;
 
-  const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
+  const chartComponentRef = useRef<typeof HighchartsReact>(null);
   const spinIntervalRef = useRef<ReturnType<typeof setInterval>>();
   const triangleRef = useRef<any>();
   const animationSpeed = 40;
@@ -179,6 +179,10 @@ const Wheel = (props: WheelProps) => {
           if (triangleRef.current) {
             triangleRef.current.destroy();
           }
+
+          if (chart) {
+            chart.reflow()
+          }
         }
       },
       title: {
@@ -250,7 +254,6 @@ const Wheel = (props: WheelProps) => {
         }
       }}
       options={options}
-      allowChartUpdate
       {...restProps}
     />
   )
