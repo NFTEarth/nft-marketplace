@@ -329,7 +329,7 @@ const FortunePage = () => {
                 direction="column"
                 css={{
                   borderRadius: 10,
-                  backgroundColor: '$primary3',
+                  backgroundColor: '$gray3',
                   p: '$4',
                   gridArea: 'player'
                 }}
@@ -346,7 +346,7 @@ const FortunePage = () => {
                 css={{
                   p: '$3',
                   borderRadius: 10,
-                  backgroundColor: '$primary3',
+                  backgroundColor: '$gray3',
                   justifyContent: 'space-between',
                   gridArea: 'main'
                 }}
@@ -461,7 +461,7 @@ const FortunePage = () => {
             justify="center"
             css={{
               borderRadius: 10,
-              backgroundColor: '$primary3',
+              backgroundColor: '$gray3',
               p: '$4',
               gap: 20,
               gridArea: 'stat'
@@ -535,7 +535,7 @@ const FortunePage = () => {
                 direction="column"
                 css={{
                   borderRadius: 10,
-                  backgroundColor: '$primary3',
+                  backgroundColor: '$gray3',
                   gridArea: 'pot',
                   gap: 20,
                   p: '$4'
@@ -585,7 +585,7 @@ const FortunePage = () => {
                 align="center"
                 css={{
                   borderRadius: 10,
-                  backgroundColor: '$primary3',
+                  backgroundColor: '$gray3',
                   p: '$4',
                   gridArea: 'cta'
                 }}>
