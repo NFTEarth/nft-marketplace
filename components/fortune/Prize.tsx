@@ -10,7 +10,7 @@ export type PrizeType = {
   tokenId?: bigint
 }
 
-const YoloPrize = ({ data } : { data: PrizeType }) => {
+const FortunePrize = ({ data } : { data: PrizeType }) => {
   return (
     <Flex
       title={data.bidderName}
@@ -45,4 +45,4 @@ const YoloPrize = ({ data } : { data: PrizeType }) => {
   )
 }
 
-export default YoloPrize;
+export default FortunePrize;

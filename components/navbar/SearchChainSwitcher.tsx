@@ -7,7 +7,6 @@ import {
 } from 'components/primitives'
 import * as TooltipPrimitive from '@radix-ui/react-tooltip'
 import { useMounted } from 'hooks'
-import { useTheme } from 'next-themes'
 import { Dispatch, FC, SetStateAction } from 'react'
 import supportedChains from 'utils/chains'
 import { TooltipArrow } from 'components/primitives/Tooltip'

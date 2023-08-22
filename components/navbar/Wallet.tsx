@@ -233,7 +233,7 @@ const Wallet = () => {
             <Text style="body2" color="subtle" css={{ mb: '$2' }}>
               Total Exp
             </Text>
-            <Text style="h4" css={{ mb: '$4' }}>{formatNumber(profile?.exp || 0)}</Text>
+            <Text style="h5" css={{ mb: '$4' }}>{formatNumber(profile?.exp || 0)}</Text>
           </Flex>
         </Flex>
         <Button

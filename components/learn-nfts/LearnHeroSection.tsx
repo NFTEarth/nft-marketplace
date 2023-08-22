@@ -1,6 +1,5 @@
 import { Box, Flex, Text } from '../primitives'
 import { FC } from 'react'
-import { useTheme } from 'next-themes'
 import { useMediaQuery } from 'react-responsive'
 
 const LearnHeroSection: FC = () => {

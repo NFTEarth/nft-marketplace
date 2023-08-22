@@ -39,7 +39,6 @@ import L2ERC721BridgeAbi from "artifact/L2ERC721BridgeAbi.json";
 import LoadingSpinner from "components/common/LoadingSpinner";
 import {FullscreenModal} from "components/common/FullscreenModal";
 import baseSupportedChains, {NFT_BRIDGE} from "../../utils/chains";
-import {useTheme} from "next-themes";
 
 const SUPPORTED_NFT_CHAINS = [1,10,42161]
 const supportedChains = baseSupportedChains.filter(f => SUPPORTED_NFT_CHAINS.includes(f.id))
