@@ -1,5 +1,4 @@
 import { ListModal, ListStep, useTokens } from '@reservoir0x/reservoir-kit-ui'
-import { Button } from 'components/primitives'
 import {
   cloneElement,
   ComponentProps,
@@ -17,11 +16,13 @@ import {
   useSwitchNetwork,
 } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
-import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
-import { zeroAddress } from 'viem'
 import { mainnet, arbitrum } from "wagmi/chains";
-import {base} from "../../utils/chains";
+import { zeroAddress } from 'viem'
+
+import { Button } from 'components/primitives'
+import { ToastContext } from 'context/ToastContextProvider'
+import {base} from "utils/chains";
 
 type ListingCurrencies = ComponentPropsWithoutRef<
   typeof ListModal
