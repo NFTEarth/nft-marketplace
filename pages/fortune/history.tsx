@@ -16,6 +16,8 @@ import Link from "next/link";
 import {ItemView} from "../../components/portfolio/ViewToggle";
 import {ChangeEvent, useState} from "react";
 import {zeroAddress} from "viem";
+import Image from "next/image";
+import ChainToggle from "../../components/common/ChainToggle";
 
 const FortuneHistory = () => {
   const [type, setType] = useState<string>("all")
@@ -35,8 +37,12 @@ const FortuneHistory = () => {
           },
         }}
       >
-        <Flex justify="center" css={{ mb: 30 }}>
-          <Text style="h5">Fortune</Text>
+        <Flex justify="between" css={{ mb: 30 }}>
+          <Flex align="center" css={{ gap: 10 }}>
+            <Image src="/icons/fortune.png" width={40} height={40} objectFit="contain" alt="Fortune"/>
+            <Text style="h4">Fortune</Text>
+          </Flex>
+          <ChainToggle />
         </Flex>
         <Flex
           direction="column"
