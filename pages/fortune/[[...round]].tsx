@@ -21,8 +21,10 @@ import FortunePrize, {PrizeType} from "components/fortune/Prize";
 import Confetti from "components/common/Confetti";
 import LoadingSpinner from "components/common/LoadingSpinner";
 import {Box, Button, Flex, FormatCryptoCurrency, FormatCurrency, CryptoCurrencyIcon, Text} from 'components/primitives'
-import {useMounted, useFortune} from "hooks";
+import {useMounted, useFortune, useMarketplaceChain} from "hooks";
 import { styled } from 'stitches.config'
+import supportedChains, {FORTUNE_CHAINS} from "../../utils/chains";
+import ChainToggle from "../../components/common/ChainToggle";
 
 const Video = styled('video', {});
 
@@ -71,6 +73,7 @@ const FortunePage = () => {
   const { data: players, setPlayers } = useFortune<PlayerType[]>(d => d.players)
   const { data: durationLeft, setDurationLeft } = useFortune<number>(d => d.durationLeft)
 
+  const marketplaceChain = useMarketplaceChain()
   const mounted = useMounted()
   const isMobile = useMediaQuery({ maxWidth: 600 })
   const [countdown, { startCountdown, resetCountdown }] = useCountdown({
@@ -112,6 +115,28 @@ const FortunePage = () => {
   }
 
   const totalPrize = '0.03'
+
+  if (!FORTUNE_CHAINS.includes(marketplaceChain.id)) {
+    return (
+      <Layout>
+        <Flex
+          align="center"
+          justify="center"
+          direction="column"
+          css={{
+            height: 400,
+            gap: 40
+          }}
+        >
+          <Text style="h4">{`Fortune currently only supported on ${FORTUNE_CHAINS.map((chainId: number) => {
+            return supportedChains.find(c => c.id === chainId)?.name || ''
+          }).join(', ')}`}</Text>
+
+          <ChainToggle/>
+        </Flex>
+      </Layout>
+    )
+  }
 
   return (
     <Layout>

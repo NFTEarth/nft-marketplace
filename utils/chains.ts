@@ -257,6 +257,10 @@ export const OFT_CHAINS = [
   // }
 ]
 
+export const FORTUNE_CHAINS = [
+  arbitrum.id
+]
+
 export default [
   DefaultChain,
   {

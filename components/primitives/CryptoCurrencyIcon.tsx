@@ -23,7 +23,7 @@ const CryptoCurrencyIcon: FC<Props> = ({
     chainId !== undefined ? chain.id === chainId : chain.active
   )
 
-  const tokenChain = OFT_CHAINS.find(c => c.id === chainId)
+  const tokenChain = OFT_CHAINS.find(c => c.id === chain?.id)
   const isNFTE = address.toLowerCase() === tokenChain?.address.toLowerCase()
 
   return (
