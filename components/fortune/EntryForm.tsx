@@ -1,6 +1,6 @@
 import {FC, useEffect, useMemo, useRef, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {TokenMedia, useDynamicTokens, useUserTokens} from '@reservoir0x/reservoir-kit-ui'
+import {TokenMedia, useUserTokens} from '@reservoir0x/reservoir-kit-ui'
 import {faClose} from "@fortawesome/free-solid-svg-icons";
 import {AddressZero} from "@ethersproject/constants";
 
@@ -12,6 +12,7 @@ import {useAccount} from "wagmi";
 import {parseEther} from "ethers/lib/utils";
 import {BigNumber} from "@ethersproject/bignumber";
 import Image from "next/image";
+import {useMarketplaceChain} from "../../hooks";
 
 type EntryProps = {
   show: boolean
@@ -378,6 +379,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ show, onClose }) => {
                   <FormatCryptoCurrency
                     amount={selection.value}
                     address={selection.contract}
+                    chainId={selection.chainId}
                     decimals={18}
                     textStyle="subtitle3"
                     logoHeight={14}
