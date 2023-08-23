@@ -58,26 +58,6 @@ const currencies = [
     coinGeckoId: 'matic-network',
   },
   {
-    address: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
-    symbol: 'WETH',
-    decimals: polygon.nativeCurrency.decimals,
-    chain: {
-      id: polygon.id,
-      name: polygon.name,
-    },
-    coinGeckoId: 'weth',
-  },
-  {
-    address: '0x4200000000000000000000000000000000000006',
-    symbol: 'WETH',
-    decimals: optimism.nativeCurrency.decimals,
-    chain: {
-      id: optimism.id,
-      name: optimism.name,
-    },
-    coinGeckoId: 'weth',
-  },
-  {
     address: '0x51b902f19a56f0c8e409a34a215ad2673edf3284',
     symbol: 'NFTE',
     decimals: arbitrum.nativeCurrency.decimals,
