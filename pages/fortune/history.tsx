@@ -1,4 +1,10 @@
-import {Head} from "../../components/Head";
+import { useState} from "react";
+import {faArrowLeft, faList, faTableCellsLarge} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {zeroAddress} from "viem";
+import Link from "next/link";
+import Image from "next/image";
+
 import {
   Box,
   Button,
@@ -8,16 +14,10 @@ import {
   Text,
   ToggleGroup,
   ToggleGroupItem
-} from "../../components/primitives";
-import Layout from "../../components/Layout";
-import {faArrowLeft, faList, faTableCellsLarge} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import Link from "next/link";
-import {ItemView} from "../../components/portfolio/ViewToggle";
-import {ChangeEvent, useState} from "react";
-import {zeroAddress} from "viem";
-import Image from "next/image";
-import ChainToggle from "../../components/common/ChainToggle";
+} from "components/primitives";
+import {Head} from "components/Head";
+import Layout from "components/Layout";
+import ChainToggle from "components/common/ChainToggle";
 
 const FortuneHistory = () => {
   const [type, setType] = useState<string>("all")
