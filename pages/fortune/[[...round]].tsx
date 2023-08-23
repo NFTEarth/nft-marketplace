@@ -145,11 +145,12 @@ const FortunePage = () => {
       <Box
         css={{
           py: 24,
-          px: '$6',
+          px: '$3',
           height: '100%',
           pb: 160,
           '@md': {
             pb: 60,
+            px: '$6',
           },
         }}
       >
