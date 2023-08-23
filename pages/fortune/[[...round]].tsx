@@ -20,12 +20,12 @@ import EntryForm from "components/fortune/EntryForm";
 import Player, {PlayerType} from "components/fortune/Player";
 import FortunePrize, {PrizeType} from "components/fortune/Prize";
 import Confetti from "components/common/Confetti";
+import ChainToggle from "components/common/ChainToggle";
 import LoadingSpinner from "components/common/LoadingSpinner";
-import {Box, Button, Flex, FormatCryptoCurrency, FormatCurrency, CryptoCurrencyIcon, Text} from 'components/primitives'
+import {Box, Button, Flex, FormatCryptoCurrency, FormatCurrency, Text} from 'components/primitives'
 import {useMounted, useFortune, useMarketplaceChain} from "hooks";
+import supportedChains, {FORTUNE_CHAINS} from "utils/chains";
 import { styled } from 'stitches.config'
-import supportedChains, {FORTUNE_CHAINS} from "../../utils/chains";
-import ChainToggle from "../../components/common/ChainToggle";
 
 const Video = styled('video', {});
 

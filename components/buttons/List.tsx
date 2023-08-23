@@ -14,13 +14,14 @@ import {
   useAccount,
   useNetwork,
   useWalletClient,
-  mainnet,
   useSwitchNetwork,
 } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 import { zeroAddress } from 'viem'
+import { mainnet, arbitrum } from "wagmi/chains";
+import {base} from "../../utils/chains";
 
 type ListingCurrencies = ComponentPropsWithoutRef<
   typeof ListModal
@@ -68,6 +69,44 @@ const List: FC<Props> = ({
       },
       {
         contract: '0x8c223a82E07feCB49D602150d7C2B3A4c9630310',
+        symbol: 'NFTE',
+        decimals: 18,
+        coinGeckoId: 'nftearth',
+      },
+    ]
+  }
+
+  if (marketplaceChain.id === arbitrum.id) {
+    listingCurrencies = [
+      {
+        contract: zeroAddress,
+        symbol: 'ETH',
+        coinGeckoId: 'ethereum',
+      },
+      {
+        contract: '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
+        symbol: 'NFTE',
+        decimals: 18,
+        coinGeckoId: 'nftearth',
+      },
+      {
+        contract: '0x912CE59144191C1204E64559FE8253a0e49E6548',
+        symbol: 'ARB',
+        decimals: 18,
+        coinGeckoId: 'arbitrum',
+      }
+    ]
+  }
+
+  if (marketplaceChain.id === base.id) {
+    listingCurrencies = [
+      {
+        contract: zeroAddress,
+        symbol: 'ETH',
+        coinGeckoId: 'ethereum',
+      },
+      {
+        contract: '0xc2106ca72996e49bBADcB836eeC52B765977fd20',
         symbol: 'NFTE',
         decimals: 18,
         coinGeckoId: 'nftearth',
