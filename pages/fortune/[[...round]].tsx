@@ -1,7 +1,5 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import {useCountdown} from 'usehooks-ts'
-import useSound from 'use-sound'
-import {parseEther} from "ethers/lib/utils";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {
   faVolumeUp,
@@ -9,23 +7,25 @@ import {
   faHistory,
   faArrowLeft,
   faArrowRight,
-  faForwardStep
+  faForwardStep,
+  faClose
 } from "@fortawesome/free-solid-svg-icons";
-import { CreateTypes } from 'canvas-confetti'
 import {useMediaQuery} from "react-responsive";
 import {AddressZero} from "@ethersproject/constants";
-import ReactCanvasConfetti from 'react-canvas-confetti'
+import {ethers} from "ethers";
 import Link from 'next/link'
 
 import Layout from 'components/Layout'
 import { Head } from 'components/Head'
 import Wheel from "components/fortune/Wheel";
+import Confetti from "components/common/Confetti";
 import Player, {PlayerType} from "components/fortune/Player";
 import FortunePrize, {PrizeType} from "components/fortune/Prize";
 import LoadingSpinner from "components/common/LoadingSpinner";
-import {Box, Button, Flex, FormatCryptoCurrency, FormatCurrency, Text} from 'components/primitives'
-
-import {useMounted} from "hooks";
+import NumericalInput from "components/bridge/NumericalInput";
+import {Box, Button, Flex, FormatCryptoCurrency, FormatCurrency, CryptoCurrencyIcon, Text} from 'components/primitives'
+import {useMounted, useFortune} from "hooks";
+import {zeroAddress} from "viem";
 
 const convertTimer = (time: number) => {
   const mind = time % (60 * 60);
@@ -40,135 +40,9 @@ const convertTimer = (time: number) => {
   }
 }
 
-const spinWheelAudioSpriteMap = {
-  start: [0, 1200, true],
-  end: [1200, 1000, false]
-} as any;
-
-const fortunePrizes: PrizeType[] = [
-  {
-    type: 'erc20',
-    bidderName: 'ryuzaki01.eth',
-    address: AddressZero,
-    price: BigInt(parseEther('0.01').toString())
-  },
-  {
-    type: 'erc20',
-    bidderName: 'ryuzaki01.eth',
-    address: AddressZero,
-    price: BigInt(parseEther('0.01').toString())
-  },
-  {
-    type: 'erc20',
-    bidderName: 'ryuzaki01.eth',
-    address: AddressZero,
-    price: BigInt(parseEther('0.01').toString())
-  },
-  {
-    type: 'erc20',
-    bidderName: 'ryuzaki01.eth',
-    address: AddressZero,
-    price: BigInt(parseEther('0.01').toString())
-  },
-  {
-    type: 'erc20',
-    bidderName: 'ryuzaki01.eth',
-    address: AddressZero,
-    price: BigInt(parseEther('0.01').toString())
-  },
-  {
-    type: 'erc20',
-    bidderName: 'ryuzaki01.eth',
-    address: AddressZero,
-    price: BigInt(parseEther('0.01').toString())
-  },
-  {
-    type: 'erc20',
-    bidderName: 'ryuzaki01.eth',
-    address: AddressZero,
-    price: BigInt(parseEther('0.01').toString())
-  },
-  {
-    type: 'erc20',
-    bidderName: 'ryuzaki01.eth',
-    address: AddressZero,
-    price: BigInt(parseEther('0.01').toString())
-  },
-  {
-    type: 'erc20',
-    bidderName: 'ryuzaki01.eth',
-    address: AddressZero,
-    price: BigInt(parseEther('0.01').toString())
-  },
-  {
-    type: 'erc20',
-    bidderName: 'ryuzaki01.eth',
-    address: AddressZero,
-    price: BigInt(parseEther('0.01').toString())
-  },
-  {
-    type: 'erc20',
-    bidderName: 'ryuzaki01.eth',
-    address: AddressZero,
-    price: BigInt(parseEther('0.01').toString())
-  },
-  {
-    type: 'erc20',
-    bidderName: 'ryuzaki01.eth',
-    address: AddressZero,
-    price: BigInt(parseEther('0.01').toString())
-  },{
-    type: 'erc20',
-    bidderName: 'ryuzaki01.eth',
-    address: AddressZero,
-    price: BigInt(parseEther('0.01').toString())
-  },
-  {
-    type: 'erc20',
-    bidderName: 'ryuzaki01.eth',
-    address: AddressZero,
-    price: BigInt(parseEther('0.01').toString())
-  },
-  {
-    type: 'erc20',
-    bidderName: 'ryuzaki01.eth',
-    address: AddressZero,
-    price: BigInt(parseEther('0.01').toString())
-  },
-  {
-    type: 'erc20',
-    bidderName: 'ryuzaki01.eth',
-    address: AddressZero,
-    price: BigInt(parseEther('0.01').toString())
-  },{
-    type: 'erc20',
-    bidderName: 'ryuzaki01.eth',
-    address: AddressZero,
-    price: BigInt(parseEther('0.01').toString())
-  },
-  {
-    type: 'erc20',
-    bidderName: 'ryuzaki01.eth',
-    address: AddressZero,
-    price: BigInt(parseEther('0.01').toString())
-  },
-  {
-    type: 'erc20',
-    bidderName: 'ryuzaki01.eth',
-    address: AddressZero,
-    price: BigInt(parseEther('0.01').toString())
-  },
-  {
-    type: 'erc20',
-    bidderName: 'ryuzaki01.eth',
-    address: AddressZero,
-    price: BigInt(parseEther('0.01').toString())
-  }
-]
-
 const getTitleText = (status: number, totalPrize: string, convertedCountdown: any) => {
   if (status === 0) {
-    return `${convertedCountdown.minutes}:${convertedCountdown.seconds} • Ξ${totalPrize} • Fortune  | NFTEarth`
+    return `${convertedCountdown.minutes}:${convertedCountdown.seconds} • Ξ${totalPrize} • Fortune | NFTEarth`
   }
 
   if (status === 1) {
@@ -187,128 +61,51 @@ const getTitleText = (status: number, totalPrize: string, convertedCountdown: an
 }
 
 const FortunePage = () => {
-  const [status, setStatus] = useState(0)
-  const [enableAudio, setEnableAudio] = useState(false)
   const [showEntryForm, setShowEntryForm] = useState(false)
-  const refAnimationInstance = useRef<CreateTypes | null>();
+  const [winner, setWinner] = useState<PlayerType>()
   const prizePotRef = useRef<HTMLDivElement>(null);
-  const [playWin] = useSound(`${process.env.NEXT_PUBLIC_HOST_URL}/audio/win.mp3`, {
-    interrupt: true
-  })
-  const [playStart] = useSound(`${process.env.NEXT_PUBLIC_HOST_URL}/audio/game-start.mp3`, {
-    interrupt: true
-  })
-  const [playWheel, { stop: stopAudio }] = useSound(`${process.env.NEXT_PUBLIC_HOST_URL}/audio/wheel-spin.mp3`, {
-    sprite: spinWheelAudioSpriteMap,
-    interrupt: true
-  })
+  const confettiRef = useRef<any>(null);
+  const [valueEth, setValueEth] = useState<string>('0.0')
+  const [valueNFTE, setValueNFTE] = useState<string>('0.0')
+
+  const { data: status, setStatus } = useFortune<number>(d => d.status)
+  const { data: enableAudio, setEnableAudio } = useFortune<PrizeType[]>(d => d.enableAudio)
+  const { data: prizes, setPrizes } = useFortune<PrizeType[]>(d => d.prizes)
+  const { data: players, setPlayers } = useFortune<PlayerType[]>(d => d.players)
+  const { data: durationLeft, setDurationLeft } = useFortune<number>(d => d.durationLeft)
 
   const mounted = useMounted()
   const isMobile = useMediaQuery({ maxWidth: 600 })
-  const [players, setPlayers] = useState<PlayerType[]>([
-    {
-      y: 30,
-      name: "Ryuzaki01",
-      color: '#04cd58',
-      address: '0x7D3E5dD617EAF4A3d42EA550C41097086605c4aF',
-      entry: BigInt(parseEther('0.001').toString())
-    },
-    {
-      y: 20,
-      name: "Weston",
-      color: '#2c51ff',
-      address: '0xafd86179acd9a441801a5e582410e7e04e992d4a',
-      entry: BigInt(parseEther('0.005').toString())
-    }
-  ]);
   const [countdown, { startCountdown, resetCountdown }] = useCountdown({
-    countStart: 60 * 5,
+    countStart: durationLeft,
     countStop: 0,
-    intervalMs: 1000,
+    intervalMs: 1000000,
   })
 
   const convertedCountdown = useMemo(() => convertTimer(countdown), [countdown])
-
-  const makeShot = useCallback((particleRatio: number, opts: any) => {
-    refAnimationInstance.current &&
-    refAnimationInstance.current({
-      ...opts,
-      origin: { y: 0.7 },
-      particleCount: Math.floor(200 * particleRatio)
-    });
-  }, [refAnimationInstance]);
-
-  const fireConfetti = useCallback(() => {
-    makeShot(0.35, {
-      spread: 46,
-      startVelocity: 55
-    });
-
-    makeShot(0.3, {
-      spread: 60
-    });
-
-    makeShot(0.45, {
-      spread: 100,
-      decay: 0.91,
-      scalar: 0.8
-    });
-
-    makeShot(0.2, {
-      spread: 150,
-      startVelocity: 25,
-      decay: 0.92,
-      scalar: 1.2
-    });
-
-    makeShot(0.2, {
-      spread: 220,
-      startVelocity: 45
-    });
-  }, [makeShot]);
-
-  useEffect(() => {
-    if (!enableAudio) {
-      return;
-    }
-
-    if (status === 0) {
-      playStart?.()
-    }
-
-    if (status === 1) {
-      playWheel?.({ id: 'start' })
-    }
-
-    if (status === 2) {
-      stopAudio?.('start')
-      playWheel?.({ id: 'end' })
-    }
-
-    if (status === 3) {
-      playWin?.()
-      fireConfetti?.()
-    }
-  }, [status, enableAudio])
 
   useEffect(() => {
     if (status === 0) {
       resetCountdown()
       startCountdown()
+      setWinner(undefined)
+    } else {
+      setShowEntryForm(false);
     }
 
     if (status === 3) {
       setTimeout(() => {
-        setStatus(0);
+        setStatus?.(0);
       }, 10 * 1000)
     }
   }, [status])
 
+
   useEffect(() => {
     if (countdown <= 0) {
-      setStatus(1);
+      setStatus?.(1);
       setTimeout(() => {
-        setStatus(2);
+        setStatus?.(2);
       }, 5000)
     }
   }, [countdown])
@@ -319,32 +116,58 @@ const FortunePage = () => {
 
   const totalPrize = '0.03'
 
+  const handleSetEthValue = (val: string) => {
+    try {
+      ethers.utils.parseUnits(val, 18);
+      setValueEth(val);
+    } catch (e) {
+      setValueEth('0');
+    }
+  }
+
+  const handleSetNFTEValue = (val: string) => {
+    try {
+      ethers.utils.parseUnits(val, 18);
+      setValueNFTE(val);
+    } catch (e) {
+      setValueNFTE('0');
+    }
+  }
+
   return (
     <Layout>
       <Head title={getTitleText(status, totalPrize, convertedCountdown)}/>
       <Box
         css={{
-          p: 24,
+          py: 24,
+          px: '$6',
           height: '100%',
-          '@bp800': {
-            p: '$6',
+          pb: 160,
+          '@md': {
+            pb: 60,
           },
         }}
       >
-        <Flex justify="center">
-          <Text style="h2">Fortune</Text>
+        <Flex justify="center" css={{ mb: 30 }}>
+          <Text style="h5">Fortune</Text>
         </Flex>
         <Box css={{
-          gap: 30,
+          gap: 10,
           display: 'grid',
           gridTemplateAreas: '"main" "player" "stat" "pot" "cta"',
-          gridTemplateColumns: '100%',
+          gridTemplateRows: showEntryForm ? '1fr' : 'unset',
+          gridTemplateColumns: showEntryForm ? '1fr' : '100%',
           '@md': {
             gridTemplateAreas: '"main stat" "main cta" "player cta" "player cta" "pot pot"',
-            gridTemplateColumns: '60% 40%',
+            gridTemplateRows: showEntryForm ? '1fr' : 'unset',
+            gridTemplateColumns: showEntryForm ? '1fr' : '60% 40%',
+            gap: 30,
           },
           '@lg': {
-            gridTemplateAreas: '"player main main stat" "player main main cta" "player main main cta" "pot pot pot cta"',
+            gridTemplateAreas: showEntryForm ?
+              '"main main main stat" "main main main cta" "main main main cta" "main main main cta"' :
+              '"player main main stat" "player main main cta" "player main main cta" "pot pot pot cta"',
+            gridTemplateRows: showEntryForm ? 'repeat(4, 1fr)' : 'unset',
             gridTemplateColumns: 'repeat(4, 1fr)',
           }
         }}>
@@ -362,7 +185,11 @@ const FortunePage = () => {
                 <Text css={{ mb: '$4', p: '$2' }}>{`${players.length} Players`}</Text>
                 <Flex direction="column" css={{ gap: 5 }}>
                   {players.map((p, i) => (
-                    <Player key={`player-${i}`} data={p} />
+                    <Player
+                      key={`player-${i}`}
+                      index={i}
+                      data={p}
+                    />
                   ))}
                 </Flex>
               </Flex>
@@ -373,7 +200,7 @@ const FortunePage = () => {
                   borderRadius: 10,
                   backgroundColor: '$gray3',
                   justifyContent: 'space-between',
-                  gridArea: 'main'
+                  gridArea: 'main',
                 }}
               >
                 <Flex align="center" justify="between">
@@ -417,11 +244,11 @@ const FortunePage = () => {
                     pt: '100%'
                   }}>
                     <Wheel
-                      status={status}
                       countdown={countdown}
-                      players={players}
-                      onWheelEnd={() => {
-                        setStatus(3)
+                      onWheelEnd={(winnerIndex: number) => {
+                        setWinner(players[winnerIndex])
+                        setStatus?.(3)
+                        confettiRef.current?.fireConfetti?.();
                       }}
                       style={{
                         position: 'absolute',
@@ -431,6 +258,7 @@ const FortunePage = () => {
                         right: 0,
                       }}
                     />
+
                     <Flex
                       direction="column"
                       align="center"
@@ -450,14 +278,14 @@ const FortunePage = () => {
                         <Text style="subtitle1" css={{ color: '$primary10'}}>Drawing Winner...</Text>
                       )}
                       {status === 3 && (
-                        <Text style="subtitle1" css={{ color: '$primary10'}}>Winner is ...</Text>
+                        <Text style="subtitle1" css={{ color: '$primary10'}}>{`Winner is ${winner?.name}`}</Text>
                       )}
                     </Flex>
                   </Box>
                 </Flex>
                 <Flex justify="end">
                   <Button color="secondary" size="xs" onClick={() => {
-                    setEnableAudio(!enableAudio)
+                    setEnableAudio?.(!enableAudio)
                   }}>
                     <FontAwesomeIcon
                       icon={enableAudio ? faVolumeMute : faVolumeUp}
@@ -471,15 +299,202 @@ const FortunePage = () => {
             </>
           )}
           {showEntryForm && (
-            <Flex
-              direction="column"
-              css={{
-                gridArea: 'main',
-                overflow: 'hidden',
-              }}
-            >
+            <>
+              <Flex
+                direction="column"
+                css={{
+                  gridArea: 'main',
+                  overflow: 'hidden',
+                  borderRadius: 12,
+                  backgroundColor: '$gray3',
+                }}
+              >
+                <Flex
+                  justify="between"
+                  align="center"
+                  css={{
+                    backgroundColor: '$gray6',
+                    p: 16
+                  }}
+                >
+                  <Text style="h5">Select Entries</Text>
+                  <Button size="xs" color="secondary" onClick={() => setShowEntryForm(false)}>
+                    <FontAwesomeIcon icon={faClose} width={16} height={16} />
+                  </Button>
+                </Flex>
+                <Flex
+                  css={{
+                    p: 16,
+                    display: 'grid',
+                    gridTemplateColumns: '1fr',
+                    '@md': {
+                      gridTemplateAreas: '"left right right" "left right right" "left right right" "left right right"',
+                      gridTemplateColumns: 'repeat(3, 1fr)',
+                      height: '100%',
+                      p: 0,
+                    }
+                  }}
+                >
+                  <Flex
+                    direction="column"
+                    css={{
+                      gridArea: 'left',
+                      borderRight: '1px solid',
+                      borderRightColor: '$gray5',
+                      p: 16,
+                      gap: 20
+                    }}
+                  >
+                    <Flex direction="column" css={{ gap: 10}}>
+                      <Text style="subtitle3">Tokens</Text>
+                      <Flex
+                        align="center"
+                        css={{
+                          backgroundColor: 'rgba(0,0,0,0.2)',
+                          gap: 10,
+                          p: 12
+                        }}
+                      >
+                        <CryptoCurrencyIcon address={AddressZero} chainId={1} css={{ height: 15 }} />
+                        <Text style="h6" css={{ color: '$primary13' }}>ETH/NFTE OFT</Text>
+                      </Flex>
+                    </Flex>
+                    <Flex direction="column" css={{ gap: 10}}>
+                      <Text style="subtitle3">NFTs</Text>
+                      <Flex
+                        direction="column"
+                        css={{
+                          gap: 10
+                        }}>
 
-            </Flex>
+                      </Flex>
+                    </Flex>
+                  </Flex>
+                  <Flex
+                    direction="column"
+                    css={{
+                      gridArea: 'right',
+                      borderRight: '1px solid',
+                      borderRightColor: '$gray5',
+                      p: 16
+                    }}
+                  >
+                    <Text style="h5" css={{ mb: 30 }}>Add ETH or NFTE OFT</Text>
+                    <Flex
+                      direction="column"
+                      css={{
+                        gap: 10,
+                        borderBottom: '1px solid',
+                        borderBottomColor: '$gray5',
+                        p: 16
+                      }}
+                    >
+                      <Text style="h6">Add ETH</Text>
+                      <NumericalInput
+                        value={valueEth}
+                        onUserInput={handleSetEthValue}
+                        icon={<Button size="xs" color="primary">Add</Button>}
+                        iconStyles={{
+                          top: 4,
+                          right: 4,
+                          left: 'auto'
+                        }}
+                        containerCss={{
+                          width: '100%'
+                        }}
+                        css={{
+                          pl: 20,
+                          pr: 70,
+                          boxShadow: 'inset 0 0 0 2px $$focusColor',
+                          textAlign: 'right',
+                          '&:hover': {
+                            backgroundColor: '$gray4'
+                          }
+                        }}
+                      />
+                      <Flex
+                        align="center"
+                        justify="between"
+                      >
+                        <Text>ETH in wallet:</Text>
+                        <Flex align="center" css={{ gap: 10 }}>
+                          <Text style="body3">{`($1,615.9)`}</Text>
+                          <Text style="subtitle2">{`${valueEth} ETH`}</Text>
+                          <CryptoCurrencyIcon address={zeroAddress} chainId={42161} css={{ height: 20 }} />
+                        </Flex>
+                      </Flex>
+                    </Flex>
+                    <Flex
+                      direction="column"
+                      css={{
+                        gap: 10,
+                        borderBottom: '1px solid',
+                        borderBottomColor: '$gray5',
+                        p: 16
+                      }}
+                    >
+                      <Text style="h6">Add NFTE OFT</Text>
+                      <NumericalInput
+                        value={valueNFTE}
+                        onUserInput={handleSetNFTEValue}
+                        icon={<Button size="xs" color="primary">Add</Button>}
+                        iconStyles={{
+                          top: 4,
+                          right: 4,
+                          left: 'auto'
+                        }}
+                        containerCss={{
+                          width: '100%'
+                        }}
+                        css={{
+                          pl: 20,
+                          pr: 70,
+                          boxShadow: 'inset 0 0 0 2px $$focusColor',
+                          textAlign: 'right',
+                          '&:hover': {
+                            backgroundColor: '$gray4'
+                          }
+                        }}
+                      />
+                      <Flex
+                        align="center"
+                        justify="between"
+                      >
+                        <Text>NFTE OFT in wallet:</Text>
+                        <Flex align="center" css={{ gap: 10 }}>
+                          <Text style="body3">{`($1,615.9)`}</Text>
+                          <Text style="subtitle2">{`${valueNFTE} NFTE`}</Text>
+                          <CryptoCurrencyIcon address="0x51B902f19a56F0c8E409a34a215AD2673EDF3284" chainId={42161} css={{ height: 20 }} />
+                        </Flex>
+                      </Flex>
+                    </Flex>
+                  </Flex>
+                </Flex>
+              </Flex>
+              <Flex
+                direction="column"
+                css={{
+                  gridArea: 'cta',
+                  overflow: 'hidden',
+                  borderRadius: 12,
+                  backgroundColor: '$gray3',
+                }}
+              >
+                <Flex
+                  justify="between"
+                  align="center"
+                  css={{
+                    backgroundColor: '$gray6',
+                    p: 16
+                  }}
+                >
+                  <Text style="h5">Selections(0)</Text>
+                  <Button size="xs" color="secondary" onClick={() => {}}>
+                    Clear
+                  </Button>
+                </Flex>
+              </Flex>
+            </>
           )}
           <Flex
             direction="column"
@@ -488,8 +503,10 @@ const FortunePage = () => {
               borderRadius: 10,
               backgroundColor: '$gray3',
               p: '$4',
-              gap: 20,
-              gridArea: 'stat'
+              display: 'none',
+              '@md': {
+                display: 'flex'
+              },
             }}>
             <Flex justify="between" align="center">
               <Text style="h5">Round 1</Text>
@@ -598,7 +615,7 @@ const FortunePage = () => {
                       gap: 20
                     }}
                   >
-                    {fortunePrizes.map((prize, i: number) => (
+                    {prizes.map((prize, i: number) => (
                       <FortunePrize key={`prize-${i}`} data={prize} />
                     ))}
                   </Flex>
@@ -612,30 +629,103 @@ const FortunePage = () => {
                   borderRadius: 10,
                   backgroundColor: '$gray3',
                   p: '$4',
-                  gridArea: 'cta'
+                  gridArea: 'cta',
+                  display: 'none',
+                  '@md': {
+                    display: 'flex'
+                  }
                 }}>
-                <Button onClick={(e) => {
+                <Button disabled={status !== 0} onClick={(e) => {
                   e.preventDefault()
                   setShowEntryForm(true);
                 }}>ENTER NOW</Button>
               </Flex>
             </>
           )}
+          <Flex
+            direction="column"
+            css={{
+              gap: 10,
+              backgroundColor: '$gray3',
+              p: 20,
+              position: 'fixed',
+              bottom: 0,
+              left: 0,
+              width: '100%',
+              '@md': {
+                display: 'none'
+              }
+            }}>
+            <Flex css={{ gap: 10 }}>
+              <Flex direction="column" css={{ flex: 0.5 }} >
+                <FormatCryptoCurrency textStyle="h6" amount={0.05} />
+                <Text style="body3">Prize Pool</Text>
+              </Flex>
+              <Flex direction="column" css={{ flex: 0.5 }} >
+                <FormatCryptoCurrency textStyle="h6" amount={0.05} />
+                <Text style="body3">Your Entries</Text>
+              </Flex>
+              <Flex direction="column" css={{ flex: 0.5 }} >
+                <Text style="h6">{`10%`}</Text>
+                <Text style="body3">Your Win Chance</Text>
+              </Flex>
+              <Flex align="start">
+                {status === 0 && (
+                  <Flex
+                    align="center"
+                    justify="center"
+                    css={{
+                      borderRadius: 6,
+                      border: '1px solid $primary10',
+                      minWidth: 75,
+                      minHeight: 38,
+                    }}
+                  >
+                    <Text style="h5">{`${convertedCountdown.minutes}:${convertedCountdown.seconds}`}</Text>
+                  </Flex>
+                )}
+                {[1,2].includes(status) && (
+                  <Flex
+                    align="center"
+                    justify="center"
+                    css={{
+                      borderRadius: 6,
+                      backgroundColor: '$primary1',
+                      minWidth: 75,
+                      minHeight: 38,
+                    }}
+                  >
+                    <LoadingSpinner css={{ width: 35, height: 35 }} />
+                  </Flex>
+                )}
+
+                {status === 3 && (
+                  <Flex
+                    align="center"
+                    justify="center"
+                    css={{
+                      borderRadius: 6,
+                      backgroundColor: '$primary1',
+                      minWidth: 75,
+                      minHeight: 38,
+                    }}
+                  />
+                )}
+              </Flex>
+            </Flex>
+            <Button
+              css={{
+                justifyContent: 'center'
+              }}
+              onClick={(e) => {
+                e.preventDefault()
+                setShowEntryForm(true);
+              }}
+            >ENTER NOW</Button>
+          </Flex>
         </Box>
       </Box>
-      <ReactCanvasConfetti
-        refConfetti={(instance) => {
-          refAnimationInstance.current = instance;
-        }}
-        style={{
-          position: "fixed",
-          pointerEvents: "none",
-          width: "100%",
-          height: "100%",
-          top: 0,
-          left: 0,
-          zIndex: 100000,
-        }} />
+      <Confetti ref={confettiRef} />
     </Layout>
   )
 }

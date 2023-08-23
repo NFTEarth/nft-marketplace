@@ -35,6 +35,7 @@ import ChainContextProvider from 'context/ChainContextProvider'
 import ReferralContextProvider, {
   ReferralContext,
 } from 'context/ReferralContextProvider'
+import FortuneContextProvider from "../context/FortuneContextProvider";
 
 //CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
 const inter = Inter({
@@ -152,7 +153,9 @@ function MyApp({
               modalSize="compact"
             >
               <ToastContextProvider>
-                <FunctionalComponent {...pageProps} />
+                <FortuneContextProvider>
+                  <FunctionalComponent {...pageProps} />
+                </FortuneContextProvider>
               </ToastContextProvider>
             </RainbowKitProvider>
           </Tooltip.Provider>
