@@ -21,6 +21,22 @@ const nextConfig = {
   experimental: {
     transpilePackages: ['@reservoir0x/reservoir-kit-ui'],
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'i.seadn.io',
+      },
+      {
+        protocol: 'https',
+        hostname: 'openseauserdata.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com'
+      }
+    ],
+  },
   async rewrites() {
     return [
       {
