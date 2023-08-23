@@ -1,16 +1,26 @@
-import {Flex, FormatCryptoCurrency, Text} from "../primitives";
+import {FC} from "react";
 import Highcharts from "highcharts";
-import {Avatar} from "../primitives/Avatar";
-import Jazzicon from "react-jazzicon/dist/Jazzicon";
 import {jsNumberForAddress} from "react-jazzicon";
-import {useENSResolver} from "../../hooks";
+import Jazzicon from "react-jazzicon/dist/Jazzicon";
+
+import {Flex, FormatCryptoCurrency, Text} from "../primitives";
+import {Avatar} from "../primitives/Avatar";
+import {useENSResolver, useFortune} from "../../hooks";
 
 export interface PlayerType extends Highcharts.PointOptionsObject {
   address: `0x${string}`,
   entry: bigint
 }
 
-const Player = ({ data } : { data: PlayerType }) => {
+type PlayerProps = {
+  index: number,
+  data: PlayerType
+}
+
+const Player: FC<PlayerProps> = ({ index, data, ...restProps }) => {
+  const { data: hoverPlayerIndex, setHoverPlayerIndex } = useFortune<number>(d => d.hoverPlayerIndex)
+  const { data: status } = useFortune<number>(d => d.status)
+
   const {
     avatar: ensAvatar,
     shortAddress,
@@ -28,10 +38,21 @@ const Player = ({ data } : { data: PlayerType }) => {
         gap: 10,
         cursor: 'pointer',
         backgroundColor: 'rgba(0,0,0, 0.1)',
+        transition: 'background, filter .5s',
+        ...((status !== 0 && hoverPlayerIndex !== index) ? {
+          filter: 'opacity(0.4)'
+        } : {}),
         '&:hover': {
           backgroundColor: 'rgba(255,255,255, 0.1)'
         }
       }}
+      onMouseOver={() => {
+        setHoverPlayerIndex?.(index)
+      }}
+      onMouseLeave={() => {
+        setHoverPlayerIndex?.(undefined)
+      }}
+      {...restProps}
     >
       {ensAvatar ? (
         <Avatar size="medium" src={ensAvatar} />
