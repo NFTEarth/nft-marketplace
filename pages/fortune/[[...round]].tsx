@@ -11,6 +11,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {useMediaQuery} from "react-responsive";
 import Link from 'next/link'
+import Image from 'next/image'
 
 import Layout from 'components/Layout'
 import { Head } from 'components/Head'
@@ -152,8 +153,12 @@ const FortunePage = () => {
           },
         }}
       >
-        <Flex justify="center" css={{ mb: 30 }}>
-          <Text style="h5">Fortune</Text>
+        <Flex justify="between" css={{ mb: 30 }}>
+          <Flex align="center" css={{ gap: 10 }}>
+            <Image src="/icons/fortune.png" width={40} height={40} objectFit="contain" alt="Fortune"/>
+            <Text style="h4">Fortune</Text>
+          </Flex>
+          <ChainToggle />
         </Flex>
         <Box css={{
           gap: 10,
