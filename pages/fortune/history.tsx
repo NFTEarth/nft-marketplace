@@ -1,11 +1,26 @@
 import {Head} from "../../components/Head";
-import {Box, Flex, Text} from "../../components/primitives";
+import {
+  Box,
+  Button,
+  Flex,
+  FormatCryptoCurrency,
+  Switch,
+  Text,
+  ToggleGroup,
+  ToggleGroupItem
+} from "../../components/primitives";
 import Layout from "../../components/Layout";
-import {faArrowLeft} from "@fortawesome/free-solid-svg-icons";
+import {faArrowLeft, faList, faTableCellsLarge} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Link from "next/link";
+import {ItemView} from "../../components/portfolio/ViewToggle";
+import {ChangeEvent, useState} from "react";
+import {zeroAddress} from "viem";
 
 const FortuneHistory = () => {
+  const [type, setType] = useState<string>("all")
+  const [onlyYourRound, setOnlyYourRound] = useState<boolean>(false)
+
   return (
     <Layout>
       <Head title={"History • Fortune | NFTEarth"}/>
@@ -39,6 +54,59 @@ const FortuneHistory = () => {
                   <Text css={{ color: '$primary13' }}>Current Round</Text>
                 </Flex>
               </Link>
+              <Flex
+                align="center"
+                css={{
+                  gap: 10
+                }}
+              >
+                <ToggleGroup
+                  type="single"
+                  value={type}
+                  onValueChange={(value) => {
+                    if (value) {
+                      setType(value)
+                    }
+                  }}
+                  css={{ flexShrink: 0 }}
+                >
+                  <ToggleGroupItem value="all" css={{ p: '$2' }}>
+                    <Text>All</Text>
+                  </ToggleGroupItem>
+                  <ToggleGroupItem value="completed" css={{ p: '$2' }}>
+                    <Text>Completed</Text>
+                  </ToggleGroupItem>
+                  <ToggleGroupItem value="canceled" css={{ p: '$2' }}>
+                    <Text>Canceled</Text>
+                  </ToggleGroupItem>
+                </ToggleGroup>
+                <Switch checked={onlyYourRound} onCheckedChange={setOnlyYourRound}/>
+                <Text>Only your round</Text>
+              </Flex>
+            </Flex>
+            <Flex
+              justify="between"
+              align="center"
+              css={{
+                border: '1px solid $primary13',
+                borderRadius: 16,
+                gap: 40,
+                p: 16
+              }}
+            >
+              <Flex
+                direction="column"
+                css={{ gap: 10 }}
+              >
+                <Text style="body3">Your Unclaimed Winnings</Text>
+                <FormatCryptoCurrency
+                  amount={BigInt(0)}
+                  address={zeroAddress}
+                  logoHeight={18}
+                  textStyle={'h6'}
+                />
+              </Flex>
+              <Button>Claim Now</Button>
             </Flex>
           </Flex>
         </Flex>
