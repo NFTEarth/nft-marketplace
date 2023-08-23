@@ -48,7 +48,16 @@ const FortuneHistory = () => {
         <Flex
           direction="column"
         >
-          <Flex justify="between">
+          <Flex
+            justify="between"
+            css={{
+              gap: 20,
+              flexDirection: 'column',
+              '@md': {
+                flexDirection: 'row',
+              }
+            }}
+          >
             <Flex
               direction="column"
               css={{
