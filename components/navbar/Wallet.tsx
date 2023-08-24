@@ -100,8 +100,6 @@ const Wallet = () => {
     allowFailure: false,
   })
 
-  console.log('profile', profile, address);
-
   //CONFIGURABLE: Configure these by just changing the chainId to fetch native balance info, in addition to changing this
   // also make sure you change the enhancedCurrencies function to take into account for these new balances
   const ethBalance = useBalance({

@@ -68,8 +68,8 @@ const FortuneContextProvider: FC<any> = ({ children }) => {
     {
       type: 'erc721',
       bidderName: 'ryuzaki01.eth',
-      address: '0xc86664e7d2608f881f796ee8e24fa9d4d7598406',
-      tokenId: BigInt(8946),
+      address: '0x8778b7fd7e2480c6f9ad1075bd848b7ce1b9d90c',
+      tokenId: BigInt(39),
       price: BigInt(parseEther('0.01').toString())
     }
   ])
