@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useRef, useState} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {useCountdown} from 'usehooks-ts'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {
@@ -26,6 +26,9 @@ import {Box, Button, Flex, FormatCryptoCurrency, FormatCurrency, Text} from 'com
 import {useMounted, useFortune, useMarketplaceChain} from "hooks";
 import supportedChains, {FORTUNE_CHAINS} from "utils/chains";
 import { styled } from 'stitches.config'
+import FortuneEnterButton from "../../components/fortune/EnterButton";
+import {useAccount} from "wagmi";
+import {useConnectModal} from "@rainbow-me/rainbowkit";
 
 const Video = styled('video', {});
 
@@ -73,8 +76,9 @@ const FortunePage = () => {
   const { data: prizes, setPrizes } = useFortune<PrizeType[]>(d => d.prizes)
   const { data: players, setPlayers } = useFortune<PlayerType[]>(d => d.players)
   const { data: durationLeft, setDurationLeft } = useFortune<number>(d => d.durationLeft)
-
+  const { openConnectModal } = useConnectModal()
   const marketplaceChain = useMarketplaceChain()
+  const { address } = useAccount()
   const mounted = useMounted()
   const isMobile = useMediaQuery({ maxWidth: 600 })
   const [countdown, { startCountdown, resetCountdown }] = useCountdown({
@@ -111,6 +115,16 @@ const FortunePage = () => {
       }, 5000)
     }
   }, [countdown])
+
+  const handleEnter = useCallback((e: Event) => {
+    e.preventDefault()
+
+    if (!address) {
+      return openConnectModal?.();
+    }
+
+    setShowEntryForm(true);
+  }, [address])
 
   if (!mounted) {
     return null;
@@ -479,16 +493,9 @@ const FortunePage = () => {
                 >
                   <source src="/video/space.mp4" type="video/mp4" />
                 </Video>
-                <Button
-                  disabled={status !== 0}
-                  css={{
-                    zIndex: 1
-                  }}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    setShowEntryForm(true);
-                  }}
-                >ENTER NOW</Button>
+                <FortuneEnterButton
+                  onClick={handleEnter}
+                />
               </Flex>
             </>
           )}
@@ -573,15 +580,9 @@ const FortunePage = () => {
                 }}
               >DEPOSIT</Button>
             ) : (
-              <Button
-                css={{
-                  justifyContent: 'center'
-                }}
-                onClick={(e) => {
-                  e.preventDefault()
-                  setShowEntryForm(true);
-                }}
-              >ENTER NOW</Button>
+              <FortuneEnterButton
+                onClick={handleEnter}
+              />
             )}
           </Flex>
         </Box>

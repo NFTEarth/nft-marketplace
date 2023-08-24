@@ -27,6 +27,7 @@ const NumericalInput = React.memo(function InnerInput({
     <Input
       {...rest}
       value={value}
+      onFocus={(event) => event.target.select()}
       onChange={event => {
         if (event.target.value === '.') {
           event.target.value = '0.';

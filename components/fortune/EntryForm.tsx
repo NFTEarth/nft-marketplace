@@ -5,13 +5,12 @@ import {faClose, faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import {AddressZero} from "@ethersproject/constants";
 
 import NumericalInput from "../bridge/NumericalInput";
-import {Box, Button, CryptoCurrencyIcon, Flex, FormatCryptoCurrency, Text} from "../primitives";
+import {Box, Button, CryptoCurrencyIcon, Flex, Text} from "../primitives";
 import {ethers} from "ethers";
 import {useIntersectionObserver} from "usehooks-ts";
 import {useAccount} from "wagmi";
 import {parseEther} from "ethers/lib/utils";
 import {BigNumber} from "@ethersproject/bignumber";
-import Image from "next/image";
 import {useMounted} from "../../hooks";
 import {useMediaQuery} from "react-responsive";
 import SelectionItem from "./SelectionItem";
@@ -21,13 +20,13 @@ type EntryProps = {
   onClose: () => void
 }
 
-const minimumEntry = BigNumber.from(parseEther('0.00000005').toString())
+const minimumEntry = BigNumber.from(parseEther('0.005').toString())
 
 const FortuneEntryForm: FC<EntryProps> = ({ show, onClose }) => {
   const { address } = useAccount()
   const [showTokenEntry, setShowTokenEntry] = useState(false)
-  const [valueEth, setValueEth] = useState<string>('0.0')
-  const [valueNFTE, setValueNFTE] = useState<string>('0.0')
+  const [valueEth, setValueEth] = useState<string>('')
+  const [valueNFTE, setValueNFTE] = useState<string>('')
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const [selections, setSelections] = useState<Record<string, any>>({})
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
@@ -94,6 +93,8 @@ const FortuneEntryForm: FC<EntryProps> = ({ show, onClose }) => {
         value: BigNumber.from(parseEther(valueEth))
       }
     })
+
+    setValueEth('')
   }
 
   const handleAddNFTE = (e: any) => {
@@ -108,6 +109,8 @@ const FortuneEntryForm: FC<EntryProps> = ({ show, onClose }) => {
         value: BigNumber.from(parseEther(valueNFTE))
       }
     })
+
+    setValueNFTE('')
   }
 
   if (!show) {
@@ -369,7 +372,9 @@ const FortuneEntryForm: FC<EntryProps> = ({ show, onClose }) => {
           }}
         >
           <Text style="h5">{`Selections(${(Object.keys(selections)).length})`}</Text>
-          <Button size="xs" color="secondary" onClick={() => setSelections({})}>
+          <Button size="xs" color="secondary" onClick={() => {
+            setSelections({})
+          }}>
             Clear
           </Button>
         </Flex>

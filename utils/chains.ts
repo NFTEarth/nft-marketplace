@@ -1,4 +1,12 @@
-import { arbitrum, mainnet, polygon, optimism, fantom, avalanche, zkSync, canto, Chain, bsc } from 'wagmi/chains'
+import {
+  Chain,
+  arbitrum,
+  mainnet,
+  polygon,
+  optimism,
+  avalanche,
+  bsc
+} from 'wagmi/chains'
 
 //Chains that are missing from wagmi:
 export const zora = {
@@ -258,7 +266,7 @@ export const OFT_CHAINS = [
 ]
 
 export const FORTUNE_CHAINS = [
-  arbitrum.id as number
+  arbitrum.id as number,
 ]
 
 export default [
