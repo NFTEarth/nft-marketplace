@@ -86,6 +86,7 @@ const FortunePage = () => {
   const convertedCountdown = useMemo(() => convertTimer(countdown), [countdown])
 
   useEffect(() => {
+    console.log('status', status);
     if (status === 0) {
       resetCountdown()
       startCountdown()
@@ -466,9 +467,13 @@ const FortunePage = () => {
                     height:'auto',
                     position: 'absolute',
                     zIndex: 0,
+                    display: 'none',
                     transition: 'filter .5s',
                     '&:hover': {
                       filter: 'grayscale(1)'
+                    },
+                    '@md': {
+                      display: 'block'
                     }
                   }}
                 >
@@ -558,15 +563,26 @@ const FortunePage = () => {
                 )}
               </Flex>
             </Flex>
-            <Button
-              css={{
-                justifyContent: 'center'
-              }}
-              onClick={(e) => {
-                e.preventDefault()
-                setShowEntryForm(true);
-              }}
-            >ENTER NOW</Button>
+            {showEntryForm ? (
+              <Button
+                css={{
+                  justifyContent: 'center'
+                }}
+                onClick={(e) => {
+                  e.preventDefault()
+                }}
+              >DEPOSIT</Button>
+            ) : (
+              <Button
+                css={{
+                  justifyContent: 'center'
+                }}
+                onClick={(e) => {
+                  e.preventDefault()
+                  setShowEntryForm(true);
+                }}
+              >ENTER NOW</Button>
+            )}
           </Flex>
         </Box>
       </Box>

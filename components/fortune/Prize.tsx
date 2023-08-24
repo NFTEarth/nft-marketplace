@@ -15,6 +15,8 @@ export type PrizeType = {
 const FortunePrize : FC<{ data: PrizeType}> = ({ data, ...restProps }) => {
   const { data: tokens } = useTokens({
     tokens: [`${data.address}:${data.tokenId}`],
+  }, {
+    isPaused: () => data.type === 'erc20'
   })
 
   const token = tokens && tokens[0] ? tokens[0] : undefined

@@ -218,7 +218,7 @@ export const OFT_CHAINS = [
     address: '0x1912A3504E59d1C1B060bf2d371DEB00b70E8796',
     lightIconUrl: '/icons/bsc-icon-dark.svg',
     darkIconUrl: '/icons/bsc-icon-light.svg',
-    // coingeckoNetworkId: 'bsc'
+    coingeckoNetworkId: 'binance-smart-chain'
   },
   {
     id: base.id,
@@ -227,7 +227,7 @@ export const OFT_CHAINS = [
     address: '0xc2106ca72996e49bBADcB836eeC52B765977fd20',
     lightIconUrl: '/icons/base-icon-dark.svg',
     darkIconUrl: '/icons/base-icon-light.svg',
-    // coingeckoNetworkId: 'base'
+    coingeckoNetworkId: 'base'
   },
   {
     id: linea.id,
@@ -236,7 +236,7 @@ export const OFT_CHAINS = [
     address: '0x2140Ea50bc3B6Ac3971F9e9Ea93A1442665670e4',
     lightIconUrl: '/icons/linea-icon-dark.svg',
     darkIconUrl: '/icons/linea-icon-light.svg',
-    // coingeckoNetworkId: 'linea'
+    coingeckoNetworkId: 'linea'
   },
   {
     id: avalanche.id,
@@ -245,7 +245,7 @@ export const OFT_CHAINS = [
     address: '0xD47E4F1ef1AA4090bc27420BDD5cB379Ced81440',
     lightIconUrl: '/icons/avalanche-icon-dark.svg',
     darkIconUrl: '/icons/avalanche-icon-light.svg',
-    // coingeckoNetworkId: 'avalanche'
+    coingeckoNetworkId: 'avalanche'
   },
   // {
   //   id: 5000,
