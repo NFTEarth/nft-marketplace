@@ -175,6 +175,14 @@ const Wallet = () => {
           case mainnet.id: {
             balance = ethBalance.data?.value || 0n
             break
+           }
+          case arbitrum.id: {
+            balance = arbitrumBalance.data?.value || 0n
+            break
+          }
+          case base.id: { 
+            balance = baseBalance.data?.value || 0n
+            break 
           }
         }
       } else {
