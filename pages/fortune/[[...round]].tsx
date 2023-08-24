@@ -29,6 +29,7 @@ import { styled } from 'stitches.config'
 import FortuneEnterButton from "../../components/fortune/EnterButton";
 import {useAccount} from "wagmi";
 import {useConnectModal} from "@rainbow-me/rainbowkit";
+import {useRouter} from "next/router";
 
 const Video = styled('video', {});
 
@@ -70,6 +71,9 @@ const FortunePage = () => {
   const [winner, setWinner] = useState<PlayerType>()
   const prizePotRef = useRef<HTMLDivElement>(null);
   const confettiRef = useRef<any>(null);
+  const router = useRouter()
+  const latestRoundId = 3;
+  const roundId = parseInt(router.query?.round as string) || latestRoundId
 
   const { data: status, setStatus } = useFortune<number>(d => d.status)
   const { data: enableAudio, setEnableAudio } = useFortune<PrizeType[]>(d => d.enableAudio)
@@ -230,7 +234,7 @@ const FortunePage = () => {
                 }}
               >
                 <Flex align="center" justify="between">
-                  <Text>Current Round</Text>
+                  <Text>{roundId === latestRoundId ? `Current Round` : `Round ${roundId}`}</Text>
                   <Flex css={{ gap: 10 }}>
                     <Link href="/fortune/history" passHref legacyBehavior>
                       <Button as="a" size="xs" color="secondary">
@@ -238,13 +242,13 @@ const FortunePage = () => {
                         {!isMobile && (<Text>History</Text>)}
                       </Button>
                     </Link>
-                    <Link href="/fortune/1" passHref legacyBehavior>
-                      <Button as="a" size="xs" color="secondary">
+                    <Link href={((roundId - 1) < 1) ? '/fortune' : `/fortune/${roundId - 1}`} legacyBehavior>
+                      <Button size="xs" color="secondary" disabled={(roundId - 1) < 1}>
                         <FontAwesomeIcon icon={faArrowLeft} width={15} height={15}/>
                       </Button>
                     </Link>
-                    <Link href="/fortune/3" passHref legacyBehavior>
-                      <Button as="a" size="xs" color="secondary">
+                    <Link href={roundId === latestRoundId ? '/fortune' : `/fortune/${roundId + 1}`} legacyBehavior>
+                      <Button size="xs" color="secondary" disabled={roundId === latestRoundId}>
                         <FontAwesomeIcon icon={faArrowRight} width={15} height={15}/>
                       </Button>
                     </Link>

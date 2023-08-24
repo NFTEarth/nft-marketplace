@@ -19,6 +19,8 @@ import {Head} from "components/Head";
 import Layout from "components/Layout";
 import ChainToggle from "components/common/ChainToggle";
 import HistoryTable from "../../components/fortune/HistoryTable";
+import {useMounted} from "../../hooks";
+import {useMediaQuery} from "react-responsive";
 
 const roundData: any[] = [
   { roundId: 1, winner: '0x7D3E5dD617EAF4A3d42EA550C41097086605c4aF' },
@@ -28,6 +30,8 @@ const roundData: any[] = [
 const FortuneHistory = () => {
   const [type, setType] = useState<string>("all")
   const [onlyYourRound, setOnlyYourRound] = useState<boolean>(false)
+  const isMounted = useMounted()
+  const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
 
   return (
     <Layout>
@@ -55,6 +59,12 @@ const FortuneHistory = () => {
           direction="column"
           css={{ gap: 20 }}
         >
+          <Link href="/fortune">
+            <Flex align="center" css={{ gap: 20 }}>
+              <FontAwesomeIcon icon={faArrowLeft} width={16} height={16} color="hsl(145, 25%, 39%)" />
+              <Text css={{ color: '$primary13' }}>Current Round</Text>
+            </Flex>
+          </Link>
           <Flex
             justify="between"
             css={{
@@ -67,20 +77,23 @@ const FortuneHistory = () => {
           >
             <Flex
               direction="column"
+              justify="end"
               css={{
-                gap: 20
+                gap: 20,
+                order: 2,
+                '@md': {
+                  order: 1
+                }
               }}
             >
-              <Link href="/fortune">
-                <Flex align="center" css={{ gap: 20 }}>
-                  <FontAwesomeIcon icon={faArrowLeft} width={16} height={16} color="hsl(145, 25%, 39%)" />
-                  <Text css={{ color: '$primary13' }}>Current Round</Text>
-                </Flex>
-              </Link>
               <Flex
                 align="center"
                 css={{
-                  gap: 10
+                  gap: 10,
+                  justifyContent: 'space-between',
+                  '@md': {
+                    justifyContent: 'center',
+                  }
                 }}
               >
                 <ToggleGroup
@@ -103,8 +116,14 @@ const FortuneHistory = () => {
                     <Text>Canceled</Text>
                   </ToggleGroupItem>
                 </ToggleGroup>
-                <Switch checked={onlyYourRound} onCheckedChange={setOnlyYourRound}/>
-                <Text>Only your round</Text>
+                <Flex
+                  css={{
+                    gap: 10
+                  }}
+                >
+                  <Switch checked={onlyYourRound} onCheckedChange={setOnlyYourRound}/>
+                  <Text>{isSmallDevice ? 'Yours' : 'Only your round'}</Text>
+                </Flex>
               </Flex>
             </Flex>
             <Flex
@@ -114,7 +133,11 @@ const FortuneHistory = () => {
                 border: '1px solid $primary13',
                 borderRadius: 16,
                 gap: 40,
-                p: 16
+                p: 16,
+                order: 1,
+                '@md': {
+                  order: 2
+                }
               }}
             >
               <Flex
