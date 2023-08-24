@@ -14,6 +14,7 @@ import {BigNumber} from "@ethersproject/bignumber";
 import Image from "next/image";
 import {useMounted} from "../../hooks";
 import {useMediaQuery} from "react-responsive";
+import SelectionItem from "./SelectionItem";
 
 type EntryProps = {
   show: boolean
@@ -350,119 +351,55 @@ const FortuneEntryForm: FC<EntryProps> = ({ show, onClose }) => {
           )}
         </Flex>
       </Flex>
-      {!isMobile && (
+      <Flex
+        direction="column"
+        css={{
+          gridArea: 'cta',
+          overflow: 'hidden',
+          borderRadius: 12,
+          backgroundColor: '$gray3',
+        }}
+      >
+        <Flex
+          justify="between"
+          align="center"
+          css={{
+            backgroundColor: '$gray6',
+            p: 16
+          }}
+        >
+          <Text style="h5">{`Selections(${(Object.keys(selections)).length})`}</Text>
+          <Button size="xs" color="secondary" onClick={() => setSelections({})}>
+            Clear
+          </Button>
+        </Flex>
         <Flex
           direction="column"
           css={{
-            gridArea: 'cta',
-            overflow: 'hidden',
-            borderRadius: 12,
-            backgroundColor: '$gray3',
+            p: 16,
+            gap: 10,
+            position: 'relative',
+            pb: 80
           }}
         >
-          <Flex
-            justify="between"
-            align="center"
-            css={{
-              backgroundColor: '$gray6',
-              p: 16
-            }}
-          >
-            <Text style="h5">{`Selections(${(Object.keys(selections)).length})`}</Text>
-            <Button size="xs" color="secondary" onClick={() => setSelections({})}>
-              Clear
-            </Button>
-          </Flex>
-          <Flex
-            direction="column"
-            css={{
-              p: 16,
-              gap: 10,
-              position: 'relative',
-              pb: 80
-            }}
-          >
-            {(Object.keys(selections)).map((k: string) => {
-              const selection = selections[k];
-
-              return (
-                selection.type === 'erc20' ? (
-                  <Flex
-                    key={k}
-                    justify="between"
-                    css={{
-                      gap: 10,
-                      p: '$2',
-                      backgroundColor: '$gray7',
-                      borderRadius: 6,
-                    }}
-                  >
-                    <Text style="subtitle3">{selection.name}</Text>
-                    <FormatCryptoCurrency
-                      amount={selection.value}
-                      address={selection.contract}
-                      chainId={selection.chainId}
-                      decimals={18}
-                      textStyle="subtitle3"
-                      logoHeight={14}
-                    />
-                  </Flex>
-                ) : (
-                  <Flex
-                    key={k}
-                    css={{
-                      gap: 10,
-                      p: '$2',
-                      backgroundColor: '$gray5',
-                      borderRadius: 6,
-                    }}
-                  >
-                    <Box css={{
-                      position: 'relative',
-                      width: 60
-                    }}>
-                      <Image
-                        fill
-                        src={selection.image}
-                        alt={selection.name}
-                        style={{
-                          width: '100%',
-                          objectFit: 'cover',
-                          borderRadius: '$base',
-                          aspectRatio: '1/1',
-                        }}
-                      />
-                    </Box>
-                    <Flex direction="column" css={{ gap: 20 }}>
-                      <Text style="subtitle3">{`${selection.name} #${selection.tokenId}`}</Text>
-                      <FormatCryptoCurrency
-                        amount={selection.value}
-                        address={AddressZero}
-                        decimals={18}
-                        textStyle="subtitle3"
-                        logoHeight={14}
-                      />
-                    </Flex>
-                  </Flex>
-                )
-              )
-            })}
-            {(Object.keys(selections)).length > 0 && (
-              <Flex
-                direction="column"
-                css={{
-                  width: 'calc(100% - 30px)',
-                  position: 'absolute',
-                  bottom: 10,
-                  left: 15,
-                }}
-              >
-                <Button size="large" css={{ justifyContent: 'center' }}>Deposit</Button>
-              </Flex>
-            )}
-          </Flex>
+          {(Object.keys(selections)).map((k: string) => (
+            <SelectionItem key={k} data={selections[k]}/>
+          ))}
+          {(Object.keys(selections)).length > 0 && (
+            <Flex
+              direction="column"
+              css={{
+                width: 'calc(100% - 30px)',
+                position: 'absolute',
+                bottom: 10,
+                left: 15,
+              }}
+            >
+              <Button size="large" css={{ justifyContent: 'center' }}>Deposit</Button>
+            </Flex>
+          )}
         </Flex>
-      )}
+      </Flex>
     </>
   )
 };
