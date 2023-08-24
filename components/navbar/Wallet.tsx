@@ -28,7 +28,7 @@ const currencies = [
     },
     coinGeckoId: 'ethereum',
   },
-  {
+  /*{
     address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
     symbol: 'WETH',
     decimals: mainnet.nativeCurrency.decimals,
@@ -37,7 +37,7 @@ const currencies = [
       name: mainnet.name,
     },
     coinGeckoId: 'weth',
-  },
+  },*/
   {
     address: '0x8c223a82E07feCB49D602150d7C2B3A4c9630310',
     symbol: 'NFTE',
@@ -48,7 +48,7 @@ const currencies = [
     },
     coinGeckoId: 'nftearth',
   },
-  {
+  /*{
     address: zeroAddress,
     symbol: 'MATIC',
     decimals: polygon.nativeCurrency.decimals,
@@ -57,7 +57,7 @@ const currencies = [
       name: polygon.name,
     },
     coinGeckoId: 'matic-network',
-  },
+  }, */
   {
     address: '0x51b902f19a56f0c8e409a34a215ad2673edf3284',
     symbol: 'NFTE',
