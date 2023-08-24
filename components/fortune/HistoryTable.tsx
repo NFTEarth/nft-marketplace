@@ -1,6 +1,6 @@
 import {FC, useEffect, useMemo, useRef} from "react";
 import {useIntersectionObserver} from "usehooks-ts";
-import {Anchor, Box, Flex, FormatCryptoCurrency, HeaderRow, TableCell, TableRow, Text} from "../primitives";
+import {Anchor, Box, Button, Flex, FormatCryptoCurrency, HeaderRow, TableCell, TableRow, Text} from "../primitives";
 import LoadingSpinner from "../common/LoadingSpinner";
 import {useMediaQuery} from "react-responsive";
 import {useENSResolver, useMarketplaceChain, useMounted, useTimeSince} from "../../hooks";
@@ -11,6 +11,7 @@ import {jsNumberForAddress} from "react-jazzicon";
 import {AddressZero} from "@ethersproject/constants";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faExternalLink} from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
 
 type Props = {
@@ -92,91 +93,134 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
   } = useENSResolver(round?.winner)
 
   return (
-    <TableRow
-      key={round.txHash}
-      css={{
-        px: '$2',
-        gridTemplateColumns: '0.2fr 0.75fr repeat(3, 0.3fr)',
-        '@lg': {
-          gridTemplateColumns: '0.2fr 1fr repeat(5, 0.3fr) 0.75fr 0.2fr',
-        },
-      }}
-    >
-      <TableCell css={{ color: '$gray11' }}>
-        <Flex justify="end">
-          <Text>{round.roundId}</Text>
-        </Flex>
-      </TableCell>
-      <TableCell css={{ color: '$gray11' }}>
-        <Flex align="center" justify="start" css={{ gap: 20 }}>
-          {ensAvatar ? (
-            <Avatar size="medium" src={ensAvatar} />
-          ) : (
-            <Jazzicon diameter={44} seed={jsNumberForAddress(round.winner as string)} />
-          )}
-          <Text>{shortEnsName ? shortEnsName : shortAddress}</Text>
-        </Flex>
-      </TableCell>
-      <TableCell css={{ color: '$gray11' }}>
-        <Flex justify="center">
-          <FormatCryptoCurrency
-            amount={round.prizePool}
-            address={AddressZero}
-            logoHeight={16}
-            textStyle="subtitle1"
-          />
-        </Flex>
-      </TableCell>
-      <TableCell css={{ color: '$gray11' }}>
-        <Flex justify="center">
-          <FormatCryptoCurrency
-            amount={round.winnerEntries}
-            address={AddressZero}
-            logoHeight={16}
-            textStyle="subtitle1"
-          />
-        </Flex>
-      </TableCell>
-      <TableCell css={{ color: '$gray11' }}>
-        <Flex justify="center">
-          <Text>{`x${round.winnerROI || 1}`}</Text>
-        </Flex>
-      </TableCell>
-      <TableCell css={{ color: '$gray11' }}>
-        <Flex justify="center">
-          <FormatCryptoCurrency
-            amount={round.yourEntries}
-            address={AddressZero}
-            logoHeight={16}
-            textStyle="subtitle1"
-          />
-        </Flex>
-      </TableCell>
-      <TableCell css={{ color: '$gray11' }}>
-        <Flex justify="center">
-          <Text>{round.players?.length || 0}</Text>
-        </Flex>
-      </TableCell>
-      <TableCell css={{ color: '$gray11' }}>
-        <Flex justify="center">
-          <Text>{finish}</Text>
-        </Flex>
-      </TableCell>
-      <TableCell>
-        <Anchor
-          color="primary"
-          target="_blank"
-          rel="noopener noreferrer"
-          href={`${blockExplorerBaseUrl}/tx/${round.txHash}`}
-        >
-          <FontAwesomeIcon
-            icon={faExternalLink}
-            width={12}
-            height={15}
-          />
-        </Anchor>
-      </TableCell>
-    </TableRow>
+    <Link href={`/fortune/${round.roundId}`} passHref legacyBehavior>
+      <TableRow
+        as="a"
+        key={round.txHash}
+        css={{
+          px: '$2',
+          gridTemplateColumns: '0.2fr 0.75fr repeat(3, 0.3fr)',
+          '@lg': {
+            gridTemplateColumns: '0.2fr 1fr repeat(5, 0.3fr) 0.75fr 0.2fr',
+          },
+        }}
+      >
+        <TableCell css={{ color: '$gray11' }}>
+          <Flex justify="end">
+            <Text>{round.roundId}</Text>
+          </Flex>
+        </TableCell>
+        <TableCell css={{ color: '$gray11' }}>
+          <Flex align="center" justify="start" css={{
+            gap: 20,
+          }}>
+            <Flex css={{
+              display: 'none',
+              '@md': {
+                display: 'flex'
+              }
+            }}>
+              {ensAvatar ? (
+                <Avatar size="medium" src={ensAvatar} />
+              ) : (
+                <Jazzicon diameter={44} seed={jsNumberForAddress(round.winner as string)} />
+              )}
+            </Flex>
+            <Text>{shortEnsName ? shortEnsName : shortAddress}</Text>
+          </Flex>
+        </TableCell>
+        <TableCell css={{ color: '$gray11' }}>
+          <Flex justify="center">
+            <FormatCryptoCurrency
+              amount={round.prizePool}
+              address={AddressZero}
+              logoHeight={16}
+              textStyle="subtitle1"
+            />
+          </Flex>
+        </TableCell>
+        <TableCell
+          css={{
+            color: '$gray11',
+            display: 'none',
+            '@md': {
+              display: 'block'
+            }
+          }}>
+          <Flex justify="center">
+            <FormatCryptoCurrency
+              amount={round.winnerEntries}
+              address={AddressZero}
+              logoHeight={16}
+              textStyle="subtitle1"
+            />
+          </Flex>
+        </TableCell>
+        <TableCell
+          css={{
+            color: '$gray11',
+            display: 'none',
+            '@md': {
+              display: 'block'
+            }
+          }}>
+          <Flex justify="center">
+            <Text>{`x${round.winnerROI || 1}`}</Text>
+          </Flex>
+        </TableCell>
+        <TableCell
+          css={{
+            color: '$gray11',
+            display: 'none',
+            '@md': {
+              display: 'block'
+            }
+          }}>
+          <Flex justify="center">
+            <FormatCryptoCurrency
+              amount={round.yourEntries}
+              address={AddressZero}
+              logoHeight={16}
+              textStyle="subtitle1"
+            />
+          </Flex>
+        </TableCell>
+        <TableCell css={{ color: '$gray11' }}>
+          <Flex justify="center">
+            <Text>{round.players?.length || 0}</Text>
+          </Flex>
+        </TableCell>
+        <TableCell
+          css={{
+            color: '$gray11',
+            display: 'none',
+            '@md': {
+              display: 'block'
+            }
+          }}>
+          <Flex justify="center">
+            <Text>{finish}</Text>
+          </Flex>
+        </TableCell>
+        <TableCell>
+          <Button
+            as="a"
+            size="xs"
+            color="primary"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={e => e.stopPropagation()}
+            href={`${blockExplorerBaseUrl}/tx/${round.txHash}`}
+          >
+            <FontAwesomeIcon
+              icon={faExternalLink}
+              width={12}
+              height={15}
+            />
+          </Button>
+        </TableCell>
+      </TableRow>
+    </Link>
   )
 }
 
