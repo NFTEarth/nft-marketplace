@@ -13,6 +13,7 @@ import { zeroAddress, formatUnits } from 'viem'
 import { useCoinConversion } from '@reservoir0x/reservoir-kit-ui'
 import {useProfile} from "../../hooks";
 import {formatNumber} from "../../utils/numbers";
+import { base } from 'utils/chains'
 
 //CONFIGURABLE: Here you may configure currencies that you want to display in the wallet menu. Native currencies,
 //like ETH/MATIC etc need to be fetched in a different way. Configure them below
@@ -64,6 +65,16 @@ const currencies = [
     chain: {
       id: arbitrum.id,
       name: arbitrum.name,
+    },
+    coinGeckoId: 'nftearth',
+  },
+  {
+    address: '0xc2106ca72996e49bbadcb836eec52b765977fd20',
+    symbol: 'NFTE',
+    decimals: base.nativeCurrency.decimals,
+    chain: {
+      id: base.id,
+      name: base.name,
     },
     coinGeckoId: 'nftearth',
   },
