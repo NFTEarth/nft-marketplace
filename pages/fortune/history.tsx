@@ -1,5 +1,5 @@
 import { useState} from "react";
-import {faArrowLeft, faList, faTableCellsLarge} from "@fortawesome/free-solid-svg-icons";
+import {faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {zeroAddress} from "viem";
 import Link from "next/link";
@@ -18,6 +18,12 @@ import {
 import {Head} from "components/Head";
 import Layout from "components/Layout";
 import ChainToggle from "components/common/ChainToggle";
+import HistoryTable from "../../components/fortune/HistoryTable";
+
+const roundData: any[] = [
+  { roundId: 1, winner: '0x7D3E5dD617EAF4A3d42EA550C41097086605c4aF' },
+  { roundId: 2, winner: '0x7D3E5dD617EAF4A3d42EA550C41097086605c4aF' }
+]
 
 const FortuneHistory = () => {
   const [type, setType] = useState<string>("all")
@@ -47,6 +53,7 @@ const FortuneHistory = () => {
         </Flex>
         <Flex
           direction="column"
+          css={{ gap: 20 }}
         >
           <Flex
             justify="between"
@@ -125,6 +132,7 @@ const FortuneHistory = () => {
               <Button>Claim Now</Button>
             </Flex>
           </Flex>
+          <HistoryTable data={{ data: roundData }}/>
         </Flex>
       </Box>
     </Layout>
