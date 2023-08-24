@@ -28,6 +28,26 @@ const currencies = [
     },
     coinGeckoId: 'ethereum',
   },
+  {
+    address: zeroAddress,
+    symbol: 'ETH',
+    decimals: arbitrum.nativeCurrency.decimals,
+    chain: {
+      id: arbitrum.id,
+      name: arbitrum.name,
+    },
+    coinGeckoId: 'ethereum',
+  },
+  {
+    address: zeroAddress,
+    symbol: 'ETH',
+    decimals: base.nativeCurrency.decimals,
+    chain: {
+      id: base.id,
+      name: base.name,
+    },
+    coinGeckoId: 'ethereum',
+  },
   /*{
     address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
     symbol: 'WETH',
@@ -120,6 +140,14 @@ const Wallet = () => {
   const maticBalance = useBalance({
     address,
     chainId: polygon.id,
+  })  
+  const arbitrumBalance = useBalance({
+      address,
+      chainId: arbitrum.id,  
+  })
+  const baseBalance = useBalance({
+    address,
+    chainId: base.id,  
   })
 
   const usdConversions = useCoinConversion(
