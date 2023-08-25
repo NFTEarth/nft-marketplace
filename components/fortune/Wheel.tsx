@@ -1,10 +1,11 @@
-import {useEffect, useMemo, useRef} from 'react'
+import {useEffect, useMemo, useRef, useState} from 'react'
 import Highcharts from 'highcharts'
 import HighchartsExporting from 'highcharts/modules/exporting'
 import HighchartsReact from 'highcharts-react-official'
 import useSound from "use-sound";
-import { useFortune } from "../../hooks";
+import {useFortune} from "../../hooks";
 import {PlayerType} from "./Player";
+import {RoundStatus} from "../../hooks/useFortuneRound";
 
 if (typeof Highcharts === 'object') {
   HighchartsExporting(Highcharts)
@@ -16,6 +17,22 @@ export interface WheelProps extends HighchartsReact.Props {
 }
 
 const radToDeg = (r: number) => r * 180 / Math.PI;
+
+function getRandomInt(min: number, max: number) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+const findPlayerSlice = (data: any[], winner: `0x${string}`) => {
+  if (!data) {
+    return 30
+  }
+
+  const winnerData = data.find(d => d.address === winner);
+
+  return radToDeg(getRandomInt(winnerData?.shapeArgs.start, winnerData?.shapeArgs.end))
+}
 
 const findWinner = (data:any[]) => {
   if (!data) {
@@ -77,10 +94,12 @@ const Wheel = (props: WheelProps) => {
   const { container, countdown, onWheelEnd, ...restProps } = props;
   const chartComponentRef = useRef<typeof HighchartsReact>(null);
   const spinIntervalRef = useRef<ReturnType<typeof setInterval>>();
+  const [wheelEnd, setWheelEnd] = useState(false);
   const triangleRef = useRef<any>();
   const animationSpeed = 40;
 
-  const { data: status } = useFortune<number>(d => d.status)
+  const { data: status } = useFortune<RoundStatus>(d => d.status)
+  const { data: winner } = useFortune<`0x${string}`>(d => d.winner)
   const { data: players } = useFortune<PlayerType[]>(d => d.players)
   const { data: enableAudio } = useFortune<boolean>(d => d.enableAudio)
   const { data: hoverPlayerIndex } = useFortune<number>(d => d.hoverPlayerIndex)
@@ -113,23 +132,25 @@ const Wheel = (props: WheelProps) => {
       return;
     }
 
-    if (status === 0) {
+    setWheelEnd(false);
+
+    if (status === RoundStatus.Open) {
       playStart?.()
     }
 
-    if (status === 1) {
+    if (status === RoundStatus.Drawing) {
       playWheel?.({ id: 'start' })
     }
 
-    if (status === 2) {
+    if (status === RoundStatus.Drawn) {
       stopAudio?.('start')
       playWheel?.({ id: 'end' })
     }
 
-    if (status === 3) {
+    if (wheelEnd) {
       playWin?.()
     }
-  }, [status, enableAudio])
+  }, [status, wheelEnd, enableAudio])
 
   useEffect(() => {
     const chart = chartComponentRef.current?.chart
@@ -161,11 +182,11 @@ const Wheel = (props: WheelProps) => {
       return;
     }
 
-    if (status === 0) {
-      chart.series?.[0]?.update({ startAngle: 360 * Math.random() });
+    if (status === RoundStatus.Open) {
+      chart.series?.[0]?.update({ startAngle: 360 });
     }
 
-    if ([1,2].includes(status)) {
+    if ([RoundStatus.Drawing, RoundStatus.Drawn].includes(status)) {
       triangleRef.current = chart.renderer.path([
         ['M', chart.chartWidth / 2 - 20, chart.plotTop + 18],
         ['L', chart.chartWidth / 2 + 20, chart.plotTop + 18],
@@ -182,7 +203,7 @@ const Wheel = (props: WheelProps) => {
     let diff = 30
     let startAngle = chart.series?.[0]?.options?.startAngle | 360;
 
-    if (status === 1) {
+    if (status === RoundStatus.Drawing) {
       spinIntervalRef.current = setInterval(() => {
         startAngle += diff;
 
@@ -195,7 +216,8 @@ const Wheel = (props: WheelProps) => {
       }, animationSpeed)
     }
 
-    if (status === 2) {
+    if (status === RoundStatus.Drawn) {
+      diff = findPlayerSlice(chart.series?.[0]?.data, winner) + 90
       spinIntervalRef.current = setInterval(() => {
         startAngle += diff;
 
@@ -210,6 +232,7 @@ const Wheel = (props: WheelProps) => {
         if (diff < 0.01) {
           const winner: any = findWinner(chart.series?.[0]?.data);
           clearInterval(spinIntervalRef.current);
+          setWheelEnd(true);
           onWheelEnd(winner);
         }
       }, animationSpeed)
@@ -221,7 +244,7 @@ const Wheel = (props: WheelProps) => {
 
     if (chart) {
       chart.series?.[1]?.update({
-        data: [1,2,3].includes(status) ?
+        data: [RoundStatus.Drawing, RoundStatus.Drawn].includes(status) ?
           [{
             y: 100,
             color: '#fff'
@@ -288,7 +311,7 @@ const Wheel = (props: WheelProps) => {
           },
           events: {
             mouseOver: (e) => {
-              console.log(e.target);
+              // console.log(e.target);
             }
           }
         },
