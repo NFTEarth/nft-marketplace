@@ -180,10 +180,13 @@ const FortuneEntryForm: FC<EntryProps> = ({ show, onClose }) => {
                     backgroundColor: 'rgba(0,0,0,0.2)',
                     gap: 10,
                     p: 12,
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    userSelect: 'none'
                   }}
                   onClick={() => {
-                    setShowTokenEntry(true)
+                    if (isMobile) {
+                      setShowTokenEntry(true)
+                    }
                   }}
                 >
                   <CryptoCurrencyIcon address={AddressZero} chainId={42161} css={{ height: 15 }} />
@@ -306,50 +309,50 @@ const FortuneEntryForm: FC<EntryProps> = ({ show, onClose }) => {
                   </Flex>
                 </Flex>
               </Flex>
-              <Flex
-                direction="column"
-                css={{
-                  gap: 10,
-                  borderBottom: '1px solid',
-                  borderBottomColor: '$gray5',
-                  p: 16
-                }}
-              >
-                <Text style="h6">Add NFTE OFT</Text>
-                <NumericalInput
-                  value={valueNFTE}
-                  onUserInput={handleSetNFTEValue}
-                  icon={<Button size="xs" color="primary" onClick={handleAddNFTE}>Add</Button>}
-                  iconStyles={{
-                    top: 4,
-                    right: 4,
-                    left: 'auto'
-                  }}
-                  containerCss={{
-                    width: '100%'
-                  }}
-                  css={{
-                    pl: 20,
-                    pr: 70,
-                    boxShadow: 'inset 0 0 0 2px $$focusColor',
-                    textAlign: 'right',
-                    '&:hover': {
-                      backgroundColor: '$gray4'
-                    }
-                  }}
-                />
-                <Flex
-                  align="center"
-                  justify="between"
-                >
-                  <Text>NFTE OFT in wallet:</Text>
-                  <Flex align="center" css={{ gap: 10 }}>
-                    <Text style="body3">{`($1,615.9)`}</Text>
-                    <Text style="subtitle2">{`${valueNFTE} NFTE`}</Text>
-                    <CryptoCurrencyIcon address="0x51B902f19a56F0c8E409a34a215AD2673EDF3284" chainId={42161} css={{ height: 20 }} />
-                  </Flex>
-                </Flex>
-              </Flex>
+              {/*<Flex*/}
+              {/*  direction="column"*/}
+              {/*  css={{*/}
+              {/*    gap: 10,*/}
+              {/*    borderBottom: '1px solid',*/}
+              {/*    borderBottomColor: '$gray5',*/}
+              {/*    p: 16*/}
+              {/*  }}*/}
+              {/*>*/}
+              {/*  <Text style="h6">Add NFTE OFT</Text>*/}
+              {/*  <NumericalInput*/}
+              {/*    value={valueNFTE}*/}
+              {/*    onUserInput={handleSetNFTEValue}*/}
+              {/*    icon={<Button size="xs" color="primary" onClick={handleAddNFTE}>Add</Button>}*/}
+              {/*    iconStyles={{*/}
+              {/*      top: 4,*/}
+              {/*      right: 4,*/}
+              {/*      left: 'auto'*/}
+              {/*    }}*/}
+              {/*    containerCss={{*/}
+              {/*      width: '100%'*/}
+              {/*    }}*/}
+              {/*    css={{*/}
+              {/*      pl: 20,*/}
+              {/*      pr: 70,*/}
+              {/*      boxShadow: 'inset 0 0 0 2px $$focusColor',*/}
+              {/*      textAlign: 'right',*/}
+              {/*      '&:hover': {*/}
+              {/*        backgroundColor: '$gray4'*/}
+              {/*      }*/}
+              {/*    }}*/}
+              {/*  />*/}
+              {/*  <Flex*/}
+              {/*    align="center"*/}
+              {/*    justify="between"*/}
+              {/*  >*/}
+              {/*    <Text>NFTE OFT in wallet:</Text>*/}
+              {/*    <Flex align="center" css={{ gap: 10 }}>*/}
+              {/*      <Text style="body3">{`($1,615.9)`}</Text>*/}
+              {/*      <Text style="subtitle2">{`${valueNFTE} NFTE`}</Text>*/}
+              {/*      <CryptoCurrencyIcon address="0x51B902f19a56F0c8E409a34a215AD2673EDF3284" chainId={42161} css={{ height: 20 }} />*/}
+              {/*    </Flex>*/}
+              {/*  </Flex>*/}
+              {/*</Flex>*/}
             </Flex>
           )}
         </Flex>

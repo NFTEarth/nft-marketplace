@@ -3,8 +3,14 @@ import CryptoCurrencyIcon from "../primitives/CryptoCurrencyIcon";
 import {TokenMedia, useTokens} from "@reservoir0x/reservoir-kit-ui";
 import {FC} from "react";
 
+export enum TokenType {
+  ERC20,
+  ERC721,
+  ERC1155
+}
+
 export type PrizeType = {
-  type: 'erc721' | 'erc1155' | 'erc20',
+  type: TokenType,
   bidderName: string,
   address: `0x${string}`
   price: bigint
@@ -16,7 +22,7 @@ const FortunePrize : FC<{ data: PrizeType}> = ({ data, ...restProps }) => {
   const { data: tokens } = useTokens({
     tokens: [`${data.address}:${data.tokenId}`],
   }, {
-    isPaused: () => data.type === 'erc20'
+    isPaused: () => data.type === TokenType.ERC20
   })
 
   const token = tokens && tokens[0] ? tokens[0] : undefined
@@ -39,6 +45,7 @@ const FortunePrize : FC<{ data: PrizeType}> = ({ data, ...restProps }) => {
           border: '1px solid $gray8',
           position: 'relative',
           cursor: 'pointer',
+          userSelect: 'none',
           transition: 'filter, transform .5s',
           '&:hover': {
             filter: 'opacity(0.7)',
@@ -56,14 +63,14 @@ const FortunePrize : FC<{ data: PrizeType}> = ({ data, ...restProps }) => {
             backgroundImage: 'linear-gradient(180deg, $primary9 0%, $primary8 100%)'
           }}
         >
-          {data.type === 'erc20' && (
+          {data.type === TokenType.ERC20 && (
             <CryptoCurrencyIcon
               address={data.address}
               css={{ height: 50 }}
             />
           )}
 
-          {['erc721', 'erc1155'].includes(data.type) && (
+          {[TokenType.ERC721, TokenType.ERC1155].includes(data.type) && (
             <TokenMedia
               token={token?.token}
               style={{

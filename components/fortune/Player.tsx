@@ -9,7 +9,7 @@ import {useENSResolver, useFortune} from "../../hooks";
 
 export interface PlayerType extends Highcharts.PointOptionsObject {
   address: `0x${string}`,
-  entry: bigint
+  entry: number
 }
 
 type PlayerProps = {
@@ -37,6 +37,7 @@ const Player: FC<PlayerProps> = ({ index, data, ...restProps }) => {
         borderRightWidth: 5,
         gap: 10,
         cursor: 'pointer',
+        userSelect: 'none',
         backgroundColor: 'rgba(0,0,0, 0.1)',
         transition: 'background, filter .5s',
         ...((status !== 0 && hoverPlayerIndex !== index) ? {
