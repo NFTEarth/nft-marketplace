@@ -11,12 +11,12 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse,
 ) {
-  if (request.headers.origin !== process.env.NEXT_PUBLIC_HOST_URL) {
-    console.error(`${request.headers.origin} Not Allowed`)
-
-    response.status(404).end();
-    return;
-  }
+  // if (request.headers.origin !== process.env.NEXT_PUBLIC_HOST_URL) {
+  //   console.error(`${request.headers.origin} Not Allowed`)
+  //
+  //   response.status(404).end();
+  //   return;
+  // }
 
   const chain = FORTUNE_CHAINS[0]
   const provider = new AlchemyProvider(42161, process.env.NEXT_PUBLIC_ALCHEMY_ID);
