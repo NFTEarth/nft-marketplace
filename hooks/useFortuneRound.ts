@@ -90,6 +90,7 @@ const useFortuneRound = (roundId?: number, options?: SWRConfiguration) => {
       revalidateOnFocus: true,
       revalidateIfStale: false,
       revalidateOnReconnect: false,
+      ...options
     }
   )
 

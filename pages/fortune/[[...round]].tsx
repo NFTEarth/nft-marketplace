@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {useCountdown} from 'usehooks-ts'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {
@@ -18,7 +18,7 @@ import {Head} from 'components/Head'
 import Wheel from "components/fortune/Wheel";
 import EntryForm from "components/fortune/EntryForm";
 import Player, {PlayerType} from "components/fortune/Player";
-import FortunePrize, {PrizeType, TokenType} from "components/fortune/Prize";
+import FortunePrize, {PrizeType} from "components/fortune/Prize";
 import Confetti from "components/common/Confetti";
 import ChainToggle from "components/common/ChainToggle";
 import LoadingSpinner from "components/common/LoadingSpinner";
@@ -49,12 +49,6 @@ const convertTimer = (time: number) => {
   }
 }
 
-const TokenTypToString: Record<number, string> = {
-  0: 'erc20',
-  1: 'erc721',
-  2: 'erc1155'
-}
-
 const getTitleText = (status: number, totalPrize: string, convertedCountdown: any) => {
   if (status === RoundStatus.Open) {
     return `${convertedCountdown.minutes}:${convertedCountdown.seconds} • Ξ${totalPrize} • Fortune | NFTEarth`
@@ -77,10 +71,10 @@ const FortunePage = () => {
   const prizePotRef = useRef<HTMLDivElement>(null);
   const confettiRef = useRef<any>(null);
   const router = useRouter()
-  const { data: currentRound } = useFortuneCurrentRound()
+  const { data: currentRound } = useFortuneCurrentRound({ refreshInterval: 5000 })
   const roundId = parseInt(router.query?.round as string) || currentRound?.roundId || 1
   const { data: rawRoundData } = useFortuneRound(roundId, { refreshInterval: 5000 })
-  const { status: roundStatus = 0, valuePerEntry = 0, ...roundData } = rawRoundData || {};
+  const { status: roundStatus = 0, valuePerEntry = 0, deposits = [], cutoffTime = 0, ...roundData } = rawRoundData || {};
 
   const [ showWinner, setShowWinner] = useState(false);
   const { setStatus } = useFortune<number>(q => q)
@@ -98,57 +92,48 @@ const FortunePage = () => {
   const [countdown, { startCountdown, resetCountdown }] = useCountdown({
     countStart: durationLeft < 0 ? 0 : durationLeft,
     countStop: 0,
-    intervalMs: 1000000000,
+    intervalMs: mounted ? 1000 : 0,
   })
 
-  const convertedCountdown = useMemo(() => convertTimer(countdown), [countdown])
+  const convertedCountdown = convertTimer(countdown)
 
   useEffect(() => {
-    if (roundData) {
-      setStatus?.(roundStatus)
+    setStatus?.(roundStatus || 0);
+    const newPrizes: PrizeType[] = [];
+    const newPlayers: PlayerType[] = [];
 
-      const newPrizes: PrizeType[] = []
-      const newPlayers: PlayerType[] = []
+    (deposits || []).forEach((d: Deposit) => {
+      const existingPlayer = newPlayers.find(p => p.address === d.depositor);
 
-      roundData?.deposits?.forEach((d: Deposit) => {
-        const existingPlayer = newPlayers.find(p => p.address === d.depositor);
-
-        if (!existingPlayer) {
-          newPlayers.push({
-            address: d.depositor as `0x${string}`,
-            entry: d.numberOfEntries
-          })
-        }
-
-        newPrizes.push({
-          type: d.tokenType,
-          depositor: d.depositor as `0x${string}`,
-          address: d.tokenAddress as `0x${string}`,
-          price: BigInt(0),
-          amount: BigInt(d.tokenAmount),
-          tokenId: BigInt(d.tokenId),
-          totalNumberOfEntries: d.entry.totalNumberOfEntries
+      if (!existingPlayer) {
+        newPlayers.push({
+          address: d.depositor as `0x${string}`,
+          entry: d.numberOfEntries
         })
+      }
+
+      newPrizes.push({
+        type: d.tokenType,
+        depositor: d.depositor as `0x${string}`,
+        address: d.tokenAddress as `0x${string}`,
+        price: BigInt(0),
+        amount: BigInt(d.tokenAmount),
+        tokenId: BigInt(d.tokenId),
+        totalNumberOfEntries: d.entry.totalNumberOfEntries
       })
+    })
 
-      setPrizes?.(newPrizes)
-      setPlayers?.(newPlayers)
+    setPrizes?.(newPrizes)
+    setPlayers?.(newPlayers)
 
-      const secondDiff = (roundData?.cutoffTime || 0) - ((new Date()).getTime() / 1000);
-      setDurationLeft?.(secondDiff)
-    }
-  }, [roundData])
+    const secondDiff = (cutoffTime || 0) - ((new Date()).getTime() / 1000);
+    setDurationLeft?.(secondDiff)
+  }, [roundStatus, deposits, cutoffTime])
 
-  const totalPrize = useMemo(() => {
-    return BigInt((roundData?.numberOfEntries || 0) * valuePerEntry)
-  }, [roundData, valuePerEntry])
-  const yourEntries = useMemo(() => {
-    return prizes.filter(p => p.depositor === address)
-      .reduce((a, b) => a + b.totalNumberOfEntries, 0) * valuePerEntry
-  }, [prizes, roundData, address])
-  const yourWinChance = useMemo(() => {
-    return Math.round((roundData?.numberOfEntries || 1) / (players.find(p => p.address === address)?.entry || 1))
-  }, [players, roundData, address])
+  const totalPrize = BigInt((roundData?.numberOfEntries || 0) * (valuePerEntry || 0))
+  const yourEntries = prizes.filter(p => p.depositor === address)
+    .reduce((a, b) => a + b.totalNumberOfEntries, 0) * (valuePerEntry || 0)
+  const yourWinChance = Math.round((roundData?.numberOfEntries || 1) / (players.find(p => p.address === address)?.entry || 1))
 
   useEffect(() => {
     if (showWinner) {
@@ -164,7 +149,7 @@ const FortunePage = () => {
         setShowEntryForm(false);
       }
     }
-  }, [roundStatus, showEntryForm])
+  }, [roundStatus])
 
   const handleEnter = useCallback((e: Event) => {
     e.preventDefault()
@@ -347,13 +332,13 @@ const FortunePage = () => {
                         transform: 'translate(-50%, -50%)'
                       }}
                     >
-                      <Text css={{ borderBottom: '1px solid #ddd'}}>{`Round ${roundData?.roundId}`}</Text>
+                      <Text css={{ borderBottom: '1px solid #ddd'}}>{`Round ${roundData?.roundId || 1}`}</Text>
                       <FormatCryptoCurrency textStyle="h3" logoHeight={35} amount={totalPrize} maximumFractionDigits={4} />
                       {roundStatus === RoundStatus.Open && (
                         <FormatCurrency amount={(totalPrize * BigInt(parseEther(`${usdConversion}`).toString())).toString()} />
                       )}
                       {[RoundStatus.Drawing].includes(roundStatus) && (
-                        <Text style="subtitle1" css={{ color: '$primary10'}}>Drawing Winner...</Text>
+                        <Text style="subtitle1" css={{ color: '$primary10' }}>Drawing Winner...</Text>
                       )}
                       {showWinner && (
                         <Text style="subtitle1" css={{ color: '$primary10'}}>{`Winner is ${playerWinner?.name}`}</Text>
@@ -380,6 +365,7 @@ const FortunePage = () => {
             roundId={roundId}
             show={showEntryForm}
             lessThan30Seconds={countdown < 30}
+            roundClosed={countdown < 1}
             onClose={() => setShowEntryForm(false)}
           />
           <Flex
@@ -395,7 +381,7 @@ const FortunePage = () => {
               },
             }}>
             <Flex justify="between" align="center">
-              <Text style="h5">{`Round ${roundData?.roundId}`}</Text>
+              <Text style="h5">{`Round ${roundData?.roundId || 1}`}</Text>
               {roundStatus === RoundStatus.Open && (
                 <Flex
                   align="center"
@@ -548,6 +534,7 @@ const FortunePage = () => {
                   <source src="/video/space.mp4" type="video/mp4" />
                 </Video>
                 <FortuneEnterButton
+                  disabled={countdown < 1}
                   onClick={handleEnter}
                 />
               </Flex>

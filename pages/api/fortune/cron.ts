@@ -1,10 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import ethers, {AlchemyProvider, Contract, parseEther} from 'ethers'
+import { ethers, AlchemyProvider, Contract, parseEther} from 'ethers'
+import {Redis} from "@upstash/redis";
 
 import { FORTUNE_CHAINS } from 'utils/chains'
 import FortuneAbi from 'artifact/FortuneAbi.json'
 
-export default function handler(
+const redis = Redis.fromEnv()
+
+export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse,
 ) {
@@ -16,13 +19,22 @@ export default function handler(
   }
 
   const chain = FORTUNE_CHAINS[0]
-  const provider = new AlchemyProvider("arbitrum", process.env.NEXT_PUBLIC_ALCHEMY_ID);
+  const provider = new AlchemyProvider(42161, process.env.NEXT_PUBLIC_ALCHEMY_ID);
   const signer = new ethers.Wallet(process.env.SIGNER_PKEY as string, provider);
   const fortune = new Contract(chain.address, FortuneAbi, signer)
 
-  const data = fortune.roundsCount();
+  const roundId = await fortune.roundsCount();
+  const round = await fortune.rounds(roundId);
+  const timestamp = (new Date()).getTime() / 1000
 
-  console.log('Requested', data)
+  // Enable when we ready
+  // if (timestamp >= round.cutoffTime) {
+  //   if (round.numberOfParticipants > 1) {
+  //     await fortune.drawWinner()
+  //   } else {
+  //     await fortune.cancel()
+  //   }
+  // }
 
   response.status(200).json({ success: true });
 }

@@ -19,10 +19,13 @@ import {Head} from "components/Head";
 import Layout from "components/Layout";
 import ChainToggle from "components/common/ChainToggle";
 import HistoryTable from "../../components/fortune/HistoryTable";
-import {useMounted} from "../../hooks";
+import {useMarketplaceChain, useMounted} from "../../hooks";
 import {useMediaQuery} from "react-responsive";
 import useFortuneHistory from "../../hooks/useFortuneHistory";
-import {useAccount} from "wagmi";
+import {useAccount, useContractRead, useContractWrite} from "wagmi";
+import FortuneAbi from "../../artifact/FortuneAbi.json";
+import {FORTUNE_CHAINS} from "../../utils/chains";
+import ClaimModal from "../../components/fortune/ClaimModal";
 
 const roundData: any[] = [
   { roundId: 1, winner: '0x7D3E5dD617EAF4A3d42EA550C41097086605c4aF' },
@@ -53,6 +56,23 @@ const FortuneHistory = () => {
         }
       } :  {})
     }
+  })
+  const marketplaceChain = useMarketplaceChain()
+  const fortuneChain = FORTUNE_CHAINS.find(c => c.id === marketplaceChain.id);
+
+  const { data: isApproved, refetch: refetchApproval } = useContractRead({
+    enabled: !!fortuneChain?.transferManager && !!address,
+    abi: FortuneAbi,
+    address: fortuneChain?.address as `0x${string}`,
+    functionName: 'hasUserApprovedOperator',
+    args: [address, fortuneChain?.address],
+  })
+
+  const { writeAsync: grantApproval, error: approvalError } = useContractWrite({
+    abi: FortuneAbi,
+    address: fortuneChain?.transferManager as `0x${string}`,
+    functionName: 'grantApprovals',
+    args: [[fortuneChain?.address]],
   })
 
   return (
@@ -174,7 +194,7 @@ const FortuneHistory = () => {
                   textStyle={'h6'}
                 />
               </Flex>
-              <Button>Claim Now</Button>
+              <ClaimModal />
             </Flex>
           </Flex>
           <HistoryTable data={data}/>

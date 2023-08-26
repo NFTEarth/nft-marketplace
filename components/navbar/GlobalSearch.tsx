@@ -389,12 +389,15 @@ const GlobalSearch = forwardRef<
             {results &&
               results
                 .slice(0, 6)
-                .map((result) => (
-                  <SearchResult
-                    result={result}
-                    handleSelectResult={handleSelectResult}
-                  />
-                ))}
+                .map((result: any, i: number) => {
+                  return (
+                    <SearchResult
+                      key={`result-${searchChain}-${result.type}-${result.data.collectionId || result.data.address || i}`}
+                      result={result}
+                      handleSelectResult={handleSelectResult}
+                    />
+                  )
+                })}
 
             {results.length === 0 &&
             fallbackResults.length > 0 &&

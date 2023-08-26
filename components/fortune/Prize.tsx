@@ -2,11 +2,7 @@ import {FC, useEffect} from "react";
 import {TokenMedia, useTokens} from "@reservoir0x/reservoir-kit-ui";
 
 import CryptoCurrencyIcon from "../primitives/CryptoCurrencyIcon";
-import {Box, Flex, FormatCryptoCurrency, Text, Tooltip} from "../primitives";
-import {useFortune, useMarketplaceChain} from "hooks";
-import {setParams} from "@reservoir0x/reservoir-sdk";
-import {AddressZero} from "@ethersproject/constants";
-import {useAccount} from "wagmi";
+import {Flex, FormatCryptoCurrency, Text, Tooltip} from "../primitives";
 
 export enum TokenType {
   ERC20,
