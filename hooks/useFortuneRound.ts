@@ -1,5 +1,5 @@
 import {request, RequestDocument, Variables} from 'graphql-request'
-import useSWR from "swr";
+import useSWR, {SWRConfiguration} from "swr";
 import {TokenType} from "../components/fortune/Prize";
 export type Entry = {
   totalNumberOfEntries: number
@@ -49,7 +49,7 @@ type RoundResult = {
   round: Round
 }
 
-const useFortuneRound = (roundId?: number) => {
+const useFortuneRound = (roundId?: number, options?: SWRConfiguration) => {
   const { data, isLoading } = useSWR<RoundResult>(
     roundId ? [
       `query GetRound($id: ID!) {
@@ -88,13 +88,13 @@ const useFortuneRound = (roundId?: number) => {
     subgraphFetcher,
     {
       revalidateOnFocus: true,
-      revalidateIfStale: true,
-      revalidateOnReconnect: true,
+      revalidateIfStale: false,
+      revalidateOnReconnect: false,
     }
   )
 
   return {
-    data: data?.round,
+    data: data?.round as Round,
     isLoading
   };
 }

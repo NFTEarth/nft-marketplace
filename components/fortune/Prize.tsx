@@ -14,38 +14,23 @@ export enum TokenType {
   ERC1155
 }
 
-export type ReservoirFloorPrice = {
-  id: `0x${string}`
-  payload: `0x${string}`
-  timestamp: number
-  signature: `0x${string}`
-}
-
 export type PrizeType = {
   type: TokenType,
-  depositor: `0x${string}` | `0x${string}`[]
+  depositor?: `0x${string}`
   address: `0x${string}`
   price: bigint
-  amount: bigint | bigint[]
+  amount: bigint
   totalNumberOfEntries: number
   tokenId?: bigint
-  reservoirOracleFloorPrice?: ReservoirFloorPrice
 }
 
-type ReservoirOracleFloorPriceResponse = {
-  price: number
-  message: ReservoirFloorPrice
-}
-
-const FortunePrize : FC<{ data: PrizeType}> = ({ data, ...restProps }) => {
+const FortunePrize : FC<{ data: PrizeType }> = ({ data, ...restProps }) => {
   const { data: tokens } = useTokens({
     tokens: [`${data.address}:${data.tokenId}`],
   }, {
     isPaused: () => data.type === TokenType.ERC20
   })
-  const { address } = useAccount()
-  const { data: prizes, setPrizes } = useFortune<PrizeType[]>(d => d.prizes)
-  const marketplaceChain = useMarketplaceChain()
+
   const token = tokens && tokens[0] ? tokens[0] : undefined
 
   // TODO: Better data fetching & caching
@@ -56,35 +41,6 @@ const FortunePrize : FC<{ data: PrizeType}> = ({ data, ...restProps }) => {
           .reduce((a, b) => a + b, BigInt(0)) : data.amount || BigInt(0)
         return;
       }
-
-      const path = new URL(marketplaceChain.proxyApi, window.location.origin);
-
-      setParams(path, {
-        kind: 'twap',
-        currency: '0x0000000000000000000000000000000000000000',
-        twapSeconds: '1',
-        collection: data.address
-      })
-
-      fetch(path.href)
-        .then(res => res.json())
-        .then(res => {
-          setPrizes?.(prizes.map(p => {
-            if (p.address === data.address) {
-              p.price = res.price
-              p.reservoirOracleFloorPrice = {
-                id: res.message.id,
-                payload: res.message.payload,
-                timestamp: res.message.timestamp,
-                signature: res.message.signature
-              }
-            }
-
-            return p;
-          }))
-        }).catch(() => {
-        // Empty
-      })
     }
   }, [data])
 

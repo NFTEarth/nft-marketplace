@@ -43,8 +43,8 @@ const useFortuneCurrentRound = () => {
     subgraphFetcher,
     {
       revalidateOnFocus: true,
-      revalidateIfStale: true,
-      revalidateOnReconnect: true,
+      revalidateIfStale: false,
+      revalidateOnReconnect: false,
     }
   )
 

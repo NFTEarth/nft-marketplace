@@ -266,7 +266,12 @@ export const OFT_CHAINS = [
 ]
 
 export const FORTUNE_CHAINS = [
-  arbitrum.id as number,
+  {
+    id: arbitrum.id as number,
+    address: '0xf80d04ccd8d3c76294b24ad1c2a38ccb847059c3',
+    priceOracle: '0x896397f72bd5c207cab95740d48ca76acf960b16',
+    transferManager: '0xf502c99ebdffd2f5fb92c162ea12d741b98402c2'
+  }
 ]
 
 export default [
@@ -292,7 +297,7 @@ export default [
     proxyApi: '/api/reservoir/arbitrum',
     routePrefix: 'arbitrum',
     apiKey: process.env.RESERVOIR_API_KEY,
-    coingeckoId: 'arbitrum-iou',
+    coingeckoId: 'arbitrum',
     collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_ARBITRUM_COMMUNITY,
   },
@@ -352,7 +357,7 @@ export default [
     proxyApi: '/api/reservoir/base',
     routePrefix: 'base',
     apiKey: process.env.RESERVOIR_API_KEY,
-    coingeckoId: 'ethereum',
+    coingeckoId: 'base',
     collectionSetId: process.env.NEXT_PUBLIC_BASE_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_BASE_COMMUNITY,
   },
