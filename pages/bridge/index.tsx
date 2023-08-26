@@ -12,7 +12,7 @@ import {
 import {useConnectModal} from "@rainbow-me/rainbowkit";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowRight} from "@fortawesome/free-solid-svg-icons";
-import { ethers, BigNumber } from 'ethers';
+import {formatEther, formatUnits, parseEther, parseUnits} from 'ethers';
 import {ContractFunctionConfig, zeroAddress} from "viem";
 import {useDebounce} from "usehooks-ts";
 import {Abi} from "abitype";
@@ -27,6 +27,9 @@ import {formatBN} from "utils/numbers";
 import {OFT_CHAINS} from "utils/chains";
 import {ToastContext} from "context/ToastContextProvider";
 import NFTEOFTAbi from 'artifact/NFTEOFTAbi.json'
+import {hexZeroPad} from "@ethersproject/bytes";
+import {BigNumber} from "@ethersproject/bignumber";
+import { solidityPack } from "ethers/lib/utils";
 
 const BridgePage = () => {
   const { addToast } = useContext(ToastContext)
@@ -92,10 +95,10 @@ const BridgePage = () => {
         chainId: chain.id,
         args: [
           toChain.lzId,
-          ethers.utils.hexZeroPad(address || '0x', 32),
-          BigInt(ethers.utils.parseEther(debouncedValueEth || '0').toString()),
+          hexZeroPad(address || '0x', 32),
+          BigInt(parseEther(debouncedValueEth || '0').toString()),
           false,
-          ethers.utils.solidityPack(
+          solidityPack(
             ['uint16', 'uint256'],
             [1, BigInt(minDstGasLookup ? minDstGasLookup.toString() : 200000)]
           )
@@ -112,7 +115,7 @@ const BridgePage = () => {
 
   useEffect(() => {
     if (nfteBalance?.result) {
-      const val = ethers.utils.formatUnits(BigNumber.from(bridgePercent).mul(nfteBalance?.result?.toString()).div(100), 18)
+      const val = formatUnits(BigInt(bridgePercent) * BigInt(nfteBalance?.result) / BigInt(100), 18)
       setValueEth(val)
     }
   }, [debouncedPercent])
@@ -125,8 +128,8 @@ const BridgePage = () => {
     args: [
       address || '0x',
       toChain.lzId,
-      ethers.utils.hexZeroPad(address || '0x', 32),
-      BigInt(ethers.utils.parseEther(debouncedValueEth || '0').toString()),
+      hexZeroPad(address || '0x', 32),
+      BigInt(parseEther(debouncedValueEth || '0').toString()),
       [address, zeroAddress, '0x']
     ],
   })
@@ -138,7 +141,7 @@ const BridgePage = () => {
 
   const handleSetValue = (val: string) => {
     try {
-      ethers.utils.parseUnits(val, 18);
+      parseUnits(val, 18);
       setValueEth(val);
     } catch (e) {
       setValueEth('0');
@@ -363,7 +366,7 @@ const BridgePage = () => {
                       }}
                     >NFTE</Text>
                   </Box>
-                  <Text>{`Estimated Fee : ${ethers.utils.formatEther(BigNumber.from(estimateFee?.result?.[0]?.toString() || 300000000000000).div(100).mul(200)) || '-'}`}</Text>
+                  <Text>{`Estimated Fee : ${formatEther(BigInt(estimateFee?.result?.[0]?.toString() || 300000000000000) / BigInt(100) * BigInt(200)) || '-'}`}</Text>
                   <Flex align="center" direction="column" css={{ gap: 40 }}>
                     <Box>
                       <Button onClick={handleBridge} disabled={isLoading || isLoadingTransaction}>Bridge</Button>

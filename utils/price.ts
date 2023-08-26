@@ -1,4 +1,3 @@
-import {BigNumber} from "ethers";
 import { AddressZero } from "@ethersproject/constants";
 import { parseUnits } from "@ethersproject/units";
 import {
@@ -14,11 +13,12 @@ import {
   bsc,
   polygonZkEvm
 } from 'wagmi/chains'
-import db from "lib/db"; 
+import {BigNumber} from "@ethersproject/bignumber";
+import db from "lib/db";
+
 import {OFT_CHAINS} from "./chains";
 
 const currencyPrice = db.collection('currency_price')
-
 import { getCurrency } from "./currency";
 
 const USD_DECIMALS = 6;
