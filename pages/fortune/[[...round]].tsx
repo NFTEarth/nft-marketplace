@@ -71,10 +71,10 @@ const FortunePage = () => {
   const prizePotRef = useRef<HTMLDivElement>(null);
   const confettiRef = useRef<any>(null);
   const router = useRouter()
-  const { data: currentRound } = useFortuneCurrentRound({ refreshInterval: 5000 })
+  const { data: currentRound } = useFortuneCurrentRound({ refreshInterval: 5000, isPaused: () => !!router.query?.round })
   const roundId = parseInt(router.query?.round as string) || currentRound?.roundId || 1
-  const { data: rawRoundData } = useFortuneRound(roundId, { refreshInterval: 5000 })
-  const { status: roundStatus = 0, valuePerEntry = 0, deposits = [], cutoffTime = 0, ...roundData } = rawRoundData || {};
+  const { data: rawRoundData } = useFortuneRound(roundId, { refreshInterval: 5000, isPaused: () => !router.query?.round })
+  const { status: roundStatus = 0, valuePerEntry = 0, deposits = [], cutoffTime, ...roundData } = rawRoundData || currentRound || {};
 
   const [ showWinner, setShowWinner] = useState(false);
   const { setStatus } = useFortune<number>(q => q)
@@ -88,9 +88,11 @@ const FortunePage = () => {
   const { address } = useAccount()
   const mounted = useMounted()
   const isMobile = useMediaQuery({ maxWidth: 600 })
+  const secondDiff = (+cutoffTime || 0) - ((new Date()).getTime() / 1000);
 
+  console.log(secondDiff, cutoffTime, +cutoffTime)
   const [countdown, { startCountdown, resetCountdown }] = useCountdown({
-    countStart: durationLeft < 0 ? 0 : durationLeft,
+    countStart: secondDiff < 0 ? 0 : secondDiff,
     countStop: 0,
     intervalMs: mounted ? 1000 : 0,
   })
@@ -126,9 +128,9 @@ const FortunePage = () => {
     setPrizes?.(newPrizes)
     setPlayers?.(newPlayers)
 
-    const secondDiff = (+cutoffTime || 0) - ((new Date()).getTime() / 1000);
-    setDurationLeft?.(secondDiff)
-  }, [roundStatus, deposits, cutoffTime])
+    console.log(rawRoundData, cutoffTime, (new Date(+cutoffTime * 1000)) )
+    // setDurationLeft?.(secondDiff)
+  }, [roundStatus, deposits, cutoffTime, roundId])
 
   const totalPrize = BigInt((roundData?.numberOfEntries || 0) * (valuePerEntry || 0))
   const yourEntries = prizes.filter(p => p.depositor === address)

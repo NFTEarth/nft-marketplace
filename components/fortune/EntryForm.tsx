@@ -46,6 +46,7 @@ const minimumEntry = BigInt(parseEther('0.005').toString())
 const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClosed,  show, onClose }) => {
   const { address } = useAccount()
   const [openModal, setOpenModal] = useState(false)
+  const [approvalTarget, setApprovalTarget] = useState<`0x${string}`>()
   const { addToast } = useContext(ToastContext)
   const [showTokenEntry, setShowTokenEntry] = useState(false)
   const [valueEth, setValueEth] = useState<string>('')
@@ -93,6 +94,13 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
     args: [[fortuneChain?.address]],
   })
 
+  const { writeAsync: approveToken, isLoading: isApprovalTokenLoading, error: approvalTokenError } = useContractWrite({
+    abi: TransferManagerABI,
+    address: approvalTarget,
+    functionName: 'approve',
+    args: [fortuneChain?.address, 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff],
+  })
+
   const { writeAsync, data: sendData, isLoading, error: error } = useContractWrite({
     abi: FortuneAbi,
     address: fortuneChain?.address as `0x${string}`,
@@ -124,9 +132,11 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
     enabled: !!sendData
   })
 
+  const showModal = !!error || !!approvalError || isApprovalLoading || isLoading || isLoadingTransaction || isSuccess
+
   useEffect(() => {
-    setOpenModal(!!error || !!approvalError || isApprovalLoading || isLoading || isLoadingTransaction || isSuccess);
-  }, [error, approvalError, isLoading, isLoadingTransaction, isApprovalLoading, isSuccess])
+    setOpenModal(showModal);
+  }, [showModal])
 
   const filteredTokens = tokens.filter(t => t.token?.kind === 'erc721' && BigInt(t.token?.collection?.floorAskPrice?.amount?.raw || '0') > minimumEntry)
 
@@ -182,8 +192,9 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
         type: 'erc20',
         name: 'ETH',
         contract: AddressZero.toString(),
-        value: value
-      }
+        value: value,
+        approved: false,
+      },
     })
 
     setValueEth('')
@@ -198,7 +209,8 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
         type: 'erc20',
         name: 'NFTE OFT',
         contract: '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
-        value: BigInt(parseEther(`${valueNFTE === '' ? 0 : +valueNFTE}`).toString())
+        value: BigInt(parseEther(`${valueNFTE === '' ? 0 : +valueNFTE}`).toString()),
+        approved: false,
       }
     })
 
@@ -213,6 +225,13 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
         await refetchApproval?.()
         return;
       }
+
+      Object.keys(selections)
+        .filter((p: any) => !!p.approved).forEach((p: any) => {
+          setApprovalTarget(p.contract)
+          approveToken?.()
+      })
+
       await writeAsync?.()
     } catch (e: any) {
       // addToast?.({
@@ -496,7 +515,19 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
               maxHeight: 420
             }}>
             {(Object.keys(selections)).map((k: string) => (
-              <SelectionItem key={k} data={selections[k]}/>
+              <SelectionItem
+                key={k}
+                data={selections[k]}
+                onApprove={(approved: boolean) => {
+                  setSelections({
+                    ...selections,
+                    [k]: {
+                      ...selections[k],
+                      approved
+                    }
+                  })
+                }}
+              />
             ))}
           </Flex>
           {(Object.keys(selections)).length > 0 && (
@@ -558,6 +589,9 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
             {isApprovalLoading && (
               <Text style="h6">Transfer Manager Approval</Text>
             )}
+            {/*{isContractApproval && (*/}
+            {/*  <Text style="h6">Approval</Text>*/}
+            {/*)}*/}
             {isLoading && (
               <Text style="h6">Please confirm in your wallet</Text>
             )}
