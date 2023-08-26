@@ -28,12 +28,12 @@ export default async function handler(
   const timestamp = Math.round((new Date()).getTime() / 1000)
 
   // Enable when we ready
-  if (BigInt(timestamp) >= round.cutoffTime) {
+  if (BigInt(timestamp) >= BigInt(round.cutoffTime)) {
     if (round.numberOfParticipants > 1) {
       console.log(`Round ${roundId} Drawing Winner`)
       await fortune.drawWinner()
     } else {
-      console.log(`Round ${roundId} Canceled, New Round ID : ${roundId + 1}`)
+      console.log(`Round ${roundId} Canceled, New Round ID : ${roundId + BigInt(1)}`)
       await fortune.cancel()
     }
   }
