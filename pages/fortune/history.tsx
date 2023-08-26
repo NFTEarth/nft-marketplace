@@ -1,4 +1,4 @@
-import { useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {zeroAddress} from "viem";
@@ -21,17 +21,40 @@ import ChainToggle from "components/common/ChainToggle";
 import HistoryTable from "../../components/fortune/HistoryTable";
 import {useMounted} from "../../hooks";
 import {useMediaQuery} from "react-responsive";
+import useFortuneHistory from "../../hooks/useFortuneHistory";
+import {useAccount} from "wagmi";
+import {useIntersectionObserver} from "usehooks-ts";
 
 const roundData: any[] = [
   { roundId: 1, winner: '0x7D3E5dD617EAF4A3d42EA550C41097086605c4aF' },
   { roundId: 2, winner: '0x7D3E5dD617EAF4A3d42EA550C41097086605c4aF' }
 ]
 
+const typeToStatus: Record<string, number | undefined> = {
+  "all": undefined,
+  "completed": 3,
+  "canceled": 4
+}
+
 const FortuneHistory = () => {
   const [type, setType] = useState<string>("all")
   const [onlyYourRound, setOnlyYourRound] = useState<boolean>(false)
+
+  const { address } = useAccount()
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
+  const data = useFortuneHistory({
+    first: 12,
+    skip: 0,
+    where: {
+      status: typeToStatus[type],
+      ...(onlyYourRound ? {
+        "deposits_": {
+          "depositor": address
+        }
+      } :  {})
+    }
+  })
 
   return (
     <Layout>
@@ -155,7 +178,7 @@ const FortuneHistory = () => {
               <Button>Claim Now</Button>
             </Flex>
           </Flex>
-          <HistoryTable data={{ data: roundData }}/>
+          <HistoryTable data={data}/>
         </Flex>
       </Box>
     </Layout>

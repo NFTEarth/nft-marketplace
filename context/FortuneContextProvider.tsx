@@ -13,6 +13,8 @@ export const FortuneContext = createContext<{
     prizes: PrizeType[]
     enableAudio: boolean
     hoverPlayerIndex?: number
+    yourEntriesEth?: BigInt
+    yourEntriesCount?: number
   }
   functions: {
     setStatus: ((status: number) => void) | null
@@ -22,12 +24,16 @@ export const FortuneContext = createContext<{
     setPrizes: ((prizes: PrizeType[]) => void) | null
     setEnableAudio: ((enableAudio: boolean) => void) | null
     setHoverPlayerIndex: ((playerIndex?: number) => void) | null
+    setYourEntriesEth: ((entriesEth: bigint) => void) | null
+    setYourEntriesCount: ((status: number) => void) | null
   }
 }>({
   data: {
     status: 0,
     winner: null,
     durationLeft: 0,
+    yourEntriesEth: BigInt(0),
+    yourEntriesCount: 0,
     enableAudio: false,
     players: [],
     prizes: [],
@@ -39,12 +45,16 @@ export const FortuneContext = createContext<{
     setDurationLeft: null,
     setPlayers: null,
     setPrizes: null,
+    setYourEntriesEth: null,
+    setYourEntriesCount: null,
     setHoverPlayerIndex: null
   }
 })
 
 const FortuneContextProvider: FC<any> = ({ children }) => {
   const [status, setStatus] = useState(0)
+  const [yourEntriesEth, setYourEntriesEth] = useState(BigInt(0))
+  const [yourEntriesCount, setYourEntriesCount] = useState(0)
   const [winner, setWinner] = useState<`0x${string}` | null>(null)
   const [enableAudio, setEnableAudio] = useState(false)
   const [players, setPlayers] = useState<PlayerType[]>([])
@@ -63,6 +73,8 @@ const FortuneContextProvider: FC<any> = ({ children }) => {
           enableAudio,
           durationLeft,
           hoverPlayerIndex,
+          yourEntriesEth,
+          yourEntriesCount
         },
         functions: {
           setStatus,
@@ -71,7 +83,9 @@ const FortuneContextProvider: FC<any> = ({ children }) => {
           setPrizes,
           setEnableAudio,
           setDurationLeft,
-          setHoverPlayerIndex
+          setHoverPlayerIndex,
+          setYourEntriesEth,
+          setYourEntriesCount
         }
       }}
     >

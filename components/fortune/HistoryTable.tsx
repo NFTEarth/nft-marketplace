@@ -1,18 +1,19 @@
-import {FC, useEffect, useMemo, useRef} from "react";
+import {FC, useEffect, useRef} from "react";
 import {useIntersectionObserver} from "usehooks-ts";
-import {Anchor, Box, Button, Flex, FormatCryptoCurrency, HeaderRow, TableCell, TableRow, Text} from "../primitives";
+import {Box, Button, Flex, FormatCryptoCurrency, HeaderRow, TableCell, TableRow, Text} from "../primitives";
 import LoadingSpinner from "../common/LoadingSpinner";
 import {useMediaQuery} from "react-responsive";
 import {useENSResolver, useMarketplaceChain, useMounted, useTimeSince} from "../../hooks";
 import {NAVBAR_HEIGHT} from "../navbar";
+import {AddressZero} from "@ethersproject/constants";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faClockFour, faExternalLink, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
+import {Round, RoundStatus} from "../../hooks/useFortuneRound";
+import {useAccount} from "wagmi";
 import {Avatar} from "../primitives/Avatar";
 import Jazzicon from "react-jazzicon/dist/Jazzicon";
 import {jsNumberForAddress} from "react-jazzicon";
-import {AddressZero} from "@ethersproject/constants";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faExternalLink} from "@fortawesome/free-solid-svg-icons";
-import Link from "next/link";
-
 
 type Props = {
   data: any
@@ -22,7 +23,7 @@ const HistoryTable : FC<Props> = ({ data }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
-  const rounds:any[] = data.data;
+  const rounds: Round[] = data?.data || [];
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
@@ -49,7 +50,7 @@ const HistoryTable : FC<Props> = ({ data }) => {
 
             return (
               <RoundTableRow
-                key={`${round?.txHash}-${i}`}
+                key={`${round?.roundId}-${i}`}
                 round={round}
               />
             )
@@ -66,21 +67,21 @@ const HistoryTable : FC<Props> = ({ data }) => {
   )
 }
 
-export type Round = {
-  txHash: string
+type RoundTableRowProps = {
+  round: Round
 }
 
-type RoundTableRowProps = {
-  round: Round | any
-}
+const mobileTemplateColumn = '0.2fr 0.75fr repeat(3, 0.3fr)'
+const desktopTemplateColumn = '0.2fr 1fr repeat(5, 0.3fr) 0.75fr 0.2fr'
 
 const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
+  const { address } = useAccount();
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
   const marketplaceChain = useMarketplaceChain()
   const blockExplorerBaseUrl =
     marketplaceChain?.blockExplorers?.default?.url || 'https://etherscan.io'
-  const finish = useTimeSince(round.drawTime || ((new Date).getTime() / 1000));
+  const finish = useTimeSince(round.cutoffTime || ((new Date).getTime() / 1000));
 
   if (!round) {
     return null
@@ -92,16 +93,25 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
     shortName: shortEnsName,
   } = useENSResolver(round?.winner)
 
+  const winnerEntry = round.valuePerEntry * (round.deposits
+    .filter(d => d.depositor === round.winner)
+    .reduce((a, b) => a + b.numberOfEntries, 0) || 0);
+  const yourEntry = round.valuePerEntry * round.deposits
+    .filter(d => d.depositor === address)
+    .reduce((a, b) => a + b.numberOfEntries, 0)
+  const prizePool = round.numberOfEntries * round.valuePerEntry
+  const ROI = prizePool / winnerEntry * 100;
+
   return (
     <Link href={`/fortune/${round.roundId}`} passHref legacyBehavior>
       <TableRow
         as="a"
-        key={round.txHash}
+        key={round.roundId}
         css={{
           px: '$2',
-          gridTemplateColumns: '0.2fr 0.75fr repeat(3, 0.3fr)',
+          gridTemplateColumns: mobileTemplateColumn,
           '@lg': {
-            gridTemplateColumns: '0.2fr 1fr repeat(5, 0.3fr) 0.75fr 0.2fr',
+            gridTemplateColumns: desktopTemplateColumn,
           },
         }}
       >
@@ -120,19 +130,38 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
                 display: 'flex'
               }
             }}>
-              {ensAvatar ? (
-                <Avatar size="medium" src={ensAvatar} />
-              ) : (
-                <Jazzicon diameter={44} seed={jsNumberForAddress(round.winner as string)} />
+              {round.status === RoundStatus.Drawn && (
+                ensAvatar ? (
+                  <Avatar size="medium" src={ensAvatar} />
+                ) : (
+                  <Jazzicon diameter={44} seed={jsNumberForAddress(round.winner as string)} />
+                )
+              )}
+              {[RoundStatus.Open, RoundStatus.Drawing].includes(round.status) && (
+                <FontAwesomeIcon icon={faClockFour} size="2xl" color={round.status === RoundStatus.Drawing ? 'green' : '#ddd'} />
+              )}
+              {round.status === RoundStatus.Cancelled && (
+                <FontAwesomeIcon icon={faTimesCircle} size="2xl" color="red" />
               )}
             </Flex>
-            <Text>{shortEnsName ? shortEnsName : shortAddress}</Text>
+            {round.status === RoundStatus.Drawn && (
+              <Text>{shortEnsName ? shortEnsName : shortAddress}</Text>
+            )}
+            {round.status === RoundStatus.Open && (
+              <Text>Current Round</Text>
+            )}
+            {round.status === RoundStatus.Cancelled && (
+              <Text>Round Cancelled</Text>
+            )}
+            {round.status === RoundStatus.Drawing && (
+              <Text>Round Cancelled</Text>
+            )}
           </Flex>
         </TableCell>
         <TableCell css={{ color: '$gray11' }}>
           <Flex justify="center">
             <FormatCryptoCurrency
-              amount={round.prizePool}
+              amount={prizePool}
               address={AddressZero}
               logoHeight={16}
               textStyle="subtitle1"
@@ -148,12 +177,14 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
             }
           }}>
           <Flex justify="center">
-            <FormatCryptoCurrency
-              amount={round.winnerEntries}
-              address={AddressZero}
-              logoHeight={16}
-              textStyle="subtitle1"
-            />
+            {round.status === RoundStatus.Drawn ? (
+              <FormatCryptoCurrency
+                amount={winnerEntry}
+                address={AddressZero}
+                logoHeight={16}
+                textStyle="subtitle1"
+              />
+            ) : '-'}
           </Flex>
         </TableCell>
         <TableCell
@@ -165,7 +196,9 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
             }
           }}>
           <Flex justify="center">
-            <Text>{`x${round.winnerROI || 1}`}</Text>
+            {round.status === RoundStatus.Drawn ? (
+              <Text>{`x${ROI || 0}`}</Text>
+            ) : '-'}
           </Flex>
         </TableCell>
         <TableCell
@@ -178,7 +211,7 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
           }}>
           <Flex justify="center">
             <FormatCryptoCurrency
-              amount={round.yourEntries}
+              amount={yourEntry}
               address={AddressZero}
               logoHeight={16}
               textStyle="subtitle1"
@@ -187,7 +220,7 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
         </TableCell>
         <TableCell css={{ color: '$gray11' }}>
           <Flex justify="center">
-            <Text>{round.players?.length || 0}</Text>
+            <Text>{round.numberOfParticipants || 0}</Text>
           </Flex>
         </TableCell>
         <TableCell
@@ -203,21 +236,23 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
           </Flex>
         </TableCell>
         <TableCell>
-          <Button
-            as="a"
-            size="xs"
-            color="primary"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={e => e.stopPropagation()}
-            href={`${blockExplorerBaseUrl}/tx/${round.txHash}`}
-          >
-            <FontAwesomeIcon
-              icon={faExternalLink}
-              width={12}
-              height={15}
-            />
-          </Button>
+          {round.status === RoundStatus.Drawn && (
+            <Button
+              as="a"
+              size="xs"
+              color="primary"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={e => e.stopPropagation()}
+              href={`${blockExplorerBaseUrl}/tx/${round.drawnHash}`}
+            >
+              <FontAwesomeIcon
+                icon={faExternalLink}
+                width={12}
+                height={15}
+              />
+            </Button>
+          )}
         </TableCell>
       </TableRow>
     </Link>
@@ -235,9 +270,9 @@ const TableHeading = () => {
     <HeaderRow
       css={{
         display: 'grid',
-        gridTemplateColumns: '0.2fr 0.75fr repeat(3, 0.3fr)',
+        gridTemplateColumns: mobileTemplateColumn,
         '@lg': {
-          gridTemplateColumns: '0.2fr 1fr repeat(5, 0.3fr) 0.75fr 0.2fr',
+          gridTemplateColumns: desktopTemplateColumn,
         },
         position: 'sticky',
         top: NAVBAR_HEIGHT,

@@ -18,7 +18,7 @@ import {Head} from 'components/Head'
 import Wheel from "components/fortune/Wheel";
 import EntryForm from "components/fortune/EntryForm";
 import Player, {PlayerType} from "components/fortune/Player";
-import FortunePrize, {PrizeType} from "components/fortune/Prize";
+import FortunePrize, {PrizeType, TokenType} from "components/fortune/Prize";
 import Confetti from "components/common/Confetti";
 import ChainToggle from "components/common/ChainToggle";
 import LoadingSpinner from "components/common/LoadingSpinner";
@@ -32,6 +32,7 @@ import {useConnectModal} from "@rainbow-me/rainbowkit";
 import {useRouter} from "next/router";
 import useFortuneCurrentRound from "../../hooks/useFortuneCurrentRound";
 import useFortuneRound, {Deposit, RoundStatus} from "../../hooks/useFortuneRound";
+import {formatEther} from "viem";
 
 const Video = styled('video', {});
 
@@ -80,8 +81,7 @@ const FortunePage = () => {
   const roundId = parseInt(router.query?.round as string) || currentRound?.roundId || 1
   const { data: roundData } = useFortuneRound(roundId)
 
-  const [showWinner, setShowWinner] = useState(false);
-  const { data: winner, setWinner } = useFortune<number>(d => d.winner)
+  const [ showWinner, setShowWinner] = useState(false);
   const { data: status, setStatus } = useFortune<number>(d => d.status)
   const { data: enableAudio, setEnableAudio } = useFortune<PrizeType[]>(d => d.enableAudio)
   const { data: prizes, setPrizes } = useFortune<PrizeType[]>(d => d.prizes)
@@ -108,19 +108,53 @@ const FortunePage = () => {
         address: d.depositor as `0x${string}`,
         entry: d.numberOfEntries
       })))
-      setPrizes?.(roundData.deposits.map((d: Deposit) => ({
-        type: d.tokenType,
-        bidderName: "",
-        address: d.tokenAddress as `0x${string}`,
-        price: BigInt(0),
-        amount: BigInt(d.tokenAmount),
-        tokenId: BigInt(d.tokenId)
-      })))
+
+      const newPrizes: PrizeType[] = [...prizes]
+
+      roundData.deposits.forEach(d => {
+        const existingPrizeIndex = newPrizes.findIndex((p: PrizeType) => p.address === d.tokenAddress);
+
+        if (d.tokenType === TokenType.ERC20 && existingPrizeIndex > -1) {
+          const existingPrize = newPrizes[existingPrizeIndex];
+
+          newPrizes[existingPrizeIndex] = {
+            ...existingPrize,
+            depositor: Array.isArray(existingPrize.depositor) ?
+              [...existingPrize.depositor as `0x${string}`[], d.depositor as `0x${string}`] :
+              [existingPrize.depositor as `0x${string}`, d.depositor as `0x${string}`],
+            amount: Array.isArray(existingPrize.amount) ? [...existingPrize.amount as bigint[], BigInt(d.tokenAmount)] :
+              [existingPrize.amount, BigInt(d.tokenAmount)]
+          }
+        } else {
+          newPrizes.push({
+            type: d.tokenType,
+            depositor: d.depositor as `0x${string}`,
+            address: d.tokenAddress as `0x${string}`,
+            price: BigInt(0),
+            amount: BigInt(d.tokenAmount),
+            tokenId: BigInt(d.tokenId),
+            totalNumberOfEntries: d.entry.totalNumberOfEntries
+          })
+        }
+      })
+
+      setPrizes?.(newPrizes)
 
       const secondDiff = (roundData?.cutoffTime || 0) - ((new Date()).getTime() / 1000);
       setDurationLeft?.(secondDiff)
     }
   }, [roundData])
+
+  const totalPrize = useMemo(() => {
+    return BigInt((roundData?.numberOfEntries || 0) * (roundData?.valuePerEntry || 0))
+  }, [prizes])
+  const yourEntries = useMemo(() => {
+    return prizes.filter(p => p.depositor === address)
+      .reduce((a, b) => a + b.totalNumberOfEntries, 0) * (roundData?.valuePerEntry || 0)
+  }, [prizes])
+  const yourWinChance = useMemo(() => {
+    return Math.round((roundData?.numberOfEntries || 1) / (players.find(p => p.address === address)?.entry || 1))
+  }, [players, roundData])
 
   useEffect(() => {
     setShowWinner(false)
@@ -148,8 +182,6 @@ const FortunePage = () => {
     return null;
   }
 
-  const totalPrize = '0.03'
-
   if (!FORTUNE_CHAINS.includes(marketplaceChain.id)) {
     return (
       <Layout>
@@ -174,7 +206,7 @@ const FortunePage = () => {
 
   return (
     <Layout>
-      <Head title={getTitleText(status, totalPrize, convertedCountdown)}/>
+      <Head title={getTitleText(status, formatEther(totalPrize), convertedCountdown)}/>
       <Box
         css={{
           py: 24,
@@ -318,7 +350,7 @@ const FortunePage = () => {
                       }}
                     >
                       <Text css={{ borderBottom: '1px solid #ddd'}}>{`Round ${roundData?.roundId}`}</Text>
-                      <FormatCryptoCurrency textStyle="h3" logoHeight={35} amount={0.0005} maximumFractionDigits={4} />
+                      <FormatCryptoCurrency textStyle="h3" logoHeight={35} amount={totalPrize} maximumFractionDigits={4} />
                       {status === RoundStatus.Open && (
                         <FormatCurrency amount={58.33} />
                       )}
@@ -408,7 +440,7 @@ const FortunePage = () => {
             </Flex>
             <Flex css={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
               <Flex direction="column" css={{ flex: 0.5 }} >
-                <FormatCryptoCurrency textStyle="h5" amount={0.05} />
+                <FormatCryptoCurrency textStyle="h5" amount={prizes.reduce((a, b) => a + b.price, BigInt(0))} />
                 <Text style="subtitle2">Prize Pool</Text>
               </Flex>
               <Flex direction="column" css={{ flex: 0.5 }} >
@@ -416,11 +448,11 @@ const FortunePage = () => {
                 <Text style="subtitle2">Players</Text>
               </Flex>
               <Flex direction="column" css={{ flex: 0.5 }} >
-                <FormatCryptoCurrency textStyle="h5" amount={0.05} />
+                <FormatCryptoCurrency textStyle="h5" amount={yourEntries} />
                 <Text style="subtitle2">Your Entries</Text>
               </Flex>
               <Flex direction="column" css={{ flex: 0.5 }} >
-                <Text style="h5">{`10%`}</Text>
+                <Text style="h5">{`${yourWinChance}%`}</Text>
                 <Text style="subtitle2">Your Win Chance</Text>
               </Flex>
             </Flex>
@@ -545,7 +577,7 @@ const FortunePage = () => {
                 <Text style="body3">Your Entries</Text>
               </Flex>
               <Flex direction="column" css={{ flex: 0.5 }} >
-                <Text style="h6">{`10%`}</Text>
+                <Text style="h6">{`${yourWinChance}%`}</Text>
                 <Text style="body3">Your Win Chance</Text>
               </Flex>
               <Flex align="start">
