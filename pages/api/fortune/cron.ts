@@ -21,6 +21,7 @@ export default async function handler(
   const chain = FORTUNE_CHAINS[0]
   const provider = new AlchemyProvider(42161, process.env.NEXT_PUBLIC_ALCHEMY_ID);
   const signer = new ethers.Wallet(process.env.SIGNER_PKEY as string, provider);
+
   const fortune = new Contract(chain.address, FortuneAbi, signer)
 
   const roundId = await fortune.roundsCount();
