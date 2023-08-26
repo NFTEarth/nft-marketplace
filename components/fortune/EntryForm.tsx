@@ -11,27 +11,27 @@ import {
   useContractWrite,
   useWaitForTransaction,
 } from "wagmi";
-import {parseEther} from "viem";
+import {createPublicClient, createWalletClient, custom, http, parseEther} from "viem";
 import {useMediaQuery} from "react-responsive";
 
 import NumericalInput from "../bridge/NumericalInput";
 import {Button, CryptoCurrencyIcon, Flex, FormatCryptoCurrency, Text} from "../primitives";
-import {useMarketplaceChain, useMounted} from "../../hooks";
+import {useMarketplaceChain, useMounted} from "hooks";
 import SelectionItem from "./SelectionItem";
 import NFTEntry, { SelectionData } from "./NFTEntry";
-import FortuneAbi from "../../artifact/FortuneAbi.json";
-import {FORTUNE_CHAINS} from "../../utils/chains";
-import {ToastContext} from "../../context/ToastContextProvider";
-import { AnimatedOverlay, AnimatedContent } from "../primitives/Dialog";
+import FortuneAbi from "artifact/FortuneAbi.json";
+import {FORTUNE_CHAINS} from "utils/chains";
+import {ToastContext} from "context/ToastContextProvider";
 import Link from "next/link";
 import {faTwitter} from "@fortawesome/free-brands-svg-icons";
-import TransferManagerABI from "../../artifact/TransferManagerABI.json";
+import TransferManagerABI from "artifact/TransferManagerABI.json";
 import {Modal} from "../common/Modal";
 import ErrorWell from "../primitives/ErrorWell";
 import LoadingSpinner from "../common/LoadingSpinner";
 import TransactionProgress from "../common/TransactionProgress";
-import {ApprovalCollapsible} from "../portfolio/ApprovalCollapsible";
-import {mainnet} from "wagmi/chains";
+import ERC721Abi from "artifact/ERC721Abi.json";
+import ERC20Abi from "artifact/ERC20Abi.json";
+import { arbitrum } from "viem/chains";
 
 type EntryProps = {
   roundId: number,
@@ -226,11 +226,44 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
         return;
       }
 
-      Object.keys(selections)
-        .filter((p: any) => !!p.approved).forEach((p: any) => {
-          setApprovalTarget(p.contract)
-          approveToken?.()
-      })
+      const selects = new Set([...Object.keys(selections)
+        .filter((p) => !selections[p].approved)])
+
+      for(let select of selects) {
+        const selection = selections[select];
+        const publicClient = createPublicClient({
+          chain: arbitrum,
+          transport: http()
+        })
+
+        const walletClient = createWalletClient({
+          chain: arbitrum,
+
+          // @ts-ignore
+          transport: custom(window.ethereum)
+        })
+
+        const [account] = await walletClient.getAddresses()
+
+        const data = await publicClient.readContract({
+          address: selection.contract `0x${string}`,
+          abi: selection.type === 'erc20' ? ERC20Abi : ERC721Abi,
+          functionName: selection.type === 'erc20' ? 'allowance' : 'isApprovedForAll',
+        })
+
+        console.log(data)
+        const { request } = await publicClient.simulateContract({
+          address: selection.contract as `0x${string}`,
+          abi: selection.type === 'erc20' ? ERC20Abi : ERC721Abi,
+          functionName: selection.type === 'erc20' ? 'approve' : 'setApprovalForAll',
+          args: selection.type === 'erc20' ?
+            [fortuneChain?.address as `0x${string}`, 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff] :
+            [fortuneChain?.address as `0x${string}`, true],
+          account
+        })
+
+        await walletClient.writeContract(request)
+      }
 
       await writeAsync?.()
     } catch (e: any) {

@@ -90,7 +90,6 @@ const FortunePage = () => {
   const isMobile = useMediaQuery({ maxWidth: 600 })
   const secondDiff = (+cutoffTime || 0) - ((new Date()).getTime() / 1000);
 
-  console.log(secondDiff, cutoffTime, +cutoffTime)
   const [countdown, { startCountdown, resetCountdown }] = useCountdown({
     countStart: secondDiff < 0 ? 0 : secondDiff,
     countStop: 0,
@@ -127,8 +126,6 @@ const FortunePage = () => {
 
     setPrizes?.(newPrizes)
     setPlayers?.(newPlayers)
-
-    console.log(rawRoundData, cutoffTime, (new Date(+cutoffTime * 1000)) )
     // setDurationLeft?.(secondDiff)
   }, [roundStatus, deposits, cutoffTime, roundId])
 
