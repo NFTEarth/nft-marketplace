@@ -4,6 +4,9 @@ import {useMarketplaceChain} from "../../hooks";
 import {TokenMedia, useUserTokens} from "@reservoir0x/reservoir-kit-ui";
 import {Flex} from "../primitives";
 import {parseEther} from "viem";
+import {useAccount, useContractRead, useContractWrite} from "wagmi";
+import ERC721Abi from "../../artifact/ERC721Abi.json";
+import {FORTUNE_CHAINS} from "../../utils/chains";
 
 export type ReservoirFloorPrice = {
   id: `0x${string}`
@@ -24,7 +27,8 @@ export type SelectionData = {
   tokenId?: string,
   contract?: string,
   value?: bigint,
-  reservoirOracleFloor?: ReservoirFloorPrice
+  reservoirOracleFloor?: ReservoirFloorPrice,
+  approved: boolean
 }
 
 type NFTEntryProps = {
@@ -76,6 +80,7 @@ const NFTEntry : FC<NFTEntryProps> = ({ data, handleClick, selected }) => {
             contract: data?.token?.contract,
             value: BigInt(data?.token?.collection?.floorAskPrice?.amount?.decimal || 0),
             reservoirOracleFloor,
+            approved: false,
           }
         )
       } : () => {}}
