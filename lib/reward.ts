@@ -6,6 +6,7 @@ import db from "lib/db";
 import {getUSDAndNativePrices, USDAndNativePrices} from "../utils/price";
 import {AddressZero} from "@ethersproject/constants";
 import {BigNumber} from "@ethersproject/bignumber";
+import {formatEther} from "viem";
 
 let lastUpdate = (new Date()).getTime();
 const EXTRA_REWARD_PER_PERIOD=0.00001
@@ -125,7 +126,7 @@ type CalculateReward = (
 export const calculateReward: CalculateReward = async (chainId, account, collectionId, paymentToken, amount, period, isListing)  => {
   const chain = OFT_CHAINS.find(c => c.id === chainId)
   const isNFTE = paymentToken === chain?.address
-  let value = +ethers.utils.formatEther(amount || '0').toString()
+  let value = +formatEther(BigInt(`${+amount || 0}`)).toString()
 
   if (!account) {
     return 0;

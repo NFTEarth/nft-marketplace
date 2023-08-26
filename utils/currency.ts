@@ -20,7 +20,7 @@ export type Currency = {
 };
 
 const CURRENCY_MEMORY_CACHE: Map<string, Currency> = new Map<string, Currency>();
-export const sgetCurrency = async (currencyAddress: string, chainId: number): Promise<Currency> => {
+export const getCurrency = async (currencyAddress: string, chainId: number): Promise<Currency> => {
   if (!CURRENCY_MEMORY_CACHE.has(`${currencyAddress}:${chainId}`)) {
     const result = await currency.findOne({
       contract: currencyAddress,
