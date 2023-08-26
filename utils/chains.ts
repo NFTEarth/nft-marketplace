@@ -268,7 +268,7 @@ export const OFT_CHAINS = [
 export const FORTUNE_CHAINS = [
   {
     id: arbitrum.id as number,
-    address: '0xf80d04ccd8d3c76294b24ad1c2a38ccb847059c3',
+    address: '0xB11eD4D3b3D8Ace516Ceae0a8D4764BbF2B08c50',
     priceOracle: '0x896397f72bd5c207cab95740d48ca76acf960b16',
     transferManager: '0xf502c99ebdffd2f5fb92c162ea12d741b98402c2'
   }

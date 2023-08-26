@@ -2,11 +2,7 @@ import {FC} from "react";
 import {AddressZero} from "@ethersproject/constants";
 import Image from "next/image";
 
-import {Box, CryptoCurrencyIcon, Flex, FormatCryptoCurrency, Text} from "../primitives";
-
-export type SelectionItemType = {
-  
-}
+import {CryptoCurrencyIcon, Flex, FormatCryptoCurrency, Text} from "../primitives";
 
 type dataItemProps = {
   data: Record<string, any>
@@ -63,8 +59,8 @@ const SelectionItem: FC<dataItemProps> = ({ data }) => {
             amount={data.value}
             address={data.contract}
             decimals={18}
-            textStyle="h4"
-            logoHeight={20}
+            textStyle="h5"
+            logoHeight={15}
           />
         </Flex>
       </Flex>

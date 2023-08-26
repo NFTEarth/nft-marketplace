@@ -14,7 +14,7 @@ export default function ErrorWell({ message, css }: Props) {
       css={{
         color: '$red11',
         p: '$4',
-        gap: '$2',
+        gap: '$4',
         background: '$gray3',
         ...css,
       }}

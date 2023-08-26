@@ -1,24 +1,22 @@
-import {FC, SyntheticEvent, useContext, useEffect, useMemo, useRef, useState} from "react";
+import {FC, SyntheticEvent, useContext, useEffect, useRef, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {TokenMedia, useUserTokens} from '@reservoir0x/reservoir-kit-ui'
+import {useUserTokens} from '@reservoir0x/reservoir-kit-ui'
 import {faClose, faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import {AddressZero} from "@ethersproject/constants";
-import * as Dialog from '@radix-ui/react-dialog'
-import {ethers} from "ethers";
+import {parseUnits} from "ethers";
 import {useIntersectionObserver} from "usehooks-ts";
 import {
-  useAccount,
+  useAccount, useBalance,
   useContractRead,
   useContractWrite,
-  useWaitForTransaction
+  useWaitForTransaction,
 } from "wagmi";
-import {parseEther} from "ethers/lib/utils";
-import {BigNumber} from "@ethersproject/bignumber";
+import {parseEther} from "viem";
 import {useMediaQuery} from "react-responsive";
 
 import NumericalInput from "../bridge/NumericalInput";
-import {Button, CryptoCurrencyIcon, Flex, Text} from "../primitives";
-import {useFortune, useMarketplaceChain, useMounted} from "../../hooks";
+import {Button, CryptoCurrencyIcon, Flex, FormatCryptoCurrency, Text} from "../primitives";
+import {useMarketplaceChain, useMounted} from "../../hooks";
 import SelectionItem from "./SelectionItem";
 import NFTEntry, { SelectionData } from "./NFTEntry";
 import FortuneAbi from "../../artifact/FortuneAbi.json";
@@ -27,21 +25,26 @@ import {ToastContext} from "../../context/ToastContextProvider";
 import { AnimatedOverlay, AnimatedContent } from "../primitives/Dialog";
 import Link from "next/link";
 import {faTwitter} from "@fortawesome/free-brands-svg-icons";
-import ERC721Abi from "../../artifact/ERC721Abi.json";
 import TransferManagerABI from "../../artifact/TransferManagerABI.json";
+import {Modal} from "../common/Modal";
+import ErrorWell from "../primitives/ErrorWell";
+import LoadingSpinner from "../common/LoadingSpinner";
+import TransactionProgress from "../common/TransactionProgress";
+import {ApprovalCollapsible} from "../portfolio/ApprovalCollapsible";
+import {mainnet} from "wagmi/chains";
 
 type EntryProps = {
   roundId: number,
   show: boolean
   lessThan30Seconds: boolean
+  roundClosed: boolean
   onClose: () => void
 }
 
-const minimumEntry = BigNumber.from(parseEther('0.005').toString())
+const minimumEntry = BigInt(parseEther('0.005').toString())
 
-const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds,  show, onClose }) => {
+const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClosed,  show, onClose }) => {
   const { address } = useAccount()
-  const [loading, setLoading] = useState(false)
   const [openModal, setOpenModal] = useState(false)
   const { addToast } = useContext(ToastContext)
   const [showTokenEntry, setShowTokenEntry] = useState(false)
@@ -68,6 +71,10 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds,  show, on
   const isMobile = useMediaQuery({ maxWidth: 600 }) && isMounted
   const marketplaceChain = useMarketplaceChain()
   const fortuneChain = FORTUNE_CHAINS.find(c => c.id === marketplaceChain.id);
+  const ethBalance = useBalance({
+    address,
+    chainId: marketplaceChain.id
+  })
 
   const tweetText = `I just placed my bet on #Fortune at @NFTEarth_L2!\n\n🎉 #Winner takes all 🎉\n\n`
 
@@ -79,7 +86,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds,  show, on
     args: [address, fortuneChain?.address],
   })
 
-  const { writeAsync: grantApproval, error: approvalError } = useContractWrite({
+  const { writeAsync: grantApproval, isLoading: isApprovalLoading, error: approvalError } = useContractWrite({
     abi: TransferManagerABI,
     address: fortuneChain?.transferManager as `0x${string}`,
     functionName: 'grantApprovals',
@@ -109,21 +116,19 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds,  show, on
         ])
       ];
     })],
-    value: BigInt(parseEther(valueEth === '' ? '0' : valueEth).toString())
+    value: BigInt(parseEther(`${valueEth === '' ? 0 : +valueEth}`).toString())
   })
 
-  const { isLoading: isLoadingTransaction, isSuccess = true, data: txData } = useWaitForTransaction({
+  const { isLoading: isLoadingTransaction = true, isSuccess = true, data: txData } = useWaitForTransaction({
     hash: sendData?.hash,
     enabled: !!sendData
   })
 
   useEffect(() => {
-    setOpenModal(!!error || isLoading || isLoadingTransaction || isSuccess);
-  }, [error, isLoading, isLoadingTransaction, isSuccess])
+    setOpenModal(!!error || !!approvalError || isApprovalLoading || isLoading || isLoadingTransaction || isSuccess);
+  }, [error, approvalError, isLoading, isLoadingTransaction, isApprovalLoading, isSuccess])
 
-  const filteredTokens = useMemo(() => {
-    return tokens.filter(t => t.token?.kind === 'erc721' && BigNumber.from(t.token?.collection?.floorAskPrice?.amount?.raw || '0').gte(minimumEntry))
-  }, [tokens, minimumEntry])
+  const filteredTokens = tokens.filter(t => t.token?.kind === 'erc721' && BigInt(t.token?.collection?.floorAskPrice?.amount?.raw || '0') > minimumEntry)
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
@@ -134,16 +139,16 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds,  show, on
 
   // console.log('TEST')
 
-  const selectionValueEth = useMemo(() => {
-    return Object.keys(selections).reduce((a: bigint, k: string) => {
-      const selection = selections[k];
-      return a + BigInt(selection?.value || 0)
-    }, BigInt(0))
-  }, [selections])
+  // const selectionValueEth = useMemo(() => {
+  //   return Object.keys(selections).reduce((a: bigint, k: string) => {
+  //     const selection = selections[k];
+  //     return a + BigInt(selection?.value || 0)
+  //   }, BigInt(0))
+  // }, [selections])
 
   const handleSetEthValue = (val: string) => {
     try {
-      ethers.utils.parseUnits(val, 18);
+      parseUnits(val, 18);
       setValueEth(val);
     } catch (e) {
       setValueEth('0');
@@ -152,7 +157,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds,  show, on
 
   const handleSetNFTEValue = (val: string) => {
     try {
-      ethers.utils.parseUnits(val, 18);
+      parseUnits(val, 18);
       setValueNFTE(val);
     } catch (e) {
       setValueNFTE('0');
@@ -161,6 +166,15 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds,  show, on
 
   const handleAddEth = (e: any) => {
     e.preventDefault();
+    const value = BigInt(parseEther(`${valueEth === '' ? 0 : +valueEth}`).toString())
+
+    if (value < minimumEntry) {
+      return;
+    }
+
+    if ((ethBalance.data?.value || 0) < value) {
+      return;
+    }
 
     setSelections({
       ...selections,
@@ -168,7 +182,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds,  show, on
         type: 'erc20',
         name: 'ETH',
         contract: AddressZero.toString(),
-        value: BigInt(parseEther(valueEth === '' ? '0' : valueEth).toString())
+        value: value
       }
     })
 
@@ -184,7 +198,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds,  show, on
         type: 'erc20',
         name: 'NFTE OFT',
         contract: '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
-        value: BigInt(parseEther(valueNFTE === '' ? '0' : valueNFTE).toString())
+        value: BigInt(parseEther(`${valueNFTE === '' ? 0 : +valueNFTE}`).toString())
       }
     })
 
@@ -193,28 +207,21 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds,  show, on
 
   const handleDeposit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    setLoading(true)
     try {
       if (!isApproved) {
-        await grantApproval?.().catch(e => {
-          console.log(e);
-          addToast?.({
-            title: 'error',
-            description: e.reason || e.message
-          })
-        })
+        await grantApproval?.()
         await refetchApproval?.()
         return;
       }
       await writeAsync?.()
     } catch (e: any) {
-      // console.log(e);
       // addToast?.({
-      //   title: 'error',
+      //   title: 'Error',
+      //   status: 'error',
       //   description: e.reason || e.message
       // })
     }
-    setLoading(false)
+    // setLoading(false)
   }
 
   if (!show) {
@@ -316,7 +323,6 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds,  show, on
                       data={token}
                       selected={!!selections[`${token?.token?.contract}:${token?.token?.tokenId}`]}
                       handleClick={(key, data) => {
-                        console.log('CLICK', key, data)
                         if (selections[key]) {
                           const newSelections = {...selections};
                           delete newSelections[key];
@@ -355,11 +361,14 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds,  show, on
                   p: 16
                 }}
               >
-                <Text style="h6">Add ETH</Text>
+                <Flex justify="between">
+                  <Text style="h6">Add ETH</Text>
+                  <Text style="subtitle3">Minimum Entry is 0.005Ξ</Text>
+                </Flex>
                 <NumericalInput
                   value={valueEth}
                   onUserInput={handleSetEthValue}
-                  icon={<Button size="xs" color="primary" onClick={handleAddEth}>Add</Button>}
+                  icon={<Button size="xs" color="primary" disabled={BigInt(parseEther(`${+valueEth}`)) < minimumEntry} onClick={handleAddEth}>Add</Button>}
                   iconStyles={{
                     top: 4,
                     right: 4,
@@ -385,9 +394,13 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds,  show, on
 
                   <Text>ETH in wallet:</Text>
                   <Flex align="center" css={{ gap: 10 }}>
-                    <Text style="body3">{`(${valueEth})`}</Text>
-                    <Text style="subtitle2">{`${valueEth} ETH`}</Text>
-                    <CryptoCurrencyIcon address={AddressZero} chainId={marketplaceChain.id} css={{ height: 20 }} />
+                    {/*<Text style="body3">{`(${valueEth})`}</Text>*/}
+                    <FormatCryptoCurrency
+                      amount={ethBalance.data?.value}
+                      decimals={ethBalance.data?.decimals}
+                      textStyle="subtitle2"
+                      logoHeight={16}
+                    />
                   </Flex>
                 </Flex>
               </Flex>
@@ -494,104 +507,87 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds,  show, on
                 gap: 20
               }}
             >
-              {lessThan30Seconds && (
+              {(lessThan30Seconds && !roundClosed) && (
                 <Text css={{ color: 'orange', textAlign: 'center' }}>
                   {`Warning: less than 30 seconds left, your transaction might not make it in time.`}
                 </Text>
               )}
               <Button
-                disabled={isLoading || isLoadingTransaction }
+                disabled={roundClosed || isApprovalLoading || isLoading || isLoadingTransaction }
                 size="large"
                 color={lessThan30Seconds ? 'red' : 'primary'}
                 css={{
                   justifyContent: 'center'
                 }}
                 onClick={handleDeposit}
-              >{isApproved ? '(Minimum 0.005E) Deposit' : 'Grant Approval'}</Button>
+              >{isApproved ? (roundClosed ? 'Round Closed' : '(Minimum 0.005E) Deposit') : 'Grant Approval'}</Button>
             </Flex>
           )}
         </Flex>
       </Flex>
       {isMounted && (
-        <Dialog.Root modal={true} open={openModal}>
-          <Dialog.Portal>
-            <AnimatedOverlay
-              style={{
-                position: 'fixed',
-                zIndex: 1000,
-                inset: 0,
-                maxWidth: '60vw',
-                maxHeight: '50vh',
-                width: 320,
-                backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                backdropFilter: '20px',
-              }}
-            />
-            <AnimatedContent style={{
-              outline: 'unset',
-              position: 'fixed',
-              zIndex: 1000,
-              transform: 'translate(-50%, 120%)',
-            }}>
-              <Flex
-                justify="between"
+        <Modal
+          title="Confirm Entries"
+          open={openModal}
+          onOpenChange={(open) => {
+            setOpenModal(open)
+          }}
+        >
+          <Flex
+            direction="column"
+            justify="start"
+            align="center"
+            css={{ flex: 1, textAlign: 'center', p: '$4', gap: '$4' }}
+          >
+            {(!!error || !!approvalError) && (
+              <ErrorWell
+                message={(error || approvalError as any)?.reason || (error || approvalError)?.message}
                 css={{
-                  pt: '$5',
-                  background: '$gray7',
-                  padding: '$5',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  textAlign: 'center',
-                  gap: '20px',
-                  '@bp600': {
-                    flexDirection: 'column',
-                    gap: '20px',
-                  },
+                  textAlign: 'left',
+                  maxWidth: '100%',
+                  wordBreak: 'break-word',
+                  whiteSpace: 'pre-wrap'
                 }}
-              >
-                {!!error && (
-                  <Dialog.Close asChild>
-                    <button
-                      style={{
-                        position: 'absolute',
-                        top: 10,
-                        right: 15
-                      }}
-                      onClick={() => setOpenModal(!openModal)}
-                      className="IconButton"
-                      aria-label="Close"
-                    >
-                      <FontAwesomeIcon icon={faClose} size="xl" />
-                    </button>
-                  </Dialog.Close>
-                )}
-                {isLoading && (
-                  <Text style="h6">Please confirm in your wallet</Text>
-                )}
-                {isLoadingTransaction && (
-                  <Text style="h6">Processing your deposit...</Text>
-                )}
-                {(!!error || !!approvalError ) && (
-                  <Text style="h6" css={{ color: 'red' }}>{(error || approvalError as any)?.reason || (error || approvalError)?.message}</Text>
-                )}
-                {isSuccess && (
-                  <>
-                    <Text style="h6" css={{ color: 'green' }}>Deposit Success !</Text>
-                    <Link
-                      rel="noreferrer noopener"
-                      target="_blank"
-                      href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(`https://app.nftearth.exchange/fortune`)}&hashtags=&via=&related=&original_referer=${encodeURIComponent('https://app.nftearth.exchange')}`}>
-                      <Button>
-                        {`Tweet your joy !`}
-                        <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faTwitter}/>
-                      </Button>
-                    </Link>
-                  </>
-                )}
+              />
+            )}
+            {(isLoading || isApprovalLoading) && !error && (
+              <Flex css={{ height: '100%', py: '$4' }} align="center">
+                <LoadingSpinner />
               </Flex>
-            </AnimatedContent>
-          </Dialog.Portal>
-        </Dialog.Root>
+            )}
+            {isApprovalLoading && (
+              <Text style="h6">Transfer Manager Approval</Text>
+            )}
+            {isLoading && (
+              <Text style="h6">Please confirm in your wallet</Text>
+            )}
+            {isLoadingTransaction && (
+              <Text style="h6">Send to Prize Pool</Text>
+            )}
+            {isLoadingTransaction && (
+              <TransactionProgress
+                justify="center"
+                css={{ mb: '$3' }}
+                fromImgs={['/icons/arbitrum-icon-light.svg']}
+                toImgs={['/icons/fortune.png']}
+              />
+            )}
+            {isSuccess && (
+              <Flex direction="column" css={{ gap: 20, my: '$4' }}>
+                <Text style="h6" css={{ color: 'green' }}>Deposit Success !</Text>
+                <Link
+                  rel="noreferrer noopener"
+                  target="_blank"
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(`https://app.nftearth.exchange/fortune`)}&hashtags=&via=&related=&original_referer=${encodeURIComponent('https://app.nftearth.exchange')}`}>
+                  <Button>
+                    {`Tweet your joy !`}
+                    <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faTwitter}/>
+                  </Button>
+                </Link>
+              </Flex>
+            )}
+          </Flex>
+        </Modal>
       )}
     </>
   )

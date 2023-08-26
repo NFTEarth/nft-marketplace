@@ -8,13 +8,13 @@ const FortuneEnterButton: FC<any> = (props) => {
 
   return (
     <Button
-      disabled={status !== RoundStatus.Open}
+      disabled={status !== RoundStatus.Open || props.disabled}
       css={{
         zIndex: 1,
         justifyContent: 'center'
       }}
       {...props}
-    >{status !== RoundStatus.Open ? 'Round Closed' : 'Enter Now'}</Button>
+    >{(status !== RoundStatus.Open || props.disabled) ? 'Round Closed' : 'Enter Now'}</Button>
   )
 }
 

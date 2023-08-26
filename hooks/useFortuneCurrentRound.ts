@@ -1,5 +1,5 @@
 import {request, RequestDocument} from 'graphql-request'
-import useSWR from "swr";
+import useSWR, {SWRConfiguration} from "swr";
 import {Round} from "./useFortuneRound";
 
 const subgraphFetcher = <T>(query: RequestDocument) =>
@@ -9,7 +9,7 @@ type RoundResult = {
   rounds: Round[]
 }
 
-const useFortuneCurrentRound = () => {
+const useFortuneCurrentRound = (options?: SWRConfiguration) => {
   const { data, isLoading } = useSWR<RoundResult>(
     `query GetCurrentRound {
         rounds(orderBy: roundId, orderDirection: desc, first: 1) {
@@ -45,6 +45,7 @@ const useFortuneCurrentRound = () => {
       revalidateOnFocus: true,
       revalidateIfStale: false,
       revalidateOnReconnect: false,
+      ...options
     }
   )
 
