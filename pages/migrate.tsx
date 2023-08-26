@@ -12,7 +12,7 @@ import {
 import {useConnectModal} from "@rainbow-me/rainbowkit";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowRight} from "@fortawesome/free-solid-svg-icons";
-import {ethers, formatEther, formatUnits, parseEther, parseUnits} from 'ethers';
+import {ethers, formatEther, formatUnits, parseEther, parseUnits, solidityPacked} from 'ethers';
 import {ContractFunctionConfig, zeroAddress} from "viem";
 import {useDebounce} from "usehooks-ts";
 import {Abi} from "abitype";
@@ -28,7 +28,6 @@ import {OFT_CHAINS} from "utils/chains";
 import {ToastContext} from "context/ToastContextProvider";
 import NFTEOFTAbi from 'artifact/NFTEOFTAbi.json'
 import {hexZeroPad} from "@ethersproject/bytes";
-import { solidityPack } from "ethers/lib/utils";
 import {BigNumber} from "@ethersproject/bignumber";
 
 const BridgePage = () => {
@@ -98,7 +97,7 @@ const BridgePage = () => {
           hexZeroPad(address || '0x', 32),
           BigInt(parseEther(debouncedValueEth || '0').toString()),
           false,
-          solidityPack(
+          solidityPacked(
             ['uint16', 'uint256'],
             [1, BigInt(minDstGasLookup ? minDstGasLookup.toString() : 200000)]
           )
