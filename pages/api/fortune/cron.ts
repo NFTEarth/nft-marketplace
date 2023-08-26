@@ -28,13 +28,13 @@ export default async function handler(
   const timestamp = (new Date()).getTime() / 1000
 
   // Enable when we ready
-  // if (timestamp >= round.cutoffTime) {
-  //   if (round.numberOfParticipants > 1) {
-  //     await fortune.drawWinner()
-  //   } else {
-  //     await fortune.cancel()
-  //   }
-  // }
+  if (timestamp >= round.cutoffTime) {
+    if (round.numberOfParticipants > 1) {
+      await fortune.drawWinner()
+    } else {
+      await fortune.cancel()
+    }
+  }
 
   response.status(200).json({ success: true });
 }
