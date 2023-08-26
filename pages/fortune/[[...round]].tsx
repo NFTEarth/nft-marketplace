@@ -76,8 +76,6 @@ const FortunePage = () => {
   const { data: rawRoundData } = useFortuneRound(roundId, { refreshInterval: 5000 })
   const { status: roundStatus = 0, valuePerEntry = 0, deposits = [], cutoffTime = 0, ...roundData } = rawRoundData || {};
 
-  console.log(cutoffTime, typeof cutoffTime, (new Date(+cutoffTime * 1000)).getTime() > (new Date()).getTime())
-
   const [ showWinner, setShowWinner] = useState(false);
   const { setStatus } = useFortune<number>(q => q)
   const { data: usdConversion, setUSDConversion } = useFortune<number>(d => d.usdConversion)
@@ -128,7 +126,7 @@ const FortunePage = () => {
     setPrizes?.(newPrizes)
     setPlayers?.(newPlayers)
 
-    const secondDiff = ((new Date()).getTime() / 1000) - (+cutoffTime || 0);
+    const secondDiff = (+cutoffTime || 0) - ((new Date()).getTime() / 1000);
     setDurationLeft?.(secondDiff)
   }, [roundStatus, deposits, cutoffTime])
 
