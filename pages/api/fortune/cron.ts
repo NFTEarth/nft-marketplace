@@ -30,8 +30,10 @@ export default async function handler(
   // Enable when we ready
   if (timestamp >= round.cutoffTime) {
     if (round.numberOfParticipants > 1) {
+      console.log(`Round ${roundId} Drawing Winner`)
       await fortune.drawWinner()
     } else {
+      console.log(`Round ${roundId} Canceled, New Round ID : ${roundId + 1}`)
       await fortune.cancel()
     }
   }
