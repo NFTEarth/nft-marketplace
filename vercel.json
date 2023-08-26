@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/fortune/cron",
+      "schedule": "*/5 * * * *"
+    }
+  ]
+}

@@ -67,6 +67,13 @@ const Button = styled('button', {
           backgroundColor: '$primary9',
         },
       },
+      red: {
+        backgroundColor: '$red3',
+        color: '$red12',
+        '&:hover': {
+          backgroundColor: '$red4',
+        },
+      },
       ghost: {
         backgroundColor: 'transparent',
         p: 0,

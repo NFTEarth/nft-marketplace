@@ -14,6 +14,7 @@ import {useAccount} from "wagmi";
 import {Avatar} from "../primitives/Avatar";
 import Jazzicon from "react-jazzicon/dist/Jazzicon";
 import {jsNumberForAddress} from "react-jazzicon";
+import dayjs from "dayjs";
 
 type Props = {
   data: any
@@ -81,7 +82,6 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
   const marketplaceChain = useMarketplaceChain()
   const blockExplorerBaseUrl =
     marketplaceChain?.blockExplorers?.default?.url || 'https://etherscan.io'
-  const finish = useTimeSince(round.cutoffTime || ((new Date).getTime() / 1000));
 
   if (!round) {
     return null
@@ -210,12 +210,14 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
             }
           }}>
           <Flex justify="center">
-            <FormatCryptoCurrency
-              amount={yourEntry}
-              address={AddressZero}
-              logoHeight={16}
-              textStyle="subtitle1"
-            />
+            {yourEntry > 0 ? (
+              <FormatCryptoCurrency
+                amount={yourEntry}
+                address={AddressZero}
+                logoHeight={16}
+                textStyle="subtitle1"
+              />
+            ) : '-' }
           </Flex>
         </TableCell>
         <TableCell css={{ color: '$gray11' }}>
@@ -232,7 +234,7 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
             }
           }}>
           <Flex justify="center">
-            <Text>{finish}</Text>
+            <Text>{dayjs(round.cutoffTime * 1000).format('HH:mm, MMM, D, YYYY')}</Text>
           </Flex>
         </TableCell>
         <TableCell>

@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import {useState} from "react";
 import {faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {zeroAddress} from "viem";
@@ -23,7 +23,6 @@ import {useMounted} from "../../hooks";
 import {useMediaQuery} from "react-responsive";
 import useFortuneHistory from "../../hooks/useFortuneHistory";
 import {useAccount} from "wagmi";
-import {useIntersectionObserver} from "usehooks-ts";
 
 const roundData: any[] = [
   { roundId: 1, winner: '0x7D3E5dD617EAF4A3d42EA550C41097086605c4aF' },

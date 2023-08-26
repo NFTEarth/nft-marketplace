@@ -1,6 +1,5 @@
 import {request, RequestDocument, Variables} from 'graphql-request'
 import useSWRInfinite, { SWRInfiniteConfiguration } from 'swr/infinite'
-import fetcher from "../utils/fetcher";
 import {useCallback, useState} from "react";
 import {useSWRConfig} from "swr";
 import {Round} from "./useFortuneRound";

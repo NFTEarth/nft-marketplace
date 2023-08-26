@@ -2,7 +2,7 @@ import {useEffect, useMemo, useRef, useState} from 'react'
 import Highcharts from 'highcharts'
 import HighchartsExporting from 'highcharts/modules/exporting'
 import HighchartsReact from 'highcharts-react-official'
-import useSound from "use-sound";
+import useSound  from "use-sound";
 import {useFortune} from "../../hooks";
 import {PlayerType} from "./Player";
 import {RoundStatus} from "../../hooks/useFortuneRound";
@@ -298,11 +298,15 @@ const Wheel = (props: WheelProps) => {
         {
           name: 'Win Chance',
           borderWidth: 0,
-          data: players,
+          data: players.length ? players : [{
+            y: 100,
+            color: '#AAA'
+          }],
           type: 'pie',
           size: '90%',
           innerSize: '75%',
           showInLegend: false,
+          enableMouseTracking: players.length > 0,
           dataLabels: {
             enabled: false
           },

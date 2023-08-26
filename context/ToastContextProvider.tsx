@@ -161,7 +161,7 @@ const ToastContextProvider: FC<any> = ({ children }) => {
 
   return (
     <ToastContext.Provider value={{ toasts, addToast, setToasts }}>
-      <ToastProvider duration={5000}>
+      <ToastProvider duration={3000}>
         {children}
         {toasts.map((toast, idx) => {
           return (
