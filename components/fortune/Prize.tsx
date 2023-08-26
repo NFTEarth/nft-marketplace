@@ -1,7 +1,12 @@
-import {Box, Flex, FormatCryptoCurrency, Text, Tooltip} from "../primitives";
-import CryptoCurrencyIcon from "../primitives/CryptoCurrencyIcon";
+import {FC, useEffect} from "react";
 import {TokenMedia, useTokens} from "@reservoir0x/reservoir-kit-ui";
-import {FC} from "react";
+
+import CryptoCurrencyIcon from "../primitives/CryptoCurrencyIcon";
+import {Box, Flex, FormatCryptoCurrency, Text, Tooltip} from "../primitives";
+import {useFortune, useMarketplaceChain} from "hooks";
+import {setParams} from "@reservoir0x/reservoir-sdk";
+import {AddressZero} from "@ethersproject/constants";
+import {useAccount} from "wagmi";
 
 export enum TokenType {
   ERC20,
@@ -9,13 +14,27 @@ export enum TokenType {
   ERC1155
 }
 
+export type ReservoirFloorPrice = {
+  id: `0x${string}`
+  payload: `0x${string}`
+  timestamp: number
+  signature: `0x${string}`
+}
+
 export type PrizeType = {
   type: TokenType,
-  bidderName: string,
+  depositor: `0x${string}` | `0x${string}`[]
   address: `0x${string}`
   price: bigint
-  amount?: bigint
+  amount: bigint | bigint[]
+  totalNumberOfEntries: number
   tokenId?: bigint
+  reservoirOracleFloorPrice?: ReservoirFloorPrice
+}
+
+type ReservoirOracleFloorPriceResponse = {
+  price: number
+  message: ReservoirFloorPrice
 }
 
 const FortunePrize : FC<{ data: PrizeType}> = ({ data, ...restProps }) => {
@@ -24,20 +43,69 @@ const FortunePrize : FC<{ data: PrizeType}> = ({ data, ...restProps }) => {
   }, {
     isPaused: () => data.type === TokenType.ERC20
   })
-
+  const { address } = useAccount()
+  const { data: prizes, setPrizes } = useFortune<PrizeType[]>(d => d.prizes)
+  const marketplaceChain = useMarketplaceChain()
   const token = tokens && tokens[0] ? tokens[0] : undefined
+
+  // TODO: Better data fetching & caching
+  useEffect(() => {
+    if (!data.price) {
+      if (data.type === TokenType.ERC20) {
+        data.price = Array.isArray(data.amount) ? data.amount
+          .reduce((a, b) => a + b, BigInt(0)) : data.amount || BigInt(0)
+        return;
+      }
+
+      const path = new URL(marketplaceChain.proxyApi, window.location.origin);
+
+      setParams(path, {
+        kind: 'twap',
+        currency: '0x0000000000000000000000000000000000000000',
+        twapSeconds: '1',
+        collection: data.address
+      })
+
+      fetch(path.href)
+        .then(res => res.json())
+        .then(res => {
+          setPrizes?.(prizes.map(p => {
+            if (p.address === data.address) {
+              p.price = res.price
+              p.reservoirOracleFloorPrice = {
+                id: res.message.id,
+                payload: res.message.payload,
+                timestamp: res.message.timestamp,
+                signature: res.message.signature
+              }
+            }
+
+            return p;
+          }))
+        }).catch(() => {
+        // Empty
+      })
+    }
+  }, [data])
 
   return (
     <Tooltip
       side="top"
       content={
-        <Text style="body3" as="p">
-          Not tradeable on OpenSea
-        </Text>
+        <Flex direction="column" css={{ gap: 10 }}>
+          {Array.isArray(data.depositor) ? data.depositor.map(d => (
+            <Text key={d} style="body3" as="p">
+              {d}
+            </Text>
+          )) : (
+            <Text style="body3" as="p">
+              {data.depositor}
+            </Text>
+          )}
+        </Flex>
       }
     >
       <Flex
-        title={data.bidderName}
         direction="column"
         css={{
           overflow: 'hidden',

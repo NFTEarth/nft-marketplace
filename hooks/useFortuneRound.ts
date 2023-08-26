@@ -37,6 +37,7 @@ export type Round = {
   numberOfEntries: number
   numberOfParticipants: number
   winner: string
+  drawnHash: string
   protocolFeeBp: number
   deposits: Deposit[]
 }
