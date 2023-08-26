@@ -25,7 +25,7 @@ export default async function handler(
 
   const roundId = await fortune.roundsCount();
   const round = await fortune.rounds(roundId);
-  const timestamp = (new Date()).getTime() / 1000
+  const timestamp = Math.round((new Date()).getTime() / 1000)
 
   // Enable when we ready
   if (BigInt(timestamp) >= BigInt(+round.cutoffTime)) {
