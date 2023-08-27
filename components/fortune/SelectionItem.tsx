@@ -146,7 +146,7 @@ const SelectionItem: FC<dataItemProps> = ({ data, onApprove }) => {
           css={{
             whiteSpace: 'nowrap'
           }}
-        >{`${data.name} #${data.tokenId}`}</Text>
+        >{`${data.name} x${data.tokenIds.length}`}</Text>
         <FormatCryptoCurrency
           amount={data.value}
           address={AddressZero}

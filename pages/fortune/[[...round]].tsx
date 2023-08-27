@@ -126,7 +126,7 @@ const FortunePage = () => {
 
     setPrizes?.(newPrizes)
     setPlayers?.(newPlayers)
-    // setDurationLeft?.(secondDiff)
+    resetCountdown()
   }, [roundStatus, deposits, cutoffTime, roundId])
 
   const totalPrize = BigInt((roundData?.numberOfEntries || 0) * (valuePerEntry || 0))
