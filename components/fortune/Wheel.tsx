@@ -87,8 +87,8 @@ const Wheel = (props: WheelProps) => {
   }, setHoverPlayerIndex } = useFortune<FortuneData>(d => d)
 
   const [playWin] = useSound([
-    `/audio/win.webm`,
-    `/audio/win.mp3`
+    `/audio/win.mp3`,
+    `/audio/win.webm`
   ], {
     interrupt: true,
     volume: 0.8
@@ -170,7 +170,7 @@ const Wheel = (props: WheelProps) => {
       diff = 360 * 30
       spinIntervalRef.current = setInterval(() => {
         startAngle = diff % 360;
-        diff -= ((diff + 360) - ((diff + 360) * 0.99));
+        diff -= ((diff + 360) - ((diff + 360) * 0.98));
 
         chart.series?.[0]?.update({ startAngle: startAngle }, true, false, false);
 
