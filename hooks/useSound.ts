@@ -99,7 +99,7 @@ export default function useSound<T = any>(
     // error on unmount, where the state loses track of the sprites??
     // No idea, but anyway I don't need to re-run this if only the `sound`
     // changes.
-  }, [volume, playbackRate]);
+  }, [sound, volume, playbackRate]);
 
   const play: PlayFunction = React.useCallback(
     (options?: PlayOptions) => {

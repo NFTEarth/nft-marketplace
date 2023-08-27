@@ -2,7 +2,7 @@ import {useEffect, useMemo, useRef, useState} from 'react'
 import Highcharts from 'highcharts'
 import HighchartsExporting from 'highcharts/modules/exporting'
 import HighchartsReact from 'highcharts-react-official'
-import useSound from "use-sound";
+import useSound from "../../hooks/useSound";
 import {useFortune} from "../../hooks";
 import {PlayerType} from "./Player";
 import {RoundStatus} from "../../hooks/useFortuneRound";
@@ -14,6 +14,7 @@ if (typeof Highcharts === 'object') {
 export interface WheelProps extends HighchartsReact.Props {
   onWheelEnd: any
   winner?: `0x${string}`
+  roundId: number
 }
 
 const radToDeg = (r: number) => r * 180 / Math.PI;
@@ -44,7 +45,6 @@ const findWinner = (data: any[], winner?: `0x${string}`, randomize = true) : win
     }
   }
 
-
   const winnerIndex = data.findIndex(d => {
     return (new RegExp(`${winner}`, 'i')).test(d.address)
   });
@@ -52,7 +52,7 @@ const findWinner = (data: any[], winner?: `0x${string}`, randomize = true) : win
   return {
     wheelPoint: randomize ?
       getRandomInt(radToDeg(data[winnerIndex]?.shapeArgs.start), radToDeg(data[winnerIndex]?.shapeArgs.end)) :
-      radToDeg(data[winnerIndex]?.shapeArgs.start),
+      Math.round((radToDeg(data[winnerIndex]?.shapeArgs.start) + radToDeg(data[winnerIndex]?.shapeArgs.end)) / 2) - 90,
     winnerIndex
   };
 }
@@ -69,13 +69,8 @@ const getProgressColor = (percent: number) => {
   return 'white'
 }
 
-const spinWheelAudioSpriteMap = {
-  start: [0, 1200, true],
-  end: [500, 2000, false]
-} as any;
-
 const Wheel = (props: WheelProps) => {
-  const { container, winner, onWheelEnd, ...restProps } = props;
+  const { container, roundId, winner, onWheelEnd, ...restProps } = props;
   const chartComponentRef = useRef<typeof HighchartsReact>(null);
   const spinIntervalRef = useRef<ReturnType<typeof setInterval>>();
   const [wheelEnd, setWheelEnd] = useState(false);
@@ -98,47 +93,13 @@ const Wheel = (props: WheelProps) => {
     interrupt: true,
     volume: 0.8
   })
-  const [playStart] = useSound([
-    `/audio/game-start.webm`,
-    `/audio/game-start.mp3`
-  ], {
-    interrupt: true,
-    volume: 0.8
-  })
-  const [playWheel, { stop: stopAudio, sound: wheelSound }] = useSound([
-    `/audio/wheel-spin.webm`,
-    `/audio/wheel-spin.mp3`
-  ], {
-    sprite: spinWheelAudioSpriteMap,
-    interrupt: true,
-    volume: 0.8
-  })
 
   useEffect(() => {
-    if (!enableAudio) {
-      return;
-    }
-
     setWheelEnd(false);
-
-    if (status === RoundStatus.Open) {
-      playStart?.()
-    }
-
-    if (status === RoundStatus.Drawing) {
-      playWheel?.({ id: 'start' })
-    }
-
-    if (status === RoundStatus.Drawn) {
-      stopAudio?.('start')
-      playWheel?.({ id: 'end' })
-    }
-  }, [status, enableAudio])
+  }, [roundId])
 
   useEffect(() => {
     if (wheelEnd) {
-      stopAudio?.('start')
-      stopAudio?.('end')
       playWin?.()
     }
   }, [wheelEnd, enableAudio])
@@ -173,9 +134,7 @@ const Wheel = (props: WheelProps) => {
       return;
     }
 
-    if (status === RoundStatus.Open) {
-      chart.series?.[0]?.update({ startAngle: 360 });
-    }
+    chart.series?.[0]?.update({ startAngle: 360 });
 
     if ([RoundStatus.Drawing, RoundStatus.Drawn].includes(status)) {
       triangleRef.current = chart.renderer.path([
@@ -192,7 +151,7 @@ const Wheel = (props: WheelProps) => {
     }
 
     let diff = 30
-    let startAngle = chart.series?.[0]?.options?.startAngle | 360;
+    let startAngle = chart.series?.[0]?.options?.startAngle | 0;
 
     if (status === RoundStatus.Drawing) {
       spinIntervalRef.current = setInterval(() => {
@@ -207,18 +166,15 @@ const Wheel = (props: WheelProps) => {
     }
 
     if (status === RoundStatus.Drawn) {
-      const { wheelPoint, winnerIndex } = findWinner(chart.series?.[0]?.data, winner)
-
+      const { wheelPoint, winnerIndex } = findWinner(chart.series?.[0]?.data, winner, false)
       diff = 360 * 30
       spinIntervalRef.current = setInterval(() => {
         startAngle = diff % 360;
-
-        diff -= ((diff + 360) - ((diff + 360) * 0.985));
-
+        diff -= ((diff + 360) - ((diff + 360) * 0.99));
 
         chart.series?.[0]?.update({ startAngle: startAngle }, true, false, false);
 
-        if (diff < wheelPoint) {
+        if (diff < wheelPoint - 5) {
           clearInterval(spinIntervalRef.current);
           setWheelEnd(true);
           onWheelEnd(winnerIndex);
