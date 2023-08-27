@@ -4,9 +4,6 @@ import {useMarketplaceChain} from "../../hooks";
 import {TokenMedia, useUserTokens} from "@reservoir0x/reservoir-kit-ui";
 import {Flex} from "../primitives";
 import {parseEther} from "viem";
-import {useAccount, useContractRead, useContractWrite} from "wagmi";
-import ERC721Abi from "../../artifact/ERC721Abi.json";
-import {FORTUNE_CHAINS} from "../../utils/chains";
 
 export type ReservoirFloorPrice = {
   id: `0x${string}`
@@ -21,20 +18,31 @@ type ReservoirOracleFloorPriceResponse = {
 }
 
 export type SelectionData = {
-  type?: string,
+  type: string,
+  contract: string,
+  approved: boolean
   image?: string,
   name?: string,
-  tokenId?: string,
-  contract?: string,
+  tokenIds?: bigint[],
+  values?: bigint[],
+  reservoirOracleFloor?: ReservoirFloorPrice,
+}
+
+export type SingleSelectionData = {
+  type: string,
+  contract: string,
+  approved: boolean
+  image?: string,
+  name?: string,
+  tokenId?: bigint,
   value?: bigint,
   reservoirOracleFloor?: ReservoirFloorPrice,
-  approved: boolean
 }
 
 type NFTEntryProps = {
   data: ReturnType<typeof useUserTokens>['data'][0],
   selected: boolean
-  handleClick?: (key: string, data: SelectionData) => void
+  handleClick?: (data: SingleSelectionData) => void
 }
 
 const NFTEntry : FC<NFTEntryProps> = ({ data, handleClick, selected }) => {
@@ -69,16 +77,18 @@ const NFTEntry : FC<NFTEntryProps> = ({ data, handleClick, selected }) => {
   return (
     <Flex
       onClick={reservoirOracleFloor ? () => {
-        const key = `${data?.token?.contract}:${data?.token?.tokenId}`
+        if (!data?.token) {
+          return;
+        }
+
         handleClick?.(
-          key,
           {
-            type: data?.token?.kind,
-            image: data?.token?.imageSmall,
-            name: data?.token?.collection?.name,
-            tokenId: data?.token?.tokenId as string,
-            contract: data?.token?.contract,
-            value: BigInt(data?.token?.collection?.floorAskPrice?.amount?.decimal || 0),
+            type: data.token.kind as string,
+            image: data.token.imageSmall,
+            name: data.token.collection?.name,
+            tokenId: BigInt(data.token.tokenId as string),
+            contract: data.token.contract as string,
+            value: BigInt(data.token.collection?.floorAskPrice?.amount?.raw || 0),
             reservoirOracleFloor,
             approved: false,
           }

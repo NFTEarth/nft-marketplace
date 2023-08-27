@@ -11,14 +11,23 @@ import {
   useContractWrite,
   useWaitForTransaction,
 } from "wagmi";
-import {createPublicClient, createWalletClient, custom, http, parseEther} from "viem";
+import {
+  BaseError,
+  ContractFunctionRevertedError,
+  createPublicClient,
+  createWalletClient,
+  custom,
+  formatEther,
+  http,
+  parseEther
+} from "viem";
 import {useMediaQuery} from "react-responsive";
 
 import NumericalInput from "../bridge/NumericalInput";
 import {Button, CryptoCurrencyIcon, Flex, FormatCryptoCurrency, Text} from "../primitives";
 import {useMarketplaceChain, useMounted} from "hooks";
 import SelectionItem from "./SelectionItem";
-import NFTEntry, { SelectionData } from "./NFTEntry";
+import NFTEntry, {ReservoirFloorPrice, SelectionData} from "./NFTEntry";
 import FortuneAbi from "artifact/FortuneAbi.json";
 import {FORTUNE_CHAINS} from "utils/chains";
 import {ToastContext} from "context/ToastContextProvider";
@@ -41,12 +50,11 @@ type EntryProps = {
   onClose: () => void
 }
 
-const minimumEntry = BigInt(parseEther('0.005').toString())
+const minimumEntry = BigInt(parseEther('0.0001').toString())
 
 const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClosed,  show, onClose }) => {
   const { address } = useAccount()
   const [openModal, setOpenModal] = useState(false)
-  const [approvalTarget, setApprovalTarget] = useState<`0x${string}`>()
   const { addToast } = useContext(ToastContext)
   const [showTokenEntry, setShowTokenEntry] = useState(false)
   const [valueEth, setValueEth] = useState<string>('')
@@ -68,6 +76,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
     revalidateIfStale: false,
     revalidateOnMount: true
   })
+
   const isMounted = useMounted()
   const isMobile = useMediaQuery({ maxWidth: 600 }) && isMounted
   const marketplaceChain = useMarketplaceChain()
@@ -76,6 +85,17 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
     address,
     chainId: marketplaceChain.id
   })
+  const publicClient = createPublicClient({
+    chain: marketplaceChain,
+    transport: http()
+  })
+
+  const walletClient = createWalletClient({
+    chain: marketplaceChain,
+    // @ts-ignore
+    transport: custom(window?.ethereum)
+  })
+  let requireApprovals = useRef(0).current
 
   const tweetText = `I just placed my bet on #Fortune at @NFTEarth_L2!\n\n🎉 #Winner takes all 🎉\n\n`
 
@@ -94,13 +114,6 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
     args: [[fortuneChain?.address]],
   })
 
-  const { writeAsync: approveToken, isLoading: isApprovalTokenLoading, error: approvalTokenError } = useContractWrite({
-    abi: TransferManagerABI,
-    address: approvalTarget,
-    functionName: 'approve',
-    args: [fortuneChain?.address, 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff],
-  })
-
   const { writeAsync, data: sendData, isLoading, error: error } = useContractWrite({
     abi: FortuneAbi,
     address: fortuneChain?.address as `0x${string}`,
@@ -113,7 +126,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
       return [
         isEth ? 0 : (isErc20 ? 1 : 2),
         selection.contract,
-        [BigInt((isErc20 ? selection?.value || 0 : selection?.tokenId || 0))],
+        isErc20 ? selection?.values || 0 : selection?.tokenIds || 0,
         ...(isErc20 ? [] : [
           [
             selection.reservoirOracleFloor?.id as string,
@@ -132,7 +145,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
     enabled: !!sendData
   })
 
-  const showModal = !!error || !!approvalError || isApprovalLoading || isLoading || isLoadingTransaction || isSuccess
+  const showModal = !!error || !!approvalError || isApprovalLoading || isLoading || isLoadingTransaction || isSuccess || !!requireApprovals
 
   useEffect(() => {
     setOpenModal(showModal);
@@ -146,15 +159,6 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
       // fetchNextPage()
     }
   }, [loadMoreObserver?.isIntersecting])
-
-  // console.log('TEST')
-
-  // const selectionValueEth = useMemo(() => {
-  //   return Object.keys(selections).reduce((a: bigint, k: string) => {
-  //     const selection = selections[k];
-  //     return a + BigInt(selection?.value || 0)
-  //   }, BigInt(0))
-  // }, [selections])
 
   const handleSetEthValue = (val: string) => {
     try {
@@ -174,7 +178,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
     }
   }
 
-  const handleAddEth = (e: any) => {
+  const handleAddEth = async (e: any) => {
     e.preventDefault();
     const value = BigInt(parseEther(`${valueEth === '' ? 0 : +valueEth}`).toString())
 
@@ -186,18 +190,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
       return;
     }
 
-    setSelections({
-      ...selections,
-      [`${AddressZero}`]: {
-        type: 'erc20',
-        name: 'ETH',
-        contract: AddressZero.toString(),
-        value: value,
-        approved: false,
-      },
-    })
-
-    setValueEth('')
+    await handleDeposit()
   }
 
   const handleAddNFTE = (e: any) => {
@@ -209,7 +202,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
         type: 'erc20',
         name: 'NFTE OFT',
         contract: '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
-        value: BigInt(parseEther(`${valueNFTE === '' ? 0 : +valueNFTE}`).toString()),
+        values: [BigInt(parseEther(`${valueNFTE === '' ? 0 : +valueNFTE}`).toString())],
         approved: false,
       }
     })
@@ -217,8 +210,8 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
     setValueNFTE('')
   }
 
-  const handleDeposit = async (e: SyntheticEvent) => {
-    e.preventDefault();
+  const handleDeposit = async (e?: SyntheticEvent) => {
+    e?.preventDefault();
     try {
       if (!isApproved) {
         await grantApproval?.()
@@ -226,32 +219,27 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
         return;
       }
 
-      const selects = new Set([...Object.keys(selections)
-        .filter((p) => !selections[p].approved)])
+      const selects =  [...Object.keys(selections)
+        .filter((p) => !selections[p].approved)]
+      requireApprovals = selects.length;
 
       for(let select of selects) {
         const selection = selections[select];
-        const publicClient = createPublicClient({
-          chain: arbitrum,
-          transport: http()
-        })
-
-        const walletClient = createWalletClient({
-          chain: arbitrum,
-
-          // @ts-ignore
-          transport: custom(window.ethereum)
-        })
-
-        const [account] = await walletClient.getAddresses()
-
         const data = await publicClient.readContract({
-          address: selection.contract `0x${string}`,
+          address: selection.contract as `0x${string}`,
           abi: selection.type === 'erc20' ? ERC20Abi : ERC721Abi,
           functionName: selection.type === 'erc20' ? 'allowance' : 'isApprovedForAll',
         })
 
-        console.log(data)
+        if (selection.type === 'erc20' && (data as bigint) >= (selection.values?.[0] || BigInt(0))) {
+          continue
+        }
+
+        if (selection.type === 'erc721' && !!data) {
+          continue
+        }
+
+        const [account] = await walletClient.getAddresses()
         const { request } = await publicClient.simulateContract({
           address: selection.contract as `0x${string}`,
           abi: selection.type === 'erc20' ? ERC20Abi : ERC721Abi,
@@ -263,15 +251,22 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
         })
 
         await walletClient.writeContract(request)
+        requireApprovals -= 1
       }
 
       await writeAsync?.()
-    } catch (e: any) {
-      // addToast?.({
-      //   title: 'Error',
-      //   status: 'error',
-      //   description: e.reason || e.message
-      // })
+    } catch (err: any) {
+      if (err instanceof BaseError) {
+        const revertError = err.walk(err => err instanceof ContractFunctionRevertedError)
+        if (revertError instanceof ContractFunctionRevertedError) {
+          const errorName = revertError.data?.errorName ?? ''
+          addToast?.({
+            title: errorName,
+            status: 'error',
+            description: errorName
+          })
+        }
+      }
     }
     // setLoading(false)
   }
@@ -373,16 +368,36 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
                     <NFTEntry
                       key={`entry-token-${i}`}
                       data={token}
-                      selected={!!selections[`${token?.token?.contract}:${token?.token?.tokenId}`]}
-                      handleClick={(key, data) => {
-                        if (selections[key]) {
+                      selected={!!selections[`${token?.token?.contract}`]}
+                      handleClick={( data) => {
+                        const existing = selections[`${data.contract}`]
+                        if (existing) {
                           const newSelections = {...selections};
-                          delete newSelections[key];
-                          setSelections(newSelections);
+                          if (existing.tokenIds?.includes(BigInt(`${data.tokenId}`))) {
+                            existing.tokenIds = existing.tokenIds.filter(a => a !== BigInt(`${data.tokenId}`))
+                          } else {
+                            existing.tokenIds?.push(BigInt(`${data.tokenId}`))
+                          }
+                          newSelections[`${data.contract}`] = existing;
+
+                          if (!existing.tokenIds?.length) {
+                            delete newSelections[`${data.contract}`]
+                          }
+
+                          setSelections(newSelections)
                         } else {
                           setSelections({
                             ...selections,
-                            [key]: data
+                            [`${data.contract}`]: {
+                              type: 'erc721',
+                              contract: data.contract,
+                              approved: data.approved,
+                              name: data.name,
+                              image: data.image,
+                              tokenIds: [BigInt(`${data.tokenId}`)],
+                              values: [BigInt(`${data.value}`)],
+                              reservoirOracleFloor: data.reservoirOracleFloor
+                            }
                           })
                         }
                       }}
@@ -415,7 +430,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
               >
                 <Flex justify="between">
                   <Text style="h6">Add ETH</Text>
-                  <Text style="subtitle3">Minimum Entry is 0.005Ξ</Text>
+                  <Text style="subtitle3">{`Minimum Entry is ${formatEther(minimumEntry)}Ξ`}</Text>
                 </Flex>
                 <NumericalInput
                   value={valueEth}
@@ -584,7 +599,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
                   justifyContent: 'center'
                 }}
                 onClick={handleDeposit}
-              >{isApproved ? (roundClosed ? 'Round Closed' : '(Minimum 0.005E) Deposit') : 'Grant Approval'}</Button>
+              >{isApproved ? (roundClosed ? 'Round Closed' : `(Minimum ${formatEther(minimumEntry)}Ξ) Deposit`) : 'Grant Approval'}</Button>
             </Flex>
           )}
         </Flex>
