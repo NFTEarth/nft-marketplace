@@ -35,7 +35,7 @@ const TermsPage = () => {
 
           <Flex css={{ my: '$6', gap: 20 }} direction="column">
             <p>
-              {`These Terms of Service govern your use of the website located at nftearth.exchange any related services provided by Layer2DAO., doing business as NFTEarth (“NFTEarth,“ “we,“ “us,“ or “our“).`}
+              {`These Terms of Service govern your use of the website located at nftearth.exchange any related services provided by Layer2NFTs, operating as NFTEarth (“NFTEarth,“ “we,“ “us,“ or “our“).`}
             </p>
             <p>
               {`By accessing nftearth.exchange, you agree to abide by these Terms of Service and to comply with all applicable laws and regulations. If you do not agree with these Terms of Service, you are prohibited from using or accessing this website or using any other services provided by NFTEarth.`}

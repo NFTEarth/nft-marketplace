@@ -58,10 +58,10 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
             }}
             as="h1"
             css={{
-              color: '$whiteA12', lineHeight: 1.2
+              color: '$whiteA12', lineHeight: 1
             }}
           >
-            NFTΞarth
+            NFTEarth
           </Text>
           <Image
             src="/res2.png"
@@ -74,13 +74,13 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
         <Text
           style="subtitle1"
           css={{
-            lineHeight: 1.5,
+            lineHeight: 2,
             color: '$whiteA12',
             width: '100%',
             '@lg': { width: '50%' },
           }}
         >
-          {`Omnichain NFT Hub. Trade and Create NFTs, Earn Rewards.`}
+          {`Trade and Create NFTs, Earn Rewards.`}
         </Text>
         {hideLink ?? (
           <Flex css={{ gap: 10 }}>
@@ -110,11 +110,11 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
                 css={{
                   borderRadius: '$lg',
                   color: 'white',
-                  border: '2px solid #6BE481',
+                  border: '2px solid #79FFA8',
                   justifyContent: 'center'
                 }}
               >
-                Join Quest
+                Quests
               </Button>
             </Link>
           </Flex>
