@@ -108,28 +108,29 @@ const Wheel = (props: WheelProps) => {
       return;
     }
 
-    if (status === RoundStatus.Cancelled) {
-      setWheelEnd(false);
-    }
+    setWheelEnd(false);
 
     if (status === RoundStatus.Open) {
       playStart?.()
     }
 
-
     if (status === RoundStatus.Drawing) {
       playWheel?.({ id: 'start' })
     }
 
-    if (status === RoundStatus.Drawn && !wheelEnd) {
+    if (status === RoundStatus.Drawn) {
       stopAudio?.('start')
       playWheel?.({ id: 'end' })
     }
+  }, [status, enableAudio])
 
+  useEffect(() => {
     if (wheelEnd) {
+      stopAudio?.('start')
+      stopAudio?.('end')
       playWin?.()
     }
-  }, [status, wheelEnd, enableAudio])
+  }, [wheelEnd, enableAudio])
 
   useEffect(() => {
     const chart = chartComponentRef.current?.chart
