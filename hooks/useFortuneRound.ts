@@ -15,6 +15,8 @@ export enum RoundStatus {
 
 export type Deposit = {
   id: string
+  roundId: number
+  round: Round
   depositor: string
   tokenAddress: string
   tokenAmount: number
