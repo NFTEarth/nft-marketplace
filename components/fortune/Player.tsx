@@ -8,16 +8,16 @@ import {Avatar} from "../primitives/Avatar";
 import {useENSResolver, useFortune} from "../../hooks";
 
 export interface PlayerType extends Highcharts.PointOptionsObject {
-  address: `0x${string}`,
+  address: `0x${string}`
+  index: number
   entry: number
 }
 
 type PlayerProps = {
-  index: number,
   data: PlayerType
 }
 
-const Player: FC<PlayerProps> = ({ index, data, ...restProps }) => {
+const Player: FC<PlayerProps> = ({ data, ...restProps }) => {
   const { data: hoverPlayerIndex, setHoverPlayerIndex } = useFortune<number>(d => d.hoverPlayerIndex)
   const { data: status } = useFortune<number>(d => d.status)
 
@@ -40,7 +40,7 @@ const Player: FC<PlayerProps> = ({ index, data, ...restProps }) => {
         userSelect: 'none',
         backgroundColor: 'rgba(0,0,0, 0.1)',
         transition: 'background, filter .5s',
-        ...((status !== 0 && hoverPlayerIndex !== index) ? {
+        ...((status !== 0 && hoverPlayerIndex !== data.index) ? {
           filter: 'opacity(0.4)'
         } : {}),
         '&:hover': {
@@ -48,7 +48,7 @@ const Player: FC<PlayerProps> = ({ index, data, ...restProps }) => {
         }
       }}
       onMouseOver={() => {
-        setHoverPlayerIndex?.(index)
+        setHoverPlayerIndex?.(data.index)
       }}
       onMouseLeave={() => {
         setHoverPlayerIndex?.(undefined)

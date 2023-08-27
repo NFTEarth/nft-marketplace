@@ -1,4 +1,4 @@
-import { useState, createContext, FC } from 'react'
+import {useState, createContext, FC, useReducer, Dispatch} from 'react'
 import {PlayerType} from "../components/fortune/Player";
 import {PrizeType} from "../components/fortune/Prize";
 
@@ -17,7 +17,7 @@ export const FortuneContext = createContext<{
     setStatus: ((status: number) => void) | null
     setWinner: ((winner: `0x${string}`) => void) | null
     setDurationLeft: ((status: number) => void) | null
-    setPlayers: ((players: PlayerType[]) => void) | null
+    setPlayers: Dispatch<PlayerAction> | null
     setPrizes: ((prizes: PrizeType[]) => void) | null
     setEnableAudio: ((enableAudio: boolean) => void) | null
     setUSDConversion: ((usdConversion: number) => void) | null
@@ -45,15 +45,57 @@ export const FortuneContext = createContext<{
   }
 })
 
+type PlayerResetAction = {
+  type: 'reset'
+}
+
+type PlayerUpdateAction = {
+  type: 'update'
+  index: number
+  payload: PlayerType
+}
+
+type PlayerAddAction = {
+  type: 'add'
+  payload: PlayerType
+}
+
+type PlayerSetAction = {
+  type: 'set'
+  payload: PlayerType[]
+}
+
+type PlayerAction = PlayerResetAction | PlayerAddAction | PlayerUpdateAction | PlayerSetAction
+
 const FortuneContextProvider: FC<any> = ({ children }) => {
   const [status, setStatus] = useState(0)
   const [usdConversion, setUSDConversion] = useState(0)
   const [winner, setWinner] = useState<`0x${string}` | null>(null)
   const [enableAudio, setEnableAudio] = useState(false)
-  const [players, setPlayers] = useState<PlayerType[]>([])
   const [prizes, setPrizes] = useState<PrizeType[]>([])
   const [durationLeft, setDurationLeft] = useState(60 * 5)
   const [hoverPlayerIndex, setHoverPlayerIndex] = useState<number | undefined>(undefined)
+  const playerReducer = (state: PlayerType[], action: PlayerAction): PlayerType[] => {
+    switch (action.type) {
+      case "add":
+        return [...state, action.payload]
+      case "update":
+        return state.map((player: PlayerType) => {
+          if (player.index === action.index) {
+            return { ...player, ...action.payload };
+          } else {
+            return player;
+          }
+        });
+      case "set":
+        return action.payload
+      case "reset":
+        return []
+      default:
+        return state;
+    }
+  };
+  const [players, setPlayers] = useReducer(playerReducer, []);
 
   return (
     <FortuneContext.Provider

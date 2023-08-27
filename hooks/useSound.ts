@@ -23,7 +23,11 @@ export default function useSound<T = any>(
   }: HookOptions<T> = {} as HookOptions
 ) {
   const HowlConstructor = React.useRef<HowlStatic | null>(null);
-  const isMounted = useMounted();
+  const [mounted, setMounted] = React.useState<boolean>(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const [duration, setDuration] = React.useState<number | null>(null);
 
@@ -36,7 +40,7 @@ export default function useSound<T = any>(
       onload.call(this);
     }
 
-    if (isMounted) {
+    if (mounted) {
       // @ts-ignore
       setDuration(this.duration() * 1000);
     }
@@ -47,7 +51,7 @@ export default function useSound<T = any>(
 
   // We want to lazy-load Howler, since sounds can't play on load anyway.
   useEffect(() => {
-    if (!isMounted) {
+    if (!mounted) {
       return;
     }
 
@@ -64,7 +68,7 @@ export default function useSound<T = any>(
         ...delegated,
       });
     });
-  }, [isMounted]);
+  }, [mounted]);
 
   // When the `src` changes, we have to do a whole thing where we recreate
   // the Howl instance. This is because Howler doesn't expose a way to
