@@ -64,7 +64,6 @@ const useFortuneHistory = (filter : RoundHistoryFilter, options?: SWRInfiniteCon
   const {data, error, mutate, size, setSize} = useSWRInfinite<RoundResult>(
     (pageIndex, previousPageData) => {
       const params = getKey(pageIndex, previousPageData)
-      console.log('params', params)
       const key = params && params[1] ? JSON.stringify(params[1]) : null
       if (key && !keys.includes(key)) {
         setKeys([...keys, key])
