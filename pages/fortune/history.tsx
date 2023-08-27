@@ -46,7 +46,7 @@ const FortuneHistory = () => {
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
   const data = useFortuneHistory({
-    first: 20,
+    first: 100,
     skip: 0,
     where: {
       status: typeToStatus[type],
