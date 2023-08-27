@@ -12,7 +12,6 @@ if (typeof Highcharts === 'object') {
 }
 
 export interface WheelProps extends HighchartsReact.Props {
-  countdown: number
   onWheelEnd: any
   winner?: `0x${string}`
 }
@@ -26,6 +25,15 @@ function getRandomInt(min: number, max: number) {
 type winnerWheel = {
   wheelPoint: number,
   winnerIndex: number
+}
+
+type FortuneData = {
+  durationLeft: number
+  status: number
+  countdown: number
+  players: PlayerType[]
+  enableAudio: boolean
+  hoverPlayerIndex: number
 }
 
 const findWinner = (data: any[], winner?: `0x${string}`, randomize = true) : winnerWheel => {
@@ -67,18 +75,21 @@ const spinWheelAudioSpriteMap = {
 } as any;
 
 const Wheel = (props: WheelProps) => {
-  const { container, winner, countdown, onWheelEnd, ...restProps } = props;
+  const { container, winner, onWheelEnd, ...restProps } = props;
   const chartComponentRef = useRef<typeof HighchartsReact>(null);
   const spinIntervalRef = useRef<ReturnType<typeof setInterval>>();
   const [wheelEnd, setWheelEnd] = useState(false);
   const triangleRef = useRef<any>();
   const animationSpeed = 40;
 
-  const { data: durationLeft } = useFortune<number>(d => d.durationLeft)
-  const { data: status } = useFortune<RoundStatus>(d => d.status)
-  const { data: players } = useFortune<PlayerType[]>(d => d.players)
-  const { data: enableAudio } = useFortune<boolean>(d => d.enableAudio)
-  const { data: hoverPlayerIndex, setHoverPlayerIndex } = useFortune<number>(d => d.hoverPlayerIndex)
+  const { data: {
+    countdown,
+    durationLeft,
+    status,
+    players,
+    enableAudio,
+    hoverPlayerIndex
+  }, setHoverPlayerIndex } = useFortune<FortuneData>(d => d)
 
   const [playWin] = useSound([
     `/audio/win.webm`,
