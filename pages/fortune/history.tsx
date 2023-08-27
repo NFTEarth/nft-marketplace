@@ -69,7 +69,7 @@ const FortuneHistory = () => {
       claimList[r.roundId] = r.deposits.map((d: Deposit) => d.indice)
     });
 
-    return Object.keys(claimList).map((k:string) => [k, claimList[k].filter(Boolean).map(d => d)])
+    return Object.keys(claimList).map((k:string) => [+k, claimList[k].filter(Boolean).map(d => d)])
   }, [userWinningRounds])
 
   return (
