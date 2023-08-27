@@ -256,7 +256,7 @@ const Wallet = () => {
           </Flex>
           <Flex direction="column" align="center">
             <Text style="body2" color="subtle" css={{ mb: '$2' }}>
-              Total Exp
+              Total XP
             </Text>
             <Text style="h5" css={{ mb: '$4' }}>{formatNumber(profile?.exp || 0)}</Text>
           </Flex>
