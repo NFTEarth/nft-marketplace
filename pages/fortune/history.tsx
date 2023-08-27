@@ -43,6 +43,7 @@ const typeToStatus: Record<string, number | undefined> = {
 const FortuneHistory = () => {
   const [type, setType] = useState<string>("all")
   const [onlyYourRound, setOnlyYourRound] = useState<boolean>(false)
+  const [totalUnclaimed, setTotalUnclaimed] = useState(0n)
   const { address } = useAccount()
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
@@ -62,12 +63,17 @@ const FortuneHistory = () => {
     }
   })
 
-  const totalUnclaimed = (userWinningRounds || []).reduce((a, b) => a + (BigInt(b.valuePerEntry) * BigInt(b.numberOfEntries)), BigInt(0))
   const rewards:  (number | number[])[][] = useMemo(() => {
     const claimList: Record<string, number[]> = {};
+    let total = 0n;
     (userWinningRounds || []).forEach((r: Round) => {
-      claimList[r.roundId] = r.deposits.map((d: Deposit) => d.indice)
+      claimList[r.roundId] = r.deposits.filter(d => !d.claimed).map((d) => {
+        total += ((BigInt(d.entry.totalNumberOfEntries) * BigInt(r.valuePerEntry)))
+        return d.indice
+      })
     });
+
+    setTotalUnclaimed(total);
 
     return Object.keys(claimList).map((k:string) => [+k, claimList[k].filter(Boolean).map(d => d)])
   }, [userWinningRounds])
