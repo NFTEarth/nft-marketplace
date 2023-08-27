@@ -6,16 +6,17 @@ import Jazzicon from "react-jazzicon/dist/Jazzicon";
 import {Flex, FormatCryptoCurrency, Text} from "../primitives";
 import {Avatar} from "../primitives/Avatar";
 import {useENSResolver, useFortune} from "../../hooks";
+import {RoundStatus} from "../../hooks/useFortuneRound";
 
 export interface PlayerType extends Highcharts.PointOptionsObject {
   address: `0x${string}`
-  valuePerEntry: number
   index: number
   entry: number
 }
 
 type PlayerProps = {
-  data: PlayerType
+  data: PlayerType,
+  valuePerEntry: number
 }
 
 const Player: FC<PlayerProps> = ({ data, valuePerEntry, ...restProps }) => {
@@ -40,8 +41,8 @@ const Player: FC<PlayerProps> = ({ data, valuePerEntry, ...restProps }) => {
         cursor: 'pointer',
         userSelect: 'none',
         backgroundColor: 'rgba(0,0,0, 0.1)',
-        transition: 'background, filter .5s',
-        ...((status !== 0 && hoverPlayerIndex !== data.index) ? {
+        transition: 'background-color, filter .5s',
+        ...((status !== RoundStatus.Open || (hoverPlayerIndex && hoverPlayerIndex !== data.index)) ? {
           filter: 'opacity(0.4)'
         } : {}),
         '&:hover': {
@@ -63,7 +64,7 @@ const Player: FC<PlayerProps> = ({ data, valuePerEntry, ...restProps }) => {
       )}
       <Flex align="start" direction="column" css={{ flex: 1 }}>
         <Text>{shortEnsName || data.name || shortAddress}</Text>
-        <FormatCryptoCurrency amount={BigInt(data.entry) * BigInt(valuePerEntry)} />
+        <FormatCryptoCurrency amount={BigInt(data.entry || 0) * BigInt(valuePerEntry || 0)} />
       </Flex>
       <Flex align="center">
         <Text>{`${data.y}%`}</Text>
