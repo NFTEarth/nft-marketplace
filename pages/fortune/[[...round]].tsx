@@ -77,6 +77,7 @@ const FortunePage = () => {
     refreshInterval: 5000,
     isPaused: () => !router.query?.round
   })
+
   const rawRoundData = useMemo(() => {
     return router.query?.round ? roundDataById as Round : currentRound as Round
   }, [router, roundDataById, currentRound])
@@ -365,12 +366,12 @@ const FortunePage = () => {
                       </Button>
                     </Link>
                     <Link href={((+roundId - 1) < 1) ? '/fortune' : `/fortune/${+roundId - 1}`} legacyBehavior>
-                      <Button size="xs" color="secondary" disabled={(+roundId - 1) < 1}>
+                      <Button size="xs" color="secondary" disabled={!roundId || (+roundId - 1) < 1}>
                         <FontAwesomeIcon icon={faArrowLeft} width={15} height={15}/>
                       </Button>
                     </Link>
                     <Link href={+roundId === +(currentRound?.roundId || 1) ? '/fortune' : `/fortune/${+roundId + 1}`} legacyBehavior>
-                      <Button size="xs" color="secondary" disabled={+roundId === +(currentRound?.roundId || 1)}>
+                      <Button size="xs" color="secondary" disabled={!roundId || !currentRound || +roundId === +(currentRound?.roundId || 1)}>
                         <FontAwesomeIcon icon={faArrowRight} width={15} height={15}/>
                       </Button>
                     </Link>
