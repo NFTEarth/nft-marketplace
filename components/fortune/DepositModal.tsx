@@ -61,14 +61,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
   })
   let requireApprovals = useRef(0).current
 
-  const tweetText = `I just entered the current round of #Fortune at @NFTEarth_L2 
-
-  🎉 #Winner takes all 🎉
-  
-  
-  Join the fun now at this link! 
-  
-  https://app.nftearth.exchange/fortune`
+  const tweetText = `I just entered the current round on #Fortune at @NFTEarth_L2\n\n🎉 #Winner takes all 🎉\n\nJoin the fun now at this link!`
 
   const { data: isApproved, refetch: refetchApproval } = useContractRead({
     enabled: !!fortuneChain?.transferManager && !!address,

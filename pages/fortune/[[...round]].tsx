@@ -122,7 +122,7 @@ const FortunePage = () => {
   const [countdown, { startCountdown, stopCountdown, resetCountdown }] = useCountdown({
     countStart: duration,
     countStop: 0,
-    intervalMs: 1000
+    intervalMs: mounted ? 1000 : 0,
   })
 
   const convertedCountdown = convertTimer(countdown)
@@ -256,9 +256,9 @@ const FortunePage = () => {
     setDurationLeft?.(cutoffTime)
   }, [cutoffTime, roundId])
 
-  // useEffect(() => {
-  //   setCountdown?.(countdown)
-  // }, [countdown])
+  useEffect(() => {
+    setCountdown?.(countdown)
+  }, [countdown])
 
   useEffect(() => {
     if (!enableAudio) {
@@ -285,6 +285,7 @@ const FortunePage = () => {
     }
 
     if (roundStatus === RoundStatus.Open) {
+      startCountdown()
       if (playerWinner) {
         setPlayerWinner(undefined)
       }
