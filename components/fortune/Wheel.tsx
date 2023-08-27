@@ -198,7 +198,6 @@ const Wheel = (props: WheelProps) => {
       spinIntervalRef.current = setInterval(() => {
         startAngle += diff;
 
-        // console.log('new startAngle', startAngle);
         if (startAngle > 360) {
           startAngle -= 360;
         }
@@ -210,7 +209,6 @@ const Wheel = (props: WheelProps) => {
     if (status === RoundStatus.Drawn) {
       const { wheelPoint, winnerIndex } = findWinner(chart.series?.[0]?.data, winner)
 
-      console.log('wheelPoint', wheelPoint, winner);
       diff = 360 * 30
       spinIntervalRef.current = setInterval(() => {
         startAngle = diff % 360;
@@ -232,8 +230,6 @@ const Wheel = (props: WheelProps) => {
   useEffect(() => {
     const chart = chartComponentRef.current?.chart
     const progressPercent = (countdown / durationLeft) * 100
-
-    console.log('progressPercent', durationLeft, countdown, progressPercent)
 
     if (chart) {
       chart.series?.[1]?.update({
