@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/fortune/cron",
-      "schedule": "*/2 * * * *"
+      "schedule": "*/1 * * * *"
     }
   ]
 }

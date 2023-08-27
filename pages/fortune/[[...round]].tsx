@@ -94,12 +94,11 @@ const FortunePage = () => {
   const rawRoundData = useMemo(() => {
     return router.query?.round ? roundDataById as Round : currentRound as Round
   }, [router, roundDataById, currentRound])
-  const { roundId, status: roundStatus = 0, valuePerEntry = 0, deposits = [], cutoffTime = 0, ...roundData } = rawRoundData || {}
+  const { roundId, status: roundStatus = 0, valuePerEntry = 0, deposits = [], cutoffTime, ...roundData } = rawRoundData || {}
   const [ showWinner, setShowWinner] = useState(false);
   const { data: {
     players,
     usdConversion,
-    durationLeft
   }, setUSDConversion, setDurationLeft, setCountdown, setPlayers, setStatus } = useFortune<FortuneData>(d => d)
   const [ enableAudio, setEnableAudio ] = useState(false)
   const { openConnectModal } = useConnectModal()
@@ -117,10 +116,13 @@ const FortunePage = () => {
     totalNumberOfEntries: BigInt(0)
   }])
 
+  const secondDiff = (+cutoffTime || 0) - ((new Date()).getTime() / 1000);
+  const duration = secondDiff < 0 ? 0 : Math.round(secondDiff);
+
   const [countdown, { startCountdown, stopCountdown, resetCountdown }] = useCountdown({
-    countStart: durationLeft < 0 ? 0 : durationLeft,
+    countStart: duration,
     countStop: 0,
-    intervalMs: mounted ? 1000 : 0,
+    intervalMs: 1000
   })
 
   const convertedCountdown = convertTimer(countdown)
@@ -242,20 +244,21 @@ const FortunePage = () => {
       type: 'set',
       payload: newPlayers
     })
-  }, [deposits, roundId])
+  }, [deposits])
 
   useEffect(() => {
+    resetCountdown();
+    startCountdown()
     setStatus?.(roundStatus || 0);
   }, [roundStatus, roundId])
 
   useEffect(() => {
-    const secondDiff = (+cutoffTime || 0) - ((new Date()).getTime() / 1000);
-    setDurationLeft?.(Math.round(secondDiff))
+    setDurationLeft?.(cutoffTime)
   }, [cutoffTime, roundId])
 
-  useEffect(() => {
-    setCountdown?.(countdown)
-  }, [countdown])
+  // useEffect(() => {
+  //   setCountdown?.(countdown)
+  // }, [countdown])
 
   useEffect(() => {
     if (!enableAudio) {
@@ -271,7 +274,6 @@ const FortunePage = () => {
     }
 
     if (roundStatus === RoundStatus.Drawn) {
-      console.log('Play Wheel end')
       stopAudio?.('start')
       playWheel?.({ id: 'end' })
     }
@@ -283,8 +285,9 @@ const FortunePage = () => {
     }
 
     if (roundStatus === RoundStatus.Open) {
-      startCountdown()
-      setPlayerWinner(undefined)
+      if (playerWinner) {
+        setPlayerWinner(undefined)
+      }
     } else {
       if (showEntryForm) {
         setShowEntryForm(false);
