@@ -74,9 +74,8 @@ const getTitleText = (status: number, totalPrize: string, convertedCountdown: an
 
 const spinWheelAudioSpriteMap = {
   start: [0, 1200, true],
-  end: [500, 2000, false]
+  end: [0, 2000, false]
 } as any;
-
 
 const FortunePage = () => {
   const [showEntryForm, setShowEntryForm] = useState(false)
@@ -133,15 +132,15 @@ const FortunePage = () => {
   const yourWinChance = currentPlayer ? Math.round((currentPlayer?.entry || 1) / (roundData?.numberOfEntries || 1) * 100) : 0
 
   const [playStart] = useSound([
-    `/audio/game-start.webm`,
-    `/audio/game-start.mp3`
+    `/audio/game-start.mp3`,
+    `/audio/game-start.webm`
   ], {
     interrupt: true,
     volume: 0.8
   })
   const [playWheel, { stop: stopAudio, sound: wheelSound }] = useSound([
-    `/audio/wheel-spin.webm`,
-    `/audio/wheel-spin.mp3`
+    `/audio/wheel-spin.mp3`,
+    `/audio/wheel-spin.webm`
   ], {
     sprite: spinWheelAudioSpriteMap,
     interrupt: true,
