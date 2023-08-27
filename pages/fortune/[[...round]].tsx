@@ -34,7 +34,14 @@ import useFortuneCurrentRound from "../../hooks/useFortuneCurrentRound";
 import useFortuneRound, {Deposit, Round, RoundStatus} from "../../hooks/useFortuneRound";
 import {formatEther, parseEther} from "viem";
 import {truncateAddress} from "../../utils/truncate";
-import {AddressZero} from "@ethersproject/constants";
+import {AddressZero} from "@ethersproject/constants"
+import FortuneDepositModal from "../../components/fortune/DepositModal";
+
+type FortuneData = {
+  players: PlayerType[]
+  usdConversion: number
+  durationLeft: number
+}
 
 const Video = styled('video', {});
 
@@ -85,10 +92,11 @@ const FortunePage = () => {
   const { roundId, status: roundStatus = 0, valuePerEntry = 0, deposits = [], cutoffTime = 0, ...roundData } = rawRoundData || {}
 
   const [ showWinner, setShowWinner] = useState(false);
-  const { setStatus } = useFortune<number>(q => q)
-  const { data: usdConversion, setUSDConversion } = useFortune<number>(d => d.usdConversion)
-  const { data: durationLeft, setDurationLeft } = useFortune<number>(d => d.durationLeft)
-  const { data: players, setPlayers } = useFortune<PlayerType[]>(d => d.players)
+  const { data: {
+    players,
+    usdConversion,
+    durationLeft
+  }, setUSDConversion, setDurationLeft, setCountdown, setPlayers, setStatus } = useFortune<FortuneData>(d => d)
   const [ enableAudio, setEnableAudio ] = useState(false)
   const { openConnectModal } = useConnectModal()
   const marketplaceChain = useMarketplaceChain()
@@ -220,6 +228,10 @@ const FortunePage = () => {
     const secondDiff = (+cutoffTime || 0) - ((new Date()).getTime() / 1000);
     setDurationLeft?.(Math.round(secondDiff))
   }, [cutoffTime])
+
+  useEffect(() => {
+    setCountdown?.(countdown)
+  }, [countdown])
 
   const totalPrize =(BigInt(roundData?.numberOfEntries || 0) || BigInt(0)) * (BigInt(valuePerEntry) || BigInt(0))
   const yourEntries = BigInt(deposits.filter(p => (new RegExp(address as string, 'i').test(p.depositor as string)))
@@ -458,8 +470,6 @@ const FortunePage = () => {
           <EntryForm
             roundId={roundId}
             show={showEntryForm}
-            lessThan30Seconds={countdown < 30}
-            roundClosed={countdown < 1}
             onClose={() => setShowEntryForm(false)}
           />
           <Flex
@@ -628,7 +638,7 @@ const FortunePage = () => {
                   <source src="/video/space.mp4" type="video/mp4" />
                 </Video>
                 <FortuneEnterButton
-                  disabled={countdown < 1}
+                  disabled={countdown < 1 || roundStatus !== RoundStatus.Open}
                   onClick={handleEnter}
                 />
               </Flex>
@@ -706,16 +716,10 @@ const FortunePage = () => {
               </Flex>
             </Flex>
             {showEntryForm ? (
-              <Button
-                css={{
-                  justifyContent: 'center'
-                }}
-                onClick={(e) => {
-                  e.preventDefault()
-                }}
-              >DEPOSIT</Button>
+              <FortuneDepositModal roundId={roundId} />
             ) : (
               <FortuneEnterButton
+                disabled={countdown < 1 || roundStatus !== RoundStatus.Open}
                 onClick={handleEnter}
               />
             )}

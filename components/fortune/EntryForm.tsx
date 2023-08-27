@@ -6,61 +6,40 @@ import {AddressZero} from "@ethersproject/constants";
 import {parseUnits} from "ethers";
 import {useIntersectionObserver} from "usehooks-ts";
 import {
-  useAccount, useBalance,
-  useContractRead,
-  useContractWrite,
-  useWaitForTransaction,
+  useAccount,
+  useBalance,
 } from "wagmi";
 import {
-  BaseError,
-  ContractFunctionRevertedError,
-  createPublicClient,
-  createWalletClient,
-  custom,
   formatEther,
-  http,
   parseEther
 } from "viem";
 import {useMediaQuery} from "react-responsive";
 
 import NumericalInput from "../bridge/NumericalInput";
 import {Button, CryptoCurrencyIcon, Flex, FormatCryptoCurrency, Text} from "../primitives";
-import {useMarketplaceChain, useMounted} from "hooks";
+import {useFortune, useMarketplaceChain, useMounted} from "hooks";
 import SelectionItem from "./SelectionItem";
-import NFTEntry, {ReservoirFloorPrice, SelectionData} from "./NFTEntry";
-import FortuneAbi from "artifact/FortuneAbi.json";
-import {FORTUNE_CHAINS} from "utils/chains";
-import {ToastContext} from "context/ToastContextProvider";
-import Link from "next/link";
-import {faTwitter} from "@fortawesome/free-brands-svg-icons";
-import TransferManagerABI from "artifact/TransferManagerABI.json";
-import {Modal} from "../common/Modal";
-import ErrorWell from "../primitives/ErrorWell";
-import LoadingSpinner from "../common/LoadingSpinner";
-import TransactionProgress from "../common/TransactionProgress";
-import ERC721Abi from "artifact/ERC721Abi.json";
-import ERC20Abi from "artifact/ERC20Abi.json";
-import { arbitrum } from "viem/chains";
+import NFTEntry, {SelectionData} from "./NFTEntry";
+import FortuneDepositModal from "./DepositModal";
 
 type EntryProps = {
   roundId: number,
   show: boolean
-  lessThan30Seconds: boolean
-  roundClosed: boolean
   onClose: () => void
 }
 
-const minimumEntry = BigInt(parseEther('0.0001').toString())
+type FortuneData = {
+  selections: Record<string, SelectionData>,
+  valueEth: string
+}
 
-const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClosed,  show, onClose }) => {
+export const minimumEntry = BigInt(parseEther('0.0001').toString())
+
+const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
   const { address } = useAccount()
-  const [openModal, setOpenModal] = useState(false)
-  const { addToast } = useContext(ToastContext)
   const [showTokenEntry, setShowTokenEntry] = useState(false)
-  const [valueEth, setValueEth] = useState<string>('')
   const [valueNFTE, setValueNFTE] = useState<string>('')
   const loadMoreRef = useRef<HTMLDivElement>(null)
-  const [selections, setSelections] = useState<Record<string, SelectionData>>({})
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
   const {
     data: tokens,
@@ -80,92 +59,30 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
   const isMounted = useMounted()
   const isMobile = useMediaQuery({ maxWidth: 600 }) && isMounted
   const marketplaceChain = useMarketplaceChain()
-  const fortuneChain = FORTUNE_CHAINS.find(c => c.id === marketplaceChain.id);
   const ethBalance = useBalance({
     address,
     chainId: marketplaceChain.id
   })
-  const publicClient = createPublicClient({
-    chain: marketplaceChain,
-    transport: http()
-  })
-
-  const walletClient = createWalletClient({
-    chain: marketplaceChain,
-    // @ts-ignore
-    transport: custom(window?.ethereum)
-  })
-  let requireApprovals = useRef(0).current
-
-  const tweetText = `I just placed my bet on #Fortune at @NFTEarth_L2!\n\n🎉 #Winner takes all 🎉\n\n`
-
-  const { data: isApproved, refetch: refetchApproval } = useContractRead({
-    enabled: !!fortuneChain?.transferManager && !!address,
-    abi: TransferManagerABI,
-    address: fortuneChain?.transferManager as `0x${string}`,
-    functionName: 'hasUserApprovedOperator',
-    args: [address, fortuneChain?.address],
-  })
-
-  const { writeAsync: grantApproval, isLoading: isApprovalLoading, error: approvalError } = useContractWrite({
-    abi: TransferManagerABI,
-    address: fortuneChain?.transferManager as `0x${string}`,
-    functionName: 'grantApprovals',
-    args: [[fortuneChain?.address]],
-  })
-
-  const { writeAsync, data: sendData, isLoading, error: error } = useContractWrite({
-    abi: FortuneAbi,
-    address: fortuneChain?.address as `0x${string}`,
-    functionName: 'deposit',
-    args: [roundId, Object.keys(selections).map(s => {
-      const selection = selections[s];
-      const isErc20 = selection.type === 'erc20'
-      const isEth = isErc20 && selection.contract === AddressZero
-
-      return [
-        isEth ? 0 : (isErc20 ? 1 : 2),
-        selection.contract,
-        isErc20 ? selection?.values || 0 : selection?.tokenIds || 0,
-        ...(isErc20 ? [] : [
-          [
-            selection.reservoirOracleFloor?.id as string,
-            selection.reservoirOracleFloor?.payload as string,
-            selection.reservoirOracleFloor?.timestamp as number,
-            selection.reservoirOracleFloor?.signature as string
-          ]
-        ])
-      ];
-    })],
-    value: BigInt(parseEther(`${valueEth === '' ? 0 : +valueEth}`).toString())
-  })
-
-  const { isLoading: isLoadingTransaction = true, isSuccess = true, data: txData } = useWaitForTransaction({
-    hash: sendData?.hash,
-    enabled: !!sendData
-  })
-
-  const showModal = !!error || !!approvalError || isApprovalLoading || isLoading || isLoadingTransaction || isSuccess || !!requireApprovals
-
-  useEffect(() => {
-    setOpenModal(showModal);
-  }, [showModal])
-
+  const { data: { valueEth, selections }, setSelections, setValueEth } = useFortune<FortuneData>(q => q)
   const filteredTokens = tokens.filter(t => t.token?.kind === 'erc721' && BigInt(t.token?.collection?.floorAskPrice?.amount?.raw || '0') > minimumEntry)
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
-      // fetchNextPage()
+      fetchNextPage()
     }
   }, [loadMoreObserver?.isIntersecting])
 
   const handleSetEthValue = (val: string) => {
     try {
       parseUnits(val, 18);
-      setValueEth(val);
+      const value = BigInt(parseEther(`${valueEth === '' ? 0 : +valueEth}`).toString())
+      if (value < minimumEntry) {
+        return;
+      }
+      setValueEth?.(val);
     } catch (e) {
-      setValueEth('0');
+      setValueEth?.('0');
     }
   }
 
@@ -189,14 +106,12 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
     if ((ethBalance.data?.value || 0) < value) {
       return;
     }
-
-    await handleDeposit()
   }
 
   const handleAddNFTE = (e: any) => {
     e.preventDefault();
 
-    setSelections({
+    setSelections?.({
       ...selections,
       [`0x51B902f19a56F0c8E409a34a215AD2673EDF3284`]: {
         type: 'erc20',
@@ -208,72 +123,6 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
     })
 
     setValueNFTE('')
-  }
-
-  const handleDeposit = async (e?: SyntheticEvent) => {
-    e?.preventDefault();
-    setOpenModal(true);
-    try {
-      if (!isApproved) {
-        await grantApproval?.()
-        await refetchApproval?.()
-        return;
-      }
-
-      const selects =  [...Object.keys(selections)
-        .filter((p) => !selections[p].approved)]
-      requireApprovals = selects.length;
-
-      for(let select of selects) {
-        const selection = selections[select];
-        const selectionAbi = selection.type === 'erc20' ?  ERC20Abi : ERC721Abi;
-        const selectionFunc = selection.type === 'erc20' ? 'allowance' : 'isApprovedForAll'
-        const data = await publicClient.readContract<typeof selectionAbi, typeof selectionFunc>({
-          address: selection.contract as `0x${string}`,
-          abi: selectionAbi,
-          functionName: selectionFunc
-        })
-
-        if (selection.type === 'erc20' && (data as bigint) >= (selection.values?.[0] || BigInt(0))) {
-          continue
-        }
-
-        if (selection.type === 'erc721' && !!data) {
-          continue
-        }
-
-        const [account] = await walletClient.getAddresses()
-        const selectionApprovalFunc = selection.type === 'erc20' ? 'approve' : 'setApprovalForAll'
-        const { request } = await publicClient.simulateContract<typeof selectionAbi, typeof selectionApprovalFunc>({
-          address: selection.contract as `0x${string}`,
-          abi: selectionAbi,
-          functionName: selectionApprovalFunc,
-          args: selection.type === 'erc20' ?
-            [fortuneChain?.address as `0x${string}`, 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff] :
-            [fortuneChain?.address as `0x${string}`, true],
-          account
-        })
-
-        await walletClient.writeContract(request)
-        requireApprovals -= 1
-      }
-
-      await writeAsync?.()
-    } catch (err: any) {
-      if (err instanceof BaseError) {
-        const revertError = err.walk(err => err instanceof ContractFunctionRevertedError)
-        if (revertError instanceof ContractFunctionRevertedError) {
-          const errorName = revertError.data?.errorName ?? ''
-          addToast?.({
-            title: errorName,
-            status: 'error',
-            description: errorName
-          })
-        }
-      }
-      setOpenModal(true);
-    }
-    // setLoading(false)
   }
 
   if (!show) {
@@ -389,9 +238,9 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
                             delete newSelections[`${data.contract}`]
                           }
 
-                          setSelections(newSelections)
+                          setSelections?.(newSelections)
                         } else {
-                          setSelections({
+                          setSelections?.({
                             ...selections,
                             [`${data.contract}`]: {
                               type: 'erc721',
@@ -440,7 +289,6 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
                 <NumericalInput
                   value={valueEth}
                   onUserInput={handleSetEthValue}
-                  icon={<Button size="xs" color="primary" disabled={BigInt(parseEther(`${+valueEth}`)) < minimumEntry} onClick={handleAddEth}>Add</Button>}
                   iconStyles={{
                     top: 4,
                     right: 4,
@@ -450,8 +298,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
                     width: '100%'
                   }}
                   css={{
-                    pl: 20,
-                    pr: 70,
+                    px: 20,
                     boxShadow: 'inset 0 0 0 2px $$focusColor',
                     textAlign: 'right',
                     '&:hover': {
@@ -543,7 +390,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
         >
           <Text style="h5">{`Selections(${(Object.keys(selections)).length})`}</Text>
           <Button size="xs" color="secondary" onClick={() => {
-            setSelections({})
+            setSelections?.({})
           }}>
             Clear
           </Button>
@@ -572,7 +419,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
                 key={k}
                 data={selections[k]}
                 onApprove={(approved: boolean) => {
-                  setSelections({
+                  setSelections?.({
                     ...selections,
                     [k]: {
                       ...selections[k],
@@ -584,98 +431,12 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
             ))}
           </Flex>
           {(Object.keys(selections)).length > 0 && (
-            <Flex
-              align="center"
-              direction="column"
-              css={{
-                gap: 20
-              }}
-            >
-              {(lessThan30Seconds && !roundClosed) && (
-                <Text css={{ color: 'orange', textAlign: 'center' }}>
-                  {`Warning: less than 30 seconds left, your transaction might not make it in time.`}
-                </Text>
-              )}
-              <Button
-                disabled={roundClosed || isApprovalLoading || isLoading || isLoadingTransaction }
-                size="large"
-                color={lessThan30Seconds ? 'red' : 'primary'}
-                css={{
-                  justifyContent: 'center'
-                }}
-                onClick={handleDeposit}
-              >{isApproved ? (roundClosed ? 'Round Closed' : `(Minimum ${formatEther(minimumEntry)}Ξ) Deposit`) : 'Grant Approval'}</Button>
-            </Flex>
+            <FortuneDepositModal
+              roundId={roundId}
+            />
           )}
         </Flex>
       </Flex>
-      {isMounted && (
-        <Modal
-          title="Confirm Entries"
-          open={openModal}
-          onOpenChange={(open) => {
-            setOpenModal(open)
-          }}
-        >
-          <Flex
-            direction="column"
-            justify="start"
-            align="center"
-            css={{ flex: 1, textAlign: 'center', p: '$4', gap: '$4' }}
-          >
-            {(!!error || !!approvalError) && (
-              <ErrorWell
-                message={(error || approvalError as any)?.reason || (error || approvalError)?.message}
-                css={{
-                  textAlign: 'left',
-                  maxWidth: '100%',
-                  wordBreak: 'break-word',
-                  whiteSpace: 'pre-wrap'
-                }}
-              />
-            )}
-            {(isLoading || isApprovalLoading) && !error && (
-              <Flex css={{ height: '100%', py: '$4' }} align="center">
-                <LoadingSpinner />
-              </Flex>
-            )}
-            {isApprovalLoading && (
-              <Text style="h6">Transfer Manager Approval</Text>
-            )}
-            {/*{isContractApproval && (*/}
-            {/*  <Text style="h6">Approval</Text>*/}
-            {/*)}*/}
-            {isLoading && (
-              <Text style="h6">Please confirm in your wallet</Text>
-            )}
-            {isLoadingTransaction && (
-              <Text style="h6">Send to Prize Pool</Text>
-            )}
-            {isLoadingTransaction && (
-              <TransactionProgress
-                justify="center"
-                css={{ mb: '$3' }}
-                fromImgs={['/icons/arbitrum-icon-light.svg']}
-                toImgs={['/icons/fortune.png']}
-              />
-            )}
-            {isSuccess && (
-              <Flex direction="column" css={{ gap: 20, my: '$4' }}>
-                <Text style="h6" css={{ color: 'green' }}>Deposit Success !</Text>
-                <Button
-                  as="a"
-                  rel="noreferrer noopener"
-                  target="_blank"
-                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(`https://app.nftearth.exchange/fortune`)}&hashtags=&via=&related=&original_referer=${encodeURIComponent('https://app.nftearth.exchange')}`}
-                >
-                  {`Tweet your joy !`}
-                  <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faTwitter}/>
-                </Button>
-              </Flex>
-            )}
-          </Flex>
-        </Modal>
-      )}
     </>
   )
 };
