@@ -36,11 +36,11 @@ const resourcesSectionLinks = [
     href: '/learn-nfts',
   },
   {
-    name: '$NFTE Token',
-    href: 'https://www.coingecko.com/en/coins/nftearth',
+    name: 'Buy NFTE',
+    href: 'https://app.uniswap.org/#/swap?outputCurrency=0x51b902f19a56f0c8e409a34a215ad2673edf3284&chain=arbitrum',
   },
   {
-    name: 'Brand',
+    name: 'Brand Assets',
     href: 'https://docs.nftearth.exchange/resources/brand-assets',
   },
 ]

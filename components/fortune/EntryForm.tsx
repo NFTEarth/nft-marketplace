@@ -111,7 +111,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
       ...selections,
       [`0x51B902f19a56F0c8E409a34a215AD2673EDF3284`]: {
         type: 'erc20',
-        name: 'NFTE OFT',
+        name: 'NFTE',
         contract: '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
         values: [BigInt(parseEther(`${valueNFTE === '' ? 0 : +valueNFTE}`).toString())],
         approved: false,
@@ -198,7 +198,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
                   }}
                 >
                   <CryptoCurrencyIcon address={AddressZero} chainId={marketplaceChain.id} css={{ height: 15 }} />
-                  <Text style="h6" css={{ color: '$primary13' }}>ETH/NFTE OFT</Text>
+                  <Text style="h6" css={{ color: '$primary13' }}>ETH/NFTE</Text>
                 </Flex>
               </Flex>
               <Flex direction="column" css={{ gap: 10}}>
@@ -268,7 +268,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
                 p: 16
               }}
             >
-              <Text style="h5" css={{ mb: 30 }}>Add ETH or NFTE OFT</Text>
+              <Text style="h5" css={{ mb: 30 }}>Add ETH or NFTE</Text>
               <Flex
                 direction="column"
                 css={{

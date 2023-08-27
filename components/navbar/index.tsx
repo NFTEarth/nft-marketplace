@@ -120,14 +120,14 @@ const Navbar = () => {
                 Collections
               </NavItem>
             </Link>
-            <Link href="/quests">
-              <NavItem active={router.pathname == '/quests'}>Quests</NavItem>
+            <Link href="/fortune">
+              <NavItem active={router.pathname == '/quests'}>Fortune</NavItem>
             </Link>
             <Link href="/bridge">
               <NavItem active={router.pathname == '/bridge'}>Bridge</NavItem>
             </Link>
             <Link href="https://www.sushi.com/pool/42161:0xd2aaa8fc5c39dbe68344bc42d4513ea344e5d696" target="_blank">
-              <NavItem>Staking</NavItem>
+              <NavItem>Rewards</NavItem>
             </Link>
           </Flex>
         </Flex>

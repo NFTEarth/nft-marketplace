@@ -39,7 +39,7 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         //Aliases
 
         //Primary
-        primary1: '$lime1',
+        primary1: 'hsl(261, 100%, 74%)',
         primary2: '$lime2',
         primary3: '$lime3',
         primary4: '$lime4',
@@ -51,8 +51,8 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         primary10: '$lime10',
         primary11: '$lime11',
         primary12: '$lime12',
-        primary13: 'hsl(145, 25%, 39%)',
-        primary14: 'hsl(142, 34%, 51%)',
+        primary13: 'hsl(261, 100%, 74%)',
+        primary14: 'hsl(111, 100%, 74%)',
 
         //Secondary
         secondary1: '$limeA1',
