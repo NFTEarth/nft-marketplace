@@ -9,6 +9,7 @@ import {useENSResolver, useFortune} from "../../hooks";
 
 export interface PlayerType extends Highcharts.PointOptionsObject {
   address: `0x${string}`
+  valuePerEntry: number
   index: number
   entry: number
 }
@@ -17,7 +18,7 @@ type PlayerProps = {
   data: PlayerType
 }
 
-const Player: FC<PlayerProps> = ({ data, ...restProps }) => {
+const Player: FC<PlayerProps> = ({ data, valuePerEntry, ...restProps }) => {
   const { data: hoverPlayerIndex, setHoverPlayerIndex } = useFortune<number>(d => d.hoverPlayerIndex)
   const { data: status } = useFortune<number>(d => d.status)
 
@@ -62,7 +63,7 @@ const Player: FC<PlayerProps> = ({ data, ...restProps }) => {
       )}
       <Flex align="start" direction="column" css={{ flex: 1 }}>
         <Text>{shortEnsName || data.name || shortAddress}</Text>
-        <FormatCryptoCurrency amount={data.entry} />
+        <FormatCryptoCurrency amount={BigInt(data.entry) * BigInt(valuePerEntry)} />
       </Flex>
       <Flex align="center">
         <Text>{`${data.y}%`}</Text>

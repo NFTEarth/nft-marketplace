@@ -409,6 +409,7 @@ const FortunePage = () => {
                   {players.map((p, i) => (
                     <Player
                       key={`player-${i}`}
+                      valuePerEntry={valuePerEntry}
                       data={p}
                     />
                   ))}
