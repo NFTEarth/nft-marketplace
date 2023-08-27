@@ -163,7 +163,6 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
           <FormatCryptoCurrency
             amount={prizePool}
             address={AddressZero}
-            decimals={16}
             logoHeight={16}
             textStyle="subtitle1"
           />
@@ -182,7 +181,6 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
             <FormatCryptoCurrency
               amount={winnerEntryValue}
               address={AddressZero}
-              decimals={16}
               logoHeight={16}
               textStyle="subtitle1"
             />
@@ -216,7 +214,6 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
             <FormatCryptoCurrency
               amount={yourEntry}
               address={AddressZero}
-              decimals={16}
               logoHeight={16}
               textStyle="subtitle1"
             />
