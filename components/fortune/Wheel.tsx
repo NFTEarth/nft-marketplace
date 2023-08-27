@@ -204,7 +204,8 @@ const Wheel = (props: WheelProps) => {
           }]
       });
     }
-  }, [status, countdown])
+
+  }, [status, roundId, durationLeft, countdown])
 
   const options = useMemo<Highcharts.Options>(() => {
     return {
