@@ -36,6 +36,7 @@ import {formatEther, parseEther} from "viem";
 import {truncateAddress} from "../../utils/truncate";
 import {AddressZero} from "@ethersproject/constants"
 import FortuneDepositModal from "../../components/fortune/DepositModal";
+import useSound from "../../hooks/useSound";
 
 type FortuneData = {
   players: PlayerType[]
@@ -70,6 +71,12 @@ const getTitleText = (status: number, totalPrize: string, convertedCountdown: an
 
   return `Preparing Game... • Fortune  | NFTEarth`
 }
+
+const spinWheelAudioSpriteMap = {
+  start: [0, 1200, true],
+  end: [500, 2000, false]
+} as any;
+
 
 const FortunePage = () => {
   const [showEntryForm, setShowEntryForm] = useState(false)
@@ -146,8 +153,6 @@ const FortunePage = () => {
       };
 
       newPlayers.push(player)
-
-      console.log(typeof d.tokenType, d.tokenType);
 
       if (d.tokenType === 'ETH') {
         newPrizes = newPrizes.map((p, i) => {
@@ -238,6 +243,43 @@ const FortunePage = () => {
     .reduce((a, b) => a + BigInt(b.entry.totalNumberOfEntries || 0), BigInt(0)) * (BigInt(valuePerEntry) || BigInt(0)))
   const currentPlayer = players.find(p => (new RegExp(address as string, 'i')).test(p.address));
   const yourWinChance = currentPlayer ? Math.round((currentPlayer?.entry || 1) / (roundData?.numberOfEntries || 1) * 100) : 0
+
+
+  const [playStart] = useSound([
+    `/audio/game-start.webm`,
+    `/audio/game-start.mp3`
+  ], {
+    interrupt: true,
+    volume: 0.8
+  })
+  const [playWheel, { stop: stopAudio, sound: wheelSound }] = useSound([
+    `/audio/wheel-spin.webm`,
+    `/audio/wheel-spin.mp3`
+  ], {
+    sprite: spinWheelAudioSpriteMap,
+    interrupt: true,
+    volume: 0.8
+  })
+
+  useEffect(() => {
+    if (!enableAudio) {
+      return;
+    }
+
+    if (roundStatus === RoundStatus.Open) {
+      playStart?.()
+    }
+
+    if (roundStatus === RoundStatus.Drawing) {
+      playWheel?.({ id: 'start' })
+    }
+
+    if (roundStatus === RoundStatus.Drawn) {
+      console.log('Play Wheel end')
+      stopAudio?.('start')
+      playWheel?.({ id: 'end' })
+    }
+  }, [roundStatus, enableAudio, roundId])
 
   useEffect(() => {
     if (showWinner) {
@@ -410,6 +452,7 @@ const FortunePage = () => {
                   }}>
                     <Wheel
                       countdown={countdown}
+                      roundId={roundId}
                       winner={roundData?.winner as `0x${string}`}
                       onWheelEnd={(winnerIndex: number) => {
                         setPlayerWinner(players[winnerIndex])
