@@ -22,10 +22,11 @@ const useFortuneHistory = (filter : RoundHistoryFilter, options?: SWRInfiniteCon
   const { mutate: globalMutate } = useSWRConfig()
 
   const getKey = useCallback((pageIndex: number, previousPageData: RoundResult) => {
+    const newFilter = { ...filter };
     if (previousPageData && previousPageData.rounds.length === 0) {
       return null
     } else if (previousPageData && pageIndex > 0) {
-      filter.skip =  filter.first * pageIndex
+      newFilter.skip =  newFilter.first * pageIndex
     }
 
     const query = `query GetHistoryRounds($first: Int!, $skip: Int!, $where: Round_filter) {
@@ -58,7 +59,7 @@ const useFortuneHistory = (filter : RoundHistoryFilter, options?: SWRInfiniteCon
           }
         }
       }`
-    return [query, filter]
+    return [query, newFilter]
   }, [filter])
 
   const {data, error, mutate, size, setSize} = useSWRInfinite<RoundResult>(
