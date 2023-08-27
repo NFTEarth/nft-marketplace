@@ -8,7 +8,6 @@ import {NAVBAR_HEIGHT} from "../navbar";
 import {AddressZero} from "@ethersproject/constants";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faClockFour, faExternalLink, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
-import Link from "next/link";
 import {Round, RoundStatus} from "../../hooks/useFortuneRound";
 import {useAccount} from "wagmi";
 import {Avatar} from "../primitives/Avatar";
@@ -28,7 +27,7 @@ const HistoryTable : FC<Props> = ({ data }) => {
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
-    if (isVisible) {
+    if (isVisible && !data.isFetchingPage) {
       data.fetchNextPage?.()
     }
   }, [loadMoreObserver?.isIntersecting])
@@ -104,164 +103,165 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
   const ROI = (round.numberOfEntries / winnerEntry).toFixed(2);
 
   return (
-    <Link href={`/fortune/${round.roundId}`} passHref legacyBehavior>
-      <TableRow
-        as="a"
-        key={round.roundId}
-        css={{
-          px: '$2',
-          gridTemplateColumns: mobileTemplateColumn,
-          '@lg': {
-            gridTemplateColumns: desktopTemplateColumn,
-          },
-        }}
-      >
-        <TableCell css={{ color: '$gray11' }}>
-          <Flex justify="end">
-            <Text>{round.roundId}</Text>
-          </Flex>
-        </TableCell>
-        <TableCell css={{ color: '$gray11' }}>
-          <Flex align="center" justify="start" css={{
-            gap: 20,
+    <TableRow
+      as="a"
+      href={`/fortune/${round.roundId}`}
+      key={round.roundId}
+      css={{
+        px: '$2',
+        gridTemplateColumns: mobileTemplateColumn,
+        '@lg': {
+          gridTemplateColumns: desktopTemplateColumn,
+        },
+      }}
+    >
+      <TableCell css={{ color: '$gray11' }}>
+        <Flex justify="end">
+          <Text>{round.roundId}</Text>
+        </Flex>
+      </TableCell>
+      <TableCell css={{ color: '$gray11' }}>
+        <Flex align="center" justify="start" css={{
+          gap: 20,
+        }}>
+          <Flex css={{
+            display: 'none',
+            '@md': {
+              display: 'flex'
+            }
           }}>
-            <Flex css={{
-              display: 'none',
-              '@md': {
-                display: 'flex'
-              }
-            }}>
-              {round.status === RoundStatus.Drawn && (
-                ensAvatar ? (
-                  <Avatar size="medium" src={ensAvatar} />
-                ) : (
-                  <Jazzicon diameter={44} seed={jsNumberForAddress(round.winner as string)} />
-                )
-              )}
-              {[RoundStatus.Open, RoundStatus.Drawing].includes(round.status) && (
-                <FontAwesomeIcon icon={faClockFour} size="2xl" color={round.status === RoundStatus.Drawing ? 'green' : '#ddd'} />
-              )}
-              {round.status === RoundStatus.Cancelled && (
-                <FontAwesomeIcon icon={faTimesCircle} size="2xl" color="red" />
-              )}
-            </Flex>
             {round.status === RoundStatus.Drawn && (
-              <Text>{shortEnsName ? shortEnsName : shortAddress}</Text>
+              ensAvatar ? (
+                <Avatar size="medium" src={ensAvatar} />
+              ) : (
+                <Jazzicon diameter={44} seed={jsNumberForAddress(round.winner as string)} />
+              )
             )}
-            {round.status === RoundStatus.Open && (
-              <Text>Current Round</Text>
+            {[RoundStatus.Open, RoundStatus.Drawing].includes(round.status) && (
+              <FontAwesomeIcon icon={faClockFour} size="2xl" color={round.status === RoundStatus.Drawing ? 'green' : '#ddd'} />
             )}
             {round.status === RoundStatus.Cancelled && (
-              <Text>Round Cancelled</Text>
-            )}
-            {round.status === RoundStatus.Drawing && (
-              <Text>Round Cancelled</Text>
+              <FontAwesomeIcon icon={faTimesCircle} size="2xl" color="red" />
             )}
           </Flex>
-        </TableCell>
-        <TableCell css={{ color: '$gray11' }}>
-          <Flex justify="center">
+          {round.status === RoundStatus.Drawn && (
+            <Text>{shortEnsName ? shortEnsName : shortAddress}</Text>
+          )}
+          {round.status === RoundStatus.Open && (
+            <Text>Current Round</Text>
+          )}
+          {round.status === RoundStatus.Cancelled && (
+            <Text>Round Cancelled</Text>
+          )}
+          {round.status === RoundStatus.Drawing && (
+            <Text>Round Cancelled</Text>
+          )}
+        </Flex>
+      </TableCell>
+      <TableCell css={{ color: '$gray11' }}>
+        <Flex justify="center">
+          <FormatCryptoCurrency
+            amount={prizePool}
+            address={AddressZero}
+            decimals={16}
+            logoHeight={16}
+            textStyle="subtitle1"
+          />
+        </Flex>
+      </TableCell>
+      <TableCell
+        css={{
+          color: '$gray11',
+          display: 'none',
+          '@md': {
+            display: 'block'
+          }
+        }}>
+        <Flex justify="center">
+          {round.status === RoundStatus.Drawn ? (
             <FormatCryptoCurrency
-              amount={prizePool}
+              amount={winnerEntryValue}
               address={AddressZero}
               decimals={16}
               logoHeight={16}
               textStyle="subtitle1"
             />
-          </Flex>
-        </TableCell>
-        <TableCell
-          css={{
-            color: '$gray11',
-            display: 'none',
-            '@md': {
-              display: 'block'
-            }
-          }}>
-          <Flex justify="center">
-            {round.status === RoundStatus.Drawn ? (
-              <FormatCryptoCurrency
-                amount={winnerEntryValue}
-                address={AddressZero}
-                decimals={16}
-                logoHeight={16}
-                textStyle="subtitle1"
-              />
-            ) : '-'}
-          </Flex>
-        </TableCell>
-        <TableCell
-          css={{
-            color: '$gray11',
-            display: 'none',
-            '@md': {
-              display: 'block'
-            }
-          }}>
-          <Flex justify="center">
-            {round.status === RoundStatus.Drawn ? (
-              <Text>{`x${ROI || 0}`}</Text>
-            ) : '-'}
-          </Flex>
-        </TableCell>
-        <TableCell
-          css={{
-            color: '$gray11',
-            display: 'none',
-            '@md': {
-              display: 'block'
-            }
-          }}>
-          <Flex justify="center">
-            {yourEntry > 0 ? (
-              <FormatCryptoCurrency
-                amount={yourEntry}
-                address={AddressZero}
-                decimals={16}
-                logoHeight={16}
-                textStyle="subtitle1"
-              />
-            ) : '-' }
-          </Flex>
-        </TableCell>
-        <TableCell css={{ color: '$gray11' }}>
-          <Flex justify="center">
-            <Text>{round.numberOfParticipants || 0}</Text>
-          </Flex>
-        </TableCell>
-        <TableCell
-          css={{
-            color: '$gray11',
-            display: 'none',
-            '@md': {
-              display: 'block'
-            }
-          }}>
-          <Flex justify="center">
-            <Text>{dayjs(round.cutoffTime * 1000).format('HH:mm, MMM, D, YYYY')}</Text>
-          </Flex>
-        </TableCell>
-        <TableCell>
-          {round.status === RoundStatus.Drawn && (
-            <Button
-              as="a"
-              size="xs"
-              color="primary"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={e => e.stopPropagation()}
-              href={`${blockExplorerBaseUrl}/tx/${round.drawnHash}`}
-            >
-              <FontAwesomeIcon
-                icon={faExternalLink}
-                width={12}
-                height={15}
-              />
-            </Button>
-          )}
-        </TableCell>
-      </TableRow>
-    </Link>
+          ) : '-'}
+        </Flex>
+      </TableCell>
+      <TableCell
+        css={{
+          color: '$gray11',
+          display: 'none',
+          '@md': {
+            display: 'block'
+          }
+        }}>
+        <Flex justify="center">
+          {round.status === RoundStatus.Drawn ? (
+            <Text>{`x${ROI || 0}`}</Text>
+          ) : '-'}
+        </Flex>
+      </TableCell>
+      <TableCell
+        css={{
+          color: '$gray11',
+          display: 'none',
+          '@md': {
+            display: 'block'
+          }
+        }}>
+        <Flex justify="center">
+          {yourEntry > 0 ? (
+            <FormatCryptoCurrency
+              amount={yourEntry}
+              address={AddressZero}
+              decimals={16}
+              logoHeight={16}
+              textStyle="subtitle1"
+            />
+          ) : '-' }
+        </Flex>
+      </TableCell>
+      <TableCell css={{ color: '$gray11' }}>
+        <Flex justify="center">
+          <Text>{round.numberOfParticipants || 0}</Text>
+        </Flex>
+      </TableCell>
+      <TableCell
+        css={{
+          color: '$gray11',
+          display: 'none',
+          '@md': {
+            display: 'block'
+          }
+        }}>
+        <Flex justify="center">
+          <Text>{dayjs(round.cutoffTime * 1000).format('HH:mm, MMM, D, YYYY')}</Text>
+        </Flex>
+      </TableCell>
+      <TableCell>
+        {round.status === RoundStatus.Drawn && (
+          <Button
+            size="xs"
+            color="primary"
+            onClick={e => {
+              e.stopPropagation()
+              window.open(`${blockExplorerBaseUrl}/tx/${round.drawnHash}`, '_blank','noopener')
+            }}
+            css={{
+              cursor: 'pointer'
+            }}
+          >
+            <FontAwesomeIcon
+              icon={faExternalLink}
+              width={12}
+              height={15}
+            />
+          </Button>
+        )}
+      </TableCell>
+    </TableRow>
   )
 }
 

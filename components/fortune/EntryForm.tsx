@@ -76,10 +76,6 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
   const handleSetEthValue = (val: string) => {
     try {
       parseUnits(val, 18);
-      const value = BigInt(parseEther(`${valueEth === '' ? 0 : +valueEth}`).toString())
-      if (value < minimumEntry) {
-        return;
-      }
       setValueEth?.(val);
     } catch (e) {
       setValueEth?.('0');
@@ -430,11 +426,9 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
               />
             ))}
           </Flex>
-          {(Object.keys(selections)).length > 0 && (
-            <FortuneDepositModal
-              roundId={roundId}
-            />
-          )}
+          <FortuneDepositModal
+            roundId={roundId}
+          />
         </Flex>
       </Flex>
     </>

@@ -25,7 +25,7 @@ const useFortuneHistory = (filter : RoundHistoryFilter, options?: SWRInfiniteCon
     if (previousPageData && previousPageData.rounds.length === 0) {
       return null
     } else if (previousPageData && pageIndex > 0) {
-      filter.skip = pageIndex * filter.first
+      filter.skip =  filter.first * pageIndex
     }
 
     const query = `query GetHistoryRounds($first: Int!, $skip: Int!, $where: Round_filter) {
@@ -61,11 +61,10 @@ const useFortuneHistory = (filter : RoundHistoryFilter, options?: SWRInfiniteCon
     return [query, filter]
   }, [filter])
 
-
-
   const {data, error, mutate, size, setSize} = useSWRInfinite<RoundResult>(
     (pageIndex, previousPageData) => {
       const params = getKey(pageIndex, previousPageData)
+      console.log('params', params)
       const key = params && params[1] ? JSON.stringify(params[1]) : null
       if (key && !keys.includes(key)) {
         setKeys([...keys, key])
@@ -76,7 +75,6 @@ const useFortuneHistory = (filter : RoundHistoryFilter, options?: SWRInfiniteCon
     subgraphFetcher,
     {
       revalidateOnMount: true,
-      revalidateFirstPage: false,
       ...options,
     }
   )
