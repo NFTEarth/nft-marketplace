@@ -2,7 +2,7 @@ import {useEffect, useMemo, useRef, useState} from 'react'
 import Highcharts from 'highcharts'
 import HighchartsExporting from 'highcharts/modules/exporting'
 import HighchartsReact from 'highcharts-react-official'
-import useSound from "../../hooks/useSound";
+import useSound from "use-sound";
 import {useFortune} from "../../hooks";
 import {PlayerType} from "./Player";
 import {RoundStatus} from "../../hooks/useFortuneRound";
@@ -86,10 +86,7 @@ const Wheel = (props: WheelProps) => {
     hoverPlayerIndex
   }, setHoverPlayerIndex } = useFortune<FortuneData>(d => d)
 
-  const [playWin] = useSound([
-    `/audio/win.mp3`,
-    `/audio/win.webm`
-  ], {
+  const [playWin] = useSound(`/audio/win.mp3`, {
     interrupt: true,
     volume: 0.8
   })

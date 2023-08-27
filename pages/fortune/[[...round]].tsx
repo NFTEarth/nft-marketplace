@@ -36,7 +36,7 @@ import {formatEther, parseEther} from "viem";
 import {truncateAddress} from "../../utils/truncate";
 import {AddressZero} from "@ethersproject/constants"
 import FortuneDepositModal from "../../components/fortune/DepositModal";
-import useSound from "../../hooks/useSound";
+import useSound from "use-sound";
 
 type FortuneData = {
   players: PlayerType[]
@@ -133,17 +133,11 @@ const FortunePage = () => {
   const currentPlayer = players.find(p => (new RegExp(address as string, 'i')).test(p.address));
   const yourWinChance = currentPlayer ? Math.round((currentPlayer?.entry || 1) / (roundData?.numberOfEntries || 1) * 100) : 0
 
-  const [playStart] = useSound([
-    `/audio/game-start.mp3`,
-    `/audio/game-start.webm`
-  ], {
+  const [playStart] = useSound(`/audio/game-start.mp3`, {
     interrupt: true,
     volume: 0.8
   })
-  const [playWheel, { stop: stopAudio, sound: wheelSound }] = useSound([
-    `/audio/wheel-spin.mp3`,
-    `/audio/wheel-spin.webm`
-  ], {
+  const [playWheel, { stop: stopAudio, sound: wheelSound }] = useSound(`/audio/wheel-spin.mp3`, {
     sprite: spinWheelAudioSpriteMap,
     interrupt: true,
     volume: 0.8
