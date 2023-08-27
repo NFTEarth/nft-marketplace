@@ -95,9 +95,7 @@ const FortunePage = () => {
   const rawRoundData = useMemo(() => {
     return router.query?.round ? roundDataById as Round : currentRound as Round
   }, [router, roundDataById, currentRound])
-
   const { roundId, status: roundStatus = 0, valuePerEntry = 0, deposits = [], cutoffTime = 0, ...roundData } = rawRoundData || {}
-
   const [ showWinner, setShowWinner] = useState(false);
   const { data: {
     players,
@@ -127,6 +125,28 @@ const FortunePage = () => {
   })
 
   const convertedCountdown = convertTimer(countdown)
+
+  const totalPrize =(BigInt(roundData?.numberOfEntries || 0) || BigInt(0)) * (BigInt(valuePerEntry) || BigInt(0))
+  const yourEntries = BigInt(deposits.filter(p => (new RegExp(address as string, 'i').test(p.depositor as string)))
+    .reduce((a, b) => a + BigInt(b.entry.totalNumberOfEntries || 0), BigInt(0)) * (BigInt(valuePerEntry) || BigInt(0)))
+  const currentPlayer = players.find(p => (new RegExp(address as string, 'i')).test(p.address));
+  const yourWinChance = currentPlayer ? Math.round((currentPlayer?.entry || 1) / (roundData?.numberOfEntries || 1) * 100) : 0
+
+  const [playStart] = useSound([
+    `/audio/game-start.webm`,
+    `/audio/game-start.mp3`
+  ], {
+    interrupt: true,
+    volume: 0.8
+  })
+  const [playWheel, { stop: stopAudio, sound: wheelSound }] = useSound([
+    `/audio/wheel-spin.webm`,
+    `/audio/wheel-spin.mp3`
+  ], {
+    sprite: spinWheelAudioSpriteMap,
+    interrupt: true,
+    volume: 0.8
+  })
 
   useEffect(() => {
     let newPrizes: PrizeType[] = [
@@ -223,43 +243,20 @@ const FortunePage = () => {
       type: 'set',
       payload: newPlayers
     })
-  }, [deposits])
+  }, [deposits, roundId])
 
   useEffect(() => {
     setStatus?.(roundStatus || 0);
-  }, [roundStatus])
+  }, [roundStatus, roundId])
 
   useEffect(() => {
     const secondDiff = (+cutoffTime || 0) - ((new Date()).getTime() / 1000);
     setDurationLeft?.(Math.round(secondDiff))
-  }, [cutoffTime])
+  }, [cutoffTime, roundId])
 
   useEffect(() => {
     setCountdown?.(countdown)
   }, [countdown])
-
-  const totalPrize =(BigInt(roundData?.numberOfEntries || 0) || BigInt(0)) * (BigInt(valuePerEntry) || BigInt(0))
-  const yourEntries = BigInt(deposits.filter(p => (new RegExp(address as string, 'i').test(p.depositor as string)))
-    .reduce((a, b) => a + BigInt(b.entry.totalNumberOfEntries || 0), BigInt(0)) * (BigInt(valuePerEntry) || BigInt(0)))
-  const currentPlayer = players.find(p => (new RegExp(address as string, 'i')).test(p.address));
-  const yourWinChance = currentPlayer ? Math.round((currentPlayer?.entry || 1) / (roundData?.numberOfEntries || 1) * 100) : 0
-
-
-  const [playStart] = useSound([
-    `/audio/game-start.webm`,
-    `/audio/game-start.mp3`
-  ], {
-    interrupt: true,
-    volume: 0.8
-  })
-  const [playWheel, { stop: stopAudio, sound: wheelSound }] = useSound([
-    `/audio/wheel-spin.webm`,
-    `/audio/wheel-spin.mp3`
-  ], {
-    sprite: spinWheelAudioSpriteMap,
-    interrupt: true,
-    volume: 0.8
-  })
 
   useEffect(() => {
     if (!enableAudio) {
@@ -294,7 +291,7 @@ const FortunePage = () => {
         setShowEntryForm(false);
       }
     }
-  }, [roundStatus])
+  }, [roundStatus, roundId])
 
   const handleEnter = useCallback((e: Event) => {
     e.preventDefault()
