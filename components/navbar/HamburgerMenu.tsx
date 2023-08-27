@@ -64,7 +64,7 @@ const HamburgerMenu = () => {
                 src="/reservoirLogo.svg"
                 width={34}
                 height={39}
-                alt="Reservoir"
+                alt="NFTEarth"
               />
             </Box>
           </Link>

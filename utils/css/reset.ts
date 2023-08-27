@@ -327,6 +327,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   },
 
   'body #nprogress .bar': {
-    background: '#58ad77 linear-gradient(-109.6deg, #58ad77 11.2%, #a96ede 91.1%)'
+    background: '#8DFF79 linear-gradient(-109.6deg, #8DFF79 11.2%, ##79FFEB 91.1%)'
   }
 }

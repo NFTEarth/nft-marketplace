@@ -50,7 +50,7 @@ export const AccountSidebar: FC = () => {
       {ensAvatar ? (
         <Avatar size="medium" src={ensAvatar} />
       ) : (
-        <Jazzicon diameter={44} seed={jsNumberForAddress(address as string)} />
+        <Jazzicon diameter={40} seed={jsNumberForAddress(address as string)} />
       )}
     </Button>
   )

@@ -34,7 +34,7 @@ const PrivacyPage = () => {
           </Flex>
 
           <Flex css={{ my: '$6', gap: 20 }} direction="column">
-            {`Thank you for being part of our community at Layer2NFTs, doing business as NFTEarth (“NFTEarth,“ “we,“ “us,“ or “our“). Your privacy is important to us. It is NFTEarth's policy to respect your privacy and comply with any applicable law and regulation regarding any personal information we may collect about you, including across our website, qx.app, and other sites we own and operate.`}
+            {`Thank you for being part of our community at Layer2NFTs, operating as NFTEarth ("NFTEarth", "we", "us", or "our“). Your privacy is important to us. It is NFTEarth's policy to respect your privacy and comply with any applicable law and regulation regarding any personal information we may collect about you, including across our website, qx.app, and other sites we own and operate.`}
             <br/><br/>
             {`Personal information is any information about you which can be used to identify you. This includes information about you as a person (such as name, address, and date of birth), your devices, payment details, and even information about how you use a website or online service.`}
             <br/><br/>

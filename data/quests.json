@@ -1,8 +1,8 @@
 [
   {
     "id": 1,
-    "title": "Create NFTEarth user profile",
-    "description": "Connect your web3 wallet to create your NFTEarth profile",
+    "title": "Create your NFTEarth user profile",
+    "description": "Connect your wallet to create your NFTEarth profile",
     "type": "one-time",
     "tasks": [
       {
@@ -15,7 +15,7 @@
   {
     "id": 4,
     "title": "Join Discord",
-    "description": "Join the NFTEarth comunity in Discord and earn XP.",
+    "description": "Join the NFTEarth community in Discord to start earning XP.",
     "type": "one-time",
     "tasks": [
       {
