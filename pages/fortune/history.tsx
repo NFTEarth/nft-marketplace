@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useMemo, useState} from "react";
 import {faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {zeroAddress} from "viem";
@@ -26,6 +26,8 @@ import {useAccount, useContractRead, useContractWrite} from "wagmi";
 import FortuneAbi from "../../artifact/FortuneAbi.json";
 import {FORTUNE_CHAINS} from "../../utils/chains";
 import ClaimModal from "../../components/fortune/ClaimModal";
+import useFortuneUserWon from "../../hooks/useFortuneUserWon";
+import {Deposit, Round} from "../../hooks/useFortuneRound";
 
 const roundData: any[] = [
   { roundId: 1, winner: '0x7D3E5dD617EAF4A3d42EA550C41097086605c4aF' },
@@ -41,10 +43,12 @@ const typeToStatus: Record<string, number | undefined> = {
 const FortuneHistory = () => {
   const [type, setType] = useState<string>("all")
   const [onlyYourRound, setOnlyYourRound] = useState<boolean>(false)
-
   const { address } = useAccount()
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
+  const { data: userWinningRounds } = useFortuneUserWon(address, {
+    refreshInterval: 5000
+  })
   const data = useFortuneHistory({
     first: 100,
     skip: 0,
@@ -57,23 +61,16 @@ const FortuneHistory = () => {
       } :  {})
     }
   })
-  const marketplaceChain = useMarketplaceChain()
-  const fortuneChain = FORTUNE_CHAINS.find(c => c.id === marketplaceChain.id);
 
-  const { data: isApproved, refetch: refetchApproval } = useContractRead({
-    enabled: !!fortuneChain?.transferManager && !!address,
-    abi: FortuneAbi,
-    address: fortuneChain?.address as `0x${string}`,
-    functionName: 'hasUserApprovedOperator',
-    args: [address, fortuneChain?.address],
-  })
+  const totalUnclaimed = (userWinningRounds || []).reduce((a, b) => a + (BigInt(b.valuePerEntry) * BigInt(b.numberOfEntries)), BigInt(0))
+  const rewards:  (number | number[])[][] = useMemo(() => {
+    const claimList: Record<string, number[]> = {};
+    (userWinningRounds || []).forEach((r: Round) => {
+      claimList[r.roundId] = r.deposits.map((d: Deposit) => d.indice)
+    });
 
-  const { writeAsync: grantApproval, error: approvalError } = useContractWrite({
-    abi: FortuneAbi,
-    address: fortuneChain?.transferManager as `0x${string}`,
-    functionName: 'grantApprovals',
-    args: [[fortuneChain?.address]],
-  })
+    return Object.keys(claimList).map((k:string) => [k, claimList[k].filter(Boolean).map(d => d)])
+  }, [userWinningRounds])
 
   return (
     <Layout>
@@ -188,13 +185,13 @@ const FortuneHistory = () => {
               >
                 <Text style="body3">Your Unclaimed Winnings</Text>
                 <FormatCryptoCurrency
-                  amount={BigInt(0)}
+                  amount={BigInt(totalUnclaimed || 0)}
                   address={zeroAddress}
                   logoHeight={18}
                   textStyle={'h6'}
                 />
               </Flex>
-              <ClaimModal />
+              <ClaimModal rewards={rewards} disabled={!(totalUnclaimed > BigInt(0))} />
             </Flex>
           </Flex>
           <HistoryTable data={data}/>

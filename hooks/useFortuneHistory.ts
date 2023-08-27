@@ -23,6 +23,11 @@ const useFortuneHistory = (filter : RoundHistoryFilter, options?: SWRInfiniteCon
 
   const getKey = useCallback((pageIndex: number, previousPageData: RoundResult) => {
     const newFilter = { ...filter };
+
+    if (newFilter.where && newFilter.where.status) {
+      newFilter.where.status = +`${newFilter.where.status}`
+    }
+
     if (previousPageData && previousPageData.rounds.length === 0) {
       return null
     } else if (previousPageData && pageIndex > 0) {
@@ -64,8 +69,11 @@ const useFortuneHistory = (filter : RoundHistoryFilter, options?: SWRInfiniteCon
 
   const {data, error, mutate, size, setSize} = useSWRInfinite<RoundResult>(
     (pageIndex, previousPageData) => {
-      const params = getKey(pageIndex, previousPageData)
-      const key = params && params[1] ? JSON.stringify(params[1]) : null
+      const params: any = getKey(pageIndex, previousPageData)
+      const paramsFilter = params?.[1];
+      const { first, skip, where } = paramsFilter;
+      const { status, ...restStatus } = where;
+      const key = paramsFilter ? `${first}${skip}${status}:${JSON.stringify(restStatus)}` : null
       if (key && !keys.includes(key)) {
         setKeys([...keys, key])
       }

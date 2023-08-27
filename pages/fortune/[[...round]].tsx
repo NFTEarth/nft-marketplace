@@ -32,11 +32,14 @@ import {useConnectModal} from "@rainbow-me/rainbowkit";
 import {useRouter} from "next/router";
 import useFortuneCurrentRound from "../../hooks/useFortuneCurrentRound";
 import useFortuneRound, {Deposit, Round, RoundStatus} from "../../hooks/useFortuneRound";
-import {formatEther, parseEther} from "viem";
+import {formatEther, formatUnits, parseEther} from "viem";
 import {truncateAddress} from "../../utils/truncate";
 import {AddressZero} from "@ethersproject/constants"
 import FortuneDepositModal from "../../components/fortune/DepositModal";
 import useSound from "use-sound";
+import {useCoinConversion} from "@reservoir0x/reservoir-kit-ui";
+import {mainnet} from "wagmi/chains";
+import {arbitrum} from "viem/chains";
 
 type FortuneData = {
   players: PlayerType[]
@@ -127,11 +130,28 @@ const FortunePage = () => {
 
   const convertedCountdown = convertTimer(countdown)
 
+  const usdConversions = useCoinConversion(
+    'USD',
+    'ETH,NFTE',
+    'ethereum,nftearth'
+  )
+
+  const currencyToUsdConversions = usdConversions.reduce((map, data) => {
+    map[data.symbol] = data
+    map[(data as any).coinGeckoId] = data
+    return map
+  }, {} as Record<string, (typeof usdConversions)[0]>)
+
   const totalPrize =(BigInt(roundData?.numberOfEntries || 0) || BigInt(0)) * (BigInt(valuePerEntry) || BigInt(0))
   const yourEntries = BigInt(deposits.filter(p => (new RegExp(address as string, 'i').test(p.depositor as string)))
     .reduce((a, b) => a + BigInt(b.entry.totalNumberOfEntries || 0), BigInt(0)) * (BigInt(valuePerEntry) || BigInt(0)))
   const currentPlayer = players.find(p => (new RegExp(address as string, 'i')).test(p.address));
   const yourWinChance = currentPlayer ? Math.round((currentPlayer?.entry || 1) / (roundData?.numberOfEntries || 1) * 100) : 0
+  const ethConversion =
+    currencyToUsdConversions['ETH']
+  const totalPrizeUsd =
+    Number(formatUnits(BigInt(totalPrize), arbitrum.nativeCurrency.decimals || 18)) *
+    (ethConversion?.price || 0)
 
   const [playStart] = useSound(`/audio/game-start.mp3`, {
     interrupt: true,
@@ -475,7 +495,7 @@ const FortunePage = () => {
                       <Text css={{ borderBottom: '1px solid #ddd'}}>{`Round ${roundId || 1}`}</Text>
                       <FormatCryptoCurrency textStyle="h3" logoHeight={35} amount={totalPrize} maximumFractionDigits={4} />
                       {roundStatus === RoundStatus.Open && (
-                        <FormatCurrency amount={(totalPrize * BigInt(parseEther(`${usdConversion}`).toString())).toString()} />
+                        <FormatCurrency amount={totalPrizeUsd} />
                       )}
                       {(roundStatus === RoundStatus.Open && countdown < 1) && (
                         <Text style="subtitle1" css={{ color: '$primary10' }}>Processing...</Text>
