@@ -40,7 +40,7 @@ type FortuneData = {
 const findWinner = (data: any[], winner?: `0x${string}`, randomize = true) : winnerWheel => {
   if (!data || !winner) {
     return {
-      wheelPoint: 30,
+      wheelPoint: 360,
       winnerIndex: -1
     }
   }
@@ -75,7 +75,7 @@ const Wheel = (props: WheelProps) => {
   const spinIntervalRef = useRef<ReturnType<typeof setInterval>>();
   const [wheelEnd, setWheelEnd] = useState(false);
   const triangleRef = useRef<any>();
-  const animationSpeed = 40;
+  const animationSpeed = 30;
 
   const { data: {
     countdown,
@@ -101,6 +101,7 @@ const Wheel = (props: WheelProps) => {
   useEffect(() => {
     if (wheelEnd) {
       playWin?.()
+      setWheelEnd(false)
     }
   }, [wheelEnd, enableAudio])
 
@@ -150,7 +151,7 @@ const Wheel = (props: WheelProps) => {
         .add();
     }
 
-    let diff = 30
+    let diff = 360
     let startAngle = chart.series?.[0]?.options?.startAngle | 0;
 
     if (status === RoundStatus.Drawing) {
@@ -170,22 +171,22 @@ const Wheel = (props: WheelProps) => {
       diff = 360 * 30
       spinIntervalRef.current = setInterval(() => {
         startAngle = diff % 360;
-        diff -= ((diff + 360) - ((diff + 360) * 0.98));
+        diff -= (diff * 0.01)
 
         chart.series?.[0]?.update({ startAngle: startAngle }, true, false, false);
 
-        if (diff < wheelPoint - 5) {
+        if (wheelPoint > (diff - 85)) {
           clearInterval(spinIntervalRef.current);
           setWheelEnd(true);
           onWheelEnd(winnerIndex);
         }
       }, animationSpeed)
     }
-  }, [status])
+  }, [status, roundId])
 
   useEffect(() => {
     const chart = chartComponentRef.current?.chart
-    const progressPercent = (countdown / durationLeft) * 100
+    const progressPercent = (((new Date()).getTime() / 1000) / durationLeft) * 100
 
     if (chart) {
       chart.series?.[1]?.update({
