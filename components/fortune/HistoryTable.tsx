@@ -3,7 +3,7 @@ import {useIntersectionObserver} from "usehooks-ts";
 import {Box, Button, Flex, FormatCryptoCurrency, HeaderRow, TableCell, TableRow, Text} from "../primitives";
 import LoadingSpinner from "../common/LoadingSpinner";
 import {useMediaQuery} from "react-responsive";
-import {useENSResolver, useMarketplaceChain, useMounted, useTimeSince} from "../../hooks";
+import {useENSResolver, useMarketplaceChain, useMounted} from "../../hooks";
 import {NAVBAR_HEIGHT} from "../navbar";
 import {AddressZero} from "@ethersproject/constants";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -93,14 +93,15 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
     shortName: shortEnsName,
   } = useENSResolver(round?.winner)
 
-  const winnerEntry = round.valuePerEntry * (round.deposits
-    .filter(d => d.depositor === round.winner)
+  const winnerEntry = (round.deposits
+    .filter(d => new RegExp(round.winner as string, 'i').test(d.depositor))
     .reduce((a, b) => a + b.numberOfEntries, 0) || 0);
-  const yourEntry = round.valuePerEntry * round.deposits
-    .filter(d => d.depositor === address)
-    .reduce((a, b) => a + b.numberOfEntries, 0)
-  const prizePool = round.numberOfEntries * round.valuePerEntry
-  const ROI = prizePool / winnerEntry * 100;
+  const winnerEntryValue = BigInt(winnerEntry * round.valuePerEntry)
+  const yourEntry = BigInt(round.valuePerEntry * round.deposits
+    .filter(d => new RegExp(address as string, 'i').test(d.depositor))
+    .reduce((a, b) => a + b.numberOfEntries, 0))
+  const prizePool = BigInt(round.numberOfEntries * round.valuePerEntry)
+  const ROI = (round.numberOfEntries / winnerEntry).toFixed(2);
 
   return (
     <Link href={`/fortune/${round.roundId}`} passHref legacyBehavior>
@@ -163,6 +164,7 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
             <FormatCryptoCurrency
               amount={prizePool}
               address={AddressZero}
+              decimals={16}
               logoHeight={16}
               textStyle="subtitle1"
             />
@@ -179,8 +181,9 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
           <Flex justify="center">
             {round.status === RoundStatus.Drawn ? (
               <FormatCryptoCurrency
-                amount={winnerEntry}
+                amount={winnerEntryValue}
                 address={AddressZero}
+                decimals={16}
                 logoHeight={16}
                 textStyle="subtitle1"
               />
@@ -214,6 +217,7 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
               <FormatCryptoCurrency
                 amount={yourEntry}
                 address={AddressZero}
+                decimals={16}
                 logoHeight={16}
                 textStyle="subtitle1"
               />

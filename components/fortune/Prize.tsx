@@ -3,20 +3,21 @@ import {TokenMedia, useTokens} from "@reservoir0x/reservoir-kit-ui";
 
 import CryptoCurrencyIcon from "../primitives/CryptoCurrencyIcon";
 import {Flex, FormatCryptoCurrency, Text, Tooltip} from "../primitives";
+import Player, {PlayerType} from "./Player";
 
-export enum TokenType {
-  ERC20,
-  ERC721,
-  ERC1155
+export type TokenType = 'ETH' | 'ERC20' | 'ERC721'
+export type PrizeDepositor = {
+  player: PlayerType
+  amount: bigint
 }
 
 export type PrizeType = {
   type: TokenType,
-  depositor?: `0x${string}`
+  depositors: PrizeDepositor[]
   address: `0x${string}`
   price: bigint
   amount: bigint
-  totalNumberOfEntries: number
+  totalNumberOfEntries: bigint
   tokenId?: bigint
 }
 
@@ -24,36 +25,22 @@ const FortunePrize : FC<{ data: PrizeType }> = ({ data, ...restProps }) => {
   const { data: tokens } = useTokens({
     tokens: [`${data.address}:${data.tokenId}`],
   }, {
-    isPaused: () => data.type === TokenType.ERC20
+    isPaused: () => ['ERC20', 'ETH'].includes(data.type)
   })
 
   const token = tokens && tokens[0] ? tokens[0] : undefined
-
-  // TODO: Better data fetching & caching
-  useEffect(() => {
-    if (!data.price) {
-      if (data.type === TokenType.ERC20) {
-        data.price = Array.isArray(data.amount) ? data.amount
-          .reduce((a, b) => a + b, BigInt(0)) : data.amount || BigInt(0)
-        return;
-      }
-    }
-  }, [data])
 
   return (
     <Tooltip
       side="top"
       content={
         <Flex direction="column" css={{ gap: 10 }}>
-          {Array.isArray(data.depositor) ? data.depositor.map(d => (
-            <Text key={d} style="body3" as="p">
-              {d}
-            </Text>
-          )) : (
-            <Text style="body3" as="p">
-              {data.depositor}
-            </Text>
-          )}
+          {data.depositors.map((d, i) => (
+            <Player
+              key={`depositor-${i}`}
+              data={d.player}
+            />
+          ))}
         </Flex>
       }
     >
@@ -83,14 +70,14 @@ const FortunePrize : FC<{ data: PrizeType }> = ({ data, ...restProps }) => {
             backgroundImage: 'linear-gradient(180deg, $primary9 0%, $primary8 100%)'
           }}
         >
-          {data.type === TokenType.ERC20 && (
+          {['ERC20', 'ETH'].includes(data.type) && (
             <CryptoCurrencyIcon
               address={data.address}
               css={{ height: 50 }}
             />
           )}
 
-          {[TokenType.ERC721, TokenType.ERC1155].includes(data.type) && (
+          {data.type === 'ERC721' && (
             <TokenMedia
               token={token?.token}
               style={{
@@ -102,7 +89,7 @@ const FortunePrize : FC<{ data: PrizeType }> = ({ data, ...restProps }) => {
           )}
         </Flex>
         <Flex css={{ p: '$2'}}>
-          <FormatCryptoCurrency amount={data.price} />
+          <FormatCryptoCurrency amount={data.amount} />
         </Flex>
       </Flex>
     </Tooltip>

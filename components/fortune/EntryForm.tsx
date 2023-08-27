@@ -212,6 +212,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
 
   const handleDeposit = async (e?: SyntheticEvent) => {
     e?.preventDefault();
+    setOpenModal(true);
     try {
       if (!isApproved) {
         await grantApproval?.()
@@ -225,10 +226,12 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
 
       for(let select of selects) {
         const selection = selections[select];
-        const data = await publicClient.readContract({
+        const selectionAbi = selection.type === 'erc20' ?  ERC20Abi : ERC721Abi;
+        const selectionFunc = selection.type === 'erc20' ? 'allowance' : 'isApprovedForAll'
+        const data = await publicClient.readContract<typeof selectionAbi, typeof selectionFunc>({
           address: selection.contract as `0x${string}`,
-          abi: selection.type === 'erc20' ? ERC20Abi : ERC721Abi,
-          functionName: selection.type === 'erc20' ? 'allowance' : 'isApprovedForAll',
+          abi: selectionAbi,
+          functionName: selectionFunc
         })
 
         if (selection.type === 'erc20' && (data as bigint) >= (selection.values?.[0] || BigInt(0))) {
@@ -240,10 +243,11 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
         }
 
         const [account] = await walletClient.getAddresses()
-        const { request } = await publicClient.simulateContract({
+        const selectionApprovalFunc = selection.type === 'erc20' ? 'approve' : 'setApprovalForAll'
+        const { request } = await publicClient.simulateContract<typeof selectionAbi, typeof selectionApprovalFunc>({
           address: selection.contract as `0x${string}`,
-          abi: selection.type === 'erc20' ? ERC20Abi : ERC721Abi,
-          functionName: selection.type === 'erc20' ? 'approve' : 'setApprovalForAll',
+          abi: selectionAbi,
+          functionName: selectionApprovalFunc,
           args: selection.type === 'erc20' ?
             [fortuneChain?.address as `0x${string}`, 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff] :
             [fortuneChain?.address as `0x${string}`, true],
@@ -267,6 +271,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
           })
         }
       }
+      setOpenModal(true);
     }
     // setLoading(false)
   }
@@ -657,15 +662,15 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId,lessThan30Seconds, roundClos
             {isSuccess && (
               <Flex direction="column" css={{ gap: 20, my: '$4' }}>
                 <Text style="h6" css={{ color: 'green' }}>Deposit Success !</Text>
-                <Link
+                <Button
+                  as="a"
                   rel="noreferrer noopener"
                   target="_blank"
-                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(`https://app.nftearth.exchange/fortune`)}&hashtags=&via=&related=&original_referer=${encodeURIComponent('https://app.nftearth.exchange')}`}>
-                  <Button>
-                    {`Tweet your joy !`}
-                    <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faTwitter}/>
-                  </Button>
-                </Link>
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(`https://app.nftearth.exchange/fortune`)}&hashtags=&via=&related=&original_referer=${encodeURIComponent('https://app.nftearth.exchange')}`}
+                >
+                  {`Tweet your joy !`}
+                  <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faTwitter}/>
+                </Button>
               </Flex>
             )}
           </Flex>
