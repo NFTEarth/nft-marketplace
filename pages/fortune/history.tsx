@@ -48,7 +48,7 @@ const FortuneHistory = () => {
   const { address } = useAccount()
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
-  const { data: userWinningRounds } = useFortuneUserWon('0xd131f1bcdd547e067af447dd3c36c99d6be9fdeb', {
+  const { data: userWinningRounds } = useFortuneUserWon(address, {
     refreshInterval: 5000
   })
   const data = useFortuneHistory({

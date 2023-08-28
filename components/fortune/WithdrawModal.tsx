@@ -64,7 +64,7 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
     chainId: marketplaceChain.id,
   })
 
-  const {data: deposits} = useFortuneToWithdraw('0xd131f1bcdd547e067af447dd3c36c99d6be9fdeb', {
+  const {data: deposits} = useFortuneToWithdraw(address, {
     refreshInterval: 5000
   })
   const disabled = 0 >= (deposits?.length || 0)
