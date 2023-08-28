@@ -71,7 +71,7 @@ type RoundTableRowProps = {
   round: Round
 }
 
-const mobileTemplateColumn = '0.2fr 0.75fr repeat(3, 0.3fr)'
+const mobileTemplateColumn = '1fr'
 const desktopTemplateColumn = '0.2fr 1fr repeat(5, 0.3fr) 0.75fr 0.2fr'
 
 const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
@@ -115,159 +115,257 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
         },
       }}
     >
-      <TableCell css={{ color: '$gray11' }}>
-        <Flex justify="end">
-          <Text>{round.roundId}</Text>
-        </Flex>
-      </TableCell>
-      <TableCell css={{ color: '$gray11' }}>
-        <Flex align="center" justify="start" css={{
-          gap: 20,
-        }}>
-          <Flex css={{
-            display: 'none',
-            '@md': {
-              display: 'flex'
-            }
-          }}>
-            {round.status === RoundStatus.Drawn && (
-              ensAvatar ? (
-                <Avatar size="medium" src={ensAvatar} />
-              ) : (
-                <Jazzicon diameter={44} seed={jsNumberForAddress(round.winner as string)} />
-              )
-            )}
-            {[RoundStatus.Open, RoundStatus.Drawing].includes(round.status) && (
-              <FontAwesomeIcon icon={faClockFour} size="2xl" color={round.status === RoundStatus.Drawing ? 'green' : '#ddd'} />
-            )}
-            {round.status === RoundStatus.Cancelled && (
-              <FontAwesomeIcon icon={faTimesCircle} size="2xl" color="red" />
-            )}
-          </Flex>
-          {round.status === RoundStatus.Drawn && (
-            <Text>{shortEnsName ? shortEnsName : shortAddress}</Text>
-          )}
-          {round.status === RoundStatus.Open && (
-            <Text>Current Round</Text>
-          )}
-          {round.status === RoundStatus.Cancelled && (
-            <Text>Round Cancelled</Text>
-          )}
-          {round.status === RoundStatus.Drawing && (
-            <Text>Round Cancelled</Text>
-          )}
-        </Flex>
-      </TableCell>
-      <TableCell css={{ color: '$gray11' }}>
-        <Flex justify="center">
-          <FormatCryptoCurrency
-            amount={prizePool}
-            address={AddressZero}
-            logoHeight={16}
-            textStyle="subtitle1"
-          />
-        </Flex>
-      </TableCell>
-      <TableCell
-        css={{
-          color: '$gray11',
-          display: 'none',
-          '@md': {
-            display: 'block'
-          }
-        }}>
-        <Flex justify="center">
-          {round.status === RoundStatus.Drawn ? (
-            <FormatCryptoCurrency
-              amount={winnerEntryValue}
-              address={AddressZero}
-              logoHeight={16}
-              textStyle="subtitle1"
-            />
-          ) : '-'}
-        </Flex>
-      </TableCell>
-      <TableCell
-        css={{
-          color: '$gray11',
-          display: 'none',
-          '@md': {
-            display: 'block'
-          }
-        }}>
-        <Flex justify="center">
-          {round.status === RoundStatus.Drawn ? (
-            <Text>{`x${ROI || 0}`}</Text>
-          ) : '-'}
-        </Flex>
-      </TableCell>
-      <TableCell
-        css={{
-          color: '$gray11',
-          display: 'none',
-          '@md': {
-            display: 'block'
-          }
-        }}>
-        <Flex justify="center">
-          {yourEntry > 0 ? (
-            <FormatCryptoCurrency
-              amount={yourEntry}
-              address={AddressZero}
-              logoHeight={16}
-              textStyle="subtitle1"
-            />
-          ) : '-' }
-        </Flex>
-      </TableCell>
-      <TableCell css={{ color: '$gray11' }}>
-        <Flex justify="center">
-          <Text>{round.numberOfParticipants || 0}</Text>
-        </Flex>
-      </TableCell>
-      <TableCell
-        css={{
-          color: '$gray11',
-          display: 'none',
-          '@md': {
-            display: 'block'
-          }
-        }}>
-        <Flex justify="center">
-          <Text>{dayjs(round.cutoffTime * 1000).format('HH:mm, MMM, D, YYYY')}</Text>
-        </Flex>
-      </TableCell>
-      <TableCell>
-        {round.status === RoundStatus.Drawn && (
-          <Button
-            size="xs"
-            color="primary"
-            onClick={e => {
-              e.stopPropagation()
-              window.open(`${blockExplorerBaseUrl}/tx/${round.drawnHash}`, '_blank','noopener')
-            }}
+      {isSmallDevice ? (
+        <>
+          <TableCell css={{ color: '$gray11' }}>
+            <Flex
+              justify="between"
+              css={{
+                flex: 1,
+                flexDirection: 'column',
+                gap: 20,
+              }}>
+              <Flex align="center" css={{ gap: 20, backgroundColor: '$gray3', p: '$3' }}>
+                <Text>{round.roundId}</Text>
+                <Flex align="center" css={{ gap: 10 }}>
+                  {round.status === RoundStatus.Drawn && (
+                    ensAvatar ? (
+                      <Avatar size="medium" src={ensAvatar} />
+                    ) : (
+                      <Jazzicon diameter={36} seed={jsNumberForAddress(round.winner as string)} />
+                    )
+                  )}
+                  {[RoundStatus.Open, RoundStatus.Drawing].includes(round.status) && (
+                    <FontAwesomeIcon icon={faClockFour} size="2xl" color={round.status === RoundStatus.Drawing ? 'green' : '#ddd'} />
+                  )}
+                  {round.status === RoundStatus.Cancelled && (
+                    <FontAwesomeIcon icon={faTimesCircle} size="2xl" color="red" />
+                  )}
+                  {round.status === RoundStatus.Drawn && (
+                    <Text>{shortEnsName ? shortEnsName : shortAddress}</Text>
+                  )}
+                  {round.status === RoundStatus.Open && (
+                    <Text>Current Round</Text>
+                  )}
+                  {round.status === RoundStatus.Cancelled && (
+                    <Text>Round Cancelled</Text>
+                  )}
+                  {round.status === RoundStatus.Drawing && (
+                    <Text>Round Cancelled</Text>
+                  )}
+                </Flex>
+              </Flex>
+              <Flex
+                align="center"
+                justify="around"
+                css={{
+                  gap: 20,
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr'
+                }}>
+                <Flex direction="column" align="center" justify="between">
+                  <Text>
+                    Prize Pool
+                  </Text>
+                  <FormatCryptoCurrency
+                    amount={prizePool}
+                    address={AddressZero}
+                    logoHeight={16}
+                    textStyle="subtitle1"
+                  />
+                </Flex>
+                <Flex direction="column" align="center" justify="between">
+                  <Text>
+                    WIN
+                  </Text>
+                  {round.status === RoundStatus.Drawn ? (
+                    <Text>{`x${ROI || 0}`}</Text>
+                  ) : '-'}
+                </Flex>
+                <Flex direction="column" align="center" justify="between">
+                  <Text>
+                    Winner Entry
+                  </Text>
+                  {round.status === RoundStatus.Drawn ? (
+                    <FormatCryptoCurrency
+                      amount={winnerEntryValue}
+                      address={AddressZero}
+                      logoHeight={16}
+                      textStyle="subtitle1"
+                    />
+                  ) : '-'}
+                </Flex>
+                <Flex direction="column" align="center" justify="between">
+                  <Text>
+                    Your Entry
+                  </Text>
+                  {yourEntry > 0 ? (
+                    <FormatCryptoCurrency
+                      amount={yourEntry}
+                      address={AddressZero}
+                      logoHeight={16}
+                      textStyle="subtitle1"
+                    />
+                  ) : '-' }
+                </Flex>
+              </Flex>
+              <Flex align="center" justify="between" css={{ backgroundColor: '$gray3', p: '$3'}}>
+                <Text>{dayjs(round.cutoffTime * 1000).format('HH:mm, MMM, D, YYYY')}</Text>
+                {round.status === RoundStatus.Drawn && (
+                  <Button
+                    size="xs"
+                    color="primary"
+                    onClick={e => {
+                      e.stopPropagation()
+                      window.open(`${blockExplorerBaseUrl}/tx/${round.drawnHash}`, '_blank','noopener')
+                    }}
+                    css={{
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon={faExternalLink}
+                      width={12}
+                      height={15}
+                    />
+                  </Button>
+                )}
+              </Flex>
+            </Flex>
+          </TableCell>
+        </>
+      ) : (
+        <>
+          <TableCell css={{ color: '$gray11' }}>
+            <Flex
+              align="center"
+              justify="start"
+              css={{
+                gap: 20,
+              }}>
+              <Flex>
+                {round.status === RoundStatus.Drawn && (
+                  ensAvatar ? (
+                    <Avatar size="medium" src={ensAvatar} />
+                  ) : (
+                    <Jazzicon diameter={36} seed={jsNumberForAddress(round.winner as string)} />
+                  )
+                )}
+                {[RoundStatus.Open, RoundStatus.Drawing].includes(round.status) && (
+                  <FontAwesomeIcon icon={faClockFour} size="2xl" color={round.status === RoundStatus.Drawing ? 'green' : '#ddd'} />
+                )}
+                {round.status === RoundStatus.Cancelled && (
+                  <FontAwesomeIcon icon={faTimesCircle} size="2xl" color="red" />
+                )}
+              </Flex>
+              {round.status === RoundStatus.Drawn && (
+                <Text>{shortEnsName ? shortEnsName : shortAddress}</Text>
+              )}
+              {round.status === RoundStatus.Open && (
+                <Text>Current Round</Text>
+              )}
+              {round.status === RoundStatus.Cancelled && (
+                <Text>Round Cancelled</Text>
+              )}
+              {round.status === RoundStatus.Drawing && (
+                <Text>Round Cancelled</Text>
+              )}
+            </Flex>
+          </TableCell>
+          <TableCell css={{ color: '$gray11' }}>
+            <Flex justify="center">
+              <FormatCryptoCurrency
+                amount={prizePool}
+                address={AddressZero}
+                logoHeight={16}
+                textStyle="subtitle1"
+              />
+            </Flex>
+          </TableCell>
+          <TableCell
             css={{
-              cursor: 'pointer'
-            }}
-          >
-            <FontAwesomeIcon
-              icon={faExternalLink}
-              width={12}
-              height={15}
-            />
-          </Button>
-        )}
-      </TableCell>
+              color: '$gray11',
+              display: 'none',
+              '@md': {
+                display: 'block'
+              }
+            }}>
+            <Flex justify="center">
+              {round.status === RoundStatus.Drawn ? (
+                <FormatCryptoCurrency
+                  amount={winnerEntryValue}
+                  address={AddressZero}
+                  logoHeight={16}
+                  textStyle="subtitle1"
+                />
+              ) : '-'}
+            </Flex>
+          </TableCell>
+          <TableCell
+            css={{
+              color: '$gray11',
+              display: 'none',
+              '@md': {
+                display: 'block'
+              }
+            }}>
+            <Flex justify="center">
+              {round.status === RoundStatus.Drawn ? (
+                <Text>{`x${ROI || 0}`}</Text>
+              ) : '-'}
+            </Flex>
+          </TableCell>
+          <TableCell
+            css={{
+              color: '$gray11',
+              display: 'none',
+              '@md': {
+                display: 'block'
+              }
+            }}>
+            <Flex justify="center">
+              {yourEntry > 0 ? (
+                <FormatCryptoCurrency
+                  amount={yourEntry}
+                  address={AddressZero}
+                  logoHeight={16}
+                  textStyle="subtitle1"
+                />
+              ) : '-' }
+            </Flex>
+          </TableCell>
+          <TableCell css={{ color: '$gray11' }}>
+            <Flex justify="center">
+              <Text>{round.numberOfParticipants || 0}</Text>
+            </Flex>
+          </TableCell>
+          <TableCell
+            css={{
+              color: '$gray11',
+              display: 'none',
+              '@md': {
+                display: 'block'
+              }
+            }}>
+            <Flex justify="center">
+              <Text>{dayjs(round.cutoffTime * 1000).format('HH:mm, MMM, D, YYYY')}</Text>
+            </Flex>
+          </TableCell>
+        </>
+      )}
     </TableRow>
   )
 }
 
 const headings = ['Round', 'Winner', 'Prize Pool', 'Winner Entries', 'Win', 'Your Entries', 'Players', 'Finish', 'Verify']
-const mobileHeadings = ['Round', 'Winner', 'Pool', 'Players', 'Verify']
 
 const TableHeading = () => {
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
+
+  if (isSmallDevice) {
+    return null;
+  }
 
   return  (
     <HeaderRow
@@ -284,7 +382,7 @@ const TableHeading = () => {
         zIndex: 1,
       }}
     >
-      {(isSmallDevice ? mobileHeadings : headings).map((heading) => (
+      {headings.map((heading) => (
         <TableCell key={heading}>
           <Text style="subtitle3" color="subtle">
             {heading}
