@@ -1,7 +1,7 @@
 import {Modal} from "../common/Modal";
 import {FC} from "preact/compat";
 import {useContext, useMemo, useState} from "react";
-import {Button, Flex, FormatCryptoCurrency, FormatCurrency, Select, Text} from "../primitives";
+import {Button, Flex, FormatCryptoCurrency, Select, Text, Tooltip} from "../primitives";
 import {
   useAccount,
   useNetwork,
@@ -28,6 +28,8 @@ import {
 } from "viem";
 import {ToastContext} from "../../context/ToastContextProvider";
 import expirationOptions from "../../utils/defaultExpirationOptions";
+import CryptoCurrencyIcon from "../primitives/CryptoCurrencyIcon";
+import {TokenMedia} from "@reservoir0x/reservoir-kit-ui";
 
 type ClaimModalProps = {
   open?: boolean
@@ -47,22 +49,22 @@ type WithdrawDeposit = {
   value: bigint
 }
 
-const ClaimModal: FC<ClaimModalProps> = ({ open: defaultOpen, onClose }) => {
+const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
   const [open, setOpen] = useState(!!defaultOpen)
   const [step, setStep] = useState(0)
   const [error, setError] = useState<any | undefined>()
-  const { addToast } = useContext(ToastContext)
-  const { address } = useAccount()
-  const { data: wallet } = useWalletClient()
-  const { openConnectModal } = useConnectModal()
-  const { chain: activeChain } = useNetwork()
+  const {addToast} = useContext(ToastContext)
+  const {address} = useAccount()
+  const {data: wallet} = useWalletClient()
+  const {openConnectModal} = useConnectModal()
+  const {chain: activeChain} = useNetwork()
   const [roundId, setRoundId] = useState<number>()
   const marketplaceChain = useMarketplaceChain()
-  const { switchNetworkAsync } = useSwitchNetwork({
+  const {switchNetworkAsync} = useSwitchNetwork({
     chainId: marketplaceChain.id,
   })
 
-  const { data: deposits } = useFortuneToWithdraw(address,  {
+  const {data: deposits} = useFortuneToWithdraw(address, {
     refreshInterval: 5000
   })
   const disabled = 0 >= (deposits?.length || 0)
@@ -94,7 +96,7 @@ const ClaimModal: FC<ClaimModalProps> = ({ open: defaultOpen, onClose }) => {
       addToast?.({
         title: 'Error',
         status: 'error',
-        description:'Please select round to Withdraw'
+        description: 'Please select round to Withdraw'
       })
 
       return;
@@ -115,7 +117,7 @@ const ClaimModal: FC<ClaimModalProps> = ({ open: defaultOpen, onClose }) => {
 
       const [account] = await walletClient.getAddresses()
 
-      const { request } = await publicClient.simulateContract({
+      const {request} = await publicClient.simulateContract({
         address: fortuneChain?.address as `0x${string}`,
         abi: FortuneAbi,
         functionName: 'claimPrizes',
@@ -168,31 +170,42 @@ const ClaimModal: FC<ClaimModalProps> = ({ open: defaultOpen, onClose }) => {
   }
 
   const trigger = (
-    <Flex css={{ gap: 20}}>
-      <Select
-        placeholder="Select Round to withdraw"
-        css={{
-          flex: 1,
-          width: '100%',
-          minWidth: 140,
-          whiteSpace: 'nowrap',
-        }}
-        value={`${roundId || ''}`}
-        onValueChange={(value: string) => setRoundId(+value)}
-      >
-        {(deposits || []).map((d) => (
-          <Select.Item key={d.roundId} value={`${d.roundId}`}>
-            <Select.ItemText css={{ whiteSpace: 'nowrap' }}>
-              <Flex direction="column" css={{ gap: 10}}>
-                <Text>{`Round ${d.roundId}`}</Text>
-                <FormatCryptoCurrency amount={cancelledDeposits[d.roundId].value} logoHeight={14}/>
-              </Flex>
-            </Select.ItemText>
-          </Select.Item>
-        ))}
-      </Select>
-      <Button disabled={disabled} onClick={handleWithdrawDeposit}>Withdraw</Button>
-    </Flex>
+    <Tooltip
+      side="top"
+      sideOffset={20}
+      content={
+        <Flex direction="column" css={{ gap: 10 }}>
+          Withdraw your canceled round deposits
+        </Flex>
+      }
+    >
+      <Flex css={{gap: 20}}>
+        <Select
+          disabled={disabled}
+          placeholder="Select Round to withdraw"
+          css={{
+            flex: 1,
+            width: '100%',
+            minWidth: 140,
+            whiteSpace: 'nowrap',
+          }}
+          value={`${roundId || ''}`}
+          onValueChange={(value: string) => setRoundId(+value)}
+        >
+          {(deposits || []).map((d) => (
+            <Select.Item key={d.roundId} value={`${d.roundId}`}>
+              <Select.ItemText css={{whiteSpace: 'nowrap'}}>
+                <Flex direction="column" css={{gap: 10}}>
+                  <Text>{`Round ${d.roundId}`}</Text>
+                  <FormatCryptoCurrency amount={cancelledDeposits[d.roundId].value} logoHeight={14}/>
+                </Flex>
+              </Select.ItemText>
+            </Select.Item>
+          ))}
+        </Select>
+        <Button disabled={disabled} onClick={handleWithdrawDeposit}>Withdraw</Button>
+      </Flex>
+    </Tooltip>
   )
 
   if (isInTheWrongNetwork) {
@@ -237,7 +250,7 @@ const ClaimModal: FC<ClaimModalProps> = ({ open: defaultOpen, onClose }) => {
         direction="column"
         justify="start"
         align="center"
-        css={{ flex: 1, textAlign: 'center', p: '$4', gap: '$4' }}
+        css={{flex: 1, textAlign: 'center', p: '$4', gap: '$4'}}
       >
         {(!!error) && (
           <ErrorWell
@@ -251,14 +264,14 @@ const ClaimModal: FC<ClaimModalProps> = ({ open: defaultOpen, onClose }) => {
           />
         )}
         {[1, 2].includes(step) && (
-          <Flex css={{ height: '100%', py: '$4' }} align="center">
-            <LoadingSpinner />
+          <Flex css={{height: '100%', py: '$4'}} align="center">
+            <LoadingSpinner/>
           </Flex>
         )}
         {step === 2 && (
           <TransactionProgress
             justify="center"
-            css={{ mb: '$3' }}
+            css={{mb: '$3'}}
             fromImgs={['/icons/fortune.png']}
             toImgs={['/icons/arbitrum-icon-light.svg']}
           />
@@ -270,8 +283,8 @@ const ClaimModal: FC<ClaimModalProps> = ({ open: defaultOpen, onClose }) => {
           <Text style="h6">Sending to your wallet</Text>
         )}
         {step === 3 && (
-          <Flex direction="column" css={{ gap: 20, my: '$4' }}>
-            <Text style="h6" css={{ color: 'green' }}>Withdraw Success !</Text>
+          <Flex direction="column" css={{gap: 20, my: '$4'}}>
+            <Text style="h6" css={{color: 'green'}}>Withdraw Success !</Text>
           </Flex>
         )}
       </Flex>
