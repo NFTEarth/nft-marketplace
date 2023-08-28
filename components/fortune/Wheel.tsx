@@ -17,6 +17,18 @@ export interface WheelProps extends HighchartsReact.Props {
   winner?: `0x${string}`
 }
 
+const getAverage = (a: number, b: number) => {
+  a = a % 360;
+  b = b % 360;
+
+  let sum = a + b;
+  if (sum > 360 && sum < 540)
+  {
+    sum = sum % 180;
+  }
+  return sum / 2;
+}
+
 const radToDeg = (r: number) => r * 180 / Math.PI;
 
 function getRandomInt(min: number, max: number) {
@@ -48,10 +60,12 @@ const findWinner = (data: any[], winner?: `0x${string}`, randomize = true) : win
     return (new RegExp(`${winner}`, 'i')).test(d.address)
   });
 
+  console.log('WINNER', data[winnerIndex]?.address, winnerIndex, data[winnerIndex]?.angle)
+
   return {
     wheelPoint: randomize ?
       getRandomInt(radToDeg(data[winnerIndex]?.shapeArgs.start), radToDeg(data[winnerIndex]?.shapeArgs.end)) :
-      Math.round((radToDeg(data[winnerIndex]?.shapeArgs.start) + radToDeg(data[winnerIndex]?.shapeArgs.end)) / 2) - 90,
+      data[winnerIndex]?.angle,
     winnerIndex
   };
 }
@@ -82,6 +96,7 @@ const Wheel = (props: WheelProps) => {
   const animationSpeed = 30;
   const isMounted = useMounted()
   const isLargeDevice = useMediaQuery({ minWidth: 1536 }) && isMounted
+  const [seriesAngle, setSeriesAngle] = useState<Record<number, number>>({})
 
   const { data: {
     round,
@@ -126,7 +141,6 @@ const Wheel = (props: WheelProps) => {
 
   useEffect(() => {
     if (!enableAudio) {
-
       return;
     }
 
@@ -204,21 +218,34 @@ const Wheel = (props: WheelProps) => {
 
     if (RoundStatus.Drawn === status) {
       const { wheelPoint, winnerIndex } = findWinner(chart.series?.[0]?.data, winner, false)
-      diff = -(wheelPoint * 30)
+      let stopPoint = (seriesAngle[winnerIndex] || wheelPoint) + 90
+      //let stopPoint = wheelPoint - 90
+
+      console.log('stopPoint' , seriesAngle[winnerIndex], wheelPoint)
+
+      if (stopPoint < 360) {
+        stopPoint += 360;
+      }
+
+      diff = (360 * 30)
       spinIntervalRef.current = setInterval(() => {
-        startAngle = diff % 360;
-        diff += (wheelPoint / 4)
+        startAngle += diff
+        startAngle = startAngle % 360
+        diff = diff < 1000 ? diff - 30 : diff * 0.975
 
         chart.series?.[0]?.update({ startAngle: startAngle }, true, false, false);
 
-        if (diff > -(360 * 10) && wheelEnding === 0) {
+        if (diff < (wheelPoint * 10) && wheelEnding === 0) {
           setWheelEnding(1)
         }
 
-        if (diff > (wheelPoint + 90)) {
+        // console.log(diff, stopPoint)
+
+        if (diff < stopPoint) {
           clearInterval(spinIntervalRef.current);
           onWheelEnd(winnerIndex);
           setHoverPlayerIndex?.(winnerIndex);
+          chart.series?.[0]?.update({ startAngle: stopPoint }, true, false, false);
 
           if (wheelEnding != 1) {
             setWheelEnding(2);
@@ -226,14 +253,31 @@ const Wheel = (props: WheelProps) => {
         }
       }, animationSpeed)
     }
-  }, [status, roundId, winner])
+  }, [seriesAngle, status, roundId, winner])
 
+  useEffect(() => {
+    let cumulativePercentage = 0;
+    const chart = chartComponentRef.current?.chart;
+    if (chart && players.length > 0) {
+      const seriesAngles: Record<number, number> = {};
+      (chart.series?.[0]?.data || []).forEach((point: any, i: number) => {
+        let angle = -90 + (cumulativePercentage + point.percentage / 2) * 360 / 100;
+        if (angle > 90) {
+          angle = angle + 180;
+        }
+
+        seriesAngles[i] = angle
+
+        cumulativePercentage += point.percentage;
+      })
+      setSeriesAngle(seriesAngles);
+    }
+  }, [players, chartComponentRef])
 
   const options = useMemo<Highcharts.Options>(() => {
     const start = cutoffTime - duration;
     const current = ((new Date()).getTime() / 1000);
     const progressPercent = 100 * (1 - (current - start) / (cutoffTime - start))
-    console.log(round);
 
     return {
       chart: {
@@ -278,7 +322,7 @@ const Wheel = (props: WheelProps) => {
           borderWidth: 0,
           data: (players.length && RoundStatus.Cancelled !== status) ? players : [{
             y: 100,
-            color: RoundStatus.Cancelled === status ? '#F00' : '#AAA'
+            color: RoundStatus.Cancelled === status ? '#F00' : '#888'
           }],
           type: 'pie',
           size: '90%',
@@ -292,9 +336,7 @@ const Wheel = (props: WheelProps) => {
             followPointer: false,
           },
           events: {
-            mouseOver: function () {
-              //console.log('HOVER', this.data);
-            },
+
           }
         },
         {
@@ -310,7 +352,7 @@ const Wheel = (props: WheelProps) => {
           },
           data: status !== RoundStatus.Open ? [{
             y: 100,
-            color: '#fff'
+            color: !round ? '#888' : '#fff'
           }] : [{
             y: progressPercent,
             color: getProgressColor(progressPercent),
