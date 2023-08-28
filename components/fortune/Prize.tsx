@@ -21,7 +21,7 @@ export type PrizeType = {
   tokenId?: bigint
 }
 
-const FortunePrize : FC<{ data: PrizeType }> = ({ data, ...restProps }) => {
+const FortunePrize : FC<{ data: PrizeType, valuePerEntry: number }> = ({ data, valuePerEntry, ...restProps }) => {
   const { data: tokens } = useTokens({
     tokens: [`${data.address}:${data.tokenId}`],
   }, {
@@ -39,6 +39,7 @@ const FortunePrize : FC<{ data: PrizeType }> = ({ data, ...restProps }) => {
             <Player
               key={`depositor-${i}`}
               data={d.player}
+              valuePerEntry={valuePerEntry}
             />
           ))}
         </Flex>
