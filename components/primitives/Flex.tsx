@@ -34,6 +34,9 @@ const flexCss = {
       between: {
         justifyContent: 'space-between',
       },
+      around: {
+        justifyContent: 'space-around',
+      },
     },
     direction: {
       row: {
