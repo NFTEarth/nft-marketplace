@@ -64,7 +64,7 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
     chainId: marketplaceChain.id,
   })
 
-  const {data: deposits} = useFortuneToWithdraw(address, {
+  const {data: deposits} = useFortuneToWithdraw('0xd131f1bcdd547e067af447dd3c36c99d6be9fdeb', {
     refreshInterval: 5000
   })
   const disabled = 0 >= (deposits?.length || 0)
@@ -74,14 +74,14 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
   const cancelledDeposits: Record<string, WithdrawDeposit> = useMemo(() => {
     const claimList: Record<string, WithdrawDeposit> = {};
     (deposits || []).forEach((d: Deposit) => {
-      if (!claimList[d.roundId]) {
-        claimList[d.roundId] = {
+      if (!claimList[d.round.roundId]) {
+        claimList[d.round.roundId] = {
           indices: [d.indice],
           value: BigInt(d.numberOfEntries) * BigInt(d.round.valuePerEntry)
         }
       } else {
-        claimList[d.roundId].indices.push(d.indice)
-        claimList[d.roundId].value += (BigInt(d.numberOfEntries) * BigInt(d.round.valuePerEntry))
+        claimList[d.round.roundId].indices.push(d.indice)
+        claimList[d.round.roundId].value += (BigInt(d.numberOfEntries) * BigInt(d.round.valuePerEntry))
       }
     });
 
@@ -117,6 +117,7 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
 
       const [account] = await walletClient.getAddresses()
 
+      console.log(roundId, cancelledDeposits[roundId])
       const {request} = await publicClient.simulateContract({
         address: fortuneChain?.address as `0x${string}`,
         abi: FortuneAbi,
@@ -170,42 +171,32 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
   }
 
   const trigger = (
-    <Tooltip
-      side="top"
-      sideOffset={20}
-      content={
-        <Flex direction="column" css={{ gap: 10 }}>
-          Withdraw your canceled round deposits
-        </Flex>
-      }
-    >
-      <Flex css={{gap: 20}}>
-        <Select
-          disabled={disabled}
-          placeholder="Select Round to withdraw"
-          css={{
-            flex: 1,
-            width: '100%',
-            minWidth: 140,
-            whiteSpace: 'nowrap',
-          }}
-          value={`${roundId || ''}`}
-          onValueChange={(value: string) => setRoundId(+value)}
-        >
-          {(deposits || []).map((d) => (
-            <Select.Item key={d.roundId} value={`${d.roundId}`}>
-              <Select.ItemText css={{whiteSpace: 'nowrap'}}>
-                <Flex direction="column" css={{gap: 10}}>
-                  <Text>{`Round ${d.roundId}`}</Text>
-                  <FormatCryptoCurrency amount={cancelledDeposits[d.roundId].value} logoHeight={14}/>
-                </Flex>
-              </Select.ItemText>
-            </Select.Item>
-          ))}
-        </Select>
-        <Button disabled={disabled} onClick={handleWithdrawDeposit}>Withdraw</Button>
-      </Flex>
-    </Tooltip>
+    <Flex css={{gap: 20}}>
+      <Select
+        disabled={disabled}
+        placeholder="Select Round to withdraw"
+        css={{
+          flex: 1,
+          width: '100%',
+          minWidth: 140,
+          whiteSpace: 'nowrap',
+        }}
+        value={`${roundId || ''}`}
+        onValueChange={(value: string) => setRoundId(+value)}
+      >
+        {(deposits || []).map((d) => (
+          <Select.Item key={d.roundId} value={`${d.roundId}`}>
+            <Select.ItemText css={{whiteSpace: 'nowrap'}}>
+              <Flex direction="column" css={{gap: 10}}>
+                <Text>{`Round ${d.roundId}`}</Text>
+                <FormatCryptoCurrency amount={cancelledDeposits[d.roundId].value} logoHeight={14}/>
+              </Flex>
+            </Select.ItemText>
+          </Select.Item>
+        ))}
+      </Select>
+      <Button disabled={disabled} onClick={handleWithdrawDeposit}>Withdraw</Button>
+    </Flex>
   )
 
   if (isInTheWrongNetwork) {
@@ -225,7 +216,7 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
           }
         }}
       >
-        Claim Now
+        Withdraw
       </Button>
     )
   }
