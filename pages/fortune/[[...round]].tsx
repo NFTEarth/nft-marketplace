@@ -660,7 +660,11 @@ const FortunePage = () => {
                     }}
                   >
                     {prizes.map((prize, i: number) => (
-                      <FortunePrize key={`prize-${i}`} data={prize} />
+                      <FortunePrize
+                        key={`prize-${i}`}
+                        data={prize}
+                        valuePerEntry={roundData?.valuePerEntry}
+                      />
                     ))}
                   </Flex>
                 </Flex>
