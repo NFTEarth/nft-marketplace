@@ -35,7 +35,7 @@ const useFortuneCurrentRound = (options?: SWRConfiguration) => {
             numberOfEntries
             indice
             claimed
-            entry {
+            participant {
               totalNumberOfEntries
             }
           }

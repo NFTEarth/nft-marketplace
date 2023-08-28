@@ -15,11 +15,11 @@ const useFortuneToWithdraw = (user?: `0x${string}`, options?: SWRConfiguration) 
       ` query GetUserDepositsToWithdraw($user: String!) {
           deposits(first: 1000, where: { depositor: $user, round_: { status: 4 }, claimed: false }) {
             round {
+              id
               valuePerEntry
             }
             numberOfEntries
             indice
-            roundId
           }
         }
       `,
