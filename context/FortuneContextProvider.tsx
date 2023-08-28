@@ -2,12 +2,12 @@ import {useState, createContext, FC, useReducer, Dispatch} from 'react'
 import {PlayerType} from "../components/fortune/Player";
 import {PrizeType} from "../components/fortune/Prize";
 import {SelectionData} from "../components/fortune/NFTEntry";
+import {Round} from "../hooks/useFortuneRound";
 
 export const FortuneContext = createContext<{
   data: {
-    status: number
+    round: Round | null
     countdown: number
-    durationLeft: number
     valueEth: string
     winner: `0x${string}` | null
     players: PlayerType[]
@@ -18,11 +18,10 @@ export const FortuneContext = createContext<{
     usdConversion: number
   }
   functions: {
-    setStatus: ((status: number) => void) | null
+    setRound: ((round: Round) => void) | null
     setWinner: ((winner: `0x${string}`) => void) | null
     setValueEth: ((valueEth: string) => void) | null
     setCountdown: ((countdown: number) => void) | null
-    setDurationLeft: ((status: number) => void) | null
     setSelections: ((status: Record<string, SelectionData>) => void) | null
     setPlayers: Dispatch<PlayerAction> | null
     setPrizes: ((prizes: PrizeType[]) => void) | null
@@ -32,11 +31,10 @@ export const FortuneContext = createContext<{
   }
 }>({
   data: {
-    status: 0,
+    round: null,
     winner: null,
     valueEth: '',
     countdown: 0,
-    durationLeft: 0,
     enableAudio: false,
     selections: {},
     players: [],
@@ -44,13 +42,12 @@ export const FortuneContext = createContext<{
     usdConversion: 0
   },
   functions: {
-    setStatus: null,
+    setRound: null,
     setWinner: null,
     setValueEth: null,
     setSelections: null,
     setEnableAudio: null,
     setCountdown: null,
-    setDurationLeft: null,
     setPlayers: null,
     setPrizes: null,
     setHoverPlayerIndex: null,
@@ -65,7 +62,7 @@ type PlayerResetAction = {
 type PlayerUpdateAction = {
   type: 'update'
   index: number
-  payload: PlayerType
+  payload: Partial<PlayerType>
 }
 
 type PlayerAddAction = {
@@ -81,14 +78,13 @@ type PlayerSetAction = {
 type PlayerAction = PlayerResetAction | PlayerAddAction | PlayerUpdateAction | PlayerSetAction
 
 const FortuneContextProvider: FC<any> = ({ children }) => {
-  const [status, setStatus] = useState(0)
+  const [round, setRound] = useState<Round | null>(null)
   const [countdown, setCountdown] = useState(0)
   const [usdConversion, setUSDConversion] = useState(0)
   const [valueEth, setValueEth] = useState('')
   const [winner, setWinner] = useState<`0x${string}` | null>(null)
   const [enableAudio, setEnableAudio] = useState(false)
   const [prizes, setPrizes] = useState<PrizeType[]>([])
-  const [durationLeft, setDurationLeft] = useState(60 * 5)
   const [selections, setSelections] = useState<Record<string, SelectionData>>({})
   const [hoverPlayerIndex, setHoverPlayerIndex] = useState<number | undefined>(undefined)
   const playerReducer = (state: PlayerType[], action: PlayerAction): PlayerType[] => {
@@ -117,7 +113,7 @@ const FortuneContextProvider: FC<any> = ({ children }) => {
     <FortuneContext.Provider
       value={{
         data: {
-          status,
+          round,
           players,
           prizes,
           winner,
@@ -125,12 +121,11 @@ const FortuneContextProvider: FC<any> = ({ children }) => {
           selections,
           enableAudio,
           countdown,
-          durationLeft,
           hoverPlayerIndex,
           usdConversion
         },
         functions: {
-          setStatus,
+          setRound,
           setPlayers,
           setWinner,
           setPrizes,
@@ -138,7 +133,6 @@ const FortuneContextProvider: FC<any> = ({ children }) => {
           setSelections,
           setEnableAudio,
           setCountdown,
-          setDurationLeft,
           setHoverPlayerIndex,
           setUSDConversion
         }

@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import {HookOptions, PlayFunction, PlayOptions} from "use-sound/dist/types";
-import { useMounted } from "./";
 
 export interface ExposedData {
   sound: Howl | null;
@@ -8,6 +7,7 @@ export interface ExposedData {
   pause: (id?: string) => void;
   duration: number | null;
 }
+
 export declare type ReturnedValue = [PlayFunction, ExposedData];
 
 export default function useSound<T = any>(
@@ -99,7 +99,7 @@ export default function useSound<T = any>(
     // error on unmount, where the state loses track of the sprites??
     // No idea, but anyway I don't need to re-run this if only the `sound`
     // changes.
-  }, [sound, volume, playbackRate]);
+  }, [volume, playbackRate]);
 
   const play: PlayFunction = React.useCallback(
     (options?: PlayOptions) => {
@@ -121,7 +121,7 @@ export default function useSound<T = any>(
 
       sound.play(options.id);
     },
-    [soundEnabled, interrupt]
+    [sound, soundEnabled, interrupt]
   );
 
   const stop = React.useCallback(

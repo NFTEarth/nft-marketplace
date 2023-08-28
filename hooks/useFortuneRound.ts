@@ -33,6 +33,7 @@ export type Round = {
   roundId: number
   status: RoundStatus
   cutoffTime: number
+  duration: number
   maximumNumberOfDeposits: number
   maximumNumberOfParticipants: number
   valuePerEntry: number
@@ -60,6 +61,7 @@ const useFortuneRound = (roundId?: number, options?: SWRConfiguration) => {
           roundId
           status
           cutoffTime
+          duration
           maximumNumberOfDeposits
           maximumNumberOfParticipants
           valuePerEntry

@@ -1,4 +1,4 @@
-import {FC} from "react";
+import {FC, useEffect} from "react";
 import Highcharts from "highcharts";
 import {jsNumberForAddress} from "react-jazzicon";
 import Jazzicon from "react-jazzicon/dist/Jazzicon";
@@ -6,10 +6,13 @@ import Jazzicon from "react-jazzicon/dist/Jazzicon";
 import {Flex, FormatCryptoCurrency, Text} from "../primitives";
 import {Avatar} from "../primitives/Avatar";
 import {useENSResolver, useFortune} from "../../hooks";
-import {RoundStatus} from "../../hooks/useFortuneRound";
+import {Round, RoundStatus} from "../../hooks/useFortuneRound";
 
 export interface PlayerType extends Highcharts.PointOptionsObject {
   address: `0x${string}`
+  shortAddress?: string
+  shortEnsName?: string
+  ensAvatar?: string
   index: number
   entry: number
 }
@@ -20,14 +23,28 @@ type PlayerProps = {
 }
 
 const Player: FC<PlayerProps> = ({ data, valuePerEntry, ...restProps }) => {
-  const { data: hoverPlayerIndex, setHoverPlayerIndex } = useFortune<number>(d => d.hoverPlayerIndex)
-  const { data: status } = useFortune<number>(d => d.status)
+  const { data: hoverPlayerIndex, setHoverPlayerIndex, setPlayers } = useFortune<number>(d => d.hoverPlayerIndex)
+  const { data: round } = useFortune<Round>(d => d.round)
 
   const {
     avatar: ensAvatar,
     shortAddress,
     shortName: shortEnsName,
   } = useENSResolver(data.address)
+
+  useEffect(() => {
+    setPlayers?.({
+      type: 'update',
+      index: data.index,
+      payload: {
+        ensAvatar,
+        shortAddress,
+        shortEnsName: shortEnsName || undefined
+      }
+    })
+  }, [ensAvatar, shortEnsName])
+
+  const isHovered = (hoverPlayerIndex > -1 && hoverPlayerIndex === data.index)
 
   return (
     <Flex
@@ -42,7 +59,8 @@ const Player: FC<PlayerProps> = ({ data, valuePerEntry, ...restProps }) => {
         userSelect: 'none',
         backgroundColor: 'rgba(0,0,0, 0.1)',
         transition: 'background-color, filter .5s',
-        ...((status !== RoundStatus.Open || (hoverPlayerIndex && hoverPlayerIndex !== data.index)) ? {
+        ...((!isHovered &&
+            [RoundStatus.Drawn, RoundStatus.Drawing].includes(round.status)) ? {
           filter: 'opacity(0.4)'
         } : {}),
         '&:hover': {

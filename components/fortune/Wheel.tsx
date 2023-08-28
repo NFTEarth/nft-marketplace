@@ -5,7 +5,7 @@ import HighchartsReact from 'highcharts-react-official'
 import useSound from "use-sound";
 import {useFortune} from "../../hooks";
 import {PlayerType} from "./Player";
-import {RoundStatus} from "../../hooks/useFortuneRound";
+import {Round, RoundStatus} from "../../hooks/useFortuneRound";
 
 if (typeof Highcharts === 'object') {
   HighchartsExporting(Highcharts)
@@ -14,7 +14,6 @@ if (typeof Highcharts === 'object') {
 export interface WheelProps extends HighchartsReact.Props {
   onWheelEnd: any
   winner?: `0x${string}`
-  roundId: number
 }
 
 const radToDeg = (r: number) => r * 180 / Math.PI;
@@ -29,8 +28,7 @@ type winnerWheel = {
 }
 
 type FortuneData = {
-  durationLeft: number
-  status: number
+  round: Round
   countdown: number
   players: PlayerType[]
   enableAudio: boolean
@@ -69,38 +67,84 @@ const getProgressColor = (percent: number) => {
   return 'white'
 }
 
+const spinWheelAudioSpriteMap = {
+  start: [0, 1200, true],
+  end: [500, 2000, false]
+} as any;
+
 const Wheel = (props: WheelProps) => {
-  const { container, roundId, winner, onWheelEnd, ...restProps } = props;
+  const { container, winner, onWheelEnd, ...restProps } = props;
   const chartComponentRef = useRef<typeof HighchartsReact>(null);
   const spinIntervalRef = useRef<ReturnType<typeof setInterval>>();
-  const [wheelEnd, setWheelEnd] = useState(false);
+  const [wheelEnding, setWheelEnding] = useState(0);
   const triangleRef = useRef<any>();
   const animationSpeed = 30;
 
   const { data: {
+    round,
     countdown,
-    durationLeft,
-    status,
     players,
     enableAudio,
     hoverPlayerIndex
   }, setHoverPlayerIndex } = useFortune<FortuneData>(d => d)
 
+
   const [playWin] = useSound(`/audio/win.mp3`, {
+    interrupt: true,
+    volume: 0.8
+  })
+  const [playClock, { stop: stopClock, sound: clockAudio }] = useSound(`/audio/clock.mp3`, {
+    interrupt: true,
+    volume: 0.8
+  })
+  clockAudio?.loop(true)
+
+  const [playStart] = useSound(`/audio/game-start.mp3`, {
+    interrupt: true,
+    volume: 0.8
+  })
+  const [playWheel, { stop: stopAudio, }] = useSound(`/audio/wheel-spin.mp3`, {
+    sprite: spinWheelAudioSpriteMap,
     interrupt: true,
     volume: 0.8
   })
 
   useEffect(() => {
-    setWheelEnd(false);
-  }, [roundId])
+    setWheelEnding(0);
+  }, [round?.roundId])
 
   useEffect(() => {
-    if (wheelEnd) {
-      playWin?.()
-      setWheelEnd(false)
+    if (!enableAudio) {
+      stopClock()
+      stopAudio?.('start')
+      return;
     }
-  }, [wheelEnd, enableAudio])
+
+    if (RoundStatus.Open === round?.status) {
+      playStart?.()
+    }
+
+    if (RoundStatus.Drawing === round?.status && players.length > 1) {
+      playClock()
+    }
+
+    if (RoundStatus.Drawn === round?.status) {
+      stopClock?.()
+      playWheel?.({ id: 'start' })
+    }
+  }, [round?.status, round?.roundId, enableAudio])
+
+  useEffect(() => {
+    if (wheelEnding === 1) {
+      stopAudio?.('start')
+      playWheel?.({ id: 'end' })
+    }
+
+    if (wheelEnding === 2) {
+      stopAudio?.('end')
+      playWin?.()
+    }
+  }, [wheelEnding, enableAudio])
 
   useEffect(() => {
     const chart = chartComponentRef.current?.chart
@@ -133,8 +177,9 @@ const Wheel = (props: WheelProps) => {
     }
 
     chart.series?.[0]?.update({ startAngle: 360 });
+    setHoverPlayerIndex?.(undefined);
 
-    if ([RoundStatus.Drawing, RoundStatus.Drawn].includes(status)) {
+    if ([RoundStatus.Drawing, RoundStatus.Drawn].includes(round?.status)) {
       triangleRef.current = chart.renderer.path([
         ['M', chart.chartWidth / 2 - 20, chart.plotTop + 18],
         ['L', chart.chartWidth / 2 + 20, chart.plotTop + 18],
@@ -148,46 +193,56 @@ const Wheel = (props: WheelProps) => {
         .add();
     }
 
-    let diff = 360
+    let diff = 30
     let startAngle = chart.series?.[0]?.options?.startAngle | 0;
 
-    if (status === RoundStatus.Drawing) {
-      spinIntervalRef.current = setInterval(() => {
-        startAngle += diff;
+    // if (round?.status === RoundStatus.Drawing) {
+    //   spinIntervalRef.current = setInterval(() => {
+    //     startAngle -= diff;
+    //
+    //     if (startAngle < 360) {
+    //       startAngle += 360;
+    //     }
+    //
+    //     chart.series?.[0]?.update({ startAngle }, true, false, false);
+    //   }, animationSpeed)
+    // }
 
-        if (startAngle > 360) {
-          startAngle -= 360;
-        }
-
-        chart.series?.[0]?.update({ startAngle }, true, false, false);
-      }, animationSpeed)
-    }
-
-    if (status === RoundStatus.Drawn) {
+    if (RoundStatus.Drawn === round?.status) {
       const { wheelPoint, winnerIndex } = findWinner(chart.series?.[0]?.data, winner, false)
-      diff = 360 * 30
+      diff = -(wheelPoint * 30)
       spinIntervalRef.current = setInterval(() => {
         startAngle = diff % 360;
-        diff -= (diff * 0.01)
+        diff += (wheelPoint / 4)
 
         chart.series?.[0]?.update({ startAngle: startAngle }, true, false, false);
 
-        if (wheelPoint > (diff - 85)) {
+        if (diff > -(360 * 10) && wheelEnding === 0) {
+          setWheelEnding(1)
+        }
+
+        if (diff > (wheelPoint + 90)) {
           clearInterval(spinIntervalRef.current);
-          setWheelEnd(true);
           onWheelEnd(winnerIndex);
+          setHoverPlayerIndex?.(winnerIndex);
+
+          if (wheelEnding != 1) {
+            setWheelEnding(2);
+          }
         }
       }, animationSpeed)
     }
-  }, [status, roundId])
+  }, [round?.status, round?.roundId])
 
   useEffect(() => {
     const chart = chartComponentRef.current?.chart
-    const progressPercent = (((new Date()).getTime() / 1000) / durationLeft) * 100
+    const start = round?.cutoffTime - round?.duration;
+    const current = ((new Date()).getTime() / 1000);
+    const progressPercent = 100 * (1 - (current - start) / (round?.cutoffTime - start))
 
     if (chart) {
       chart.series?.[1]?.update({
-        data: [RoundStatus.Drawing, RoundStatus.Drawn].includes(status) ?
+        data: [RoundStatus.Drawing, RoundStatus.Drawn].includes(round?.status) ?
           [{
             y: 100,
             color: '#fff'
@@ -202,7 +257,7 @@ const Wheel = (props: WheelProps) => {
       });
     }
 
-  }, [status, roundId, durationLeft, countdown])
+  }, [round?.status, round?.roundId, round?.cutoffTime, countdown])
 
   const options = useMemo<Highcharts.Options>(() => {
     return {
@@ -243,15 +298,15 @@ const Wheel = (props: WheelProps) => {
         {
           name: 'Win Chance',
           borderWidth: 0,
-          data: players.length ? players : [{
+          data: (players.length && RoundStatus.Cancelled !== round?.status) ? players : [{
             y: 100,
-            color: '#AAA'
+            color: RoundStatus.Cancelled === round?.status ? '#F00' : '#AAA'
           }],
           type: 'pie',
           size: '90%',
           innerSize: '75%',
           showInLegend: false,
-          enableMouseTracking: players.length > 0,
+          enableMouseTracking: players.length > 0 && ![RoundStatus.Cancelled, RoundStatus.Drawn].includes(round?.status),
           dataLabels: {
             enabled: false
           },
