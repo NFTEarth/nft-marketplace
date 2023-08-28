@@ -9,12 +9,14 @@ import {useENSResolver, useFortune} from "../../hooks";
 import {Round, RoundStatus} from "../../hooks/useFortuneRound";
 
 export interface PlayerType extends Highcharts.PointOptionsObject {
+  index: number
   address: `0x${string}`
+  entry: number
+  color: string
   shortAddress?: string
   shortEnsName?: string
   ensAvatar?: string
-  index: number
-  entry: number
+  angle?: number
 }
 
 type PlayerProps = {
