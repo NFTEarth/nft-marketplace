@@ -3,9 +3,10 @@ import Highcharts from 'highcharts'
 import HighchartsExporting from 'highcharts/modules/exporting'
 import HighchartsReact from 'highcharts-react-official'
 import useSound from "use-sound";
-import {useFortune} from "../../hooks";
+import {useFortune, useMounted} from "../../hooks";
 import {PlayerType} from "./Player";
 import {Round, RoundStatus} from "../../hooks/useFortuneRound";
+import {useMediaQuery} from "react-responsive";
 
 if (typeof Highcharts === 'object') {
   HighchartsExporting(Highcharts)
@@ -79,6 +80,8 @@ const Wheel = (props: WheelProps) => {
   const [wheelEnding, setWheelEnding] = useState(0);
   const triangleRef = useRef<any>();
   const animationSpeed = 30;
+  const isMounted = useMounted()
+  const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
 
   const { data: {
     round,
@@ -264,8 +267,8 @@ const Wheel = (props: WheelProps) => {
         backgroundColor: 'transparent',
         renderTo: 'container',
         type: 'pie',
-        width: 380,
-        height: 380,
+        width: isSmallDevice ? 380 : 490,
+        height: isSmallDevice ? 380 : 490,
       },
       events: {
         resize: function () {
@@ -340,7 +343,7 @@ const Wheel = (props: WheelProps) => {
         enabled: false
       }
     }
-  }, [players])
+  }, [players, isSmallDevice])
 
   return (
     <>
