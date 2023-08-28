@@ -65,7 +65,7 @@ const ClaimModal: FC<ClaimModalProps> = ({ open: defaultOpen, onClose }) => {
   const { data: deposits } = useFortuneToWithdraw(address,  {
     refreshInterval: 5000
   })
-  const disabled = (deposits?.length || 0) > 0
+  const disabled = 0 >= (deposits?.length || 0)
   const isInTheWrongNetwork = Boolean(
     wallet && activeChain?.id !== marketplaceChain.id
   )
