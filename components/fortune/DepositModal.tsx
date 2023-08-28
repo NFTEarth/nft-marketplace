@@ -26,7 +26,7 @@ import {useFortune, useMarketplaceChain} from "../../hooks";
 import {FORTUNE_CHAINS} from "../../utils/chains";
 import {ToastContext} from "../../context/ToastContextProvider";
 import {SelectionData} from "./NFTEntry";
-import {RoundStatus} from "../../hooks/useFortuneRound";
+import {Round, RoundStatus} from "../../hooks/useFortuneRound";
 import {minimumEntry} from "./EntryForm";
 
 type FortuneDepositProps = {
@@ -36,7 +36,7 @@ type FortuneDepositProps = {
 type FortuneData = {
   countdown: number
   durationLeft: number
-  status: number
+  round: Round
   selections: Record<string, SelectionData>
   valueEth: string
 }
@@ -45,7 +45,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
   const { roundId } = props;
   const { address } = useAccount()
   const marketplaceChain = useMarketplaceChain()
-  const { data: { status, countdown, selections, valueEth }, } = useFortune<FortuneData>(q => q )
+  const { data: { round, countdown, selections, valueEth }, } = useFortune<FortuneData>(q => q )
   const fortuneChain = FORTUNE_CHAINS.find(c => c.id === marketplaceChain.id);
   const [openModal, setOpenModal] = useState(false)
   const { addToast } = useContext(ToastContext)
@@ -165,6 +165,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
       }
 
       await writeAsync?.()
+
     } catch (err: any) {
       if (err instanceof BaseError) {
         const revertError = err.walk(err => err instanceof ContractFunctionRevertedError)
@@ -190,20 +191,20 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
         gap: 20
       }}
     >
-      {(countdown < 30 && status === RoundStatus.Open) && (
+      {(countdown < 30 && round?.status === RoundStatus.Open) && (
         <Text css={{ color: 'orange', textAlign: 'center' }}>
           {`Warning: less than 30 seconds left, your transaction might not make it in time.`}
         </Text>
       )}
       <Button
-        disabled={status !== RoundStatus.Open || isApprovalLoading || isLoading || isLoadingTransaction }
+        disabled={round?.status !== RoundStatus.Open || isApprovalLoading || isLoading || isLoadingTransaction }
         size="large"
         color={countdown < 30 ? 'red' : 'primary'}
         css={{
           justifyContent: 'center'
         }}
         onClick={handleDeposit}
-      >{isApproved ? (status !== RoundStatus.Open ? 'Round Closed' : `(Minimum ${formatEther(minimumEntry)}Ξ) Deposit`) : 'Set Approval'}</Button>
+      >{isApproved ? (round?.status !== RoundStatus.Open ? 'Round Closed' : `(Minimum ${formatEther(minimumEntry)}Ξ) Deposit`) : 'Set Approval'}</Button>
     </Flex>
   )
 
