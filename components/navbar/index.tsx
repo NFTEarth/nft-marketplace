@@ -109,7 +109,7 @@ const Navbar = () => {
           <Box css={{ flex: 1, px: '$5', maxWidth: 600 }}>
             <GlobalSearch
               ref={searchRef}
-              placeholder="Search for NFTs and collections"
+              placeholder="Search NFTs..."
               containerCss={{ width: '100%' }}
               key={router.asPath}
             />
