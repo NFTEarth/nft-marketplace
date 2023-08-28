@@ -218,7 +218,7 @@ const Wheel = (props: WheelProps) => {
 
     if (RoundStatus.Drawn === status) {
       const { wheelPoint, winnerIndex } = findWinner(chart.series?.[0]?.data, winner, false)
-      let stopPoint = (seriesAngle[winnerIndex] || wheelPoint + 90)
+      let stopPoint = (seriesAngle[winnerIndex] || wheelPoint - 90)
       //let stopPoint = wheelPoint - 90
 
       console.log('stopPoint' , seriesAngle[winnerIndex], wheelPoint)
