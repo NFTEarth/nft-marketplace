@@ -143,7 +143,7 @@ const FortunePage = () => {
 
   const totalPrize =BigInt(roundData?.numberOfEntries || 0) * BigInt(roundData?.valuePerEntry || 0)
   const yourEntries = BigInt(roundData?.deposits?.filter(p => (new RegExp(address as string, 'i').test(p.depositor as string)))
-    .reduce((a, b) => a + BigInt(b.entry.totalNumberOfEntries || 0), BigInt(0)) || 0) * BigInt(roundData?.valuePerEntry || 0)
+    .reduce((a, b) => a + BigInt(b.participant.totalNumberOfEntries || 0), BigInt(0)) || 0) * BigInt(roundData?.valuePerEntry || 0)
   const currentPlayer = players.find(p => (new RegExp(address as string, 'i')).test(p.address));
   const yourWinChance = currentPlayer ? Math.round((currentPlayer?.entry || 1) / (roundData?.numberOfEntries || 1) * 100) : 0
   const ethConversion =
@@ -219,7 +219,7 @@ const FortunePage = () => {
             price: BigInt(0),
             amount: BigInt(d.tokenAmount),
             tokenId: BigInt(d.tokenId),
-            totalNumberOfEntries: BigInt(d.entry.totalNumberOfEntries)
+            totalNumberOfEntries: BigInt(d.participant.totalNumberOfEntries)
           })
         }
       }
@@ -237,7 +237,7 @@ const FortunePage = () => {
           price: BigInt(0),
           amount: BigInt(d.tokenAmount),
           tokenId: BigInt(d.tokenId),
-          totalNumberOfEntries: BigInt(d.entry.totalNumberOfEntries)
+          totalNumberOfEntries: BigInt(d.participant.totalNumberOfEntries)
         })
       }
     })
