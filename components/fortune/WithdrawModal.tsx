@@ -121,8 +121,8 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
       const {request} = await publicClient.simulateContract({
         address: fortuneChain?.address as `0x${string}`,
         abi: FortuneAbi,
-        functionName: 'claimPrizes',
-        args: [roundId, cancelledDeposits[roundId]],
+        functionName: 'withdrawDeposits',
+        args: [roundId, cancelledDeposits[roundId].indices],
         account
       })
 
@@ -152,7 +152,7 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
           addToast?.({
             title: 'Error',
             status: 'error',
-            description: /ABI encoding params/.test((revertError as any).message) ? 'Failed to Claim' : (revertError as any).message
+            description: (revertError as any).message
           })
         }
         setStep(0)
@@ -185,11 +185,11 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
         onValueChange={(value: string) => setRoundId(+value)}
       >
         {(deposits || []).map((d) => (
-          <Select.Item key={d.roundId} value={`${d.roundId}`}>
+          <Select.Item key={d.round.roundId} value={`${d.round.roundId}`}>
             <Select.ItemText css={{whiteSpace: 'nowrap'}}>
               <Flex direction="column" css={{gap: 10}}>
-                <Text>{`Round ${d.roundId}`}</Text>
-                <FormatCryptoCurrency amount={cancelledDeposits[d.roundId].value} logoHeight={14}/>
+                <Text>{`Round ${d.round.roundId}`}</Text>
+                <FormatCryptoCurrency amount={cancelledDeposits[d.round.roundId].value} logoHeight={14}/>
               </Flex>
             </Select.ItemText>
           </Select.Item>
