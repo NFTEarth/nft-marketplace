@@ -25,7 +25,7 @@ const useFortuneUserWon = (user?: `0x${string}`, options?: SWRConfiguration) => 
           numberOfParticipants
           winner
           protocolFeeBp
-          deposits(orderBy: indice, orderDirection: asc, first: 1000) {
+          deposits(orderBy: indice, orderDirection: asc, first: 1000, where: { claimed: false }) {
             id
             depositor
             tokenAddress

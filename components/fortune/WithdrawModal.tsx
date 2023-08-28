@@ -77,11 +77,11 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
       if (!claimList[d.roundId]) {
         claimList[d.roundId] = {
           indices: [d.indice],
-          value: BigInt(d.numberOfEntries || 0) * BigInt(d.round.valuePerEntry || 0)
+          value: BigInt(d.numberOfEntries) * BigInt(d.round.valuePerEntry)
         }
       } else {
         claimList[d.roundId].indices.push(d.indice)
-        claimList[d.roundId].value += (BigInt(d.numberOfEntries || 0) * BigInt(d.round.valuePerEntry || 0))
+        claimList[d.roundId].value += (BigInt(d.numberOfEntries) * BigInt(d.round.valuePerEntry))
       }
     });
 
