@@ -68,7 +68,7 @@ const FortuneHistory = () => {
     let total = 0n;
     (userWinningRounds || []).forEach((r: Round) => {
       claimList[r.roundId] = r.deposits.filter(d => !d.claimed).map((d) => {
-        total += ((BigInt(d.entry.totalNumberOfEntries) * BigInt(r.valuePerEntry)))
+        total += ((BigInt(d.numberOfEntries) * BigInt(r.valuePerEntry)))
         return d.indice
       })
 
