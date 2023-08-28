@@ -27,7 +27,6 @@ import {FORTUNE_CHAINS} from "../../utils/chains";
 import {ToastContext} from "../../context/ToastContextProvider";
 import {SelectionData} from "./NFTEntry";
 import {Round, RoundStatus} from "../../hooks/useFortuneRound";
-import {minimumEntry} from "./EntryForm";
 
 type FortuneDepositProps = {
   roundId: number
@@ -204,7 +203,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
           justifyContent: 'center'
         }}
         onClick={handleDeposit}
-      >{isApproved ? (round?.status !== RoundStatus.Open ? 'Round Closed' : `(Minimum ${formatEther(minimumEntry)}Ξ) Deposit`) : 'Set Approval'}</Button>
+      >{isApproved ? (round?.status !== RoundStatus.Open ? 'Round Closed' : `(Minimum ${formatEther(BigInt(round?.valuePerEntry || 0))}Ξ) Deposit`) : 'Set Approval'}</Button>
     </Flex>
   )
 

@@ -513,7 +513,7 @@ const FortunePage = () => {
                           </Text>
                           <Flex css={{ gap: 20 }}>
                             <FormatCryptoCurrency textStyle="subtitle1" logoHeight={15} amount={totalPrize} maximumFractionDigits={2} />
-                            <Text style="subtitle1">{`${((roundData?.numberOfEntries || 1) / (playerWinner?.entry || 0)).toFixed(0)}x WIN`}</Text>
+                            <Text style="subtitle1">{`${((roundData?.numberOfEntries || 1) / (playerWinner?.entry || 0)).toFixed(1)}x WIN`}</Text>
                           </Flex>
                         </Flex>
                       )}
