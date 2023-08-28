@@ -407,8 +407,8 @@ const FortunePage = () => {
                         <FontAwesomeIcon icon={faArrowRight} width={15} height={15}/>
                       </Button>
                     </Link>
-                    <Link href="/fortune" passHref legacyBehavior>
-                      <Button as="a" size="xs" color="secondary">
+                    <Link href="/fortune" legacyBehavior>
+                      <Button size="xs" color="secondary" disabled={!roundData?.roundId || !currentRound || +roundData?.roundId === +(currentRound?.roundId || 1)}>
                         <FontAwesomeIcon icon={faForwardStep} width={15} height={15}/>
                       </Button>
                     </Link>
