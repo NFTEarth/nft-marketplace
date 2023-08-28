@@ -28,6 +28,7 @@ import {FORTUNE_CHAINS} from "../../utils/chains";
 import ClaimModal from "../../components/fortune/ClaimModal";
 import useFortuneUserWon from "../../hooks/useFortuneUserWon";
 import {Deposit, Round} from "../../hooks/useFortuneRound";
+import WithdrawModal from "../../components/fortune/WithdrawModal";
 
 const roundData: any[] = [
   { roundId: 1, winner: '0x7D3E5dD617EAF4A3d42EA550C41097086605c4aF' },
@@ -175,33 +176,54 @@ const FortuneHistory = () => {
                 </Flex>
               </Flex>
             </Flex>
-            <Flex
-              justify="between"
-              align="center"
-              css={{
-                border: '1px solid $primary13',
-                borderRadius: 16,
-                gap: 40,
-                p: 16,
-                order: 1,
-                '@md': {
-                  order: 2
-                }
-              }}
-            >
+            <Flex css={{
+              gap: 20,
+              order: 1,
+              '@md': {
+                order: 2
+              },
+              flexWrap: 'wrap'
+            }}>
               <Flex
-                direction="column"
-                css={{ gap: 10 }}
+                justify="between"
+                align="center"
+                css={{
+                  border: '1px solid $primary13',
+                  borderRadius: 16,
+                  gap: 40,
+                  p: 16,
+                }}
               >
-                <Text style="body3">Your Unclaimed Winnings</Text>
-                <FormatCryptoCurrency
-                  amount={BigInt(totalUnclaimed || 0)}
-                  address={zeroAddress}
-                  logoHeight={18}
-                  textStyle={'h6'}
-                />
+                <WithdrawModal />
               </Flex>
-              <ClaimModal rewards={rewards} disabled={!(totalUnclaimed > BigInt(0))} />
+              <Flex
+                justify="between"
+                align="center"
+                css={{
+                  border: '1px solid $primary13',
+                  borderRadius: 16,
+                  gap: 40,
+                  p: 16,
+                  order: 1,
+                  '@md': {
+                    order: 2
+                  }
+                }}
+              >
+                <Flex
+                  direction="column"
+                  css={{ gap: 10 }}
+                >
+                  <Text style="body3">Your Unclaimed Winnings</Text>
+                  <FormatCryptoCurrency
+                    amount={BigInt(totalUnclaimed || 0)}
+                    address={zeroAddress}
+                    logoHeight={18}
+                    textStyle={'h6'}
+                  />
+                </Flex>
+                <ClaimModal rewards={rewards} disabled={!(totalUnclaimed > BigInt(0))} />
+              </Flex>
             </Flex>
           </Flex>
           <HistoryTable data={data}/>
