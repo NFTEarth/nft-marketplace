@@ -4,16 +4,12 @@ import {useContext, useMemo, useState} from "react";
 import {Button, Flex, FormatCryptoCurrency, Text} from "../primitives";
 import {
   useAccount,
-  useContractRead,
-  useContractWrite,
   useNetwork,
   useSwitchNetwork,
-  useWaitForTransaction,
   useWalletClient
 } from "wagmi";
 import {useConnectModal} from "@rainbow-me/rainbowkit";
 import {useMarketplaceChain} from "../../hooks";
-import useFortuneToWithdraw from "../../hooks/useFortuneToWithdraw";
 import ErrorWell from "../primitives/ErrorWell";
 import LoadingSpinner from "../common/LoadingSpinner";
 import FortuneAbi from "../../artifact/FortuneAbi.json";
@@ -21,10 +17,8 @@ import {FORTUNE_CHAINS} from "../../utils/chains";
 import TransactionProgress from "../common/TransactionProgress";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTwitter} from "@fortawesome/free-brands-svg-icons";
-import {Deposit} from "../../hooks/useFortuneRound";
 import {
   BaseError,
-  Chain,
   ContractFunctionRevertedError,
   createPublicClient,
   createWalletClient,
@@ -54,7 +48,6 @@ const ClaimModal: FC<ClaimModalProps> = ({ open: defaultOpen, rewards, disabled,
   const [fee, setFee] = useState(BigInt(0))
   const [error, setError] = useState<any | undefined>()
   const { addToast } = useContext(ToastContext)
-  const { address } = useAccount()
   const { data: wallet } = useWalletClient()
   const { openConnectModal } = useConnectModal()
   const { chain: activeChain } = useNetwork()
