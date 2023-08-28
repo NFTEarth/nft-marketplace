@@ -222,6 +222,7 @@ const Wheel = (props: WheelProps) => {
         }
 
         if (diff > (wheelPoint + 90)) {
+          triangleRef.current.destroy()
           clearInterval(spinIntervalRef.current);
           onWheelEnd(winnerIndex);
           setHoverPlayerIndex?.(winnerIndex);
