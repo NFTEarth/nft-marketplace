@@ -237,6 +237,11 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
       ) : (
         <>
           <TableCell css={{ color: '$gray11' }}>
+            <Flex justify="end">
+              <Text>{round.roundId}</Text>
+            </Flex>
+          </TableCell>
+          <TableCell css={{ color: '$gray11' }}>
             <Flex
               align="center"
               justify="start"
@@ -350,6 +355,27 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
             <Flex justify="center">
               <Text>{dayjs(round.cutoffTime * 1000).format('HH:mm, MMM, D, YYYY')}</Text>
             </Flex>
+          </TableCell>
+          <TableCell>
+            {round.status === RoundStatus.Drawn && (
+              <Button
+                size="xs"
+                color="primary"
+                onClick={e => {
+                  e.stopPropagation()
+                  window.open(`${blockExplorerBaseUrl}/tx/${round.drawnHash}`, '_blank','noopener')
+                }}
+                css={{
+                  cursor: 'pointer'
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={faExternalLink}
+                  width={12}
+                  height={15}
+                />
+              </Button>
+            )}
           </TableCell>
         </>
       )}
