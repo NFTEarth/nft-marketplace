@@ -21,6 +21,7 @@ import {useFortune, useMarketplaceChain, useMounted} from "hooks";
 import SelectionItem from "./SelectionItem";
 import NFTEntry, {SelectionData} from "./NFTEntry";
 import FortuneDepositModal from "./DepositModal";
+import {Round} from "../../hooks/useFortuneRound";
 
 type EntryProps = {
   roundId: number,
@@ -29,11 +30,11 @@ type EntryProps = {
 }
 
 type FortuneData = {
+  round: Round,
   selections: Record<string, SelectionData>,
   valueEth: string
 }
 
-export const minimumEntry = BigInt(parseEther('0.0001').toString())
 
 const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
   const { address } = useAccount()
@@ -63,7 +64,8 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
     address,
     chainId: marketplaceChain.id
   })
-  const { data: { valueEth, selections }, setSelections, setValueEth } = useFortune<FortuneData>(q => q)
+  const { data: { round, valueEth, selections }, setSelections, setValueEth } = useFortune<FortuneData>(q => q)
+  const minimumEntry = BigInt(round?.valuePerEntry || 0)
   const filteredTokens = tokens.filter(t => t.token?.kind === 'erc721' && BigInt(t.token?.collection?.floorAskPrice?.amount?.raw || '0') > minimumEntry)
 
   useEffect(() => {
