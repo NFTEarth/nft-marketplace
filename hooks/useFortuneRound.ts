@@ -1,8 +1,12 @@
 import {request, RequestDocument, Variables} from 'graphql-request'
 import useSWR, {SWRConfiguration} from "swr";
 import {TokenType} from "../components/fortune/Prize";
-export type Entry = {
-  totalNumberOfEntries: number
+export type Participant = {
+  id: string
+  round: Round
+  depositor: `0x${string}`
+  deposits: Deposit[]
+  totalNumberOfEntries: bigint
 }
 
 export enum RoundStatus {
@@ -25,7 +29,7 @@ export type Deposit = {
   numberOfEntries: number
   indice: number
   claimed: boolean
-  entry: Entry
+  participant: Participant
 }
 
 export type Round = {
