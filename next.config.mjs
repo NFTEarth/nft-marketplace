@@ -1,23 +1,23 @@
-import { withSentryConfig } from '@sentry/nextjs'
+// import { withSentryConfig } from '@sentry/nextjs'
 import * as tsImport from 'ts-import'
 
 const loadTS = (filePath) => tsImport.load(filePath)
 
 const { DefaultChain: defaultChain } = await loadTS('./utils/chains.ts')
 
-const sentryWebpackPluginOptions = {
-  org: process.env.SENTRY_ORG,
-  project: 'javascript-nextjs',
-  silent: true,
-}
+// const sentryWebpackPluginOptions = {
+//   org: process.env.SENTRY_ORG,
+//   project: 'javascript-nextjs',
+//   silent: true,
+// }
 
 /**
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
-  sentry: {
-    hideSourceMaps: false,
-  },
+  // sentry: {
+  //   hideSourceMaps: false,
+  // },
   experimental: {
     transpilePackages: ['@reservoir0x/reservoir-kit-ui'],
   },
@@ -101,4 +101,6 @@ const nextConfig = {
   },
 }
 
-export default withSentryConfig(nextConfig, sentryWebpackPluginOptions)
+// export default withSentryConfig(nextConfig, sentryWebpackPluginOptions)
+
+export default nextConfig

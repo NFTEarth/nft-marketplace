@@ -2,7 +2,7 @@ import AnalyticsProvider, {
   initializeAnalytics,
 } from 'components/AnalyticsProvider'
 initializeAnalytics()
-import ErrorTrackingProvider from 'components/ErrorTrackingProvider'
+// import ErrorTrackingProvider from 'components/ErrorTrackingProvider'
 import nProgress from 'nprogress'
 import { Router } from 'next/router'
 import { Inter } from '@next/font/google'
@@ -89,11 +89,9 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
     <WagmiConfig config={wagmiClient}>
       <ChainContextProvider>
         <AnalyticsProvider>
-          <ErrorTrackingProvider>
-            <ReferralContextProvider>
-              <MyApp {...props} />
-            </ReferralContextProvider>
-          </ErrorTrackingProvider>
+          <ReferralContextProvider>
+            <MyApp {...props} />
+          </ReferralContextProvider>
         </AnalyticsProvider>
       </ChainContextProvider>
     </WagmiConfig>
