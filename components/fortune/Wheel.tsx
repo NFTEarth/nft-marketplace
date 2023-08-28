@@ -129,6 +129,10 @@ const Wheel = (props: WheelProps) => {
   }, [round?.status, round?.roundId, enableAudio])
 
   useEffect(() => {
+    if (!enableAudio) {
+      return;
+    }
+
     if (wheelEnding === 1) {
       playWheel?.({ id: 'end' })
     }
