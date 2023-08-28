@@ -81,7 +81,7 @@ const Wheel = (props: WheelProps) => {
   const triangleRef = useRef<any>();
   const animationSpeed = 30;
   const isMounted = useMounted()
-  const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
+  const isLargeDevice = useMediaQuery({ minWidth: 1536 }) && isMounted
 
   const { data: {
     round,
@@ -267,8 +267,11 @@ const Wheel = (props: WheelProps) => {
         backgroundColor: 'transparent',
         renderTo: 'container',
         type: 'pie',
-        width: isSmallDevice ? 380 : 490,
-        height: isSmallDevice ? 380 : 490,
+        width: isLargeDevice ? 490 : 380,
+        height: isLargeDevice ? 490 : 380,
+        style: {
+          margin: 'auto'
+        }
       },
       events: {
         resize: function () {
@@ -343,7 +346,7 @@ const Wheel = (props: WheelProps) => {
         enabled: false
       }
     }
-  }, [players, isSmallDevice])
+  }, [players, isLargeDevice])
 
   return (
     <>

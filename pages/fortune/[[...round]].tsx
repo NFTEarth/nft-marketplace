@@ -415,6 +415,7 @@ const FortunePage = () => {
                   </Flex>
                 </Flex>
                 <Flex
+                  align="center"
                   direction="column"
                   css={{
                     width: '100%',
