@@ -94,16 +94,13 @@ const Wheel = (props: WheelProps) => {
     volume: 0.8
   })
   const [playClock, { stop: stopClock, sound: clockAudio }] = useSound(`/audio/clock.mp3`, {
-    interrupt: true,
     volume: 0.8
   })
   clockAudio?.loop(true)
-
   const [playStart] = useSound(`/audio/game-start.mp3`, {
-    interrupt: true,
     volume: 0.8
   })
-  const [playWheel, { stop: stopAudio, }] = useSound(`/audio/wheel-spin.mp3`, {
+  const [playWheel, { stop: stopWheel,  }] = useSound(`/audio/wheel-spin.mp3`, {
     sprite: spinWheelAudioSpriteMap,
     interrupt: true,
     volume: 0.8
@@ -115,8 +112,6 @@ const Wheel = (props: WheelProps) => {
 
   useEffect(() => {
     if (!enableAudio) {
-      stopClock()
-      stopAudio?.('start')
       return;
     }
 
@@ -129,20 +124,18 @@ const Wheel = (props: WheelProps) => {
     }
 
     if (RoundStatus.Drawn === round?.status) {
-      stopClock?.()
       playWheel?.({ id: 'start' })
     }
   }, [round?.status, round?.roundId, enableAudio])
 
   useEffect(() => {
     if (wheelEnding === 1) {
-      stopAudio?.('start')
       playWheel?.({ id: 'end' })
     }
 
     if (wheelEnding === 2) {
-      stopAudio?.('end')
       playWin?.()
+      setWheelEnding(2)
     }
   }, [wheelEnding, enableAudio])
 
@@ -232,7 +225,7 @@ const Wheel = (props: WheelProps) => {
         }
       }, animationSpeed)
     }
-  }, [round?.status, round?.roundId])
+  }, [round?.status, round?.roundId, winner])
 
   useEffect(() => {
     const chart = chartComponentRef.current?.chart
