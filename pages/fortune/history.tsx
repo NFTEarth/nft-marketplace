@@ -71,11 +71,15 @@ const FortuneHistory = () => {
         total += ((BigInt(d.entry.totalNumberOfEntries) * BigInt(r.valuePerEntry)))
         return d.indice
       })
+
+      if (!claimList[r.roundId].length) {
+        delete claimList[r.roundId]
+      }
     });
 
     setTotalUnclaimed(total);
 
-    return Object.keys(claimList).map((k:string) => [+k, claimList[k].filter(Boolean).map(d => d)])
+    return Object.keys(claimList).map((k:string) => [+k, claimList[k]])
   }, [userWinningRounds])
 
   return (

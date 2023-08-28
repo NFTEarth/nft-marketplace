@@ -17,6 +17,7 @@ const useFortuneCurrentRound = (options?: SWRConfiguration) => {
           roundId
           status
           cutoffTime
+          duration
           maximumNumberOfDeposits
           maximumNumberOfParticipants
           valuePerEntry
