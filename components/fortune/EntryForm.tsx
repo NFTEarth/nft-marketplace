@@ -23,7 +23,7 @@ import SelectionItem from "./SelectionItem";
 import NFTEntry, {SelectionData} from "./NFTEntry";
 import FortuneDepositModal from "./DepositModal";
 import {Round} from "../../hooks/useFortuneRound";
-import ERC20OracleAbi from '../../artifact/ERC20OracleABi.json'
+import ERC20OracleAbi from '../../artifact/ERC20OracleAbi.json'
 import {getUSDAndNativePrices} from "../../utils/price";
 import useUSDAndNativePrice from "../../hooks/useUSDAndNativePrice";
 
