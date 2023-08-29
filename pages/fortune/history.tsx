@@ -30,11 +30,6 @@ import useFortuneUserWon from "../../hooks/useFortuneUserWon";
 import {Deposit, Round} from "../../hooks/useFortuneRound";
 import WithdrawModal from "../../components/fortune/WithdrawModal";
 
-const roundData: any[] = [
-  { roundId: 1, winner: '0x7D3E5dD617EAF4A3d42EA550C41097086605c4aF' },
-  { roundId: 2, winner: '0x7D3E5dD617EAF4A3d42EA550C41097086605c4aF' }
-]
-
 const typeToStatus: Record<string, number | undefined> = {
   "all": undefined,
   "completed": 3,
@@ -48,7 +43,7 @@ const FortuneHistory = () => {
   const { address } = useAccount()
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
-  const { data: userWinningRounds } = useFortuneUserWon(address, {
+  const { data: userWinningRounds } = useFortuneUserWon(address , {
     refreshInterval: 5000
   })
   const data = useFortuneHistory({
@@ -69,7 +64,7 @@ const FortuneHistory = () => {
     let total = 0n;
     (userWinningRounds || []).forEach((r: Round) => {
       claimList[r.roundId] = r.deposits.filter(d => !d.claimed).map((d) => {
-        total += ((BigInt(d.numberOfEntries) * BigInt(r.valuePerEntry)))
+        total += ((BigInt(d.entriesCount) * BigInt(r.valuePerEntry)))
         return d.indice
       })
 

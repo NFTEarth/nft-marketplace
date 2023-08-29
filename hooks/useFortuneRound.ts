@@ -26,7 +26,7 @@ export type Deposit = {
   tokenAmount: number
   tokenId: number
   tokenType: TokenType
-  numberOfEntries: number
+  entriesCount: number
   indice: number
   claimed: boolean
   participant: Participant

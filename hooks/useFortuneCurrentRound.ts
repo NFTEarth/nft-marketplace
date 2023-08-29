@@ -1,6 +1,7 @@
 import {request, RequestDocument} from 'graphql-request'
 import useSWR, {SWRConfiguration} from "swr";
 import {Round} from "./useFortuneRound";
+import fa from "@walletconnect/legacy-modal/dist/cjs/browser/languages/fa";
 
 const subgraphFetcher = <T>(query: RequestDocument) =>
   request<T>('https://api.thegraph.com/subgraphs/name/ryuzaki01/fortune', query)
@@ -10,7 +11,7 @@ type RoundResult = {
 }
 
 const useFortuneCurrentRound = (options?: SWRConfiguration) => {
-  const { data, isLoading } = useSWR<RoundResult>(
+  const { data, mutate, isLoading } = useSWR<RoundResult>(
     `query GetCurrentRound {
         rounds(orderBy: roundId, orderDirection: desc, first: 1) {
           id
@@ -43,15 +44,17 @@ const useFortuneCurrentRound = (options?: SWRConfiguration) => {
       }`,
     subgraphFetcher,
     {
-      revalidateOnFocus: true,
+      revalidateOnFocus: false,
       revalidateIfStale: false,
       revalidateOnReconnect: false,
+      revalidateOnMount: false,
       ...options
     }
   )
 
   return {
     data: data?.rounds?.[0],
+    refetch: mutate,
     isLoading
   };
 }
