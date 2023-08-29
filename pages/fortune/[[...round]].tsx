@@ -83,7 +83,7 @@ const FortunePage = () => {
   const [showEntryForm, setShowEntryForm] = useState(false)
   const [playerWinner, setPlayerWinner] = useState<PlayerType>()
   const prizePotRef = useRef<HTMLDivElement>(null);
-  const [spinning, setSpinning] = useState(false);
+  const [transitionToNewRound, setTransitionToNewRound] = useState(false);
   const confettiRef = useRef<any>(null);
   const router = useRouter()
   const { data: currentRound, refetch: refetchCurrentRound } = useFortuneCurrentRound()
@@ -261,6 +261,15 @@ const FortunePage = () => {
 
     setShowWinner(false)
     setPlayerWinner(undefined)
+    setTransitionToNewRound(false)
+
+    if (roundData?.status === RoundStatus.Cancelled && !router.query.round) {
+      setTransitionToNewRound(true)
+      setTimeout(() => {
+        refetchCurrentRound()
+        setTransitionToNewRound(false)
+      }, 10 * 10000)
+    }
 
     if (roundData?.status === RoundStatus.Open) {
       startCountdown()
@@ -270,6 +279,21 @@ const FortunePage = () => {
       }
     }
   }, [roundData?.status, roundData?.roundId])
+
+  useEffect(() => {
+    if (!!router.query.round) {
+      return;
+    }
+
+    if (showWinner) {
+      setTransitionToNewRound(true)
+      setTimeout(() => {
+        setShowWinner(false)
+        refetchCurrentRound()
+        setTransitionToNewRound(false)
+      }, 10 * 10000)
+    }
+  }, [showWinner])
 
   const handleEnter = useCallback((e: Event) => {
     e.preventDefault()
@@ -430,6 +454,7 @@ const FortunePage = () => {
                     <Wheel
                       countdown={countdown}
                       winner={roundData?.winner as `0x${string}`}
+                      transitionToNewRound={transitionToNewRound}
                       onWheelEnd={(winnerIndex: number) => {
                         setShowWinner(true);
                         setPlayerWinner(players[winnerIndex])
@@ -471,6 +496,9 @@ const FortunePage = () => {
                       )}
                       {roundData?.status === RoundStatus.Cancelled && (
                         <Text style="h5" css={{ color: 'primary', mt: 20 }}>Round Cancelled</Text>
+                      )}
+                      {transitionToNewRound && (
+                        <Text style="subtitle1" css={{ color: 'primary' }}>Loading new round...</Text>
                       )}
                       {showWinner && (
                         <Flex
@@ -609,7 +637,7 @@ const FortunePage = () => {
               </Flex>
               <Flex direction="column" css={{ flex: 0.5 }} >
                 <Text style="h5">{`${yourWinChance}%`}</Text>
-                <Text style="subtitle2">Your Percentage Chance Of Winning</Text>
+                <Text style="subtitle2">Your Win Chance</Text>
               </Flex>
             </Flex>
           </Flex>
@@ -739,7 +767,7 @@ const FortunePage = () => {
               </Flex>
               <Flex direction="column" css={{ flex: 0.5 }} >
                 <Text style="h6">{`${yourWinChance}%`}</Text>
-                <Text style="body3">Your Percentage Chance Of Winning</Text>
+                <Text style="body3">Your Win Chance</Text>
               </Flex>
               <Flex align="start">
                 {roundData?.status === RoundStatus.Open && (
