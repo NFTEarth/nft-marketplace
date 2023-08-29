@@ -251,7 +251,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
                   Accept
                 </Text>
               }
-              buttonProps={{ color: '$primary10' }}
+              buttonProps={{ color: 'primary' }}
               buttonCss={{ fontSize: 14, px: '$4', py: '$2', minHeight: 36 }}
             />
           ) : null}
