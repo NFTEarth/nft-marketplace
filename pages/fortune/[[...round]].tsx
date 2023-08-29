@@ -392,23 +392,23 @@ const FortunePage = () => {
                   <Text>{roundData?.roundId === currentRound?.roundId ? `Current Round` : `Round ${roundData?.roundId || '-'}`}</Text>
                   <Flex css={{ gap: 10 }}>
                     <Link href="/fortune/history" passHref legacyBehavior>
-                      <Button as="a" size="xs" color="secondary">
+                      <Button as="a" size="xs" color="$p">
                         <FontAwesomeIcon icon={faHistory} width={15} height={15}/>
                         {!isMobile && (<Text>History</Text>)}
                       </Button>
                     </Link>
                     <Link href={((+roundData?.roundId - 1) < 1) ? '/fortune' : `/fortune/${+roundData?.roundId - 1}`} legacyBehavior>
-                      <Button size="xs" color="secondary" disabled={!roundData?.roundId || (+roundData?.roundId - 1) < 1}>
+                      <Button size="xs" color="#A879FF" disabled={!roundData?.roundId || (+roundData?.roundId - 1) < 1}>
                         <FontAwesomeIcon icon={faArrowLeft} width={15} height={15}/>
                       </Button>
                     </Link>
                     <Link href={+roundData?.roundId === +(currentRound?.roundId || 1) ? '/fortune' : `/fortune/${+roundData?.roundId + 1}`} legacyBehavior>
-                      <Button size="xs" color="secondary" disabled={!roundData?.roundId || !currentRound || +roundData?.roundId === +(currentRound?.roundId || 1)}>
+                      <Button size="xs" color="#A879FF" disabled={!roundData?.roundId || !currentRound || +roundData?.roundId === +(currentRound?.roundId || 1)}>
                         <FontAwesomeIcon icon={faArrowRight} width={15} height={15}/>
                       </Button>
                     </Link>
                     <Link href="/fortune" legacyBehavior>
-                      <Button size="xs" color="secondary" disabled={!roundData?.roundId || !currentRound || +roundData?.roundId === +(currentRound?.roundId || 1)}>
+                      <Button size="xs" color="#A879FF" disabled={!roundData?.roundId || !currentRound || +roundData?.roundId === +(currentRound?.roundId || 1)}>
                         <FontAwesomeIcon icon={faForwardStep} width={15} height={15}/>
                       </Button>
                     </Link>
@@ -560,7 +560,7 @@ const FortunePage = () => {
                   justify="center"
                   css={{
                     borderRadius: 6,
-                    border: '1px solid $primary10',
+                    border: '1px solid #A879FF',
                     minWidth: 75,
                     minHeight: 38,
                   }}
@@ -611,7 +611,7 @@ const FortunePage = () => {
               </Flex>
               <Flex direction="column" css={{ flex: 0.5 }} >
                 <Text style="h5">{`${yourWinChance}%`}</Text>
-                <Text style="subtitle2">Your Win Chance</Text>
+                <Text style="subtitle2">Your Percentage Change Of Winning/Text>
               </Flex>
             </Flex>
           </Flex>
@@ -741,7 +741,7 @@ const FortunePage = () => {
               </Flex>
               <Flex direction="column" css={{ flex: 0.5 }} >
                 <Text style="h6">{`${yourWinChance}%`}</Text>
-                <Text style="body3">Your Win Chance</Text>
+                <Text style="body3">Your Percentage Change Of Winning</Text>
               </Flex>
               <Flex align="start">
                 {roundData?.status === RoundStatus.Open && (
@@ -750,7 +750,7 @@ const FortunePage = () => {
                     justify="center"
                     css={{
                       borderRadius: 6,
-                      border: '1px solid $primary10',
+                      border: '1px solid #A879FF',
                       minWidth: 75,
                       minHeight: 38,
                     }}
