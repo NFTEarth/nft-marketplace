@@ -392,23 +392,23 @@ const FortunePage = () => {
                   <Text>{roundData?.roundId === currentRound?.roundId ? `Current Round` : `Round ${roundData?.roundId || '-'}`}</Text>
                   <Flex css={{ gap: 10 }}>
                     <Link href="/fortune/history" passHref legacyBehavior>
-                      <Button as="a" size="xs" color="$primary">
+                      <Button as="a" size="xs" color="primary">
                         <FontAwesomeIcon icon={faHistory} width={15} height={15}/>
                         {!isMobile && (<Text>History</Text>)}
                       </Button>
                     </Link>
                     <Link href={((+roundData?.roundId - 1) < 1) ? '/fortune' : `/fortune/${+roundData?.roundId - 1}`} legacyBehavior>
-                      <Button size="xs" color="$primary" disabled={!roundData?.roundId || (+roundData?.roundId - 1) < 1}>
+                      <Button size="xs" color="primary" disabled={!roundData?.roundId || (+roundData?.roundId - 1) < 1}>
                         <FontAwesomeIcon icon={faArrowLeft} width={15} height={15}/>
                       </Button>
                     </Link>
                     <Link href={+roundData?.roundId === +(currentRound?.roundId || 1) ? '/fortune' : `/fortune/${+roundData?.roundId + 1}`} legacyBehavior>
-                      <Button size="xs" color="$primary" disabled={!roundData?.roundId || !currentRound || +roundData?.roundId === +(currentRound?.roundId || 1)}>
+                      <Button size="xs" color="primary" disabled={!roundData?.roundId || !currentRound || +roundData?.roundId === +(currentRound?.roundId || 1)}>
                         <FontAwesomeIcon icon={faArrowRight} width={15} height={15}/>
                       </Button>
                     </Link>
                     <Link href="/fortune" legacyBehavior>
-                      <Button size="xs" color="$primary" disabled={!roundData?.roundId || !currentRound || +roundData?.roundId === +(currentRound?.roundId || 1)}>
+                      <Button size="xs" color="primary" disabled={!roundData?.roundId || !currentRound || +roundData?.roundId === +(currentRound?.roundId || 1)}>
                         <FontAwesomeIcon icon={faForwardStep} width={15} height={15}/>
                       </Button>
                     </Link>
@@ -466,13 +466,13 @@ const FortunePage = () => {
                         <FormatCurrency amount={totalPrizeUsd} />
                       )}
                       {(roundData?.status === RoundStatus.Open && countdown < 1) && (
-                        <Text style="subtitle1" css={{ color: '$primary' }}>Processing...</Text>
+                        <Text style="subtitle1" css={{ color: 'primary' }}>Processing...</Text>
                       )}
                       {[RoundStatus.Drawing].includes(roundData?.status) && (
-                        <Text style="subtitle1" css={{ color: '$primary' }}>Drawing Winner...</Text>
+                        <Text style="subtitle1" css={{ color: 'primary' }}>Drawing Winner...</Text>
                       )}
                       {roundData?.status === RoundStatus.Cancelled && (
-                        <Text style="h5" css={{ color: '$primary', mt: 20 }}>Round Cancelled</Text>
+                        <Text style="h5" css={{ color: 'primary', mt: 20 }}>Round Cancelled</Text>
                       )}
                       {showWinner && (
                         <Flex
@@ -500,7 +500,7 @@ const FortunePage = () => {
                           <Text
                             style="h4"
                             css={{
-                              color: '$primary',
+                              color: 'primary',
                               background: 'linear-gradient(rgb(248, 204, 50) 0%, rgb(248, 204, 50) 50%, rgb(255, 138, 20) 100%)',
                               '-webkit-text-fill-color': 'transparent',
                               '-webkit-background-clip': 'text'
@@ -560,7 +560,7 @@ const FortunePage = () => {
                   justify="center"
                   css={{
                     borderRadius: 6,
-                    border: '1px solid $primary',
+                    border: '1px solid primary',
                     minWidth: 75,
                     minHeight: 38,
                   }}
@@ -574,7 +574,7 @@ const FortunePage = () => {
                   justify="center"
                   css={{
                     borderRadius: 6,
-                    backgroundColor: '$primary',
+                    backgroundColor: 'primary',
                     minWidth: 75,
                     minHeight: 38,
                   }}
@@ -589,7 +589,7 @@ const FortunePage = () => {
                   justify="center"
                   css={{
                     borderRadius: 6,
-                    backgroundColor: '$primary',
+                    backgroundColor: 'primary',
                     minWidth: 75,
                     minHeight: 38,
                   }}
@@ -764,7 +764,7 @@ const FortunePage = () => {
                     justify="center"
                     css={{
                       borderRadius: 6,
-                      backgroundColor: '$primary',
+                      backgroundColor: 'primary',
                       minWidth: 75,
                       minHeight: 38,
                     }}
@@ -779,7 +779,7 @@ const FortunePage = () => {
                     justify="center"
                     css={{
                       borderRadius: 6,
-                      backgroundColor: '$primary',
+                      backgroundColor: 'primary',
                       minWidth: 75,
                       minHeight: 38,
                     }}
