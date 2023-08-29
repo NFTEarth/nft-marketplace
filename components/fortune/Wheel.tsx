@@ -134,25 +134,10 @@ const Wheel = (props: WheelProps) => {
       playStart?.()
     }
 
-    if (RoundStatus.Drawn === status) {
-      playWheel?.({ id: 'start' })
-    }
+    // if (RoundStatus.Drawn === status) {
+    //   playWheel?.({ id: 'start' })
+    // }
   }, [status, roundId, enableAudio])
-
-  useEffect(() => {
-    if (!enableAudio) {
-      return;
-    }
-
-    if (wheelEnding === 1) {
-      playWheel?.({ id: 'end' })
-    }
-
-    if (wheelEnding === 2) {
-      playWin?.()
-      setWheelEnding(3)
-    }
-  }, [wheelEnding, enableAudio])
 
   useEffect(() => {
     const chart = chartComponentRef.current?.chart
@@ -235,21 +220,12 @@ const Wheel = (props: WheelProps) => {
 
         chart.series?.[0]?.update({ startAngle: startAngle }, true, false, false);
 
-        if (diff < (wheelPoint * 10) && wheelEnding === 0) {
-          setWheelEnding(1)
-        }
-
-        // console.log(diff, stopPoint)
-
         if (diff < stopPoint) {
           clearInterval(spinIntervalRef.current);
           onWheelEnd(winnerIndex);
           setHoverPlayerIndex?.(winnerIndex);
           chart.series?.[0]?.update({ startAngle: stopPoint }, true, false, false);
-
-          if (wheelEnding != 1) {
-            setWheelEnding(2);
-          }
+          playWin?.()
         }
       }, animationSpeed)
     }

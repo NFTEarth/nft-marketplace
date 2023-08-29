@@ -15,7 +15,9 @@ const StyledToggleGroupItem = styled(ToggleGroupItem, {
   background: '$gray3',
   color: '$gray12',
   p: '$3',
-  '&[data-state=on]': { backgroundColor: '$primary5' },
+  '&[data-state=on]': {
+    backgroundColor: '$primary13'
+  },
 })
 
 export {

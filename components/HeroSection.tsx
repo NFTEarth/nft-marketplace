@@ -64,7 +64,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
             NFTEarth
           </Text>
           <Image
-            src="/res2.png"
+            src="/nftearth-icon.svg"
             width={55}
             height={55}
             alt="NFTEarth Logo"

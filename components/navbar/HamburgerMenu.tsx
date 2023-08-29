@@ -1,41 +1,41 @@
-import { Anchor, Box, Button, Flex, Text } from 'components/primitives'
-import { Avatar } from 'components/primitives/Avatar'
+import {Anchor, Box, Button, Flex, Text} from 'components/primitives'
+import {Avatar} from 'components/primitives/Avatar'
 import * as RadixDialog from '@radix-ui/react-dialog'
 import {
   faBars,
   faXmark,
   faRightFromBracket,
 } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTwitter } from '@fortawesome/free-brands-svg-icons'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faTwitter} from '@fortawesome/free-brands-svg-icons'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useAccount, useDisconnect } from 'wagmi'
-import { ConnectWalletButton } from 'components/ConnectWalletButton'
-import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
-import { FullscreenModal } from 'components/common/FullscreenModal'
-import { useENSResolver, useMarketplaceChain } from 'hooks'
+import {useAccount, useDisconnect} from 'wagmi'
+import {ConnectWalletButton} from 'components/ConnectWalletButton'
+import Jazzicon, {jsNumberForAddress} from 'react-jazzicon'
+import {FullscreenModal} from 'components/common/FullscreenModal'
+import {useENSResolver, useMarketplaceChain} from 'hooks'
 import ThemeSwitcher from 'components/navbar/ThemeSwitcher'
 import Wallet from 'components/navbar/Wallet'
 
 const HamburgerMenu = () => {
-  const { address, isConnected } = useAccount()
+  const {address, isConnected} = useAccount()
   const {
     avatar: ensAvatar,
     shortAddress,
     shortName: shortEnsName,
   } = useENSResolver(address)
-  const { disconnect } = useDisconnect()
-  const { routePrefix } = useMarketplaceChain()
+  const {disconnect} = useDisconnect()
+  const {routePrefix} = useMarketplaceChain()
 
   const trigger = (
     <Button
-      css={{ justifyContent: 'center', width: '44px', height: '44px' }}
+      css={{justifyContent: 'center', width: '44px', height: '44px'}}
       type="button"
       size="small"
       color="gray3"
     >
-      <FontAwesomeIcon icon={faBars} width={16} height={16} />
+      <FontAwesomeIcon icon={faBars} width={16} height={16}/>
     </Button>
   )
 
@@ -59,9 +59,9 @@ const HamburgerMenu = () => {
           justify="between"
         >
           <Link href="/">
-            <Box css={{ width: 34, cursor: 'pointer' }}>
+            <Box css={{width: 34, cursor: 'pointer'}}>
               <Image
-                src="/reservoirLogo.svg"
+                src="/nftearth-icon.svg"
                 width={34}
                 height={39}
                 alt="NFTEarth"
@@ -83,20 +83,20 @@ const HamburgerMenu = () => {
                 },
               }}
             >
-              <FontAwesomeIcon icon={faXmark} width={16} height={16} />
+              <FontAwesomeIcon icon={faXmark} width={16} height={16}/>
             </Flex>
           </RadixDialog.Close>
         </Flex>
         {isConnected ? (
-        <Flex
-          css={{
-            flexDirection: 'column',
-            justifyContent: 'flex-start',
-            height: '100%',
-            py: '$5',
-            px: '$4',
-          }}
-        >
+          <Flex
+            css={{
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+              height: '100%',
+              py: '$5',
+              px: '$4',
+            }}
+          >
             <Link href={`/portfolio/${address}`} legacyBehavior>
               <Flex
                 css={{
@@ -106,16 +106,16 @@ const HamburgerMenu = () => {
                   pb: '$4',
                 }}
               >
-                <Flex css={{ alignItems: 'center' }}>
+                <Flex css={{alignItems: 'center'}}>
                   {ensAvatar ? (
-                    <Avatar size="medium" src={ensAvatar} />
+                    <Avatar size="medium" src={ensAvatar}/>
                   ) : (
                     <Jazzicon
                       diameter={36}
                       seed={jsNumberForAddress(address as string)}
                     />
                   )}
-                  <Text style="subtitle1" css={{ ml: '$2' }}>
+                  <Text style="subtitle1" css={{ml: '$2'}}>
                     {shortEnsName ? shortEnsName : shortAddress}
                   </Text>
                 </Flex>
@@ -134,7 +134,7 @@ const HamburgerMenu = () => {
                 Collections
               </Text>
             </Link>
-            <Link href="/quests" legacyBehavior>
+            <Link href="/fortune" legacyBehavior>
               <Text
                 style="subtitle1"
                 css={{
@@ -144,22 +144,35 @@ const HamburgerMenu = () => {
                   pt: '24px',
                 }}
               >
-                Quests
-            </Text>
-          </Link>
-          <Link href="/bridge" legacyBehavior>
-            <Text
-              style="subtitle1"
-              css={{
-                borderBottom: '1px solid $gray4',
-                cursor: 'pointer',
-                pb: '$4',
-                pt: '24px',
-              }}
-            >
-              Bridge
-            </Text>
-          </Link>
+                Fortune
+              </Text>
+            </Link>
+            <Link href="/bridge" legacyBehavior>
+              <Text
+                style="subtitle1"
+                css={{
+                  borderBottom: '1px solid $gray4',
+                  cursor: 'pointer',
+                  pb: '$4',
+                  pt: '24px',
+                }}
+              >
+                Bridge
+              </Text>
+            </Link>
+            <Link href="https://www.sushi.com/pool/42161:0xd2aaa8fc5c39dbe68344bc42d4513ea344e5d696" target="_blank" legacyBehavior>
+              <Text
+                style="subtitle1"
+                css={{
+                  borderBottom: '1px solid $gray4',
+                  cursor: 'pointer',
+                  pb: '$4',
+                  pt: '24px',
+                }}
+              >
+                Rewards
+              </Text>
+            </Link>
             <Link href="/portfolio" legacyBehavior>
               <Flex
                 direction="column"
@@ -177,7 +190,7 @@ const HamburgerMenu = () => {
                 </Text>
               </Flex>
             </Link>
-            <Wallet />
+            <Wallet/>
             <Flex
               css={{
                 justifyContent: 'space-between',
@@ -196,7 +209,7 @@ const HamburgerMenu = () => {
               >
                 Logout
               </Text>
-              <Box css={{ color: '$gray10' }}>
+              <Box css={{color: '$gray10'}}>
                 <FontAwesomeIcon
                   icon={faRightFromBracket}
                   width={16}
@@ -274,7 +287,7 @@ const HamburgerMenu = () => {
               </Link>
             </Flex>
             <Box>
-              <ConnectWalletButton />
+              <ConnectWalletButton/>
             </Box>
           </Flex>
         )}
@@ -290,12 +303,12 @@ const HamburgerMenu = () => {
         >
           <a href="https://twitter.com/NFTEarth_L2" target="_blank">
             <Button
-              css={{ justifyContent: 'center', width: '44px', height: '44px' }}
+              css={{justifyContent: 'center', width: '44px', height: '44px'}}
               type="button"
               size="small"
               color="gray3"
             >
-              <FontAwesomeIcon icon={faTwitter} width={20} height={20} />
+              <FontAwesomeIcon icon={faTwitter} width={20} height={20}/>
             </Button>
           </a>
         </Flex>

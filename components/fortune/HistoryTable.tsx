@@ -72,7 +72,7 @@ type RoundTableRowProps = {
 }
 
 const mobileTemplateColumn = '1fr'
-const desktopTemplateColumn = '0.2fr 1fr repeat(5, 0.3fr) 0.75fr 0.2fr'
+const desktopTemplateColumn = '0.2fr 0.7fr repeat(5, 0.4fr) 0.75fr 0.2fr'
 
 const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
   const { address } = useAccount();
@@ -108,7 +108,7 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
       href={`/fortune/${round.roundId}`}
       key={round.roundId}
       css={{
-        px: '$2',
+        px: '$3',
         gridTemplateColumns: mobileTemplateColumn,
         '@lg': {
           gridTemplateColumns: desktopTemplateColumn,
@@ -403,14 +403,14 @@ const TableHeading = () => {
         },
         position: 'sticky',
         top: NAVBAR_HEIGHT,
-        backgroundColor: '$primary3',
-        px: '$2',
+        backgroundColor: '$primary14',
+        px: '$3',
         zIndex: 1,
       }}
     >
       {headings.map((heading) => (
         <TableCell key={heading}>
-          <Text style="subtitle3" color="subtle">
+          <Text style="subtitle2" color="dark">
             {heading}
           </Text>
         </TableCell>

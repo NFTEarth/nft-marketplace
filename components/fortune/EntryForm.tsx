@@ -154,7 +154,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
             </Button>
           )}
           <Text style="h5">Select Entries</Text>
-          <Button size="xs" color="secondary" onClick={onClose}>
+          <Button size="xs" color="primary" onClick={onClose}>
             <FontAwesomeIcon icon={faClose} width={16} height={16} />
           </Button>
         </Flex>
@@ -387,7 +387,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
           }}
         >
           <Text style="h5">{`Selections(${(Object.keys(selections)).length})`}</Text>
-          <Button size="xs" color="secondary" onClick={() => {
+          <Button size="xs" color="primary" onClick={() => {
             setSelections?.({})
           }}>
             Clear
