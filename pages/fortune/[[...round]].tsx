@@ -521,7 +521,7 @@ const FortunePage = () => {
                   </Box>
                 </Flex>
                 <Flex justify="end">
-                  <Button color="secondary" size="xs" onClick={() => {
+                  <Button color="primary" size="xs" onClick={() => {
                     setEnableAudio?.(!enableAudio)
                   }}>
                     <FontAwesomeIcon
@@ -629,7 +629,7 @@ const FortunePage = () => {
                 <Flex justify="between" align="center">
                   <Text>Prize Pool</Text>
                   <Flex css={{ gap: 10 }}>
-                    <Button size="xs" color="secondary" onClick={() => {
+                    <Button size="xs" color="primary" onClick={() => {
                       if (prizePotRef.current) {
                         prizePotRef.current.scrollBy(-100, 0)
                       }
@@ -750,7 +750,7 @@ const FortunePage = () => {
                     justify="center"
                     css={{
                       borderRadius: 6,
-                      border: '1px solid #A879FF',
+                      border: '1px solid primary',
                       minWidth: 75,
                       minHeight: 38,
                     }}
