@@ -82,7 +82,6 @@ const ClaimModal: FC<ClaimModalProps> = ({ open: defaultOpen, rewards, disabled,
       const [account] = await walletClient.getAddresses()
 
       if (rewards.length > 0) {
-        console.log(JSON.stringify(rewards))
         const protocolFeeOwed = await publicClient.readContract({
           address: fortuneChain?.address as `0x${string}`,
           abi: FortuneAbi,

@@ -74,16 +74,11 @@ const getUpstreamUSDPrice = async (
   try {
     const date = new Date(timestamp * 1000);
     const truncatedTimestamp = Math.floor(date.valueOf() / 1000);
-
     const currency = await getCurrency(currencyAddress, chainId);
     const coingeckoCurrencyId = currency?.metadata?.coingeckoCurrencyId;
 
     if (coingeckoCurrencyId) {
-      const day = date.getDate();
-      const month = date.getMonth() + 1;
-      const year = date.getFullYear();
-
-      const url = `https://api.coingecko.com/api/v3/coins/${coingeckoCurrencyId}/history?date=${day}-${month}-${year}`;
+      const url = `https://api.coingecko.com/api/v3/coins/${coingeckoCurrencyId}`;
       console.info("prices", `Fetching price from Coingecko: ${url}`);
 
       const result: {
@@ -92,7 +87,6 @@ const getUpstreamUSDPrice = async (
         };
       } = await fetch(url)
         .then(response => response.json())
-        .then((response) => response.data);
 
       const usdPrice = result?.market_data?.current_price?.["usd"];
       if (usdPrice) {
@@ -216,7 +210,7 @@ export const getUSDAndNativePrices = async (
     }
 
     const currency = await getCurrency(currencyAddress, chainId);
-    if (currency.decimals && currencyUSDPrice) {
+    if (currency && currency.decimals && currencyUSDPrice) {
       const currencyUnit = BigNumber.from(10).pow(currency.decimals);
       usdPrice = BigNumber.from(price).mul(currencyUSDPrice.value).div(currencyUnit).toString();
       if (nativeUSDPrice) {

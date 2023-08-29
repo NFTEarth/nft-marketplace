@@ -15,7 +15,7 @@ import {
   http,
   parseEther
 } from "viem";
-import {FC, SyntheticEvent, useContext, useEffect, useRef, useState} from "react";
+import {FC, SyntheticEvent, useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import {useAccount, useContractRead, useContractWrite, useWaitForTransaction} from "wagmi";
 import TransferManagerABI from "../../artifact/TransferManagerABI.json";
 import FortuneAbi from "../../artifact/FortuneAbi.json";
@@ -43,6 +43,7 @@ type FortuneData = {
 const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
   const { roundId } = props;
   const { address } = useAccount()
+  const [ step, setStep] = useState(0)
   const marketplaceChain = useMarketplaceChain()
   const { data: { round, countdown, selections, valueEth }, } = useFortune<FortuneData>(q => q )
   const fortuneChain = FORTUNE_CHAINS.find(c => c.id === marketplaceChain.id);
@@ -77,11 +78,8 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
     args: [[fortuneChain?.address]],
   })
 
-  const { writeAsync, data: sendData, isLoading, error: error } = useContractWrite({
-    abi: FortuneAbi,
-    address: fortuneChain?.address as `0x${string}`,
-    functionName: 'deposit',
-    args: [roundId, Object.keys(selections).map(s => {
+  const args = useMemo(() => {
+    return [roundId, Object.keys(selections).map(s => {
       const selection = selections[s];
       const isErc20 = selection.type === 'erc20'
       const isEth = isErc20 && selection.contract === AddressZero
@@ -99,7 +97,14 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
           ]
         ])
       ];
-    })],
+    })]
+  }, [selections])
+
+  const { writeAsync, data: sendData, isLoading, error: error } = useContractWrite({
+    abi: FortuneAbi,
+    address: fortuneChain?.address as `0x${string}`,
+    functionName: 'deposit',
+    args:  args,
     value: BigInt(parseEther(`${valueEth === '' ? 0 : +valueEth}`).toString())
   })
 
@@ -108,22 +113,25 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
     enabled: !!sendData
   })
 
-  const showModal = !!error || !!approvalError || isApprovalLoading || isLoading || isLoadingTransaction || isSuccess || !!requireApprovals
+  const showModal = !!error || !!approvalError || isApprovalLoading || isLoading || isLoadingTransaction || isSuccess || !!requireApprovals || step > 0
 
   useEffect(() => {
     setOpenModal(showModal);
   }, [showModal])
 
 
-  const handleDeposit = async (e?: SyntheticEvent) => {
+  const handleDeposit = useCallback(async (e?: SyntheticEvent) => {
     e?.preventDefault();
-    setOpenModal(true);
+    setStep(1);
     try {
       if (!isApproved) {
+        setStep(2);
         await grantApproval?.()
         await refetchApproval?.()
         return;
       }
+
+      setStep(3);
 
       const selects =  [...Object.keys(selections)
         .filter((p) => !selections[p].approved)]
@@ -136,7 +144,10 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
         const data = await publicClient.readContract<typeof selectionAbi, typeof selectionFunc>({
           address: selection.contract as `0x${string}`,
           abi: selectionAbi,
-          functionName: selectionFunc
+          functionName: selectionFunc,
+          ...(selection.type === 'erc20' ? {
+            args: [address, fortuneChain?.transferManager]
+          } : {})
         })
 
         if (selection.type === 'erc20' && (data as bigint) >= (selection.values?.[0] || BigInt(0))) {
@@ -154,7 +165,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
           abi: selectionAbi,
           functionName: selectionApprovalFunc,
           args: selection.type === 'erc20' ?
-            [fortuneChain?.address as `0x${string}`, 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff] :
+            [fortuneChain?.address as `0x${string}`, selection.values?.[0]] :
             [fortuneChain?.address as `0x${string}`, true],
           account
         })
@@ -163,8 +174,9 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
         requireApprovals -= 1
       }
 
+      setStep(4);
       await writeAsync?.()
-
+      setStep(0);
     } catch (err: any) {
       if (err instanceof BaseError) {
         const revertError = err.walk(err => err instanceof ContractFunctionRevertedError)
@@ -175,12 +187,18 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
             status: 'error',
             description: errorName
           })
+        } else {
+          addToast?.({
+            title: 'Error',
+            status: 'error',
+            description: err.message
+          })
         }
       }
       setOpenModal(true);
     }
     // setLoading(false)
-  }
+  }, [selections])
 
   const trigger = (
     <Flex
@@ -233,7 +251,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
             }}
           />
         )}
-        {(isLoading || isApprovalLoading) && !error && (
+        {(isLoading || isApprovalLoading || step > 0) && !error && (
           <Flex css={{ height: '100%', py: '$4' }} align="center">
             <LoadingSpinner />
           </Flex>

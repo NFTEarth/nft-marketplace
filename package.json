@@ -47,7 +47,7 @@
     "highcharts-react-official": "^3.2.0",
     "howler": "^2.2.3",
     "lodash": "^4.17.21",
-    "mongodb": "^5.7.0",
+    "mongodb": "5.1.0",
     "next": "13.0",
     "nprogress": "^0.2.0",
     "oauth-1.0a": "^2.2.6",

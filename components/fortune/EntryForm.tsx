@@ -1,27 +1,31 @@
-import {FC, SyntheticEvent, useContext, useEffect, useRef, useState} from "react";
+import {FC, useEffect, useRef, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {useUserTokens} from '@reservoir0x/reservoir-kit-ui'
+import {useUserTokens,  } from '@reservoir0x/reservoir-kit-ui'
 import {faClose, faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import {AddressZero} from "@ethersproject/constants";
 import {parseUnits} from "ethers";
-import {useIntersectionObserver} from "usehooks-ts";
+import {useDebounce, useIntersectionObserver} from "usehooks-ts";
 import {
   useAccount,
   useBalance,
 } from "wagmi";
 import {
-  formatEther,
+  createPublicClient,
+  formatEther, http,
   parseEther
 } from "viem";
 import {useMediaQuery} from "react-responsive";
 
 import NumericalInput from "../bridge/NumericalInput";
-import {Button, CryptoCurrencyIcon, Flex, FormatCryptoCurrency, Text} from "../primitives";
+import {Button, CryptoCurrencyIcon, Flex, FormatCryptoCurrency, FormatCurrency, Text} from "../primitives";
 import {useFortune, useMarketplaceChain, useMounted} from "hooks";
 import SelectionItem from "./SelectionItem";
 import NFTEntry, {SelectionData} from "./NFTEntry";
 import FortuneDepositModal from "./DepositModal";
 import {Round} from "../../hooks/useFortuneRound";
+import ERC20OracleAbi from '../../artifact/ERC20OracleABi.json'
+import {getUSDAndNativePrices} from "../../utils/price";
+import useUSDAndNativePrice from "../../hooks/useUSDAndNativePrice";
 
 type EntryProps = {
   roundId: number,
@@ -40,6 +44,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
   const { address } = useAccount()
   const [showTokenEntry, setShowTokenEntry] = useState(false)
   const [valueNFTE, setValueNFTE] = useState<string>('')
+  const [NFTEPrice, setNFTEPrice] = useState<bigint>(BigInt(0))
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
   const {
@@ -64,6 +69,37 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
     address,
     chainId: marketplaceChain.id
   })
+  const nfteBalance = useBalance({
+    address,
+    token: '0x51b902f19a56f0c8e409a34a215ad2673edf3284',
+    chainId: marketplaceChain.id
+  })
+  const debouncedValueNFTE = useDebounce(valueNFTE, 500)
+  const { data: priceData } = useUSDAndNativePrice({
+    chainId: marketplaceChain.id,
+    contract: '0x51b902f19a56f0c8e409a34a215ad2673edf3284',
+    price: parseEther(`${+debouncedValueNFTE}`)
+  })
+
+  const publicClient = createPublicClient({
+    chain: marketplaceChain,
+    transport: http()
+  })
+
+  useEffect(() => {
+    publicClient.readContract({
+      address: '0x896397f72bd5c207cab95740d48ca76acf960b16',
+      abi: ERC20OracleAbi,
+      functionName: 'getTWAP',
+      args: [
+        '0x51b902f19a56f0c8e409a34a215ad2673edf3284',
+        3600
+      ]
+    }).then(async (d) => {
+      setNFTEPrice(d as bigint)
+    })
+  }, [])
+
   const { data: { round, valueEth, selections }, setSelections, setValueEth } = useFortune<FortuneData>(q => q)
   const minimumEntry = BigInt(round?.valuePerEntry || 0)
   const filteredTokens = tokens.filter(t => t.token?.kind === 'erc721' && BigInt(t.token?.collection?.floorAskPrice?.amount?.raw || '0') > minimumEntry)
@@ -115,7 +151,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
         type: 'erc20',
         name: 'NFTE',
         contract: '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
-        values: [BigInt(parseEther(`${valueNFTE === '' ? 0 : +valueNFTE}`).toString())],
+        values: [BigInt(parseEther(`${valueNFTE === '' ? 0 : +valueNFTE}`))],
         approved: false,
       }
     })
@@ -308,7 +344,6 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
                   align="center"
                   justify="between"
                 >
-
                   <Text>ETH in wallet:</Text>
                   <Flex align="center" css={{ gap: 10 }}>
                     {/*<Text style="body3">{`(${valueEth})`}</Text>*/}
@@ -321,50 +356,65 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
                   </Flex>
                 </Flex>
               </Flex>
-              {/*<Flex*/}
-              {/*  direction="column"*/}
-              {/*  css={{*/}
-              {/*    gap: 10,*/}
-              {/*    borderBottom: '1px solid',*/}
-              {/*    borderBottomColor: '$gray5',*/}
-              {/*    p: 16*/}
-              {/*  }}*/}
-              {/*>*/}
-              {/*  <Text style="h6">Add NFTE OFT</Text>*/}
-              {/*  <NumericalInput*/}
-              {/*    value={valueNFTE}*/}
-              {/*    onUserInput={handleSetNFTEValue}*/}
-              {/*    icon={<Button size="xs" color="primary" onClick={handleAddNFTE}>Add</Button>}*/}
-              {/*    iconStyles={{*/}
-              {/*      top: 4,*/}
-              {/*      right: 4,*/}
-              {/*      left: 'auto'*/}
-              {/*    }}*/}
-              {/*    containerCss={{*/}
-              {/*      width: '100%'*/}
-              {/*    }}*/}
-              {/*    css={{*/}
-              {/*      pl: 20,*/}
-              {/*      pr: 70,*/}
-              {/*      boxShadow: 'inset 0 0 0 2px $$focusColor',*/}
-              {/*      textAlign: 'right',*/}
-              {/*      '&:hover': {*/}
-              {/*        backgroundColor: '$gray4'*/}
-              {/*      }*/}
-              {/*    }}*/}
-              {/*  />*/}
-              {/*  <Flex*/}
-              {/*    align="center"*/}
-              {/*    justify="between"*/}
-              {/*  >*/}
-              {/*    <Text>NFTE OFT in wallet:</Text>*/}
-              {/*    <Flex align="center" css={{ gap: 10 }}>*/}
-              {/*      <Text style="body3">{`($1,615.9)`}</Text>*/}
-              {/*      <Text style="subtitle2">{`${valueNFTE} NFTE`}</Text>*/}
-              {/*      <CryptoCurrencyIcon address="0x51B902f19a56F0c8E409a34a215AD2673EDF3284" chainId={42161} css={{ height: 20 }} />*/}
-              {/*    </Flex>*/}
-              {/*  </Flex>*/}
-              {/*</Flex>*/}
+              <Flex
+                direction="column"
+                css={{
+                  gap: 10,
+                  borderBottom: '1px solid',
+                  borderBottomColor: '$gray5',
+                  p: 16
+                }}
+              >
+                <Flex justify="between">
+                  <Text style="h6">Add NFTE OFT</Text>
+                  <Flex>
+                    <FormatCryptoCurrency
+                      amount={priceData?.nativePrice}
+                      textStyle="subtitle2"
+                      logoHeight={16}
+                    />
+                    <Text>{` = `}</Text>
+                  </Flex>
+                </Flex>
+                <NumericalInput
+                  value={valueNFTE}
+                  onUserInput={handleSetNFTEValue}
+                  icon={<Button size="xs" color="primary" disabled={BigInt(round.valuePerEntry || BigInt(0)) > (priceData?.nativePrice || BigInt(0))} onClick={handleAddNFTE}>Add</Button>}
+                  iconStyles={{
+                    top: 4,
+                    right: 4,
+                    left: 'auto'
+                  }}
+                  containerCss={{
+                    width: '100%'
+                  }}
+                  css={{
+                    pl: 20,
+                    pr: 70,
+                    boxShadow: 'inset 0 0 0 2px $$focusColor',
+                    textAlign: 'right',
+                    '&:hover': {
+                      backgroundColor: '$gray4'
+                    }
+                  }}
+                />
+                <Flex
+                  align="center"
+                  justify="between"
+                >
+                  <Text>NFTE OFT in wallet:</Text>
+                  <Flex align="center" css={{ gap: 10 }}>
+                    {/*<Text style="body3">{`($${formatEther(priceData?.usdPrice || BigInt(0), 'wei')})`}</Text>*/}
+                    <FormatCryptoCurrency
+                      amount={nfteBalance.data?.value}
+                      decimals={nfteBalance.data?.decimals}
+                      address="0x51b902f19a56f0c8e409a34a215ad2673edf3284"
+                      textStyle="subtitle2"
+                      logoHeight={16}
+                    />
+                  </Flex>
+                </Flex>
+              </Flex>
             </Flex>
           )}
         </Flex>
