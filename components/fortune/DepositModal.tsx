@@ -86,29 +86,16 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
       const isErc20 = selection.type === 'erc20'
       const isEth = (isErc20 && selection.contract === AddressZero) || selection.type === 'eth'
 
-      if (isEth || isErc20) {
-        return [
-          isEth ? 0 : 1,
-          selection.contract,
-          selection?.values || [BigInt(0)],
-          [
-            '0x0000000000000000000000000000000000000000000000000000000000000000',
-            '0x0000000000000000000000000000000000000000000000000000000000000000',
-            0,
-            '0x0000000000000000000000000000000000000000000000000000000000000000'
-          ]
-        ]
-      }
-
       return [
-        2,
+        isEth ? 0 : isErc20 ? 1 : 2,
         selection.contract,
-        selection?.tokenIds || [BigInt(0)],
+        (isErc20 || isEth) ? selection?.values || [BigInt(0)] :
+          selection?.tokenIds || [BigInt(0)],
         [
-          selection?.reservoirOracleFloor?.id as string,
-          selection?.reservoirOracleFloor?.payload as string,
-          selection?.reservoirOracleFloor?.timestamp as number,
-          selection?.reservoirOracleFloor?.signature as string
+          selection?.reservoirOracleFloor?.id || '0x0000000000000000000000000000000000000000000000000000000000000000' as string,
+          selection?.reservoirOracleFloor?.payload || '0x0000000000000000000000000000000000000000000000000000000000000000' as string,
+          selection?.reservoirOracleFloor?.timestamp || 0 as number,
+          selection?.reservoirOracleFloor?.signature || '0x0000000000000000000000000000000000000000000000000000000000000000' as string
         ]
       ]
     })]
@@ -197,7 +184,8 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
         abi: FortuneAbi,
         functionName: 'deposit',
         args: args,
-        account: address
+        account: address,
+        value: BigInt(parseEther(`${valueEth === '' ? 0 : +valueEth}`).toString()),
       })
 
       const hash = await walletClient.writeContract(request)
