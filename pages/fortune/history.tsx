@@ -163,7 +163,7 @@ const FortuneHistory = () => {
                     <Text>Completed</Text>
                   </ToggleGroupItem>
                   <ToggleGroupItem value="cancelled" css={{ p: '$2' }}>
-                    <Text>Canceled</Text>
+                    <Text>Cancelled</Text>
                   </ToggleGroupItem>
                 </ToggleGroup>
                 <Flex
