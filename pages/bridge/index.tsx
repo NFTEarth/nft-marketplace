@@ -248,7 +248,7 @@ const BridgePage = () => {
           }}>
           <Flex css={{
             p: '$4',
-            border: '1px solid $primary14',
+            border: '1px solid $gray4',
             background: '$gray3',
             borderRadius: 8,
             gap: 30,
@@ -261,8 +261,7 @@ const BridgePage = () => {
               justify="center"
             >
               <Text style="h4" as="h2">
-                NFTE Omnichain Bridge <br>
-                Powered by LayerZero </br>
+                NFTE Omnichain Bridge
               </Text>
             </Flex>
             <Flex
@@ -292,7 +291,7 @@ const BridgePage = () => {
                   }}
                 >
                   <Flex css={{ width: '100%' }}>
-                    <Text>{`NFTE Available : ${formatBN(nfteBalance?.result?.toString() || 0, 4, 18 || 10)}`}</Text>
+                    <Text>{`Available : ${formatBN(nfteBalance?.result?.toString() || 0, 4, 18 || 10)}`}</Text>
                   </Flex>
                   <Flex align="center" justify="center" css={{ gap: 20 }}>
                     <Select
@@ -333,7 +332,7 @@ const BridgePage = () => {
                       ))}
                     </Select>
                   </Flex>
-                  <Text css={{ textAlign: 'center' }}>{`Bridge NFTE from ${chain.name} to ${toChain.name}`}</Text>
+                  <Text css={{ textAlign: 'center' }}>{`Bridge from ${chain.name} to ${toChain.name}`}</Text>
                   <Slider max={100} step={1} value={[bridgePercent]} onValueChange={val => setBridgePercent(val[0])} css={{ py: 20, width: 300 }}/>
                   <Box css={{ position: 'relative' }}>
                     <NumericalInput
@@ -375,7 +374,7 @@ const BridgePage = () => {
                       <Text as="h4">Bridging...</Text>
                     )}
                     {isSuccess && (
-                      <Text css={{ color: '$primary14'}}>NFTE bridging complete. Check your wallet address on the destination chain block explorer or LayerZero Scan to view the transaction details.</Text>
+                      <Text css={{ color: '$primary14'}}>NFTE bridging complete. Check your address on the destination chain or LayerZero Scan to view the Tx details.</Text>
                     )}
                   </Flex>
                 </Flex>
