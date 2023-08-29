@@ -82,20 +82,20 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
     return [roundId, Object.keys(selections).map(s => {
       const selection = selections[s];
       const isErc20 = selection.type === 'erc20'
-      const isEth = isErc20 && selection.contract === AddressZero
+      const isEth = (isErc20 && selection.contract === AddressZero) || selection.type === 'eth'
 
       return [
         isEth ? 0 : (isErc20 ? 1 : 2),
         selection.contract,
         isErc20 ? selection?.values || 0 : selection?.tokenIds || 0,
-        ...(isErc20 ? [] : [
+      ...((!isErc20 && !isEth) ? [
           [
-            selection.reservoirOracleFloor?.id as string,
-            selection.reservoirOracleFloor?.payload as string,
-            selection.reservoirOracleFloor?.timestamp as number,
-            selection.reservoirOracleFloor?.signature as string
+            selection?.reservoirOracleFloor?.id as string,
+            selection?.reservoirOracleFloor?.payload as string,
+            selection?.reservoirOracleFloor?.timestamp as number,
+            selection?.reservoirOracleFloor?.signature as string
           ]
-        ])
+        ] : [])
       ];
     })]
   }, [selections])
