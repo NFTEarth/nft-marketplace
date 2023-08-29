@@ -1,4 +1,4 @@
-<h3 align="center">NFTEarth Marketplace v2</h3>
+<h3 align="center">NFTEarth</h3>
   <p align="center">
     
 Open-source NFT marketplace built on top of Reservoir Protocol.
