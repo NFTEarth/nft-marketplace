@@ -611,7 +611,7 @@ const FortunePage = () => {
               </Flex>
               <Flex direction="column" css={{ flex: 0.5 }} >
                 <Text style="h5">{`${yourWinChance}%`}</Text>
-                <Text style="subtitle2">Your Percentage Change Of Winning/Text>
+                <Text style="subtitle2">Your Percentage Chance Of Winning</Text>
               </Flex>
             </Flex>
           </Flex>
@@ -741,7 +741,7 @@ const FortunePage = () => {
               </Flex>
               <Flex direction="column" css={{ flex: 0.5 }} >
                 <Text style="h6">{`${yourWinChance}%`}</Text>
-                <Text style="body3">Your Percentage Change Of Winning</Text>
+                <Text style="body3">Your Percentage Chance Of Winning</Text>
               </Flex>
               <Flex align="start">
                 {roundData?.status === RoundStatus.Open && (
