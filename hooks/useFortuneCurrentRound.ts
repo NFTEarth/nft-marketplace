@@ -33,7 +33,7 @@ const useFortuneCurrentRound = (options?: SWRConfiguration) => {
             tokenAmount
             tokenId
             tokenType
-            numberOfEntries
+            entriesCount
             indice
             claimed
             participant {
@@ -44,10 +44,10 @@ const useFortuneCurrentRound = (options?: SWRConfiguration) => {
       }`,
     subgraphFetcher,
     {
-      revalidateOnFocus: false,
+      revalidateOnFocus: true,
       revalidateIfStale: false,
       revalidateOnReconnect: false,
-      revalidateOnMount: false,
+      revalidateOnMount: true,
       ...options
     }
   )

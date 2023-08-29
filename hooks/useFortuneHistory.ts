@@ -55,7 +55,7 @@ const useFortuneHistory = (filter : RoundHistoryFilter, options?: SWRInfiniteCon
             tokenAmount
             tokenId
             tokenType
-            numberOfEntries
+            entriesCount
             indice
             claimed
             participant {
