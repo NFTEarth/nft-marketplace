@@ -92,9 +92,8 @@ const SelectionItem: FC<dataItemProps> = ({ data, onApprove }) => {
             }}
           >{data.name}</Text>
           <FormatCryptoCurrency
-            amount={data.value}
+            amount={data.values?.[0]}
             address={data.contract}
-            decimals={18}
             textStyle="h5"
             logoHeight={15}
           />

@@ -1,7 +1,7 @@
-import { Interface } from "@ethersproject/abi";
-import { Contract } from "@ethersproject/contracts";
+
 import db from "lib/db";
 import {OFT_CHAINS} from "./chains";
+import {AlchemyProvider, Interface, Contract} from "ethers";
 
 const currency = db.collection('currency')
 
@@ -75,7 +75,7 @@ export const getCurrency = async (currencyAddress: string, chainId: number): Pro
     }
   }
 
-  return CURRENCY_MEMORY_CACHE.get(currencyAddress)!;
+  return CURRENCY_MEMORY_CACHE.get(`${currencyAddress}:${chainId}`)!;
 };
 
 export const tryGetCurrencyDetails = async (currencyAddress: string, chainId: number) => {
@@ -86,7 +86,8 @@ export const tryGetCurrencyDetails = async (currencyAddress: string, chainId: nu
     "function decimals() view returns (uint8)",
   ]);
 
-  const contract = new Contract(currencyAddress, iface);
+  const provider = new AlchemyProvider(chainId, process.env.NEXT_PUBLIC_ALCHEMY_ID);
+  const contract = new Contract(currencyAddress, iface, provider);
   const name = await contract.name();
   const symbol = await contract.symbol();
   const decimals = await contract.decimals();
@@ -98,8 +99,7 @@ export const tryGetCurrencyDetails = async (currencyAddress: string, chainId: nu
     const result: { id?: string; image?: { large?: string } } = await fetch(
         `https://api.coingecko.com/api/v3/coins/${coingeckoNetworkId}/contract/${currencyAddress}`,
       )
-      .then(response => response.json())
-      .then((response) => response.data);
+      .then(response => response.json());
     if (result.id) {
       metadata.coingeckoCurrencyId = result.id;
     }

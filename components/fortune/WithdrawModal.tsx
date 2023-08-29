@@ -116,8 +116,6 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
       })
 
       const [account] = await walletClient.getAddresses()
-
-      console.log(roundId, cancelledDeposits[roundId])
       const {request} = await publicClient.simulateContract({
         address: fortuneChain?.address as `0x${string}`,
         abi: FortuneAbi,
