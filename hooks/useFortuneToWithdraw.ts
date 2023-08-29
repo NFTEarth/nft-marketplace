@@ -18,7 +18,7 @@ const useFortuneToWithdraw = (user?: `0x${string}`, options?: SWRConfiguration) 
               roundId
               valuePerEntry
             }
-            numberOfEntries
+            entriesCount
             indice
           }
         }

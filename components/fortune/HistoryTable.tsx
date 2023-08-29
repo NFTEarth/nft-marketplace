@@ -94,11 +94,11 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
 
   const winnerEntry = (round.deposits
     .filter(d => new RegExp(round.winner as string, 'i').test(d.depositor))
-    .reduce((a, b) => a + b.numberOfEntries, 0) || 0);
+    .reduce((a, b) => a + b.entriesCount, 0) || 0);
   const winnerEntryValue = BigInt(winnerEntry * round.valuePerEntry)
   const yourEntry = BigInt(round.valuePerEntry * round.deposits
     .filter(d => new RegExp(address as string, 'i').test(d.depositor))
-    .reduce((a, b) => a + b.numberOfEntries, 0))
+    .reduce((a, b) => a + b.entriesCount, 0))
   const prizePool = BigInt(round.numberOfEntries * round.valuePerEntry)
   const ROI = (round.numberOfEntries / winnerEntry).toFixed(2);
 

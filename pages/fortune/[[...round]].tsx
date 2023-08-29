@@ -86,9 +86,7 @@ const FortunePage = () => {
   const [spinning, setSpinning] = useState(false);
   const confettiRef = useRef<any>(null);
   const router = useRouter()
-  const { data: currentRound } = useFortuneCurrentRound({
-    refreshInterval: 1000,
-  })
+  const { data: currentRound, refetch: refetchCurrentRound } = useFortuneCurrentRound()
   const { data: roundDataById } = useFortuneRound(parseInt(router.query?.round as string) || (currentRound as Round)?.roundId || 1, {
     refreshInterval: 5000,
     isPaused: () => !router.query?.round
@@ -166,12 +164,12 @@ const FortunePage = () => {
     const newPlayers: PlayerType[] = [];
 
     (roundData?.deposits || []).forEach((d: Deposit) => {
-      const winChance = Math.round(d.numberOfEntries / (roundData?.numberOfEntries || 1) * 100)
+      const winChance = Math.round(d.entriesCount / (roundData?.numberOfEntries || 1) * 100)
       const colorHash = Math.floor(+d.depositor*16777215).toString(16)
       const player: PlayerType = {
         index: newPlayers.length,
         address: d.depositor as `0x${string}`,
-        entry: d.numberOfEntries,
+        entry: d.entriesCount,
         y: winChance,
         color: `#${colorHash.substring(0, 2)}${colorHash.substring(8, 10)}${colorHash.substring(16, 18)}`
       };
