@@ -351,7 +351,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
                 }}
               >
                 <Flex justify="between">
-                  <Text style="h6">Add NFTE OFT</Text>
+                  <Text style="h6">Add NFTE</Text>
                   <Flex>
                     <FormatCryptoCurrency
                       amount={priceData?.nativePrice}
@@ -387,7 +387,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
                   align="center"
                   justify="between"
                 >
-                  <Text>NFTE OFT in wallet:</Text>
+                  <Text>NFTE in wallet:</Text>
                   <Flex align="center" css={{ gap: 10 }}>
                     {/*<Text style="body3">{`($${formatEther(priceData?.usdPrice || BigInt(0), 'wei')})`}</Text>*/}
                     <FormatCryptoCurrency
