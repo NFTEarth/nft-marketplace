@@ -17,7 +17,7 @@ import {
 } from "viem";
 import {FC, SyntheticEvent, useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import {useAccount, useContractRead, useContractWrite, useWaitForTransaction} from "wagmi";
-import TransferManagerABI from "../../artifact/TransferManagerABI.json";
+import TransferManagerAbi from "../../artifact/TransferManagerAbi.json";
 import FortuneAbi from "../../artifact/FortuneAbi.json";
 import {AddressZero} from "@ethersproject/constants";
 import ERC20Abi from "../../artifact/ERC20Abi.json";
@@ -67,14 +67,14 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
 
   const { data: isApproved, refetch: refetchApproval } = useContractRead({
     enabled: !!fortuneChain?.transferManager && !!address,
-    abi: TransferManagerABI,
+    abi: TransferManagerAbi,
     address: fortuneChain?.transferManager as `0x${string}`,
     functionName: 'hasUserApprovedOperator',
     args: [address, fortuneChain?.address],
   })
 
   const { writeAsync: grantApproval, isLoading: isApprovalLoading, error: approvalError } = useContractWrite({
-    abi: TransferManagerABI,
+    abi: TransferManagerAbi,
     address: fortuneChain?.transferManager as `0x${string}`,
     functionName: 'grantApprovals',
     args: [[fortuneChain?.address]]
