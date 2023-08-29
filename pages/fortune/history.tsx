@@ -33,7 +33,7 @@ import WithdrawModal from "../../components/fortune/WithdrawModal";
 const typeToStatus: Record<string, number | undefined> = {
   "all": undefined,
   "completed": 3,
-  "canceled": 4
+  "cancelled": 4
 }
 
 const FortuneHistory = () => {
@@ -157,8 +157,8 @@ const FortuneHistory = () => {
                   <ToggleGroupItem value="completed" css={{ p: '$2' }}>
                     <Text>Completed</Text>
                   </ToggleGroupItem>
-                  <ToggleGroupItem value="canceled" css={{ p: '$2' }}>
-                    <Text>Canceled</Text>
+                  <ToggleGroupItem value="cancelled" css={{ p: '$2' }}>
+                    <Text>Cancelled</Text>
                   </ToggleGroupItem>
                 </ToggleGroup>
                 <Flex
@@ -167,7 +167,7 @@ const FortuneHistory = () => {
                   }}
                 >
                   <Switch checked={onlyYourRound} onCheckedChange={setOnlyYourRound}/>
-                  <Text>{isSmallDevice ? 'Yours' : 'Only your round'}</Text>
+                  <Text>{isSmallDevice ? 'Yours' : 'Only Your Rounds'}</Text>
                 </Flex>
               </Flex>
             </Flex>
