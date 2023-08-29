@@ -32,7 +32,7 @@ const useFortuneUserWon = (user?: `0x${string}`, options?: SWRConfiguration) => 
             tokenAmount
             tokenId
             tokenType
-            numberOfEntries
+            entriesCount
             indice
             claimed
           }

@@ -80,7 +80,7 @@ const useFortuneRound = (roundId?: number, options?: SWRConfiguration) => {
             tokenAmount
             tokenId
             tokenType
-            numberOfEntries
+            entriesCount
             indice
             claimed
             participant {

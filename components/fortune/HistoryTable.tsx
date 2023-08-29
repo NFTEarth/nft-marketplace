@@ -102,6 +102,9 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
   const prizePool = BigInt(round.numberOfEntries * round.valuePerEntry)
   const ROI = (round.numberOfEntries / winnerEntry).toFixed(2);
 
+
+  console.log(winnerEntry, round.valuePerEntry)
+
   return (
     <TableRow
       as="a"
