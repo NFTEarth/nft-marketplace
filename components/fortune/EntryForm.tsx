@@ -44,7 +44,6 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
   const { address } = useAccount()
   const [showTokenEntry, setShowTokenEntry] = useState(false)
   const [valueNFTE, setValueNFTE] = useState<string>('')
-  const [NFTEPrice, setNFTEPrice] = useState<bigint>(BigInt(0))
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
   const {
@@ -85,20 +84,6 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
     chain: marketplaceChain,
     transport: http()
   })
-
-  useEffect(() => {
-    publicClient.readContract({
-      address: '0x896397f72bd5c207cab95740d48ca76acf960b16',
-      abi: ERC20OracleAbi,
-      functionName: 'getTWAP',
-      args: [
-        '0x51b902f19a56f0c8e409a34a215ad2673edf3284',
-        3600
-      ]
-    }).then(async (d) => {
-      setNFTEPrice(d as bigint)
-    })
-  }, [])
 
   const { data: { round, valueEth, selections }, setSelections, setValueEth } = useFortune<FortuneData>(q => q)
   const minimumEntry = BigInt(round?.valuePerEntry || 0)
