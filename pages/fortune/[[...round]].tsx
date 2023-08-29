@@ -527,7 +527,7 @@ const FortunePage = () => {
                             style="h4"
                             css={{
                               color: '$primary10',
-                              background: 'linear-gradient(rgb(248, 204, 50) 0%, rgb(248, 204, 50) 50%, rgb(255, 138, 20) 100%)',
+                              background: 'linear-gradient(rgb(21, 204, 50) 0%, rgb(21, 204, 50) 50%, rgb(21, 204, 50) 100%)',
                               '-webkit-text-fill-color': 'transparent',
                               '-webkit-background-clip': 'text'
                             }}>
@@ -637,7 +637,7 @@ const FortunePage = () => {
               </Flex>
               <Flex direction="column" css={{ flex: 0.5 }} >
                 <Text style="h5">{`${yourWinChance}%`}</Text>
-                <Text style="subtitle2">Your Win Chance</Text>
+                <Text style="subtitle2">Your Odds To Win</Text>
               </Flex>
             </Flex>
           </Flex>
