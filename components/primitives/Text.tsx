@@ -54,8 +54,15 @@ export default styled('span', {
         fontWeight: 400,
         fontSize: 12,
       },
+      body4: {
+        fontWeight: 400,
+        fontSize: 10,
+      },
     },
     color: {
+      dark: {
+        color: '#000',
+      },
       subtle: {
         color: '$gray11',
       },

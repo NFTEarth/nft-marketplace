@@ -60,7 +60,7 @@ const Navbar = () => {
           <Link href={`/${routePrefix}`}>
             <Box css={{ width: 34, cursor: 'pointer' }}>
               <Image
-                src="/res2.png"
+                src="/nftearth-icon.svg"
                 width={39}
                 height={39}
                 alt="NFTEarth"
@@ -99,7 +99,7 @@ const Navbar = () => {
           <Link href={`/${routePrefix}`}>
             <Box css={{ width: 112, cursor: 'pointer' }}>
               {<Image
-                src="/res2.png"
+                src="/nftearth-icon.svg"
                 width={50}
                 height={50}
                 alt="NFTEarth"

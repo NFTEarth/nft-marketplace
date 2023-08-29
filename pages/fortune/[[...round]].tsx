@@ -416,7 +416,7 @@ const FortunePage = () => {
                     <Link href="/fortune/history" passHref legacyBehavior>
                       <Button as="a" size="xs" color="primary">
                         <FontAwesomeIcon icon={faHistory} width={15} height={15}/>
-                        {!isMobile && (<Text>History</Text>)}
+                        {!isMobile && `History`}
                       </Button>
                     </Link>
                     <Link href={((+roundData?.roundId - 1) < 1) ? '/fortune' : `/fortune/${+roundData?.roundId - 1}`} legacyBehavior>
@@ -479,7 +479,7 @@ const FortunePage = () => {
                         transform: 'translate(-50%, -50%)'
                       }}
                     >
-                      {!showWinner && (
+                      {(!showWinner && !!roundData?.roundId) && (
                         <Text css={{ borderBottom: '1px solid #ddd'}}>{`Round ${roundData?.roundId || '-'}`}</Text>
                       )}
                       {([RoundStatus.Open, RoundStatus.Drawing, RoundStatus.Drawn].includes(roundData?.status) && !showWinner) && (
@@ -489,16 +489,16 @@ const FortunePage = () => {
                         <FormatCurrency amount={totalPrizeUsd} />
                       )}
                       {(roundData?.status === RoundStatus.Open && countdown < 1) && (
-                        <Text style="subtitle1" css={{ color: 'primary' }}>Processing...</Text>
+                        <Text style="subtitle1" css={{ color: '$primary10' }}>Processing...</Text>
                       )}
                       {[RoundStatus.Drawing].includes(roundData?.status) && (
-                        <Text style="subtitle1" css={{ color: 'primary' }}>Drawing Winner...</Text>
+                        <Text style="subtitle1" css={{ color: '$primary10' }}>Drawing Winner...</Text>
                       )}
                       {roundData?.status === RoundStatus.Cancelled && (
-                        <Text style="h5" css={{ color: 'primary', mt: 20 }}>Round Cancelled</Text>
+                        <Text style="h5" css={{ color: '$primary10', mt: 20 }}>Round Cancelled</Text>
                       )}
                       {transitionToNewRound && (
-                        <Text style="subtitle1" css={{ color: 'primary' }}>Loading new round...</Text>
+                        <Text style="subtitle1" css={{ color: '$primary10' }}>Loading new round...</Text>
                       )}
                       {showWinner && (
                         <Flex
@@ -526,7 +526,7 @@ const FortunePage = () => {
                           <Text
                             style="h4"
                             css={{
-                              color: 'primary',
+                              color: '$primary10',
                               background: 'linear-gradient(rgb(248, 204, 50) 0%, rgb(248, 204, 50) 50%, rgb(255, 138, 20) 100%)',
                               '-webkit-text-fill-color': 'transparent',
                               '-webkit-background-clip': 'text'
@@ -552,7 +552,7 @@ const FortunePage = () => {
                   }}>
                     <FontAwesomeIcon
                       icon={enableAudio ? faVolumeMute : faVolumeUp}
-                      color={enableAudio ? 'red' : 'green'}
+                      color={enableAudio ? '#222' : '#000'}
                       width={30}
                       height={30}
                     />
@@ -586,7 +586,7 @@ const FortunePage = () => {
                   justify="center"
                   css={{
                     borderRadius: 6,
-                    border: '1px solid primary',
+                    border: '1px solid $primary13',
                     minWidth: 75,
                     minHeight: 38,
                   }}
@@ -759,15 +759,15 @@ const FortunePage = () => {
             <Flex css={{ gap: 10 }}>
               <Flex direction="column" css={{ flex: 0.5 }} >
                 <FormatCryptoCurrency textStyle="h6" amount={totalPrize} />
-                <Text style="body3">Prize Pool</Text>
+                <Text style="body4">Prize Pool</Text>
               </Flex>
               <Flex direction="column" css={{ flex: 0.5 }} >
                 <FormatCryptoCurrency textStyle="h6" amount={yourEntries} />
-                <Text style="body3">Your Entries</Text>
+                <Text style="body4">Your Entries</Text>
               </Flex>
               <Flex direction="column" css={{ flex: 0.5 }} >
                 <Text style="h6">{`${yourWinChance}%`}</Text>
-                <Text style="body3">Your Win Chance</Text>
+                <Text style="body4">Win Chance</Text>
               </Flex>
               <Flex align="start">
                 {roundData?.status === RoundStatus.Open && (
@@ -776,7 +776,7 @@ const FortunePage = () => {
                     justify="center"
                     css={{
                       borderRadius: 6,
-                      border: '1px solid primary',
+                      border: '1px solid $primary13',
                       minWidth: 75,
                       minHeight: 38,
                     }}
