@@ -11,7 +11,7 @@ import {useMarketplaceChain} from "../../hooks";
 
 type dataItemProps = {
   data: Record<string, any>
-  onApprove: (approved: boolean) => void
+  onApprove?: (approved: boolean) => void
 }
 
 const SelectionItem: FC<dataItemProps> = ({ data, onApprove }) => {
@@ -20,7 +20,7 @@ const SelectionItem: FC<dataItemProps> = ({ data, onApprove }) => {
   const fortuneChain = FORTUNE_CHAINS.find(c => c.id === marketplaceChain.id);
 
   const { data: isApproved } = useContractRead<typeof ERC721Abi, 'isApprovedForAll', boolean>({
-    enabled: !!fortuneChain?.address && !!data.contract && !!address && data.type === 'erc721',
+    enabled: !!fortuneChain?.address && !!data.contract && !!address && data.type === 'erc721' && !!onApprove,
     abi: ERC721Abi,
     address: data.contract as `0x${string}`,
     functionName: 'isApprovedForAll',
@@ -28,7 +28,7 @@ const SelectionItem: FC<dataItemProps> = ({ data, onApprove }) => {
   })
 
   const { data: allowance } = useContractRead<typeof ERC20Abi, 'allowance', bigint>({
-    enabled: !!fortuneChain?.address && !!data.contract && !!address && data.type === 'erc20',
+    enabled: !!fortuneChain?.address && !!data.contract && !!address && data.type === 'erc20' && !!onApprove,
     abi:  ERC20Abi,
     address: data.contract as `0x${string}`,
     functionName:  'allowance',
@@ -37,11 +37,11 @@ const SelectionItem: FC<dataItemProps> = ({ data, onApprove }) => {
 
   useEffect(() => {
     if (data.type === 'erc721' && isApproved) {
-      onApprove(true)
+      onApprove?.(true)
     }
 
     if (data.type === 'erc20' && (allowance || 0) >= data.value) {
-      onApprove(true)
+      onApprove?.(true)
     }
   }, [isApproved, allowance])
 

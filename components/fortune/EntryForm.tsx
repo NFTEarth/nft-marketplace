@@ -449,6 +449,17 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
               overflowY: 'auto',
               maxHeight: 420
             }}>
+            {parsedEthValue >= minimumEntry && (
+              <SelectionItem
+                data={{
+                  type: 'erc20',
+                  name: 'ETH',
+                  contract: AddressZero,
+                  values: [parsedEthValue],
+                  approved: false,
+                }}
+              />
+            )}
             {(Object.keys(selections)).map((k: string) => (
               <SelectionItem
                 key={k}
