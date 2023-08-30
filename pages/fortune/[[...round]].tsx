@@ -22,7 +22,7 @@ import FortunePrize, {PrizeType} from "components/fortune/Prize";
 import Confetti from "components/common/Confetti";
 import ChainToggle from "components/common/ChainToggle";
 import LoadingSpinner from "components/common/LoadingSpinner";
-import {Box, Button, Flex, FormatCryptoCurrency, Text} from 'components/primitives'
+import {Anchor, Box, Button, Flex, FormatCryptoCurrency, Text} from 'components/primitives'
 import {useFortune, useMarketplaceChain, useMounted} from "hooks";
 import supportedChains, {FORTUNE_CHAINS} from "utils/chains";
 import {styled} from 'stitches.config'
@@ -38,6 +38,8 @@ import FortuneDepositModal from "../../components/fortune/DepositModal";
 import {useCoinConversion} from "@reservoir0x/reservoir-kit-ui";
 import {arbitrum} from "viem/chains";
 import FortuneRoundStatus from "../../components/fortune/RundStatus";
+import {faDiscord, faTwitter} from "@fortawesome/free-brands-svg-icons";
+import FortuneFooter from "../../components/fortune/Footer";
 
 type FortuneData = {
   enableAudio: boolean
@@ -350,7 +352,7 @@ const FortunePage = () => {
           py: 24,
           px: '$3',
           height: '100%',
-          pb: 160,
+          pb: 20,
           '@md': {
             pb: 60,
             px: '$6',
@@ -766,6 +768,7 @@ const FortunePage = () => {
           </Flex>
         </Box>
       </Box>
+      <FortuneFooter />
       <Confetti ref={confettiRef} />
     </Layout>
   )
