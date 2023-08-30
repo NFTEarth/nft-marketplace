@@ -220,7 +220,7 @@ const Wheel = (props: WheelProps) => {
 
         chart.series?.[0]?.update({ startAngle: startAngle }, true, false, false);
 
-        if (diff < (stopPoint + (360 * 5)) && !wheelEnding) {
+        if (diff < (stopPoint + (360 * 5)) && !wheelEnding && enableAudio) {
           playWheel?.('end')
           wheelEnding = true
         }
@@ -230,11 +230,14 @@ const Wheel = (props: WheelProps) => {
           onWheelEnd(winnerIndex);
           setHoverPlayerIndex?.(winnerIndex);
           chart.series?.[0]?.update({ startAngle: stopPoint }, true, false, false);
-          playWin?.()
+
+          if (enableAudio) {
+            playWin?.()
+          }
         }
       }, animationSpeed)
     }
-  }, [seriesAngle, status, roundId, winner])
+  }, [seriesAngle, status, roundId, winner, enableAudio])
 
   useEffect(() => {
     let cumulativePercentage = 0;
