@@ -41,6 +41,7 @@ import FortuneRoundStatus from "../../components/fortune/RundStatus";
 import {faDiscord, faTwitter} from "@fortawesome/free-brands-svg-icons";
 import FortuneFooter from "../../components/fortune/Footer";
 import useFortuneStatus, {FortuneStatus} from "../../hooks/useFortuneStatus";
+import BetaLogo from "../../components/fortune/BetaLogo";
 
 type FortuneData = {
   enableAudio: boolean
@@ -364,6 +365,7 @@ const FortunePage = () => {
           <Flex align="center" css={{ gap: 10 }}>
             <Image src="/icons/fortune.png" width={40} height={40} objectFit="contain" alt="Fortune"/>
             <Text style="h4">Fortune</Text>
+            <BetaLogo />
           </Flex>
           <ChainToggle />
         </Flex>

@@ -29,6 +29,7 @@ import ClaimModal from "../../components/fortune/ClaimModal";
 import useFortuneUserWon from "../../hooks/useFortuneUserWon";
 import {Deposit, Round} from "../../hooks/useFortuneRound";
 import WithdrawModal from "../../components/fortune/WithdrawModal";
+import BetaLogo from "../../components/fortune/BetaLogo";
 
 const typeToStatus: Record<string, number | undefined> = {
   "all": undefined,
@@ -97,6 +98,7 @@ const FortuneHistory = () => {
           <Flex align="center" css={{ gap: 10 }}>
             <Image src="/icons/fortune.png" width={40} height={40} objectFit="contain" alt="Fortune"/>
             <Text style="h4">Fortune</Text>
+            <BetaLogo />
           </Flex>
           <ChainToggle />
         </Flex>
