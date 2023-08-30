@@ -34,9 +34,9 @@ const Layout: FC<Props> = ({ children }) => {
         {`new Crate({
           server: '1062256160264171520',
           channel: '1146477051033956544',
-          color: '#A97AFF',
+          color: 'transparent',
           notifications: true,
-          glyph: ['https://app.nftearth.exchange/images/icons-chat.png', '80px'],
+          glyph: ['http://localhost:3000/images/chat-discord.svg', '60px'],
         })`}
       </Script>
     </>
