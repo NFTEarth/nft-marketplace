@@ -1,6 +1,6 @@
 import {Modal} from "../common/Modal";
 import {FC} from "preact/compat";
-import {useContext, useMemo, useState} from "react";
+import {useContext, useEffect, useMemo, useState} from "react";
 import {Button, Flex, FormatCryptoCurrency, Select, Text, Tooltip} from "../primitives";
 import {
   useAccount, useContractWrite,
@@ -104,6 +104,10 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
     confirmations: 5,
   })
 
+  useEffect(() => {
+    setOpen(isLoading || isLoadingTransaction || isSuccess || !!withdrawError)
+  }, [isLoading, isLoadingTransaction, isSuccess, withdrawError])
+
   const handleWithdrawDeposit = async () => {
     setError(undefined)
     if (!roundId) {
@@ -148,35 +152,9 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
     }
   }
 
-  const trigger = useMemo(() => (
-    <Flex css={{gap: 20}}>
-      <Select
-        disabled={disabled}
-        placeholder="Select Round to withdraw"
-        css={{
-          flex: 1,
-          width: '100%',
-          minWidth: 140,
-          whiteSpace: 'nowrap',
-        }}
-        value={`${roundId || ''}`}
-        onValueChange={(value: string) => setRoundId(+value)}
-      >
-        {(deposits || []).map((d) => (
-          <Select.Item key={d.round.roundId} value={`${d.round.roundId}`}>
-            <Select.ItemText css={{whiteSpace: 'nowrap'}}>
-              <Flex direction="column" css={{gap: 10}}>
-                <Text>{`Round ${d.round.roundId}`}</Text>
-                <FormatCryptoCurrency amount={cancelledDeposits[d.round.roundId].value} logoHeight={14}/>
-              </Flex>
-            </Select.ItemText>
-          </Select.Item>
-        ))}
-      </Select>
-      <Button disabled={disabled} onClick={handleWithdrawDeposit}>Withdraw</Button>
-    </Flex>
-  ), [roundId, deposits, disabled])
-
+  const handleSetRound = (value: string) => {
+    setRoundId(+value)
+  }
   if (isInTheWrongNetwork) {
     return (
       <Button
@@ -200,68 +178,95 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
   }
 
   return (
-    <Modal
-      title={`Withdraw Deposit : Round ${roundId}`}
-      trigger={trigger}
-      open={open}
-      onOpenChange={(open) => {
-        if (
-          !open &&
-          onClose
-        ) {
-          onClose()
-        }
-        setOpen(open)
-      }}
-    >
-      <Flex
-        direction="column"
-        justify="start"
-        align="center"
-        css={{flex: 1, textAlign: 'center', p: '$4', gap: '$4'}}
-      >
-        {(!!error) && (
-          <ErrorWell
-            message={(error as any)?.reason || error?.message}
-            css={{
-              textAlign: 'left',
-              maxWidth: '100%',
-              wordBreak: 'break-word',
-              whiteSpace: 'pre-wrap'
-            }}
-          />
-        )}
-        {(isLoading) && (
-          <Flex css={{height: '100%', py: '$4'}} align="center">
-            <LoadingSpinner/>
-          </Flex>
-        )}
-        {isLoadingTransaction && (
-          <TransactionProgress
-            justify="center"
-            css={{mb: '$3'}}
-            fromImgs={['/icons/fortune.png']}
-            toImgs={['/icons/arbitrum-icon-light.svg']}
-          />
-        )}
-        {isLoading && (
-          <Text style="h6">Please confirm in your wallet</Text>
-        )}
-        {isLoadingTransaction && (
-          <TransactionProgress
-            justify="center"
-            css={{ mb: '$3' }}
-            fromImgs={['/icons/fortune.png']}
-            toImgs={['/icons/arbitrum-icon-light.svg']}
-          />
-        )}
-        {isSuccess && (
-          <Flex direction="column" css={{gap: 20, my: '$4'}}>
-            <Text style="h6" css={{color: 'green'}}>Withdraw Success !</Text>
-          </Flex>
-        )}
+    <>
+      <Flex css={{gap: 20}}>
+        <Select
+          disabled={disabled}
+          placeholder="Select Round to withdraw"
+          css={{
+            flex: 1,
+            width: '100%',
+            minWidth: 140,
+            whiteSpace: 'nowrap',
+          }}
+          value={`${roundId || ''}`}
+          onValueChange={handleSetRound}
+        >
+          {(deposits || []).map((d) => (
+            <Select.Item key={d.round.roundId} value={`${d.round.roundId}`}>
+              <Select.ItemText css={{whiteSpace: 'nowrap'}}>
+                <Flex direction="column" css={{gap: 10}}>
+                  <Text>{`Round ${d.round.roundId}`}</Text>
+                  <FormatCryptoCurrency amount={cancelledDeposits[d.round.roundId].value} logoHeight={14}/>
+                </Flex>
+              </Select.ItemText>
+            </Select.Item>
+          ))}
+        </Select>
+        <Button disabled={disabled} onClick={handleWithdrawDeposit}>Withdraw</Button>
       </Flex>
-    </Modal>
+      <Modal
+        title={`Withdraw Deposit : Round ${roundId}`}
+        open={open}
+        onOpenChange={(open) => {
+          if (
+            !open &&
+            onClose
+          ) {
+            onClose()
+          }
+          setOpen(open)
+        }}
+      >
+        <Flex
+          direction="column"
+          justify="start"
+          align="center"
+          css={{flex: 1, textAlign: 'center', p: '$4', gap: '$4'}}
+        >
+          {(!!error || !!withdrawError) && (
+            <ErrorWell
+              message={(error || withdrawError as any)?.reason || (error || withdrawError)?.message}
+              css={{
+                textAlign: 'left',
+                maxWidth: '100%',
+                wordBreak: 'break-word',
+                whiteSpace: 'pre-wrap'
+              }}
+            />
+          )}
+          {(isLoading) && (
+            <Flex css={{height: '100%', py: '$4'}} align="center">
+              <LoadingSpinner/>
+            </Flex>
+          )}
+          {isLoadingTransaction && (
+            <TransactionProgress
+              justify="center"
+              css={{mb: '$3'}}
+              fromImgs={['/icons/fortune.png']}
+              toImgs={['/icons/arbitrum-icon-light.svg']}
+            />
+          )}
+          {isLoading && (
+            <Text style="h6">Please confirm in your wallet</Text>
+          )}
+          {isLoadingTransaction && (
+            <TransactionProgress
+              justify="center"
+              css={{ mb: '$3' }}
+              fromImgs={['/icons/fortune.png']}
+              toImgs={['/icons/arbitrum-icon-light.svg']}
+            />
+          )}
+          {isSuccess && (
+            <Flex direction="column" css={{gap: 20, my: '$4'}}>
+              <Text style="h6" css={{color: 'green'}}>Withdraw Success !</Text>
+            </Flex>
+          )}
+        </Flex>
+      </Modal>
+    </>
   )
 }
 

@@ -43,7 +43,7 @@ const Content = styled(DialogPrimitive.Content, {
   top: '12.5%',
   left: '50%',
   transform: 'translateX(-50%)',
-  minWidth: 490,
+  minWidth: 300,
   maxWidth: '90vw',
   maxHeight: '85vh',
   overflowY: 'auto',

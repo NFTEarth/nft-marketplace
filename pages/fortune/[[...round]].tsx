@@ -657,6 +657,8 @@ const FortunePage = () => {
                   autoPlay
                   loop
                   muted
+                  webkit-playsinline
+                  playsInline
                   css={{
                     objectFit: 'cover',
                     minWidth: '100%',
