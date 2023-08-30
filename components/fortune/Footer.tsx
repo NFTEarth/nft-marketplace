@@ -1,5 +1,16 @@
 import {Anchor, Flex, Text} from "../primitives";
 
+const fortuneSection = [
+  {
+    name: 'Getting Started',
+    href: 'https://docs.nftearth.exchange/getting-started/nftearth-fortune',
+  },
+  {
+    name: 'Subgraph',
+    href: 'https://api.thegraph.com/subgraphs/name/ryuzaki01/fortune',
+  },
+]
+
 const contractsSection = [
   {
     name: 'Fortune',
@@ -40,15 +51,18 @@ const FortuneFooter = () => {
           <Text style="subtitle1" css={{ color: '$gray12', mb: 8 }}>
             Fortune
           </Text>
-          <Anchor
-            target="_blank"
-            rel="noopener noreferrer"
-            href={'https://docs.nftearth.exchange/getting-started/nftearth-fortune'}
-            weight="medium"
-            css={{ fontSize: 14, mt: 16 }}
-          >
-            Getting Started
-          </Anchor>
+          {fortuneSection.map((props) => (
+            <Anchor
+              key={props.name}
+              target="_blank"
+              rel="noopener noreferrer"
+              href={props.href}
+              weight="medium"
+              css={{ fontSize: 14, mt: 16 }}
+            >
+              {props.name}
+            </Anchor>
+          ))}
         </Flex>
         <Flex direction="column">
           <Text style="subtitle1" css={{ color: '$gray12', mb: 8 }}>

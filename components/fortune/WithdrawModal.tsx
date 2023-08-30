@@ -175,7 +175,7 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
       </Select>
       <Button disabled={disabled} onClick={handleWithdrawDeposit}>Withdraw</Button>
     </Flex>
-  ), [deposits, disabled])
+  ), [roundId, deposits, disabled])
 
   if (isInTheWrongNetwork) {
     return (
