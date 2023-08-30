@@ -36,7 +36,7 @@ const Layout: FC<Props> = ({ children }) => {
           channel: '1146477051033956544',
           color: 'transparent',
           notifications: true,
-          glyph: ['https://app.nftearth.exchange/images/chat-discord.svg', '80px'],
+          glyph: ['https://app.nftearth.exchange/images/chat-discord.svg', '60px'],
         })`}
       </Script>
     </>

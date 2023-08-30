@@ -62,7 +62,9 @@ const getErrorText = ((errorName: string, error: any) => {
     return 'Price Oracle Couldn\'t get NFTE price right now, Usage temporary Disabled.'
   }
 
-  return errorName
+  console.error(error);
+
+  return error.message
 })
 
 const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
@@ -161,8 +163,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
 
       setStep(3);
 
-      const selects =  [...Object.keys(selections)
-        .filter((p) => !selections[p].approved)]
+      const selects =  Object.keys(selections);
       requireApprovals = selects.length;
 
       for(let select of selects) {
@@ -173,9 +174,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
           address: selection.contract as `0x${string}`,
           abi: selectionAbi,
           functionName: selectionFunc,
-          ...(selection.type === 'erc20' ? {
-            args: [address, fortuneChain?.transferManager]
-          } : {})
+          args: [address, fortuneChain?.transferManager]
         })
 
         if (selection.type === 'erc20' && BigInt(data as number) >= (selection.values?.[0] || BigInt(0))) {
