@@ -53,9 +53,13 @@ const getGeneralError = (err:any) => {
   return err.message;
 }
 
-const getErrorText = ((errorName: string) => {
+const getErrorText = ((errorName: string, error: any) => {
   if (errorName === 'ZeroDeposits') {
     return 'You must deposit ETH/NFTE or an eligible NFT to enter'
+  }
+
+  if (errorName === 'OLD') {
+    return 'Price Oracle Couldn\'t get NFTE price right now, Usage temporary Disabled.'
   }
 
   return errorName
@@ -229,7 +233,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
           addToast?.({
             title: errorName,
             status: 'error',
-            description: getErrorText(errorName)
+            description: getErrorText(errorName, err)
           })
         } else {
           addToast?.({
