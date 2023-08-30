@@ -7,7 +7,7 @@ const subgraphFetcher = <T>([query, variables]: [RequestDocument, Variables]) =>
 
 export type FortuneStatus = {
   totalRounds: bigint
-  activeRound: Round
+  currentRound: Round
 }
 
 type FortuneStatusResult = {

@@ -40,6 +40,7 @@ import {arbitrum} from "viem/chains";
 import FortuneRoundStatus from "../../components/fortune/RundStatus";
 import {faDiscord, faTwitter} from "@fortawesome/free-brands-svg-icons";
 import FortuneFooter from "../../components/fortune/Footer";
+import useFortuneStatus, {FortuneStatus} from "../../hooks/useFortuneStatus";
 
 type FortuneData = {
   enableAudio: boolean
@@ -85,12 +86,12 @@ const FortunePage = () => {
   const prizePotRef = useRef<HTMLDivElement>(null);
   const confettiRef = useRef<any>(null);
   const router = useRouter()
-  const { isLoading: isLoadingCurrentRound } = useFortuneCurrentRound({
+  const { isLoading: isLoadingCurrentRound } = useFortuneStatus({
     isPaused: () => {
       return !!activeRound
     },
-    onSuccess: ({ rounds } : { rounds: Round[] }) => {
-      setActiveRound(rounds?.[0]?.roundId)
+    onSuccess: ({ fortune } : { fortune: FortuneStatus }) => {
+      setActiveRound(fortune?.currentRound?.roundId)
     },
     refreshInterval: 1000,
   })
