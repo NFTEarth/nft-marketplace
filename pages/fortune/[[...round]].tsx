@@ -22,7 +22,7 @@ import FortunePrize, {PrizeType} from "components/fortune/Prize";
 import Confetti from "components/common/Confetti";
 import ChainToggle from "components/common/ChainToggle";
 import LoadingSpinner from "components/common/LoadingSpinner";
-import {Box, Button, Flex, FormatCryptoCurrency, FormatCurrency, Text} from 'components/primitives'
+import {Box, Button, Flex, FormatCryptoCurrency, Text} from 'components/primitives'
 import {useFortune, useMarketplaceChain, useMounted} from "hooks";
 import supportedChains, {FORTUNE_CHAINS} from "utils/chains";
 import {styled} from 'stitches.config'
@@ -33,16 +33,11 @@ import {useRouter} from "next/router";
 import useFortuneCurrentRound from "../../hooks/useFortuneCurrentRound";
 import useFortuneRound, {Deposit, Round, RoundStatus} from "../../hooks/useFortuneRound";
 import {formatEther, formatUnits} from "viem";
-import {truncateAddress} from "../../utils/truncate";
 import {AddressZero} from "@ethersproject/constants"
 import FortuneDepositModal from "../../components/fortune/DepositModal";
 import {useCoinConversion} from "@reservoir0x/reservoir-kit-ui";
 import {arbitrum} from "viem/chains";
-import {Avatar} from "../../components/primitives/Avatar";
-import Jazzicon from "react-jazzicon/dist/Jazzicon";
-import {jsNumberForAddress} from "react-jazzicon";
-import {Simulate} from "react-dom/test-utils";
-import play = Simulate.play;
+import FortuneRoundStatus from "../../components/fortune/RundStatus";
 
 type FortuneData = {
   enableAudio: boolean
@@ -82,25 +77,27 @@ const getTitleText = (status: number, totalPrize: string, convertedCountdown: an
 const FortunePage = () => {
   const [showEntryForm, setShowEntryForm] = useState(false)
   const [playerWinner, setPlayerWinner] = useState<PlayerType>()
+  const [activeRound, setActiveRound] = useState<number>()
   const prizePotRef = useRef<HTMLDivElement>(null);
-  const [transitionToNewRound, setTransitionToNewRound] = useState(false);
   const confettiRef = useRef<any>(null);
   const router = useRouter()
-  const { data: currentRound, refetch: refetchCurrentRound } = useFortuneCurrentRound()
-  const { data: roundDataById } = useFortuneRound(parseInt(router.query?.round as string) || (currentRound as Round)?.roundId || 1, {
-    refreshInterval: 5000,
-    isPaused: () => !router.query?.round
+  const { isLoading: isLoadingCurrentRound } = useFortuneCurrentRound({
+    isPaused: () => {
+      return !!activeRound
+    },
+    onSuccess: ({ rounds } : { rounds: Round[] }) => {
+      setActiveRound(rounds?.[0]?.roundId)
+    },
+    refreshInterval: 1000,
   })
-
-  const roundData = useMemo(() => {
-    return router.query?.round ? roundDataById as Round : currentRound as Round
-  }, [router, roundDataById, currentRound])
-  const [ showWinner, setShowWinner] = useState(true);
+  const { data: roundData } = useFortuneRound(parseInt(`${router.query?.round || 0}`) || activeRound || 1, {
+    refreshInterval: 1000,
+    isPaused: () => !(parseInt(`${router.query?.round || 0}`) || activeRound)
+  })
   const { data: {
     players,
     enableAudio,
-    usdConversion,
-  }, setUSDConversion, setRound, setCountdown, setPlayers, setEnableAudio } = useFortune<FortuneData>(d => d)
+  }, setRound, setCountdown, setPlayers, setEnableAudio } = useFortune<FortuneData>(d => d)
   const { openConnectModal } = useConnectModal()
   const marketplaceChain = useMarketplaceChain()
   const { address } = useAccount()
@@ -259,16 +256,12 @@ const FortunePage = () => {
     resetCountdown();
     startCountdown()
 
-    setShowWinner(false)
     setPlayerWinner(undefined)
-    setTransitionToNewRound(false)
 
     if (roundData?.status === RoundStatus.Cancelled && !router.query.round) {
-      setTransitionToNewRound(true)
       setTimeout(() => {
-        refetchCurrentRound()
-        setTransitionToNewRound(false)
-      }, 10 * 10000)
+        setActiveRound(undefined)
+      }, 3 * 1000)
     }
 
     if (roundData?.status === RoundStatus.Open) {
@@ -278,22 +271,19 @@ const FortunePage = () => {
         setShowEntryForm(false);
       }
     }
-  }, [roundData?.status, roundData?.roundId])
+  }, [roundData?.status])
 
   useEffect(() => {
     if (!!router.query.round) {
       return;
     }
 
-    if (showWinner) {
-      setTransitionToNewRound(true)
+    if (playerWinner) {
       setTimeout(() => {
-        setShowWinner(false)
-        refetchCurrentRound()
-        setTransitionToNewRound(false)
-      }, 10 * 10000)
+        setActiveRound(undefined)
+      }, 3 * 1000)
     }
-  }, [showWinner])
+  }, [playerWinner])
 
   const handleEnter = useCallback((e: Event) => {
     e.preventDefault()
@@ -411,7 +401,7 @@ const FortunePage = () => {
                 }}
               >
                 <Flex align="center" justify="between">
-                  <Text>{roundData?.roundId === currentRound?.roundId ? `Current Round` : `Round ${roundData?.roundId || '-'}`}</Text>
+                  <Text>{roundData?.roundId === activeRound ? `Current Round` : `Round ${roundData?.roundId || '-'}`}</Text>
                   <Flex css={{ gap: 10 }}>
                     <Link href="/fortune/history" passHref legacyBehavior>
                       <Button as="a" size="xs" color="primary">
@@ -424,13 +414,13 @@ const FortunePage = () => {
                         <FontAwesomeIcon icon={faArrowLeft} width={15} height={15}/>
                       </Button>
                     </Link>
-                    <Link href={+roundData?.roundId === +(currentRound?.roundId || 1) ? '/fortune' : `/fortune/${+roundData?.roundId + 1}`} legacyBehavior>
-                      <Button size="xs" color="primary" disabled={!roundData?.roundId || !currentRound || +roundData?.roundId === +(currentRound?.roundId || 1)}>
+                    <Link href={+roundData?.roundId === +(activeRound || 1) ? '/fortune' : `/fortune/${+roundData?.roundId + 1}`} legacyBehavior>
+                      <Button size="xs" color="primary" disabled={!roundData?.roundId || !activeRound || +roundData?.roundId === +(activeRound || 1)}>
                         <FontAwesomeIcon icon={faArrowRight} width={15} height={15}/>
                       </Button>
                     </Link>
                     <Link href="/fortune" legacyBehavior>
-                      <Button size="xs" color="primary" disabled={!roundData?.roundId || !currentRound || +roundData?.roundId === +(currentRound?.roundId || 1)}>
+                      <Button size="xs" color="primary" disabled={!roundData?.roundId || !activeRound || +roundData?.roundId === +(activeRound || 1)}>
                         <FontAwesomeIcon icon={faForwardStep} width={15} height={15}/>
                       </Button>
                     </Link>
@@ -454,9 +444,7 @@ const FortunePage = () => {
                     <Wheel
                       countdown={countdown}
                       winner={roundData?.winner as `0x${string}`}
-                      transitionToNewRound={transitionToNewRound}
                       onWheelEnd={(winnerIndex: number) => {
-                        setShowWinner(true);
                         setPlayerWinner(players[winnerIndex])
                         confettiRef.current?.fireConfetti?.();
                       }}
@@ -468,82 +456,12 @@ const FortunePage = () => {
                         right: 0,
                       }}
                     />
-
-                    <Flex
-                      direction="column"
-                      align="center"
-                      css={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)'
-                      }}
-                    >
-                      {(!showWinner && !!roundData?.roundId) && (
-                        <Text css={{ borderBottom: '1px solid #ddd'}}>{`Round ${roundData?.roundId || '-'}`}</Text>
-                      )}
-                      {([RoundStatus.Open, RoundStatus.Drawing, RoundStatus.Drawn].includes(roundData?.status) && !showWinner) && (
-                        <FormatCryptoCurrency textStyle="h3" logoHeight={35} amount={totalPrize} maximumFractionDigits={4} />
-                      )}
-                      {roundData?.status === RoundStatus.Open && (
-                        <FormatCurrency amount={totalPrizeUsd} />
-                      )}
-                      {(roundData?.status === RoundStatus.Open && countdown < 1) && (
-                        <Text style="subtitle1" css={{ color: '$primary10' }}>Processing...</Text>
-                      )}
-                      {[RoundStatus.Drawing].includes(roundData?.status) && (
-                        <Text style="subtitle1" css={{ color: '$primary10' }}>Drawing Winner...</Text>
-                      )}
-                      {roundData?.status === RoundStatus.Cancelled && (
-                        <Text style="h5" css={{ color: '$primary10', mt: 20 }}>Round Cancelled</Text>
-                      )}
-                      {transitionToNewRound && (
-                        <Text style="subtitle1" css={{ color: '$primary10' }}>Loading new round...</Text>
-                      )}
-                      {showWinner && (
-                        <Flex
-                          direction="column"
-                          align="center"
-                          css={{
-                            mt: -40
-                          }}
-                        >
-                          <Flex
-                            css={{
-                              backgroundImage: 'url(/images/winner-bg.png)',
-                              backgroundSize: 'contain',
-                              backgroundPosition: 'center',
-                              backgroundRepeat: 'no-repeat',
-                              p: 40
-                            }}
-                          >
-                            {playerWinner?.ensAvatar ? (
-                              <Avatar size="xl" src={playerWinner?.ensAvatar} />
-                            ) : (
-                              <Jazzicon diameter={56} seed={jsNumberForAddress(playerWinner?.address || '' as string)} />
-                            )}
-                          </Flex>
-                          <Text
-                            style="h4"
-                            css={{
-                              color: '$primary10',
-                              background: 'linear-gradient(rgb(21, 204, 50) 0%, rgb(21, 204, 50) 50%, rgb(21, 204, 50) 100%)',
-                              '-webkit-text-fill-color': 'transparent',
-                              '-webkit-background-clip': 'text'
-                            }}>
-                            {
-                              playerWinner?.shortEnsName ||
-                              playerWinner?.shortAddress ||
-                              truncateAddress(playerWinner?.address || '')
-                            }
-                          </Text>
-                          <Flex css={{ gap: 20 }}>
-                            <FormatCryptoCurrency textStyle="subtitle1" logoHeight={15} amount={totalPrize} maximumFractionDigits={2} />
-                            <Text style="subtitle1">{`${((roundData?.numberOfEntries || 1) / (playerWinner?.entry || 0)).toFixed(1)}x WIN`}</Text>
-                          </Flex>
-                        </Flex>
-                      )}
-                    </Flex>
+                    <FortuneRoundStatus
+                      totalPrize={totalPrize}
+                      totalPrizeUsd={totalPrizeUsd}
+                      winner={playerWinner}
+                      loadingNewRound={isLoadingCurrentRound || !activeRound}
+                    />
                   </Box>
                 </Flex>
                 <Flex justify="end">

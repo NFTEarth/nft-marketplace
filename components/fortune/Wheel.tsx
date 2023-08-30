@@ -91,7 +91,6 @@ const Wheel = (props: WheelProps) => {
   const { container, winner, onWheelEnd, ...restProps } = props;
   const chartComponentRef = useRef<typeof HighchartsReact>(null);
   const spinIntervalRef = useRef<ReturnType<typeof setInterval>>();
-  const [wheelEnding, setWheelEnding] = useState(0);
   const triangleRef = useRef<any>();
   const animationSpeed = 30;
   const isMounted = useMounted()
@@ -122,10 +121,6 @@ const Wheel = (props: WheelProps) => {
   })
 
   useEffect(() => {
-    setWheelEnding(0);
-  }, [roundId])
-
-  useEffect(() => {
     if (!enableAudio) {
       return;
     }
@@ -134,23 +129,27 @@ const Wheel = (props: WheelProps) => {
       playStart?.()
     }
 
-    // if (RoundStatus.Drawn === status) {
+    // if (RoundStatus.Drawing === status) {
     //   playWheel?.({ id: 'start' })
     // }
+
+    if (RoundStatus.Drawn === status) {
+      playWheel?.({ id: 'start' })
+    }
   }, [status, roundId, enableAudio])
 
   useEffect(() => {
     const chart = chartComponentRef.current?.chart
 
-    if (chart) {
-      if (hoverPlayerIndex !== undefined) {
-        chart.series?.[0]?.points?.[hoverPlayerIndex]?.select(true, false);
-      } else {
-        chart.series?.[0]?.points?.forEach((p: Highcharts.Point) => {
-          p.select(false);
-        })
-      }
-    }
+    // if (chart) {
+    //   if (hoverPlayerIndex !== undefined) {
+    //     chart.series?.[0]?.points?.[hoverPlayerIndex]?.select(true, false);
+    //   } else {
+    //     chart.series?.[0]?.points?.forEach((p: Highcharts.Point) => {
+    //       p.select(false);
+    //     })
+    //   }
+    // }
   }, [chartComponentRef, hoverPlayerIndex])
 
   useEffect(() => {
@@ -189,19 +188,20 @@ const Wheel = (props: WheelProps) => {
     let diff = 30
     let startAngle = chart.series?.[0]?.options?.startAngle | 0;
 
-    // if (status === RoundStatus.Drawing) {
-    //   spinIntervalRef.current = setInterval(() => {
-    //     startAngle -= diff;
-    //
-    //     if (startAngle < 360) {
-    //       startAngle += 360;
-    //     }
-    //
-    //     chart.series?.[0]?.update({ startAngle }, true, false, false);
-    //   }, animationSpeed)
-    // }
+    if (status === RoundStatus.Drawing) {
+      spinIntervalRef.current = setInterval(() => {
+        startAngle -= diff;
+
+        if (startAngle < 360) {
+          startAngle += 360;
+        }
+
+        chart.series?.[0]?.update({ startAngle }, true, false, false);
+      }, animationSpeed)
+    }
 
     if (RoundStatus.Drawn === status) {
+      let wheelEnding = false
       const { wheelPoint, winnerIndex } = findWinner(chart.series?.[0]?.data, winner, false)
       let stopPoint = ((seriesAngle[winnerIndex] || wheelPoint) + 90) % 360
       //let stopPoint = wheelPoint - 90
@@ -219,6 +219,11 @@ const Wheel = (props: WheelProps) => {
         diff = diff < 1000 ? diff - 30 : diff * 0.975
 
         chart.series?.[0]?.update({ startAngle: startAngle }, true, false, false);
+
+        if (diff < (stopPoint + (360 * 5)) && !wheelEnding) {
+          playWheel?.({ id: 'end' })
+          wheelEnding = true
+        }
 
         if (diff < stopPoint) {
           clearInterval(spinIntervalRef.current);

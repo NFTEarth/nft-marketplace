@@ -14,32 +14,7 @@ const useFortuneCurrentRound = (options?: SWRConfiguration) => {
   const { data, mutate, isLoading } = useSWR<RoundResult>(
     `query GetCurrentRound {
         rounds(orderBy: roundId, orderDirection: desc, first: 1) {
-          id
           roundId
-          status
-          cutoffTime
-          duration
-          maximumNumberOfDeposits
-          maximumNumberOfParticipants
-          valuePerEntry
-          numberOfEntries
-          numberOfParticipants
-          winner
-          protocolFeeBp
-          deposits(orderBy: indice, orderDirection: asc, first: 1000) {
-            id
-            depositor
-            tokenAddress
-            tokenAmount
-            tokenId
-            tokenType
-            entriesCount
-            indice
-            claimed
-            participant {
-              totalNumberOfEntries
-            }
-          }
         }
       }`,
     subgraphFetcher,
@@ -54,7 +29,7 @@ const useFortuneCurrentRound = (options?: SWRConfiguration) => {
 
   return {
     data: data?.rounds?.[0],
-    refetch: mutate,
+    mutate,
     isLoading
   };
 }

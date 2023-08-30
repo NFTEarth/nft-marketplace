@@ -15,7 +15,6 @@ export const FortuneContext = createContext<{
     selections: Record<string, SelectionData>
     enableAudio: boolean
     hoverPlayerIndex?: number
-    usdConversion: number
   }
   functions: {
     setRound: ((round: Round) => void) | null
@@ -26,7 +25,6 @@ export const FortuneContext = createContext<{
     setPlayers: Dispatch<PlayerAction> | null
     setPrizes: ((prizes: PrizeType[]) => void) | null
     setEnableAudio: ((enableAudio: boolean) => void) | null
-    setUSDConversion: ((usdConversion: number) => void) | null
     setHoverPlayerIndex: ((playerIndex?: number) => void) | null
   }
 }>({
@@ -39,7 +37,6 @@ export const FortuneContext = createContext<{
     selections: {},
     players: [],
     prizes: [],
-    usdConversion: 0
   },
   functions: {
     setRound: null,
@@ -51,7 +48,6 @@ export const FortuneContext = createContext<{
     setPlayers: null,
     setPrizes: null,
     setHoverPlayerIndex: null,
-    setUSDConversion: null,
   }
 })
 
@@ -80,7 +76,6 @@ type PlayerAction = PlayerResetAction | PlayerAddAction | PlayerUpdateAction | P
 const FortuneContextProvider: FC<any> = ({ children }) => {
   const [round, setRound] = useState<Round | null>(null)
   const [countdown, setCountdown] = useState(0)
-  const [usdConversion, setUSDConversion] = useState(0)
   const [valueEth, setValueEth] = useState('')
   const [winner, setWinner] = useState<`0x${string}` | null>(null)
   const [enableAudio, setEnableAudio] = useState(false)
@@ -122,7 +117,6 @@ const FortuneContextProvider: FC<any> = ({ children }) => {
           enableAudio,
           countdown,
           hoverPlayerIndex,
-          usdConversion
         },
         functions: {
           setRound,
@@ -134,7 +128,6 @@ const FortuneContextProvider: FC<any> = ({ children }) => {
           setEnableAudio,
           setCountdown,
           setHoverPlayerIndex,
-          setUSDConversion
         }
       }}
     >
