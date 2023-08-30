@@ -304,7 +304,7 @@ const FortunePage = () => {
     if (playerWinner) {
       setTimeout(() => {
         setActiveRound(undefined)
-      }, 3 * 1000)
+      }, 10 * 1000)
     }
   }, [playerWinner])
 

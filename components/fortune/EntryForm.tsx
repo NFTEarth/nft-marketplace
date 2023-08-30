@@ -97,6 +97,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
   const filteredTokens = tokens.filter(t => t.token?.kind === 'erc721' && BigInt(t.token?.collection?.floorAskPrice?.amount?.raw || '0') > minimumEntry)
   const parsedEthValue = BigInt(parseEther(`${valueEth === '' ? 0 : +valueEth}`).toString())
   const parsedNFTEValue = BigInt(parseEther(`${valueNFTE === '' ? 0 : +valueNFTE}`).toString())
+  const nfteEthConversion = Number(formatEther(parsedNFTEValue)) * (currencyToETHConversions['NFTE']?.price || 0)
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
@@ -310,9 +311,9 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
                   p: 16
                 }}
               >
-                <Flex justify="between">
+                <Flex align="end" justify="between">
                   <Text style="h6">Deposit ETH</Text>
-                  <Text style="subtitle3">Minimum Deposit = ${formatEther(minimumEntry)} ETH</Text>
+                  <Text style="subtitle3">{`Minimum Deposit = ${formatEther(minimumEntry)} ETH`}</Text>
                 </Flex>
                 <NumericalInput
                   value={valueEth}
@@ -359,21 +360,21 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
                   p: 16
                 }}
               >
-                <Flex justify="between">
+                <Flex align="end" justify="between">
                   <Text style="h6">Deposit NFTE</Text>
-                  <Flex>
+                  <Flex css={{ gap: 5 }}>
                     <FormatCryptoCurrency
-                      amount={Number(formatEther(parsedNFTEValue)) * (currencyToETHConversions['NFTE']?.price || 0)}
-                      textStyle="subtitle2"
+                      amount={nfteEthConversion}
+                      textStyle="subtitle3"
                       logoHeight={16}
                     />
-                    <Text>{`  ETH`}</Text>
+                    <Text style="subtitle3">ETH</Text>
                   </Flex>
                 </Flex>
                 <NumericalInput
                   value={valueNFTE}
                   onUserInput={handleSetNFTEValue}
-                  icon={<Button size="xs" color="primary" disabled={BigInt(round.valuePerEntry || BigInt(0)) > BigInt(0)} onClick={handleAddNFTE}>Add</Button>}
+                  icon={<Button size="xs" color="primary" disabled={parseEther(`${nfteEthConversion < 0.001 ? 0 : nfteEthConversion}`) < minimumEntry} onClick={handleAddNFTE}>Add</Button>}
                   iconStyles={{
                     top: 4,
                     right: 4,
@@ -433,6 +434,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
           <Text style="h5">{`Selections(${(Object.keys(selections)).length})`}</Text>
           <Button size="xs" color="primary" onClick={() => {
             setSelections?.({})
+            setValueEth?.('')
           }}>
             Clear
           </Button>
@@ -482,9 +484,9 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
                 }}
               />
             ))}
-            {(Object.keys(selections)).length == 0 && (
+            {((Object.keys(selections)).length == 0 && parsedEthValue < minimumEntry) && (
               <Flex justify="center">
-                <Text color="subtle">{parsedEthValue > BigInt(0) ? 'ETH Deposit'  : 'No Selection'}</Text>
+                <Text color="subtle">No Selection</Text>
               </Flex>
             )}
           </Flex>

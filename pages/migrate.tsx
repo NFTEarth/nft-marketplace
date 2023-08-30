@@ -36,7 +36,7 @@ const BridgePage = () => {
   const [ toChainId, setToChainId ] = useState<number>(OFT_CHAINS[1].id)
   const { openConnectModal } = useConnectModal()
   const [bridgePercent, setBridgePercent] = useState(0);
-  const [valueEth, setValueEth] = useState<string>('0.0')
+  const [valueEth, setValueEth] = useState<string>('0')
   const { switchNetworkAsync } = useSwitchNetwork({
     chainId: fromChainId,
   })
