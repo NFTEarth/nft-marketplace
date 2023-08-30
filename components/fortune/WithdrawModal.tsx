@@ -3,9 +3,9 @@ import {FC} from "preact/compat";
 import {useContext, useMemo, useState} from "react";
 import {Button, Flex, FormatCryptoCurrency, Select, Text, Tooltip} from "../primitives";
 import {
-  useAccount,
+  useAccount, useContractWrite,
   useNetwork,
-  useSwitchNetwork,
+  useSwitchNetwork, useWaitForTransaction,
   useWalletClient
 } from "wagmi";
 import {useConnectModal} from "@rainbow-me/rainbowkit";
@@ -30,6 +30,7 @@ import {ToastContext} from "../../context/ToastContextProvider";
 import expirationOptions from "../../utils/defaultExpirationOptions";
 import CryptoCurrencyIcon from "../primitives/CryptoCurrencyIcon";
 import {TokenMedia} from "@reservoir0x/reservoir-kit-ui";
+import TransferManagerAbi from "../../artifact/TransferManagerAbi.json";
 
 type ClaimModalProps = {
   open?: boolean
@@ -51,7 +52,6 @@ type WithdrawDeposit = {
 
 const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
   const [open, setOpen] = useState(!!defaultOpen)
-  const [step, setStep] = useState(0)
   const [error, setError] = useState<any | undefined>()
   const {addToast} = useContext(ToastContext)
   const {address} = useAccount()
@@ -90,6 +90,20 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
 
   const fortuneChain = FORTUNE_CHAINS.find(c => c.id === marketplaceChain.id);
 
+  const { data, writeAsync: withdrawDeposit, isLoading, error: withdrawError } = useContractWrite({
+    address: fortuneChain?.address as `0x${string}`,
+    abi: FortuneAbi,
+    functionName: 'withdrawDeposits',
+    args: [roundId, cancelledDeposits[roundId || 0]?.indices],
+    account: address
+  })
+
+  const { isLoading: isLoadingTransaction, isSuccess = true } = useWaitForTransaction({
+    hash: data?.hash,
+    enabled: !!data?.hash,
+    confirmations: 5,
+  })
+
   const handleWithdrawDeposit = async () => {
     setError(undefined)
     if (!roundId) {
@@ -103,39 +117,7 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
     }
 
     try {
-      setStep(1)
-      const publicClient = createPublicClient({
-        chain: marketplaceChain,
-        transport: http()
-      })
-
-      const walletClient = createWalletClient({
-        chain: marketplaceChain,
-        // @ts-ignore
-        transport: custom(window?.ethereum)
-      })
-
-      const [account] = await walletClient.getAddresses()
-      const {request} = await publicClient.simulateContract({
-        address: fortuneChain?.address as `0x${string}`,
-        abi: FortuneAbi,
-        functionName: 'withdrawDeposits',
-        args: [roundId, cancelledDeposits[roundId].indices],
-        account
-      })
-
-      const hash = await walletClient.writeContract(request)
-
-      setStep(2)
-
-      await publicClient.waitForTransactionReceipt(
-        {
-          confirmations: 5,
-          hash
-        }
-      )
-
-      setStep(3)
+      withdrawDeposit?.()
     } catch (err: any) {
       if (err instanceof BaseError) {
         const revertError = err.walk(err => err instanceof ContractFunctionRevertedError)
@@ -153,7 +135,6 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
             description: (revertError as any).message
           })
         }
-        setStep(0)
         setOpen(false)
       } else {
         console.log(err.stack)
@@ -162,7 +143,6 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
           status: 'error',
           description: (err as any).message
         })
-        setStep(0)
         setOpen(false)
       }
     }
@@ -230,7 +210,6 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
           onClose
         ) {
           onClose()
-          setStep(0)
         }
         setOpen(open)
       }}
@@ -252,12 +231,12 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
             }}
           />
         )}
-        {[1, 2].includes(step) && (
+        {(isLoading) && (
           <Flex css={{height: '100%', py: '$4'}} align="center">
             <LoadingSpinner/>
           </Flex>
         )}
-        {step === 2 && (
+        {isLoadingTransaction && (
           <TransactionProgress
             justify="center"
             css={{mb: '$3'}}
@@ -265,13 +244,18 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
             toImgs={['/icons/arbitrum-icon-light.svg']}
           />
         )}
-        {step === 1 && (
+        {isLoading && (
           <Text style="h6">Please confirm in your wallet</Text>
         )}
-        {step === 2 && (
-          <Text style="h6">Sending to your wallet</Text>
+        {isLoadingTransaction && (
+          <TransactionProgress
+            justify="center"
+            css={{ mb: '$3' }}
+            fromImgs={['/icons/fortune.png']}
+            toImgs={['/icons/arbitrum-icon-light.svg']}
+          />
         )}
-        {step === 3 && (
+        {isSuccess && (
           <Flex direction="column" css={{gap: 20, my: '$4'}}>
             <Text style="h6" css={{color: 'green'}}>Withdraw Success !</Text>
           </Flex>
