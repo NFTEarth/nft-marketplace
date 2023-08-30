@@ -1,29 +1,28 @@
-import {FC, useEffect, useRef, useState} from "react";
+import {FC, useEffect, useMemo, useRef, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {useCoinConversion, useUserTokens,} from '@reservoir0x/reservoir-kit-ui'
 import {faClose, faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import {AddressZero} from "@ethersproject/constants";
 import {parseUnits} from "ethers";
-import {useDebounce, useIntersectionObserver} from "usehooks-ts";
+import {useIntersectionObserver} from "usehooks-ts";
 import {
   useAccount,
   useBalance,
 } from "wagmi";
 import {
-  createPublicClient,
-  formatEther, formatUnits, http,
+  formatEther,
   parseEther
 } from "viem";
 import {useMediaQuery} from "react-responsive";
 
 import NumericalInput from "../bridge/NumericalInput";
-import {Button, CryptoCurrencyIcon, Flex, FormatCryptoCurrency, FormatCurrency, Text} from "../primitives";
+import {Button, CryptoCurrencyIcon, Flex, FormatCryptoCurrency, Text} from "../primitives";
 import {useFortune, useMarketplaceChain, useMounted} from "hooks";
 import SelectionItem from "./SelectionItem";
 import NFTEntry, {SelectionData} from "./NFTEntry";
 import FortuneDepositModal from "./DepositModal";
 import {Round} from "../../hooks/useFortuneRound";
-import useUSDAndNativePrice from "../../hooks/useUSDAndNativePrice";
+import useFortuneCurrencies from "../../hooks/useFortuneCurrencies";
 
 type EntryProps = {
   roundId: number,
@@ -43,6 +42,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
   const [showTokenEntry, setShowTokenEntry] = useState(false)
   const [valueNFTE, setValueNFTE] = useState<string>('')
   const loadMoreRef = useRef<HTMLDivElement>(null)
+  const { data: allowedCurrencies } = useFortuneCurrencies()
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
   const {
     data: tokens,
@@ -59,6 +59,9 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
     revalidateOnMount: true
   })
 
+  const allowedCurrencyAddresses = useMemo(() => {
+    return (allowedCurrencies || []).map(p => p.address.toLowerCase())
+  }, [allowedCurrencies])
   const isMounted = useMounted()
   const isMobile = useMediaQuery({ maxWidth: 600 }) && isMounted
   const marketplaceChain = useMarketplaceChain()
@@ -94,7 +97,11 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
 
   const { data: { round, valueEth, selections }, setSelections, setValueEth } = useFortune<FortuneData>(q => q)
   const minimumEntry = BigInt(round?.valuePerEntry || 0)
-  const filteredTokens = tokens.filter(t => t.token?.kind === 'erc721' && BigInt(t.token?.collection?.floorAskPrice?.amount?.raw || '0') > minimumEntry)
+  const filteredTokens = tokens
+    .filter(t => t.token?.kind === 'erc721' &&
+      BigInt(t.token?.collection?.floorAskPrice?.amount?.raw || '0') > minimumEntry &&
+      allowedCurrencyAddresses.includes((t.token?.contract?.toLowerCase() || '0x0') as `0x${string}`)
+    )
   const parsedEthValue = BigInt(parseEther(`${valueEth === '' ? 0 : +valueEth}`).toString())
   const parsedNFTEValue = BigInt(parseEther(`${valueNFTE === '' ? 0 : +valueNFTE}`).toString())
   const nfteEthConversion = Number(formatEther(parsedNFTEValue)) * (currencyToETHConversions['NFTE']?.price || 0)

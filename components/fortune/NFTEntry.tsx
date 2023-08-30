@@ -62,6 +62,7 @@ const NFTEntry : FC<NFTEntryProps> = ({ data, handleClick, selected }) => {
     fetch(path.href)
       .then(res => res.json())
       .then(res => {
+        console.log(res);
         setPrice(BigInt(parseEther(res.price.toString())))
         setReservoirOracleFloor({
           id: res.message.id,
