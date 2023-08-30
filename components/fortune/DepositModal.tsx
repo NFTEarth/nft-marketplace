@@ -55,7 +55,7 @@ const getGeneralError = (err:any) => {
 
 const getErrorText = ((errorName: string) => {
   if (errorName === 'ZeroDeposits') {
-    return 'You have put ETH/NFTE/NFT to deposit'
+    return 'You must deposit ETH/NFTE or an eligible NFT to enter'
   }
 
   return errorName
@@ -84,7 +84,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
   })
   let requireApprovals = useRef(0).current
 
-  const tweetText = `I just entered the current round on #Fortune at @NFTEarth_L2\n\n🎉 #Winner takes all 🎉\n\nJoin the fun now at this link!`
+  const tweetText = `I just entered the current round of #Fortune on @NFTEarth_L2\n\n🎉 #Winner takes all 🎉\n\nJoin the fun now at this link!`
 
   const { data: isApproved, refetch: refetchApproval } = useContractRead({
     enabled: !!fortuneChain?.transferManager && !!address,
@@ -256,7 +256,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
     >
       {(countdown < 30 && round?.status === RoundStatus.Open) && (
         <Text css={{ color: 'orange', textAlign: 'center' }}>
-          {`Warning: less than 30 seconds left, your transaction might not make it in time.`}
+          {`Alert: less than 30 seconds left in round, your transaction might not make it in time.`}
         </Text>
       )}
       <Button
@@ -267,7 +267,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
           justifyContent: 'center'
         }}
         onClick={handleDeposit}
-      >{isApproved ? (round?.status !== RoundStatus.Open ? 'Round Closed' : `(Minimum ${formatEther(BigInt(round?.valuePerEntry || 0))}Ξ) Deposit`) : 'Set Approval'}</Button>
+      >{isApproved ? (round?.status !== RoundStatus.Open ? 'Round Closed' : `(Enter Round ${formatEther(BigInt(round?.valuePerEntry || 0))}(ETH Minimum)`) : 'Set Approval'}</Button>
     </Flex>
   )
 
@@ -308,7 +308,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
           </Flex>
         )}
         {isApprovalLoading && (
-          <Text style="h6">Transfer Manager Approval</Text>
+          <Text style="h6">Contract Approval</Text>
         )}
         {/*{isContractApproval && (*/}
         {/*  <Text style="h6">Approval</Text>*/}
@@ -329,14 +329,14 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
         )}
         {isSuccess && (
           <Flex direction="column" css={{ gap: 20, my: '$4' }}>
-            <Text style="h6" css={{ color: 'green' }}>Deposit Success !</Text>
+            <Text style="h6" css={{ color: 'green' }}>Deposit Success!</Text>
             <Button
               as="a"
               rel="noreferrer noopener"
               target="_blank"
               href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(`https://app.nftearth.exchange/fortune`)}&hashtags=&via=&related=&original_referer=${encodeURIComponent('https://app.nftearth.exchange')}`}
             >
-              {`Share your entry on X! `}
+              {`Share your entry on X!`}
               <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faTwitter}/>
             </Button>
           </Flex>
