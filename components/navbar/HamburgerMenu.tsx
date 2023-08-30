@@ -229,7 +229,7 @@ const HamburgerMenu = () => {
             }}
           >
             <Flex direction="column">
-              <Link href="/" legacyBehavior>
+              <Link href={`/${routePrefix}/collection-rankings`} legacyBehavior>
                 <Text
                   style="subtitle1"
                   css={{
@@ -237,13 +237,12 @@ const HamburgerMenu = () => {
                     cursor: 'pointer',
                     pb: '$4',
                     pt: '24px',
-                    width: '100%',
                   }}
                 >
-                  Explore
+                  Collections
                 </Text>
               </Link>
-              <Link href="/portfolio" legacyBehavior>
+              <Link href="/fortune" legacyBehavior>
                 <Text
                   style="subtitle1"
                   css={{
@@ -254,21 +253,7 @@ const HamburgerMenu = () => {
                     width: '100%',
                   }}
                 >
-                  Portfolio
-                </Text>
-              </Link>
-              <Link href="/quests" legacyBehavior>
-                <Text
-                  style="subtitle1"
-                  css={{
-                    borderBottom: '1px solid $gray4',
-                    cursor: 'pointer',
-                    pb: '$4',
-                    pt: '24px',
-                    width: '100%',
-                  }}
-                >
-                  Quests
+                  Fortune
                 </Text>
               </Link>
               <Link href="/bridge" legacyBehavior>
@@ -283,6 +268,34 @@ const HamburgerMenu = () => {
                   }}
                 >
                   Bridge
+                </Text>
+              </Link>
+              <Link href="https://www.sushi.com/pool/42161:0xd2aaa8fc5c39dbe68344bc42d4513ea344e5d696" target="_blank" legacyBehavior>
+                <Text
+                  style="subtitle1"
+                  css={{
+                    borderBottom: '1px solid $gray4',
+                    cursor: 'pointer',
+                    pb: '$4',
+                    pt: '24px',
+                    width: '100%',
+                  }}
+                >
+                  Rewards
+                </Text>
+              </Link>
+              <Link href="/portfolio" legacyBehavior>
+                <Text
+                  style="subtitle1"
+                  css={{
+                    borderBottom: '1px solid $gray4',
+                    cursor: 'pointer',
+                    pb: '$4',
+                    pt: '24px',
+                    width: '100%',
+                  }}
+                >
+                  Portfolio
                 </Text>
               </Link>
             </Flex>

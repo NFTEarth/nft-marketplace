@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {useCountdown} from 'usehooks-ts'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {
@@ -9,12 +9,17 @@ import {
   faVolumeMute,
   faVolumeUp,
 } from "@fortawesome/free-solid-svg-icons";
+import {useCoinConversion} from "@reservoir0x/reservoir-kit-ui";
 import {useMediaQuery} from "react-responsive";
+import {useAccount} from "wagmi";
+import {useConnectModal} from "@rainbow-me/rainbowkit";
+import {useRouter} from "next/router";
+import {formatEther, formatUnits, parseEther} from "viem";
+import {AddressZero} from "@ethersproject/constants"
 import Link from 'next/link'
 import Image from 'next/image'
 
 import Layout from 'components/Layout'
-import {Head} from 'components/Head'
 import Wheel from "components/fortune/Wheel";
 import EntryForm from "components/fortune/EntryForm";
 import Player, {PlayerType} from "components/fortune/Player";
@@ -22,26 +27,18 @@ import FortunePrize, {PrizeType} from "components/fortune/Prize";
 import Confetti from "components/common/Confetti";
 import ChainToggle from "components/common/ChainToggle";
 import LoadingSpinner from "components/common/LoadingSpinner";
-import {Anchor, Box, Button, Flex, FormatCryptoCurrency, Text} from 'components/primitives'
+import {Box, Button, Flex, FormatCryptoCurrency, Text} from 'components/primitives'
+import FortuneEnterButton from "components/fortune/EnterButton";
+import FortuneDepositModal from "components/fortune/DepositModal";
+import FortuneRoundStatus from "components/fortune/RundStatus";
+import FortuneFooter from "components/fortune/Footer";
+import BetaLogo from "components/fortune/BetaLogo";
+import Head from "components/fortune/Head";
 import {useFortune, useMarketplaceChain, useMounted} from "hooks";
+import useFortuneRound, {Deposit, RoundStatus} from "hooks/useFortuneRound";
+import useFortuneStatus, {FortuneStatus} from "hooks/useFortuneStatus";
 import supportedChains, {FORTUNE_CHAINS} from "utils/chains";
 import {styled} from 'stitches.config'
-import FortuneEnterButton from "../../components/fortune/EnterButton";
-import {useAccount} from "wagmi";
-import {useConnectModal} from "@rainbow-me/rainbowkit";
-import {useRouter} from "next/router";
-import useFortuneCurrentRound from "../../hooks/useFortuneCurrentRound";
-import useFortuneRound, {Deposit, Round, RoundStatus} from "../../hooks/useFortuneRound";
-import {formatEther, formatUnits, parseEther} from "viem";
-import {AddressZero} from "@ethersproject/constants"
-import FortuneDepositModal from "../../components/fortune/DepositModal";
-import {useCoinConversion} from "@reservoir0x/reservoir-kit-ui";
-import {arbitrum} from "viem/chains";
-import FortuneRoundStatus from "../../components/fortune/RundStatus";
-import {faDiscord, faTwitter} from "@fortawesome/free-brands-svg-icons";
-import FortuneFooter from "../../components/fortune/Footer";
-import useFortuneStatus, {FortuneStatus} from "../../hooks/useFortuneStatus";
-import BetaLogo from "../../components/fortune/BetaLogo";
 
 type FortuneData = {
   enableAudio: boolean
@@ -62,22 +59,6 @@ const convertTimer = (time: number) : string => {
   const seconds = Math.ceil(secd);
 
   return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
-}
-
-const getTitleText = (status: number, totalPrize: string, convertedCountdown: any) => {
-  if (status === RoundStatus.Open) {
-    return `${convertedCountdown} • Ξ${totalPrize} • Fortune | NFTEarth`
-  }
-
-  if (status === RoundStatus.Drawing) {
-    return `Drawing Winner... • Ξ${totalPrize} • Fortune  | NFTEarth`
-  }
-
-  if (status === RoundStatus.Drawn) {
-    return `Winner Drawn • Ξ${totalPrize} • Fortune  | NFTEarth`
-  }
-
-  return `Preparing Game... • Fortune  | NFTEarth`
 }
 
 const FortunePage = () => {
@@ -320,9 +301,14 @@ const FortunePage = () => {
     setShowEntryForm(true);
   }, [address])
 
-  if (!FORTUNE_CHAINS.find(c => c.id === marketplaceChain.id)) {
+  if (!FORTUNE_CHAINS.find(c => c.id === marketplaceChain.id) && mounted) {
     return (
       <Layout>
+        <Head
+          status={roundData?.status}
+          totalPrize={totalPrize}
+          convertedCountdown={convertedCountdown}
+        />
         <Flex
           align="center"
           justify="center"
@@ -344,7 +330,11 @@ const FortunePage = () => {
 
   return (
     <Layout>
-      <Head title={getTitleText(roundData?.status, formatEther(totalPrize), convertedCountdown)}/>
+      <Head
+        status={roundData?.status}
+        totalPrize={totalPrize}
+        convertedCountdown={convertedCountdown}
+      />
       <Box
         css={{
           py: 24,
