@@ -125,9 +125,9 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
                 flexDirection: 'column',
                 gap: 20,
               }}>
-              <Flex align="center" css={{ gap: 20, backgroundColor: '$gray3', p: '$3' }}>
+              <Flex align="center" justify="between" css={{ gap: 20, backgroundColor: '$gray3', p: '$3' }}>
                 <Text>{round.roundId}</Text>
-                <Flex align="center" css={{ gap: 10 }}>
+                <Flex align="center" css={{ gap: 10, flex: 1 }}>
                   {round.status === RoundStatus.Drawn && (
                     ensAvatar ? (
                       <Avatar size="medium" src={ensAvatar} />
@@ -154,6 +154,9 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
                     <Text>Round Cancelled</Text>
                   )}
                 </Flex>
+                <Text style="body4">
+                  {`${round.numberOfParticipants || 0} Player`}
+                </Text>
               </Flex>
               <Flex
                 align="center"
