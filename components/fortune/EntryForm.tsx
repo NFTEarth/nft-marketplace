@@ -324,15 +324,16 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
                     left: 'auto'
                   }}
                   containerCss={{
-                    width: '100%'
+                    width: '100%',
                   }}
                   css={{
                     px: 20,
-                    boxShadow: 'inset 0 0 0 2px $$focusColor',
+                    boxShadow: 'inset 0 0 0 2px $colors$primary13',
                     textAlign: 'right',
                     '&:hover': {
                       backgroundColor: '$gray4'
-                    }
+                    },
+                    '&:focus': { boxShadow: 'inset 0 0 0 2px $colors$primary13' },
                   }}
                 />
                 <Flex
@@ -386,11 +387,12 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
                   css={{
                     pl: 20,
                     pr: 70,
-                    boxShadow: 'inset 0 0 0 2px $$focusColor',
                     textAlign: 'right',
+                    boxShadow: 'inset 0 0 0 2px $colors$primary13',
                     '&:hover': {
                       backgroundColor: '$gray4'
-                    }
+                    },
+                    '&:focus': { boxShadow: 'inset 0 0 0 2px $colors$primary13' },
                   }}
                 />
                 <Flex
