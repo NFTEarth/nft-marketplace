@@ -1,6 +1,6 @@
 import {FC, useEffect, useRef, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {useUserTokens,  } from '@reservoir0x/reservoir-kit-ui'
+import {useCoinConversion, useUserTokens,} from '@reservoir0x/reservoir-kit-ui'
 import {faClose, faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import {AddressZero} from "@ethersproject/constants";
 import {parseUnits} from "ethers";
@@ -11,7 +11,7 @@ import {
 } from "wagmi";
 import {
   createPublicClient,
-  formatEther, http,
+  formatEther, formatUnits, http,
   parseEther
 } from "viem";
 import {useMediaQuery} from "react-responsive";
@@ -23,8 +23,6 @@ import SelectionItem from "./SelectionItem";
 import NFTEntry, {SelectionData} from "./NFTEntry";
 import FortuneDepositModal from "./DepositModal";
 import {Round} from "../../hooks/useFortuneRound";
-import ERC20OracleAbi from '../../artifact/ERC20OracleAbi.json'
-import {getUSDAndNativePrices} from "../../utils/price";
 import useUSDAndNativePrice from "../../hooks/useUSDAndNativePrice";
 
 type EntryProps = {
@@ -73,23 +71,32 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
     token: '0x51b902f19a56f0c8e409a34a215ad2673edf3284',
     chainId: marketplaceChain.id
   })
-  const debouncedValueNFTE = useDebounce(valueNFTE, 500)
-  const { data: priceData } = useUSDAndNativePrice({
-    chainId: marketplaceChain.id,
-    contract: '0x51b902f19a56f0c8e409a34a215ad2673edf3284',
-    price: parseEther(`${+debouncedValueNFTE}`)
-  })
-
-  const publicClient = createPublicClient({
-    chain: marketplaceChain,
-    transport: http()
-  })
+  const ethConversions = useCoinConversion(
+    'ETH',
+    'NFTE',
+    'nftearth'
+  )
+  const usdConversions = useCoinConversion(
+    'USD',
+    'ETH,NFTE',
+    'ethereum,nftearth'
+  )
+  const currencyToUsdConversions = usdConversions.reduce((map, data) => {
+    map[data.symbol] = data
+    map[(data as any).coinGeckoId] = data
+    return map
+  }, {} as Record<string, (typeof usdConversions)[0]>)
+  const currencyToETHConversions = ethConversions.reduce((map, data) => {
+    map[data.symbol] = data
+    map[(data as any).coinGeckoId] = data
+    return map
+  }, {} as Record<string, (typeof ethConversions)[0]>)
 
   const { data: { round, valueEth, selections }, setSelections, setValueEth } = useFortune<FortuneData>(q => q)
   const minimumEntry = BigInt(round?.valuePerEntry || 0)
   const filteredTokens = tokens.filter(t => t.token?.kind === 'erc721' && BigInt(t.token?.collection?.floorAskPrice?.amount?.raw || '0') > minimumEntry)
   const parsedEthValue = BigInt(parseEther(`${valueEth === '' ? 0 : +valueEth}`).toString())
-
+  const parsedNFTEValue = BigInt(parseEther(`${valueNFTE === '' ? 0 : +valueNFTE}`).toString())
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
@@ -333,7 +340,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
                 >
                   <Text>ETH in wallet:</Text>
                   <Flex align="center" css={{ gap: 10 }}>
-                    {/*<Text style="body3">{`(${valueEth})`}</Text>*/}
+                    <Text style="body3">{`($${(Number(ethBalance.data?.formatted) * (currencyToUsdConversions['ETH']?.price || 0)).toFixed(2)})`}</Text>
                     <FormatCryptoCurrency
                       amount={ethBalance.data?.value}
                       decimals={ethBalance.data?.decimals}
@@ -356,7 +363,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
                   <Text style="h6">Add NFTE</Text>
                   <Flex>
                     <FormatCryptoCurrency
-                      amount={priceData?.nativePrice}
+                      amount={Number(formatEther(parsedNFTEValue)) * (currencyToETHConversions['NFTE']?.price || 0)}
                       textStyle="subtitle2"
                       logoHeight={16}
                     />
@@ -366,7 +373,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
                 <NumericalInput
                   value={valueNFTE}
                   onUserInput={handleSetNFTEValue}
-                  icon={<Button size="xs" color="primary" disabled={BigInt(round.valuePerEntry || BigInt(0)) > (priceData?.nativePrice || BigInt(0))} onClick={handleAddNFTE}>Add</Button>}
+                  icon={<Button size="xs" color="primary" disabled={BigInt(round.valuePerEntry || BigInt(0)) > BigInt(0)} onClick={handleAddNFTE}>Add</Button>}
                   iconStyles={{
                     top: 4,
                     right: 4,
@@ -391,7 +398,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
                 >
                   <Text>NFTE in wallet:</Text>
                   <Flex align="center" css={{ gap: 10 }}>
-                    {/*<Text style="body3">{`($${formatEther(priceData?.usdPrice || BigInt(0), 'wei')})`}</Text>*/}
+                    <Text style="body3">{`($${(Number(nfteBalance.data?.formatted) * (currencyToUsdConversions['NFTE']?.price || 0)).toFixed(2)})`}</Text>
                     <FormatCryptoCurrency
                       amount={nfteBalance.data?.value}
                       decimals={nfteBalance.data?.decimals}

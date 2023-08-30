@@ -149,7 +149,7 @@ const FortunePage = () => {
   const ethConversion =
     currencyToUsdConversions['ETH']
   const totalPrizeUsd =
-    Number(formatUnits(BigInt(totalPrize), arbitrum.nativeCurrency.decimals || 18)) *
+    Number(formatUnits(BigInt(totalPrize), marketplaceChain.nativeCurrency.decimals || 18)) *
     (ethConversion?.price || 0)
 
   useEffect(() => {
@@ -168,7 +168,9 @@ const FortunePage = () => {
     (roundData?.deposits || []).forEach((d: Deposit) => {
       const winChance = Math.round(d.entriesCount / (roundData?.numberOfEntries || 1) * 100)
       const colorHash = Math.floor(+d.depositor*16777215).toString(16)
-      const player: PlayerType = {
+      const existingPlayer = newPlayers.findIndex(p => p.address === d.depositor)
+
+      let player = {
         index: newPlayers.length,
         address: d.depositor as `0x${string}`,
         entry: d.entriesCount,
@@ -176,15 +178,25 @@ const FortunePage = () => {
         color: `#${colorHash.substring(0, 2)}${colorHash.substring(8, 10)}${colorHash.substring(16, 18)}`
       };
 
-      newPlayers.push(player)
+      if (existingPlayer > -1) {
+        newPlayers[existingPlayer].entry += d.entriesCount
+        newPlayers[existingPlayer].y += winChance
+      } else {
+        newPlayers.push(player)
+      }
 
       if (d.tokenType === 'ETH') {
         newPrizes = newPrizes.map((p, i) => {
           if (i === 0) {
-            p.depositors.push({
-              player,
-              amount: BigInt(d.tokenAmount)
-            });
+            const existingPlayerDepositIndex = p.depositors.findIndex(d => d.player.address === player.address)
+            if (existingPlayerDepositIndex > -1) {
+              p.depositors[existingPlayerDepositIndex].amount += BigInt(d.tokenAmount)
+            } else {
+              p.depositors.push({
+                player,
+                amount: BigInt(d.tokenAmount)
+              });
+            }
             p.amount = p.amount + BigInt(d.tokenAmount)
           }
 
@@ -197,10 +209,15 @@ const FortunePage = () => {
         if (currentPrizeIndex > -1) {
           newPrizes = newPrizes.map((p, i) => {
             if (i === 0) {
-              p.depositors.push({
-                player,
-                amount: BigInt(d.tokenAmount)
-              });
+              const existingPlayerDepositIndex = p.depositors.findIndex(d => d.player.address === player.address)
+              if (existingPlayerDepositIndex > -1) {
+                p.depositors[existingPlayerDepositIndex].amount += BigInt(d.tokenAmount)
+              } else {
+                p.depositors.push({
+                  player,
+                  amount: BigInt(d.tokenAmount)
+                });
+              }
               p.amount = p.amount + BigInt(d.tokenAmount)
             }
 
@@ -250,6 +267,7 @@ const FortunePage = () => {
   }, [roundData?.deposits])
 
   useEffect(() => {
+    setPlayerWinner(undefined)
     setRound?.(roundData)
   }, [roundData])
 
@@ -260,8 +278,6 @@ const FortunePage = () => {
   useEffect(() => {
     resetCountdown();
     startCountdown()
-
-    setPlayerWinner(undefined)
 
     if (roundData?.status === RoundStatus.Cancelled && !router.query.round) {
       setTimeout(() => {

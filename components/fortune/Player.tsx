@@ -12,6 +12,7 @@ export interface PlayerType extends Highcharts.PointOptionsObject {
   index: number
   address: `0x${string}`
   entry: number
+  y: number
   color: string
   shortAddress?: string
   shortEnsName?: string
