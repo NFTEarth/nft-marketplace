@@ -267,7 +267,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
           justifyContent: 'center'
         }}
         onClick={handleDeposit}
-      >{isApproved ? (round?.status !== RoundStatus.Open ? 'Round Closed' : `Join Round (>= ${formatEther(BigInt(round?.valuePerEntry || 0))}ETH)`) : 'Set Approval'}</Button>
+      >{isApproved ? (round?.status !== RoundStatus.Open ? 'Round Closed' : `Enter Round`) : 'Set Approval'}</Button>
     </Flex>
   )
 
