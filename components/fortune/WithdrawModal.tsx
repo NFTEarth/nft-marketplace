@@ -148,7 +148,7 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
     }
   }
 
-  const trigger = (
+  const trigger = useMemo(() => (
     <Flex css={{gap: 20}}>
       <Select
         disabled={disabled}
@@ -175,7 +175,7 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
       </Select>
       <Button disabled={disabled} onClick={handleWithdrawDeposit}>Withdraw</Button>
     </Flex>
-  )
+  ), [deposits, disabled])
 
   if (isInTheWrongNetwork) {
     return (
