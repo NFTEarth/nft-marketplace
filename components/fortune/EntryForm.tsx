@@ -305,7 +305,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
               >
                 <Flex justify="between">
                   <Text style="h6">Add ETH</Text>
-                  <Text style="subtitle3">{`Minimum Entry is ${formatEther(minimumEntry)}Ξ`}</Text>
+                  <Text style="subtitle3">{`Minimum Entry = ${formatEther(minimumEntry)}ETH`}</Text>
                 </Flex>
                 <NumericalInput
                   value={valueEth}
@@ -360,7 +360,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
                       textStyle="subtitle2"
                       logoHeight={16}
                     />
-                    <Text>{` = `}</Text>
+                    <Text>{` In ETH `}</Text>
                   </Flex>
                 </Flex>
                 <NumericalInput
