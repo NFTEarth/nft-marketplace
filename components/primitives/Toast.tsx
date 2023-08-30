@@ -12,8 +12,11 @@ const VIEWPORT_PADDING = 25
 export const ToastViewport = styled(ToastPrimitive.Viewport, {
   padding: VIEWPORT_PADDING,
   position: 'fixed',
-  bottom: 0,
   right: 0,
+  bottom: 120,
+  '@lg': {
+    bottom: 0,
+  },
   display: 'flex',
   flexDirection: 'column',
   gap: '10px',

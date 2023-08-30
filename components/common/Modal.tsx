@@ -60,6 +60,9 @@ export const Modal = forwardRef<ElementRef<typeof Dialog>, Props>(
         onOpenChange={onOpenChange}
         onPointerDownOutside={onPointerDownOutside}
         onFocusCapture={onFocusCapture}
+        style={{
+          maxWidth: '90%'
+        }}
         overlayProps={{ style: { opacity: 0.6 } }}
       >
         <Flex

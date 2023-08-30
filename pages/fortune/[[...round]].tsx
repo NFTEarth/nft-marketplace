@@ -32,7 +32,7 @@ import {useConnectModal} from "@rainbow-me/rainbowkit";
 import {useRouter} from "next/router";
 import useFortuneCurrentRound from "../../hooks/useFortuneCurrentRound";
 import useFortuneRound, {Deposit, Round, RoundStatus} from "../../hooks/useFortuneRound";
-import {formatEther, formatUnits} from "viem";
+import {formatEther, formatUnits, parseEther} from "viem";
 import {AddressZero} from "@ethersproject/constants"
 import FortuneDepositModal from "../../components/fortune/DepositModal";
 import {useCoinConversion} from "@reservoir0x/reservoir-kit-ui";
@@ -44,6 +44,8 @@ type FortuneData = {
   players: PlayerType[]
   usdConversion: number
   durationLeft: number
+  valueEth: string
+  selections: Selection[]
 }
 
 const Video = styled('video', {});
@@ -97,6 +99,8 @@ const FortunePage = () => {
   const { data: {
     players,
     enableAudio,
+    valueEth,
+    selections,
   }, setRound, setCountdown, setPlayers, setEnableAudio } = useFortune<FortuneData>(d => d)
   const { openConnectModal } = useConnectModal()
   const marketplaceChain = useMarketplaceChain()
@@ -113,6 +117,7 @@ const FortunePage = () => {
     totalNumberOfEntries: BigInt(0)
   }])
 
+  const parsedEthValue = BigInt(parseEther(`${valueEth === '' ? 0 : +valueEth}`).toString())
   const secondDiff = (+roundData?.cutoffTime || 0) - ((new Date()).getTime() / 1000);
   const duration = secondDiff < 0 ? 0 : Math.round(secondDiff);
 
@@ -732,7 +737,10 @@ const FortunePage = () => {
               </Flex>
             </Flex>
             {showEntryForm ? (
-              <FortuneDepositModal roundId={roundData?.roundId} />
+              <FortuneDepositModal
+                roundId={roundData?.roundId}
+                disabled={!roundData || !(parsedEthValue >= BigInt(roundData?.valuePerEntry || 0) || (Object.keys(selections)).length > 0)}
+              />
             ) : (
               <FortuneEnterButton
                 disabled={countdown < 1 || roundData?.status !== RoundStatus.Open}

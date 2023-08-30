@@ -88,6 +88,8 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
   const { data: { round, valueEth, selections }, setSelections, setValueEth } = useFortune<FortuneData>(q => q)
   const minimumEntry = BigInt(round?.valuePerEntry || 0)
   const filteredTokens = tokens.filter(t => t.token?.kind === 'erc721' && BigInt(t.token?.collection?.floorAskPrice?.amount?.raw || '0') > minimumEntry)
+  const parsedEthValue = BigInt(parseEther(`${valueEth === '' ? 0 : +valueEth}`).toString())
+
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
@@ -462,10 +464,18 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
                 }}
               />
             ))}
+            {(Object.keys(selections)).length == 0 && (
+              <Flex justify="center">
+                <Text color="subtle">{parsedEthValue > BigInt(0) ? 'ETH Deposit'  : 'No Selection'}</Text>
+              </Flex>
+            )}
           </Flex>
-          <FortuneDepositModal
-            roundId={roundId}
-          />
+          {!isMobile && (
+            <FortuneDepositModal
+              disabled={!(parsedEthValue >= minimumEntry || (Object.keys(selections)).length > 0)}
+              roundId={roundId}
+            />
+          )}
         </Flex>
       </Flex>
     </>

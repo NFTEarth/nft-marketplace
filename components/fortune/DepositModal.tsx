@@ -30,6 +30,7 @@ import {Round, RoundStatus} from "../../hooks/useFortuneRound";
 
 type FortuneDepositProps = {
   roundId: number
+  disabled?: boolean
 }
 
 type FortuneData = {
@@ -40,8 +41,28 @@ type FortuneData = {
   valueEth: string
 }
 
+const getGeneralError = (err:any) => {
+  if (/exceeds the balance/.test(err.message)) {
+    return 'Insufficient balance'
+  }
+
+  if (/User rejected/.test(err.message)) {
+    return 'User rejected the request'
+  }
+
+  return err.message;
+}
+
+const getErrorText = ((errorName: string) => {
+  if (errorName === 'ZeroDeposits') {
+    return 'You have put ETH/NFTE/NFT to deposit'
+  }
+
+  return errorName
+})
+
 const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
-  const { roundId } = props;
+  const { roundId, disabled } = props;
   const { address } = useAccount()
   const [ step, setStep] = useState(0)
   const [ error, setError] = useState<any>()
@@ -208,22 +229,22 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
           addToast?.({
             title: errorName,
             status: 'error',
-            description: errorName
+            description: getErrorText(errorName)
           })
         } else {
-          setError(err)
+          addToast?.({
+            title: 'Error',
+            status: 'error',
+            description: getGeneralError(err)
+          })
         }
       } else {
-        addToast?.({
-          title: 'Error',
-          status: 'error',
-          description: err.message
-        })
+        setError(err)
       }
       setStep(0)
     }
     // setLoading(false)
-  }, [selections])
+  }, [selections, valueEth])
 
   const trigger = (
     <Flex
@@ -239,7 +260,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
         </Text>
       )}
       <Button
-        disabled={round?.status !== RoundStatus.Open || isApprovalLoading || step === 4 }
+        disabled={round?.status !== RoundStatus.Open || isApprovalLoading || step === 4  || disabled}
         size="large"
         color={countdown < 30 ? 'red' : 'primary'}
         css={{
@@ -263,7 +284,12 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
         direction="column"
         justify="start"
         align="center"
-        css={{ flex: 1, textAlign: 'center', p: '$4', gap: '$4' }}
+        css={{
+          flex: 1,
+          textAlign: 'center',
+          p: '$4',
+          gap: '$4'
+        }}
       >
         {(!!error || !!approvalError) && (
           <ErrorWell
