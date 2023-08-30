@@ -230,7 +230,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
                   }}
                 >
                   <CryptoCurrencyIcon address={AddressZero} chainId={marketplaceChain.id} css={{ height: 15 }} />
-                  <Text style="h6" css={{ color: '$primary13' }}>ETH/NFTE</Text>
+                  <Text style="h6" css={{ color: '$primary13' }}>ETH and NFTE</Text>
                 </Flex>
               </Flex>
               <Flex direction="column" css={{ gap: 10}}>
@@ -300,7 +300,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
                 p: 16
               }}
             >
-              <Text style="h5" css={{ mb: 30 }}>Add ETH or NFTE</Text>
+              <Text style="h5" css={{ mb: 30 }}>Deposit ETH or NFTE</Text>
               <Flex
                 direction="column"
                 css={{
@@ -311,8 +311,8 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
                 }}
               >
                 <Flex justify="between">
-                  <Text style="h6">Add ETH</Text>
-                  <Text style="subtitle3">{`Minimum Entry = ${formatEther(minimumEntry)}ETH`}</Text>
+                  <Text style="h6">Deposit ETH</Text>
+                  <Text style="subtitle3">Minimum Deposit = ${formatEther(minimumEntry)} ETH</Text>
                 </Flex>
                 <NumericalInput
                   value={valueEth}
@@ -355,19 +355,19 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
                 css={{
                   gap: 10,
                   borderBottom: '1px solid',
-                  borderBottomColor: '$gray5',
+                  borderBottomColor: '$gray3',
                   p: 16
                 }}
               >
                 <Flex justify="between">
-                  <Text style="h6">Add NFTE</Text>
+                  <Text style="h6">Deposit NFTE</Text>
                   <Flex>
                     <FormatCryptoCurrency
                       amount={Number(formatEther(parsedNFTEValue)) * (currencyToETHConversions['NFTE']?.price || 0)}
                       textStyle="subtitle2"
                       logoHeight={16}
                     />
-                    <Text>{` In ETH `}</Text>
+                    <Text>{`  ETH`}</Text>
                   </Flex>
                 </Flex>
                 <NumericalInput

@@ -62,7 +62,7 @@ const ClaimModal: FC<ClaimModalProps> = ({ open: defaultOpen, rewards, disabled,
 
   const fortuneChain = FORTUNE_CHAINS.find(c => c.id === marketplaceChain.id);
 
-  const tweetText = `I just claimed my reward on #Fortune at @NFTEarth_L2\n\n🎉 #Winner takes all 🎉\n\nJoin the fun now at this link!`
+  const tweetText = `I just claimed my reward from #Fortune on @NFTEarth_L2\n\n🎉 #Winner takes all 🎉\n\nJoin the fun now at this link!`
 
   const handleClaimReward = async () => {
     setError(undefined)
@@ -237,14 +237,14 @@ const ClaimModal: FC<ClaimModalProps> = ({ open: defaultOpen, rewards, disabled,
         )}
         {step === 3 && (
           <Flex direction="column" css={{ gap: 20, my: '$4' }}>
-            <Text style="h6" css={{ color: 'green' }}>Claim Reward Success !</Text>
+            <Text style="h6" css={{ color: 'green' }}>Claiming Rewards Success!</Text>
             <Button
               as="a"
               rel="noreferrer noopener"
               target="_blank"
               href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(`https://app.nftearth.exchange/fortune`)}&hashtags=&via=&related=&original_referer=${encodeURIComponent('https://app.nftearth.exchange')}`}
             >
-              {`Share your win on X! `}
+              {`Share your win on X!`}
               <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faTwitter}/>
             </Button>
           </Flex>
