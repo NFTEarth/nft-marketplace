@@ -2,7 +2,7 @@ import {useEffect, useMemo, useRef, useState} from 'react'
 import Highcharts from 'highcharts'
 import HighchartsExporting from 'highcharts/modules/exporting'
 import HighchartsReact from 'highcharts-react-official'
-import useSound from "use-sound";
+import useSound from "../../hooks/useSound";
 import {useFortune, useMounted} from "../../hooks";
 import {PlayerType} from "./Player";
 import {Round, RoundStatus} from "../../hooks/useFortuneRound";
@@ -84,7 +84,7 @@ const getProgressColor = (percent: number) => {
 
 const spinWheelAudioSpriteMap = {
   start: [0, 1200, true],
-  end: [500, 2000, false]
+  end: [1200, 2000, false]
 } as any;
 
 const Wheel = (props: WheelProps) => {
@@ -114,7 +114,7 @@ const Wheel = (props: WheelProps) => {
   const [playStart] = useSound(`/audio/game-start.mp3`, {
     volume: 0.8
   })
-  const [playWheel, { stop: stopWheel}] = useSound(`/audio/wheel-spin.mp3`, {
+  const [playWheel] = useSound(`/audio/wheel-spin.mp3`, {
     sprite: spinWheelAudioSpriteMap,
     interrupt: true,
     volume: 0.8
@@ -134,7 +134,7 @@ const Wheel = (props: WheelProps) => {
     // }
 
     if (RoundStatus.Drawn === status) {
-      playWheel?.({ id: 'start' })
+      playWheel?.('start')
     }
   }, [status, roundId, enableAudio])
 
@@ -212,7 +212,7 @@ const Wheel = (props: WheelProps) => {
         stopPoint += 360;
       }
 
-      diff = (360 * 30)
+      diff = (360 * 35)
       spinIntervalRef.current = setInterval(() => {
         startAngle += diff
         startAngle = startAngle % 360
@@ -221,7 +221,7 @@ const Wheel = (props: WheelProps) => {
         chart.series?.[0]?.update({ startAngle: startAngle }, true, false, false);
 
         if (diff < (stopPoint + (360 * 5)) && !wheelEnding) {
-          playWheel?.({ id: 'end' })
+          playWheel?.('end')
           wheelEnding = true
         }
 

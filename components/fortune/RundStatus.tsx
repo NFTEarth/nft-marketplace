@@ -37,7 +37,7 @@ const FortuneRoundStatus: FC<RoundStatusProps> = (props) => {
       {([RoundStatus.Open, RoundStatus.Drawing, RoundStatus.Drawn].includes(round?.status) && !winner) && (
         <FormatCryptoCurrency textStyle="h3" logoHeight={35} amount={totalPrize} maximumFractionDigits={4} />
       )}
-      {(!winner && countdown > 0) && (
+      {(!winner || countdown > 0) && (
         <FormatCurrency amount={totalPrizeUsd} />
       )}
       {(round?.status === RoundStatus.Open && countdown < 1) && (
