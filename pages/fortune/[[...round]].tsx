@@ -244,7 +244,7 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
             }
           ],
           address: d.tokenAddress as `0x${string}`,
-          price: BigInt(0),
+          price: BigInt(d.entriesCount) * BigInt(roundData.valuePerEntry),
           amount: BigInt(d.tokenAmount),
           tokenId: BigInt(d.tokenId),
           totalNumberOfEntries: BigInt(d.participant.totalNumberOfEntries)

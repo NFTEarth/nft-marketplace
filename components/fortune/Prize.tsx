@@ -24,14 +24,13 @@ export type PrizeType = {
 const FortunePrize : FC<{ data: PrizeType, valuePerEntry: number }> = ({ data, valuePerEntry, ...restProps }) => {
   const { data: tokens } = useTokens({
     tokens: [`${data.address}:${data.tokenId}`],
-    includeTopBid: true,
   }, {
     isPaused: () => ['ERC20', 'ETH'].includes(data.type)
   })
 
   const token = tokens && tokens[0] ? tokens[0] : undefined
 
-  console.log(token?.market)
+  console.log(data);
 
   return (
     <Tooltip
@@ -93,7 +92,7 @@ const FortunePrize : FC<{ data: PrizeType, valuePerEntry: number }> = ({ data, v
           )}
         </Flex>
         <Flex css={{ p: '$2'}}>
-          <FormatCryptoCurrency amount={data.amount || token?.market?.floorAsk?.price?.amount?.decimal} />
+          <FormatCryptoCurrency amount={data.price || data.amount || data.price} />
         </Flex>
       </Flex>
     </Tooltip>
