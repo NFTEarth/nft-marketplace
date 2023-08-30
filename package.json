@@ -36,7 +36,6 @@
     "@types/howler": "2.1.2",
     "@types/uuid": "^9.0.1",
     "@upstash/redis": "^1.22.0",
-    "@widgetbot/react-embed": "^1.8.2",
     "canvas-confetti": "^1.6.0",
     "dayjs": "^1.11.6",
     "ethers": "^6.7.1",

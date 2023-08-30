@@ -24,21 +24,21 @@ export const Head: FC<Props> = ({
       {/* CONFIGURABLE: There are also keywords in pages/_document.ts that you can also configure to fit your application */}
 
       {/* Title */}
-      <title>{NFTEarth}</title>
+      <title>{title}</title>
 
       {/* Meta tags */}
       <meta name="description" content={description} />
 
       {/* Twitter */}
-      <meta name="twitter:card" content="NFTEarth" />
+      <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content="https://twitter.com/NFTEarth_L2" />
-      <meta name="twitter:title" content={"NFTEarth_L2"} />
-      <meta name="twitter:description" content={"NFTEarth"} />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={ogImage} />
 
       {/* Open Graph */}
-      <meta property="og:type" content="https://app.nftearth.exchange" />
-      <meta property="og:determiner" content="NFTEarth" />
+      <meta property="og:type" content="website" />
+      <meta property="og:determiner" content="the" />
       <meta property="og:locale" content="en" />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
@@ -47,13 +47,6 @@ export const Head: FC<Props> = ({
       <meta property="og:image:width" content="500" />
       <meta property="og:image:height" content="500" />
       <meta property="og:image:alt" content="NFTEarth" />
-
-      <script src='https://cdn.jsdelivr.net/npm/@widgetbot/crate@3' async defer>
-        new Crate({
-          server: '1062256160264171520', // NFTΞarth
-          channel: '1146477051033956544' // #🔮│fortune
-        })
-      </script>
     </NextHead>
   )
 }

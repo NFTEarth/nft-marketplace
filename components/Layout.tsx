@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react'
-import WidgetBot from '@widgetbot/react-embed'
+import Script from "next/script";
 import { Box } from 'components/primitives'
 import Navbar from './navbar'
 import {useMounted} from 'hooks'
@@ -26,14 +26,19 @@ const Layout: FC<Props> = ({ children }) => {
           <main>{children}</main>
         </Box>
       </Box>
-      {/*{isMounted && (*/}
-      {/*  <WidgetBot*/}
-      {/*    server="1062256160264171520"*/}
-      {/*    channel="1062472338987286598"*/}
-      {/*    notifications*/}
-
-      {/*  />*/}
-      {/*)}*/}
+      <Script
+        src="https://cdn.jsdelivr.net/npm/@widgetbot/crate@3"
+        async
+        defer
+      >
+        {`new Crate({
+          server: '1062256160264171520',
+          channel: '1146477051033956544',
+          color: '#A97AFF',
+          notifications: true,
+          glyph: ['https://app.nftearth.exchange/images/icons-chat.png', '80px'],
+        })`}
+      </Script>
     </>
   )
 }
