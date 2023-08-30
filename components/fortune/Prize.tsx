@@ -30,8 +30,6 @@ const FortunePrize : FC<{ data: PrizeType, valuePerEntry: number }> = ({ data, v
 
   const token = tokens && tokens[0] ? tokens[0] : undefined
 
-  console.log(data);
-
   return (
     <Tooltip
       side="top"
@@ -92,7 +90,7 @@ const FortunePrize : FC<{ data: PrizeType, valuePerEntry: number }> = ({ data, v
           )}
         </Flex>
         <Flex css={{ p: '$2'}}>
-          <FormatCryptoCurrency amount={data.price || data.amount || data.price} />
+          <FormatCryptoCurrency amount={data.amount || data.price} />
         </Flex>
       </Flex>
     </Tooltip>
