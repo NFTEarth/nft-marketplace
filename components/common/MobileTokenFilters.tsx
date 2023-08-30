@@ -1,7 +1,7 @@
 import { Dispatch, FC, SetStateAction, useRef, useMemo } from 'react'
 import * as RadixDialog from '@radix-ui/react-dialog'
 import { Button, Flex, Text } from 'components/primitives'
-import Image from 'next/image'
+import Image from "next/legacy/image"
 import { FullscreenModal } from 'components/common/FullscreenModal'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'

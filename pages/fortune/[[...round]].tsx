@@ -17,7 +17,7 @@ import {useRouter} from "next/router";
 import {formatEther, formatUnits, parseEther} from "viem";
 import {AddressZero} from "@ethersproject/constants"
 import Link from 'next/link'
-import Image from 'next/image'
+import Image from "next/legacy/image"
 
 import Layout from 'components/Layout'
 import Wheel from "components/fortune/Wheel";

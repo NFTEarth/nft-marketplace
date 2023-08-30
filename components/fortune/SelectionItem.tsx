@@ -1,6 +1,6 @@
 import {FC, useEffect, useState} from "react";
 import {AddressZero} from "@ethersproject/constants";
-import Image from "next/image";
+import Image from "next/legacy/image";
 
 import {CryptoCurrencyIcon, Flex, FormatCryptoCurrency, Text} from "../primitives";
 import {FORTUNE_CHAINS} from "../../utils/chains";

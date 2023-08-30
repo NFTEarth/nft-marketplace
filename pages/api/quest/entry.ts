@@ -210,10 +210,10 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
     })
   }
 
-  let cachedEntry: QuestTask[] = await redis
+  let cachedEntry: QuestTask[] = (await redis
     .get(`entry:${questData.id}:${accountData?.wallet}`)
     .then((res: any) => JSON.parse(res))
-    .catch(() => null) || []
+    .catch(() => null)) || []
 
   const tasks = await Promise.all((questData.tasks || []).map(async (r: QuestTask) => {
     if (r.type === 'connection') {

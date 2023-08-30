@@ -24,7 +24,7 @@ import {
   Grid,
 } from '../primitives'
 import {List, AcceptBid} from 'components/buttons'
-import Image from 'next/image'
+import Image from "next/legacy/image"
 import {useIntersectionObserver} from 'usehooks-ts'
 import LoadingSpinner from '../common/LoadingSpinner'
 import {

@@ -137,12 +137,12 @@ export const calculateReward: CalculateReward = async (chainId, account, collect
     value = BigNumber.from(value).mul(BigNumber.from(nfteToNative?.nativePrice)).toNumber()
   }
 
-  const questEntry = await entry.findOne({
+  const questEntry = (await entry.findOne({
     wallet: {
       $regex: account,
       $options: 'i'
     }
-  }).catch(() => null) || []
+  }).catch(() => null)) || []
 
   const collection = await fetchCollectionRankReward(chainId, collectionId)
 

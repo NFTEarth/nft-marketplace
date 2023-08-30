@@ -22,7 +22,7 @@ const questEntryListHandler = async (req: NextApiRequest, res: NextApiResponse) 
     account_id: accountData?._id.toString()
   });
 
-  const questList = await cursor.toArray() || [];
+  const questList = (await cursor.toArray()) || [];
 
   res.status(200).json(questList);
 }

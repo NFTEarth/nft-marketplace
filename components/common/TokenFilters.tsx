@@ -7,7 +7,7 @@ import {
 import { Dispatch, FC, SetStateAction, useMemo } from 'react'
 import * as Collapsible from '@radix-ui/react-collapsible'
 import { CollapsibleContent } from 'components/primitives/Collapsible'
-import Image from 'next/image'
+import Image from "next/legacy/image"
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
 import { OpenSeaVerified } from './OpenSeaVerified'

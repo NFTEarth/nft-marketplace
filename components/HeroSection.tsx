@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import Image from 'next/image'
+import Image from "next/legacy/image"
 import { Box, Button, Flex, Grid, Text } from './primitives'
 import { FC } from 'react'
 

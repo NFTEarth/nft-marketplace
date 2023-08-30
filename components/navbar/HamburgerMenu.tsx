@@ -9,7 +9,7 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faTwitter} from '@fortawesome/free-brands-svg-icons'
 import Link from 'next/link'
-import Image from 'next/image'
+import Image from "next/legacy/image"
 import {useAccount, useDisconnect} from 'wagmi'
 import {ConnectWalletButton} from 'components/ConnectWalletButton'
 import Jazzicon, {jsNumberForAddress} from 'react-jazzicon'

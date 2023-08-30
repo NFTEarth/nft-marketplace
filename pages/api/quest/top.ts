@@ -29,7 +29,7 @@ const topExpHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       $limit: +limit
     }
   ])
-  const top = await cursor.toArray() || [];
+  const top = (await cursor.toArray()) || [];
 
   res.status(200).json(top);
 }

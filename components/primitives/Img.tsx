@@ -1,7 +1,7 @@
 import { faImage } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Flex from 'components/primitives/Flex'
-import Image from 'next/image'
+import Image from "next/legacy/image"
 import { ComponentPropsWithoutRef, useEffect, useState } from 'react'
 import { styled } from 'stitches.config'
 
