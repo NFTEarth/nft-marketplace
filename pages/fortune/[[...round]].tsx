@@ -320,10 +320,6 @@ const FortunePage = () => {
     setShowEntryForm(true);
   }, [address])
 
-  if (!mounted) {
-    return null;
-  }
-
   if (!FORTUNE_CHAINS.find(c => c.id === marketplaceChain.id)) {
     return (
       <Layout>
