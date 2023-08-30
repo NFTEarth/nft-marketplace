@@ -18,15 +18,7 @@ export interface WheelProps extends HighchartsReact.Props {
 }
 
 const getAverage = (a: number, b: number) => {
-  a = a % 360;
-  b = b % 360;
-
-  let sum = a + b;
-  if (sum > 360 && sum < 540)
-  {
-    sum = sum % 180;
-  }
-  return sum / 2;
+  return (a - b + 180 + 360) % 360 - 180
 }
 
 const radToDeg = (r: number) => r * 180 / Math.PI;
@@ -65,7 +57,7 @@ const findWinner = (data: any[], winner?: `0x${string}`, randomize = true) : win
   return {
     wheelPoint: randomize ?
       getRandomInt(radToDeg(data[winnerIndex]?.shapeArgs.start), radToDeg(data[winnerIndex]?.shapeArgs.end)) :
-      data[winnerIndex]?.angle,
+      getAverage(radToDeg(data[winnerIndex]?.shapeArgs.start), radToDeg(data[winnerIndex]?.shapeArgs.end)),
     winnerIndex
   };
 }
@@ -168,7 +160,6 @@ const Wheel = (props: WheelProps) => {
       return;
     }
 
-    chart.series?.[0]?.update({ startAngle: 360 });
     setHoverPlayerIndex?.(undefined);
 
     if ([RoundStatus.Drawing, RoundStatus.Drawn].includes(status)) {
@@ -186,7 +177,14 @@ const Wheel = (props: WheelProps) => {
     }
 
     let diff = 30
-    let startAngle = chart.series?.[0]?.options?.startAngle | 0;
+    let startAngle = 0;
+
+    // TODO: find better calculation of finding correct winner angle
+    const { wheelPoint, winnerIndex } = findWinner(chart.series?.[0]?.data, winner, false)
+    let stopPoint = wheelPoint + 45
+    if (stopPoint < 360) {
+      stopPoint += 360;
+    }
 
     if (status === RoundStatus.Drawing) {
       spinIntervalRef.current = setInterval(() => {
@@ -202,17 +200,12 @@ const Wheel = (props: WheelProps) => {
 
     if (RoundStatus.Drawn === status) {
       let wheelEnding = false
-      const { wheelPoint, winnerIndex } = findWinner(chart.series?.[0]?.data, winner, false)
-      let stopPoint = ((seriesAngle[winnerIndex] || wheelPoint) + 90) % 360
+
       //let stopPoint = wheelPoint - 90
 
       // console.log('stopPoint' , seriesAngle[winnerIndex], wheelPoint)
 
-      if (stopPoint < 360) {
-        stopPoint += 360;
-      }
-
-      diff = (360 * 35)
+      diff = (360 * 30)
       spinIntervalRef.current = setInterval(() => {
         startAngle += diff
         startAngle = startAngle % 360
@@ -220,12 +213,12 @@ const Wheel = (props: WheelProps) => {
 
         chart.series?.[0]?.update({ startAngle: startAngle }, true, false, false);
 
-        if (diff < (stopPoint + (360 * 5)) && !wheelEnding && enableAudio) {
+        if (diff <  (360 * 5) && !wheelEnding && enableAudio) {
           playWheel?.('end')
           wheelEnding = true
         }
 
-        if (diff < stopPoint) {
+        if (diff < 10) {
           clearInterval(spinIntervalRef.current);
           onWheelEnd(winnerIndex);
           setHoverPlayerIndex?.(winnerIndex);
