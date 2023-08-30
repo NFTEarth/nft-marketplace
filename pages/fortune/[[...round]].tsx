@@ -608,7 +608,7 @@ const FortunePage = () => {
                       gap: 20
                     }}
                   >
-                    {prizes.map((prize, i: number) => (
+                    {prizes.filter(p => p.amount > 0 || !!p.tokenId).map((prize, i: number) => (
                       <FortunePrize
                         key={`prize-${i}`}
                         data={prize}
