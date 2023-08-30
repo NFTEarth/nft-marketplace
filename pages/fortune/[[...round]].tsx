@@ -84,12 +84,11 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
   const { data: roundData } = useFortuneRound(parseInt((id || '0')) || activeRound || 1, {
     refreshInterval: 1000,
     isPaused: () => !(parseInt(`${router.query?.round || 0}`) || activeRound),
-    fallbackData: [
-      {
-        round: ssr.round
-      }
-    ]
+    fallbackData: {
+      round: ssr.round
+    }
   })
+
   const { data: {
     players,
     enableAudio,
@@ -318,21 +317,36 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
           totalPrize={totalPrize}
           convertedCountdown={convertedCountdown}
         />
-        <Flex
-          align="center"
-          justify="center"
-          direction="column"
+        <Box
           css={{
-            height: 400,
-            gap: 40
+            py: 24,
+            px: '$3',
+            height: '100%',
+            pb: 20,
+            '@md': {
+              pb: 60,
+              px: '$6',
+            },
           }}
         >
-          <Text style="h4">{`Fortune currently only supported on ${FORTUNE_CHAINS.map((chain) => {
-            return supportedChains.find(c => c.id === chain.id)?.name || ''
-          }).join(', ')}`}</Text>
+          <Flex
+            align="center"
+            justify="center"
+            direction="column"
+            css={{
+              p: 40,
+              height: '80vh',
+              gap: 40,
+              textAlign: 'center'
+            }}
+          >
+            <Text style="h4">{`Fortune currently only supported on ${FORTUNE_CHAINS.map((chain) => {
+              return supportedChains.find(c => c.id === chain.id)?.name || ''
+            }).join(', ')}`}</Text>
 
-          <ChainToggle/>
-        </Flex>
+            <ChainToggle/>
+          </Flex>
+        </Box>
       </Layout>
     )
   }
@@ -427,7 +441,9 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
                     <Link href="/fortune/history" passHref legacyBehavior>
                       <Button as="a" size="xs" color="primary">
                         <FontAwesomeIcon icon={faHistory} width={15} height={15}/>
-                        {!isMobile && `History`}
+                        {(mounted && !isMobile) && (
+                          <span>{`History`}</span>
+                        )}
                       </Button>
                     </Link>
                     <Link href={((+roundData?.roundId - 1) < 1) ? '/fortune' : `/fortune/${+roundData?.roundId - 1}`} legacyBehavior>
@@ -505,81 +521,83 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
             show={showEntryForm}
             onClose={() => setShowEntryForm(false)}
           />
-          <Flex
-            direction="column"
-            justify="center"
-            css={{
-              borderRadius: 10,
-              backgroundColor: '$gray3',
-              p: '$4',
-              display: 'none',
-              '@md': {
-                display: 'flex'
-              },
-            }}>
-            <Flex justify="between" align="center">
-              <Text style="h5">{`Round ${roundData?.roundId || '-'}`}</Text>
-              {roundData?.status === RoundStatus.Open && (
-                <Flex
-                  align="center"
-                  justify="center"
-                  css={{
-                    borderRadius: 6,
-                    border: '1px solid $primary13',
-                    minWidth: 75,
-                    minHeight: 38,
-                  }}
-                >
-                  <Text style="h5">{`${convertedCountdown}`}</Text>
-                </Flex>
-              )}
-              {[RoundStatus.Drawing].includes(roundData?.status) && (
-                <Flex
-                  align="center"
-                  justify="center"
-                  css={{
-                    borderRadius: 6,
-                    backgroundColor: 'primary',
-                    minWidth: 75,
-                    minHeight: 38,
-                  }}
-                >
-                  <LoadingSpinner css={{ width: 35, height: 35 }} />
-                </Flex>
-              )}
+          {mounted && (
+            <Flex
+              direction="column"
+              justify="center"
+              css={{
+                borderRadius: 10,
+                backgroundColor: '$gray3',
+                p: '$4',
+                display: 'none',
+                '@md': {
+                  display: 'flex'
+                },
+              }}>
+              <Flex justify="between" align="center">
+                <Text style="h5">{`Round ${roundData?.roundId || '-'}`}</Text>
+                {roundData?.status === RoundStatus.Open && (
+                  <Flex
+                    align="center"
+                    justify="center"
+                    css={{
+                      borderRadius: 6,
+                      border: '1px solid $primary13',
+                      minWidth: 75,
+                      minHeight: 38,
+                    }}
+                  >
+                    <Text style="h5">{`${convertedCountdown}`}</Text>
+                  </Flex>
+                )}
+                {[RoundStatus.Drawing].includes(roundData?.status) && (
+                  <Flex
+                    align="center"
+                    justify="center"
+                    css={{
+                      borderRadius: 6,
+                      backgroundColor: 'primary',
+                      minWidth: 75,
+                      minHeight: 38,
+                    }}
+                  >
+                    <LoadingSpinner css={{ width: 35, height: 35 }} />
+                  </Flex>
+                )}
 
-              {[RoundStatus.Drawn, RoundStatus.Cancelled, RoundStatus.None].includes(roundData?.status) && (
-                <Flex
-                  align="center"
-                  justify="center"
-                  css={{
-                    borderRadius: 6,
-                    backgroundColor: 'primary',
-                    minWidth: 75,
-                    minHeight: 38,
-                  }}
-                />
-              )}
+                {[RoundStatus.Drawn, RoundStatus.Cancelled, RoundStatus.None].includes(roundData?.status) && (
+                  <Flex
+                    align="center"
+                    justify="center"
+                    css={{
+                      borderRadius: 6,
+                      backgroundColor: 'primary',
+                      minWidth: 75,
+                      minHeight: 38,
+                    }}
+                  />
+                )}
+              </Flex>
+              <Flex css={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
+                <Flex direction="column" css={{ flex: 0.5 }} >
+                  <FormatCryptoCurrency textStyle="h5" amount={totalPrize} />
+                  <Text style="subtitle2">Prize Pool</Text>
+                </Flex>
+                <Flex direction="column" css={{ flex: 0.5 }} >
+                  <Text style="h5">{`${players.length}/${roundData?.maximumNumberOfParticipants || 0}`}</Text>
+                  <Text style="subtitle2">Players</Text>
+                </Flex>
+                <Flex direction="column" css={{ flex: 0.5 }} >
+                  <FormatCryptoCurrency textStyle="h5" amount={yourEntries} />
+                  <Text style="subtitle2">Your Entries</Text>
+                </Flex>
+                <Flex direction="column" css={{ flex: 0.5 }} >
+                  <Text style="h5">{`${yourWinChance}%`}</Text>
+                  <Text style="subtitle2">Your Odds To Win</Text>
+                </Flex>
+              </Flex>
             </Flex>
-            <Flex css={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
-              <Flex direction="column" css={{ flex: 0.5 }} >
-                <FormatCryptoCurrency textStyle="h5" amount={totalPrize} />
-                <Text style="subtitle2">Prize Pool</Text>
-              </Flex>
-              <Flex direction="column" css={{ flex: 0.5 }} >
-                <Text style="h5">{`${players.length}/${roundData?.maximumNumberOfParticipants || 0}`}</Text>
-                <Text style="subtitle2">Players</Text>
-              </Flex>
-              <Flex direction="column" css={{ flex: 0.5 }} >
-                <FormatCryptoCurrency textStyle="h5" amount={yourEntries} />
-                <Text style="subtitle2">Your Entries</Text>
-              </Flex>
-              <Flex direction="column" css={{ flex: 0.5 }} >
-                <Text style="h5">{`${yourWinChance}%`}</Text>
-                <Text style="subtitle2">Your Odds To Win</Text>
-              </Flex>
-            </Flex>
-          </Flex>
+          )}
           {!showEntryForm && (
             <>
               <Flex
@@ -696,63 +714,65 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
                 display: 'none'
               }
             }}>
-            <Flex css={{ gap: 10 }}>
-              <Flex direction="column" css={{ flex: 0.5 }} >
-                <FormatCryptoCurrency textStyle="h6" amount={totalPrize} />
-                <Text style="body4">Prize Pool</Text>
-              </Flex>
-              <Flex direction="column" css={{ flex: 0.5 }} >
-                <FormatCryptoCurrency textStyle="h6" amount={yourEntries} />
-                <Text style="body4">Your Entries</Text>
-              </Flex>
-              <Flex direction="column" css={{ flex: 0.5 }} >
-                <Text style="h6">{`${yourWinChance}%`}</Text>
-                <Text style="body4">Win Chance</Text>
-              </Flex>
-              <Flex align="start">
-                {roundData?.status === RoundStatus.Open && (
-                  <Flex
-                    align="center"
-                    justify="center"
-                    css={{
-                      borderRadius: 6,
-                      border: '1px solid $primary13',
-                      minWidth: 75,
-                      minHeight: 38,
-                    }}
-                  >
-                    <Text style="h5">{`${convertedCountdown}`}</Text>
-                  </Flex>
-                )}
-                {[RoundStatus.Drawing].includes(roundData?.status) && (
-                  <Flex
-                    align="center"
-                    justify="center"
-                    css={{
-                      borderRadius: 6,
-                      backgroundColor: 'primary',
-                      minWidth: 75,
-                      minHeight: 38,
-                    }}
-                  >
-                    <LoadingSpinner css={{ width: 35, height: 35 }} />
-                  </Flex>
-                )}
+            {mounted && (
+              <Flex css={{ gap: 10 }}>
+                <Flex direction="column" css={{ flex: 0.5 }} >
+                  <FormatCryptoCurrency textStyle="h6" amount={totalPrize} />
+                  <Text style="body4">Prize Pool</Text>
+                </Flex>
+                <Flex direction="column" css={{ flex: 0.5 }} >
+                  <FormatCryptoCurrency textStyle="h6" amount={yourEntries} />
+                  <Text style="body4">Your Entries</Text>
+                </Flex>
+                <Flex direction="column" css={{ flex: 0.5 }} >
+                  <Text style="h6">{`${yourWinChance}%`}</Text>
+                  <Text style="body4">Win Chance</Text>
+                </Flex>
+                <Flex align="start">
+                  {roundData?.status === RoundStatus.Open && (
+                    <Flex
+                      align="center"
+                      justify="center"
+                      css={{
+                        borderRadius: 6,
+                        border: '1px solid $primary13',
+                        minWidth: 75,
+                        minHeight: 38,
+                      }}
+                    >
+                      <Text style="h5">{`${convertedCountdown}`}</Text>
+                    </Flex>
+                  )}
+                  {[RoundStatus.Drawing].includes(roundData?.status) && (
+                    <Flex
+                      align="center"
+                      justify="center"
+                      css={{
+                        borderRadius: 6,
+                        backgroundColor: 'primary',
+                        minWidth: 75,
+                        minHeight: 38,
+                      }}
+                    >
+                      <LoadingSpinner css={{ width: 35, height: 35 }} />
+                    </Flex>
+                  )}
 
-                {[RoundStatus.Drawn, RoundStatus.None, RoundStatus.Cancelled].includes(roundData?.status) && (
-                  <Flex
-                    align="center"
-                    justify="center"
-                    css={{
-                      borderRadius: 6,
-                      backgroundColor: 'primary',
-                      minWidth: 75,
-                      minHeight: 38,
-                    }}
-                  />
-                )}
+                  {[RoundStatus.Drawn, RoundStatus.None, RoundStatus.Cancelled].includes(roundData?.status) && (
+                    <Flex
+                      align="center"
+                      justify="center"
+                      css={{
+                        borderRadius: 6,
+                        backgroundColor: 'primary',
+                        minWidth: 75,
+                        minHeight: 38,
+                      }}
+                    />
+                  )}
+                </Flex>
               </Flex>
-            </Flex>
+            )}
             {showEntryForm ? (
               <FortuneDepositModal
                 roundId={roundData?.roundId}
@@ -784,9 +804,9 @@ export const getStaticProps: GetStaticProps<{
   ssr: {
     round: Round
   }
-  id: string | undefined
+  id: string | null
 }> = async ({ params }) => {
-  const id = params?.round?.toString()
+  const id = params?.round?.toString() || null
 
   const response = await basicFetcher('https://api.thegraph.com/subgraphs/name/ryuzaki01/fortune',
     {

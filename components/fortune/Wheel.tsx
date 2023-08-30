@@ -206,7 +206,7 @@ const Wheel = (props: WheelProps) => {
       let stopPoint = ((seriesAngle[winnerIndex] || wheelPoint) + 90) % 360
       //let stopPoint = wheelPoint - 90
 
-      console.log('stopPoint' , seriesAngle[winnerIndex], wheelPoint)
+      // console.log('stopPoint' , seriesAngle[winnerIndex], wheelPoint)
 
       if (stopPoint < 360) {
         stopPoint += 360;
@@ -351,6 +351,11 @@ const Wheel = (props: WheelProps) => {
       }
     }
   }, [players, status, cutoffTime, duration, countdown, isLargeDevice])
+
+
+  if (!isMounted) {
+    return null
+  }
 
   return (
     <>

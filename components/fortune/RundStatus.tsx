@@ -5,7 +5,7 @@ import {jsNumberForAddress} from "react-jazzicon";
 import {truncateAddress} from "../../utils/truncate";
 import {FC} from "react";
 import {PlayerType} from "./Player";
-import {useFortune} from "../../hooks";
+import {useFortune, useMounted} from "../../hooks";
 import {Round, RoundStatus} from "../../hooks/useFortuneRound";
 
 type RoundStatusProps = {
@@ -19,6 +19,12 @@ const FortuneRoundStatus: FC<RoundStatusProps> = (props) => {
   const { winner, totalPrize, totalPrizeUsd, loadingNewRound } = props;
   const { data: round } = useFortune<Round>(q => q.round)
   const { data: countdown } = useFortune<number>(q => q.countdown)
+
+  const isMounted = useMounted()
+
+  if (!isMounted) {
+    return null
+  }
   
   return (
     <Flex
