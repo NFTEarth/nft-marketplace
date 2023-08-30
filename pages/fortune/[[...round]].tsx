@@ -35,10 +35,12 @@ import FortuneFooter from "components/fortune/Footer";
 import BetaLogo from "components/fortune/BetaLogo";
 import Head from "components/fortune/Head";
 import {useFortune, useMarketplaceChain, useMounted} from "hooks";
-import useFortuneRound, {Deposit, RoundStatus} from "hooks/useFortuneRound";
+import useFortuneRound, {Deposit, Round, RoundStatus} from "hooks/useFortuneRound";
 import useFortuneStatus, {FortuneStatus} from "hooks/useFortuneStatus";
 import supportedChains, {FORTUNE_CHAINS} from "utils/chains";
 import {styled} from 'stitches.config'
+import {GetStaticPaths, GetStaticProps, InferGetStaticPropsType, NextPage} from "next";
+import { basicFetcher } from "../../utils/fetcher";
 
 type FortuneData = {
   enableAudio: boolean
@@ -61,7 +63,9 @@ const convertTimer = (time: number) : string => {
   return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
 }
 
-const FortunePage = () => {
+type Props = InferGetStaticPropsType<typeof getStaticProps>
+
+const FortunePage : NextPage<Props> = ({ id, ssr }) => {
   const [showEntryForm, setShowEntryForm] = useState(false)
   const [playerWinner, setPlayerWinner] = useState<PlayerType>()
   const [activeRound, setActiveRound] = useState<number>()
@@ -77,9 +81,14 @@ const FortunePage = () => {
     },
     refreshInterval: 1000,
   })
-  const { data: roundData } = useFortuneRound(parseInt(`${router.query?.round || 0}`) || activeRound || 1, {
+  const { data: roundData } = useFortuneRound(parseInt((id || '0')) || activeRound || 1, {
     refreshInterval: 1000,
-    isPaused: () => !(parseInt(`${router.query?.round || 0}`) || activeRound)
+    isPaused: () => !(parseInt(`${router.query?.round || 0}`) || activeRound),
+    fallbackData: [
+      {
+        round: ssr.round
+      }
+    ]
   })
   const { data: {
     players,
@@ -762,6 +771,102 @@ const FortunePage = () => {
       <Confetti ref={confettiRef} />
     </Layout>
   )
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  }
+}
+
+export const getStaticProps: GetStaticProps<{
+  ssr: {
+    round: Round
+  }
+  id: string | undefined
+}> = async ({ params }) => {
+  const id = params?.round?.toString()
+
+  const response = await basicFetcher('https://api.thegraph.com/subgraphs/name/ryuzaki01/fortune',
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        query: id ? `
+          query GetRound($id: ID!) {
+            round(id: $id) {
+              id
+              roundId
+              status
+              cutoffTime
+              duration
+              maximumNumberOfDeposits
+              maximumNumberOfParticipants
+              valuePerEntry
+              numberOfEntries
+              numberOfParticipants
+              winner
+              protocolFeeBp
+              deposits(orderBy: indice, orderDirection: asc, first: 1000) {
+                id
+                depositor
+                tokenAddress
+                tokenAmount
+                tokenId
+                tokenType
+                entriesCount
+                indice
+                claimed
+                participant {
+                  totalNumberOfEntries
+                }
+              }
+            }
+          }
+        ` : `
+          query GetCurrentRound {
+            rounds(orderBy: roundId, orderDirection: desc, first: 1) {
+              roundId
+              status
+              cutoffTime
+              duration
+              maximumNumberOfDeposits
+              maximumNumberOfParticipants
+              valuePerEntry
+              numberOfEntries
+              numberOfParticipants
+              winner
+              protocolFeeBp
+              deposits(orderBy: indice, orderDirection: asc, first: 1000) {
+                id
+                depositor
+                tokenAddress
+                tokenAmount
+                tokenId
+                tokenType
+                entriesCount
+                indice
+                claimed
+                participant {
+                  totalNumberOfEntries
+                }
+              }
+            }
+          }
+        `,
+        variables: {
+          id
+        }
+      })
+    }
+  ).then(res => res.data)
+
+  const round: Round = response?.data?.rounds?.[0] || response?.data?.round || null
+
+  return {
+    props: { ssr: { round }, id },
+    revalidate: 30,
+  }
 }
 
 export default FortunePage;
