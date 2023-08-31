@@ -880,6 +880,7 @@ export const getStaticProps: GetStaticProps<{
       })
     }
   ).then(res => res.data)
+    .catch(() => {})
 
   const round: Round = response?.data?.rounds?.[0] || response?.data?.round || null
 

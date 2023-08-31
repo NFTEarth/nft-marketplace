@@ -23,6 +23,7 @@ import NFTEntry, {SelectionData} from "./NFTEntry";
 import FortuneDepositModal from "./DepositModal";
 import {Round} from "../../hooks/useFortuneRound";
 import useFortuneCurrencies from "../../hooks/useFortuneCurrencies";
+import {arbitrum} from "viem/chains";
 
 type EntryProps = {
   roundId: number,
@@ -67,12 +68,12 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
   const marketplaceChain = useMarketplaceChain()
   const ethBalance = useBalance({
     address,
-    chainId: marketplaceChain.id
+    chainId: arbitrum.id
   })
   const nfteBalance = useBalance({
     address,
     token: '0x51b902f19a56f0c8e409a34a215ad2673edf3284',
-    chainId: marketplaceChain.id
+    chainId: arbitrum.id
   })
   const ethConversions = useCoinConversion(
     'ETH',
