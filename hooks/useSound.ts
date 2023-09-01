@@ -10,7 +10,8 @@ type AudioOptions = {
 
 const audioStore: Record<string, HTMLAudioElement> = {}
 type SoundContext = {
-  stop: (id?: string) => void
+  stop: () => void
+  reset: () => void
   audio?: HTMLAudioElement
 }
 
@@ -71,7 +72,14 @@ const useSound = (src: string, options: AudioOptions) : [(id?: string) => void, 
     }
   }, [audioRef])
 
-  return [play, {  stop, audio: audioRef.current }]
+  const reset = () => {
+    Object.keys(audioStore).forEach(key => {
+      audioStore[key].pause()
+      audioStore[key].currentTime = 0
+    })
+  }
+
+  return [play, {  stop, reset, audio: audioRef.current }]
 }
 
 export default useSound

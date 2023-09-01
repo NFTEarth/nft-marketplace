@@ -97,6 +97,7 @@ enum WheelState {
 const Wheel = (props: WheelProps) => {
   const { container, winner, onWheelEnd, ...restProps } = props;
   const [wheelState, setWheelState] = useState(0)
+  const [audioRate, setAudioRate] = useState(1)
   const chartComponentRef = useRef<typeof HighchartsReact>(null);
   const spinIntervalRef = useRef<ReturnType<typeof setInterval>>();
   const triangleRef = useRef<any>();
@@ -114,7 +115,7 @@ const Wheel = (props: WheelProps) => {
 
   const { status, roundId, cutoffTime, duration } = round || {};
 
-  const [playWin] = useSound(`/audio/win.mp3`, {
+  const [playWin, { reset }] = useSound(`/audio/win.mp3`, {
     interrupt: true,
     volume: 0.8
   })
@@ -130,10 +131,12 @@ const Wheel = (props: WheelProps) => {
   const [playWheel, { stop: stopWheel, audio: wheelAudio }] = useSound(`/audio/wheel-spin.mp3`, {
     sprite: spinWheelAudioSpriteMap,
     interrupt: true,
+    rate: audioRate,
     volume: 0.8
   })
 
   useEffect(() => {
+    reset();
     if (WheelState.NONE === wheelState && enableAudio) {
       playStart?.()
     }
@@ -198,7 +201,7 @@ const Wheel = (props: WheelProps) => {
     let diff = 360 * 30
     let startAngle = -(wheelPoint + diff);
     if (wheelAudio) {
-      wheelAudio.playbackRate = 1;
+      setAudioRate(1);
     }
     spinIntervalRef.current = setInterval(() => {
       startAngle += (diff % 360)
@@ -207,19 +210,20 @@ const Wheel = (props: WheelProps) => {
 
       startAngle *= 0.99
       // console.log(diff, startAngle, wheelPoint)
-      if (startAngle > -(360 * 15) && wheelAudio) {
-        wheelAudio.playbackRate = 0.8;
+      if (Math.abs(startAngle) < 360 * 15 && wheelAudio) {
+        setAudioRate(0.8);
       }
 
-      if (startAngle > -(360 * 5) && wheelAudio) {
+      if (Math.abs(startAngle) < 360 * 5 && wheelAudio) {
         wheelAudio.playbackRate = 0.7;
+        setAudioRate(0.7);
       }
 
-      if (startAngle > -360 && wheelAudio) {
-        wheelAudio.playbackRate = 0.5;
+      if (Math.abs(startAngle) < 360 && wheelAudio) {
+        setAudioRate(0.5);
       }
 
-      if (startAngle >= -wheelPoint) {
+      if (Math.abs(startAngle) <= Math.abs(wheelPoint)) {
         clearInterval(spinIntervalRef.current);
         onWheelEnd(winnerIndex);
         setHoverPlayerIndex?.(winnerIndex);
@@ -230,6 +234,7 @@ const Wheel = (props: WheelProps) => {
   }, [chartComponentRef])
 
   useEffect(() => {
+    setWheelState(WheelState.NONE)
     if (triangleRef.current) {
       triangleRef.current.destroy()
     }
