@@ -115,7 +115,7 @@ const Wheel = (props: WheelProps) => {
 
   const { status, roundId, cutoffTime, duration } = round || {};
 
-  const [playWin, { reset }] = useSound(`/audio/win.mp3`, {
+  const [playWin] = useSound(`/audio/win.mp3`, {
     interrupt: true,
     volume: 0.8
   })
@@ -136,7 +136,6 @@ const Wheel = (props: WheelProps) => {
   })
 
   useEffect(() => {
-    reset();
     if (WheelState.NONE === wheelState && enableAudio) {
       playStart?.()
     }
@@ -211,16 +210,15 @@ const Wheel = (props: WheelProps) => {
       startAngle *= 0.99
       // console.log(diff, startAngle, wheelPoint)
       if (Math.abs(startAngle) < 360 * 15 && wheelAudio) {
-        setAudioRate(0.8);
-      }
-
-      if (Math.abs(startAngle) < 360 * 5 && wheelAudio) {
-        wheelAudio.playbackRate = 0.7;
         setAudioRate(0.7);
       }
 
+      if (Math.abs(startAngle) < 360 * 5 && wheelAudio) {
+        setAudioRate(0.6);
+      }
+
       if (Math.abs(startAngle) < 360 && wheelAudio) {
-        setAudioRate(0.5);
+        setAudioRate(0.4);
       }
 
       if (Math.abs(startAngle) <= Math.abs(wheelPoint)) {

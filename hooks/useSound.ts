@@ -19,6 +19,12 @@ const useSound = (src: string, options: AudioOptions) : [(id?: string) => void, 
   const audioRef = useRef<HTMLAudioElement>()
 
   useEffect(() => {
+    return () => {
+      reset();
+    }
+  }, [])
+
+  useEffect(() => {
     if (audioStore[src]) {
       audioRef.current = audioStore[src]
     } else {

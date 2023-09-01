@@ -17,7 +17,7 @@ export const FortuneContext = createContext<{
     hoverPlayerIndex?: number
   }
   functions: {
-    setRound: ((round: Round) => void) | null
+    setRound: ((round: Round | null) => void) | null
     setWinner: ((winner: `0x${string}`) => void) | null
     setValueEth: ((valueEth: string) => void) | null
     setCountdown: ((countdown: number) => void) | null

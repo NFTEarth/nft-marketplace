@@ -262,6 +262,10 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
   useEffect(() => {
     setPlayerWinner(undefined)
     setRound?.(roundData)
+
+    return () => {
+      setRound?.(null)
+    }
   }, [roundData])
 
   useEffect(() => {
@@ -478,7 +482,6 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
                     pt: '100%'
                   }}>
                     <Wheel
-                      roundId={roundData?.id}
                       countdown={countdown}
                       winner={roundData?.winner as `0x${string}`}
                       onWheelEnd={(winnerIndex: number) => {

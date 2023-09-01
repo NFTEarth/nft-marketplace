@@ -63,7 +63,7 @@ const Player: FC<PlayerProps> = ({ data, valuePerEntry, ...restProps }) => {
         backgroundColor: 'rgba(0,0,0, 0.1)',
         transition: 'background-color, filter .5s',
         ...((!isHovered &&
-            [RoundStatus.Drawn, RoundStatus.Drawing].includes(round.status)) ? {
+            [RoundStatus.Drawn, RoundStatus.Drawing].includes(round?.status)) ? {
           filter: 'opacity(0.4)'
         } : {}),
         '&:hover': {
