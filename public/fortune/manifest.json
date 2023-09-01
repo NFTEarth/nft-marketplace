@@ -1,0 +1,32 @@
+{
+    "theme_color": "#7ed321",
+    "background_color": "#000000",
+    "display": "standalone",
+    "scope": "/fortune",
+    "start_url": "/fortune",
+    "name": "Fortune",
+    "short_name": "Fortune",
+    "description": "Fortune is a nail-biting game that invites players to deposit ETH, NFTE and NFTs from eligible collections into a shared prize pool, and the winner takes all. Find out more at NFTEarth.",
+    "icons": [
+        {
+            "src": "/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/icon-256x256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        },
+        {
+            "src": "/icon-384x384.png",
+            "sizes": "384x384",
+            "type": "image/png"
+        },
+        {
+            "src": "/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

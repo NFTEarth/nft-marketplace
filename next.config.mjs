@@ -1,4 +1,5 @@
 // import { withSentryConfig } from '@sentry/nextjs'
+import withPWA from 'next-pwa'
 import * as tsImport from 'ts-import'
 
 const loadTS = (filePath) => tsImport.load(filePath)
@@ -103,4 +104,7 @@ const nextConfig = {
 
 // export default withSentryConfig(nextConfig, sentryWebpackPluginOptions)
 
-export default nextConfig
+export default withPWA({
+  dest: 'public',
+  scope: '/fortune'
+})(nextConfig)
