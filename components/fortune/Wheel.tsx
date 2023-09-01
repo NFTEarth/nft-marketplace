@@ -231,7 +231,7 @@ const Wheel = (props: WheelProps) => {
         setWheelState(WheelState.ENDED)
       }
     }, animationSpeed)
-  }, [chartComponentRef])
+  }, [chartComponentRef, players])
 
   useEffect(() => {
     setWheelState(WheelState.NONE)
