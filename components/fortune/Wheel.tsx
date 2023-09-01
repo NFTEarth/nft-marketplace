@@ -17,42 +17,6 @@ export interface WheelProps extends HighchartsReact.Props {
   winner?: `0x${string}`
 }
 
-// const normalizeDeg = (r: number) => r % 360;
-// const getAverage = (a: number, b: number) => {
-//   return Math.atan2(Math.sin(b-a), Math.cos(b-a))
-// }
-//
-// const getAverage2 = (a: number, b: number) => {
-//   return normalizeDeg(((a - b + 180 + 360) % 360 - 180) + 360)
-// }
-
-// const sum = (a: number[]) => {
-//   let s = 0;
-//   for (let i = 0; i < a.length; i++) s += a[i];
-//   return s;
-// }
-//
-// const degToRad= (a: number) => {
-//   return Math.PI / 180 * a;
-// }
-
-const oppositeDeg = (a: number) => (a + 180) % 360
-//
-// const meanAngleDeg = (a: number[]) => {
-//   return 180 / Math.PI * Math.atan2(
-//     sum(a.map(degToRad).map(Math.sin)) / a.length,
-//     sum(a.map(degToRad).map(Math.cos)) / a.length
-//   );
-// }
-
-const radToDeg = (r: number) =>  {
-  if (r < 0) {
-    r += 2*Math.PI;
-  }
-
-  return r * 180 / Math.PI;
-}
-
 function getRandomInt(min: number, max: number) {
   return min + (Math.random() * (max - min));
 }
@@ -76,38 +40,34 @@ type AnglePoint = {
   end: number
 }
 //
-// const findWinner = (data: any[], winner?: `0x${string}`, randomize = true) : winnerWheel => {
-//   if (!data || !winner) {
-//     return {
-//       wheelPoint: 360,
-//       winnerIndex: -1
-//     }
-//   }
-//
-//   let cumulativeDegree = 0;
-//   let winnerAngle: AnglePoint = { index: -1, start: 0, end: 0 };
-//   (data || []).forEach((point: any, i: number) => {
-//     if ((new RegExp(`${winner}`, 'i')).test(point.address)) {
-//       winnerAngle = {
-//         index: i,
-//         start: cumulativeDegree,
-//         end: (cumulativeDegree + (360 * (point.percentage / 100)))
-//       }
-//     }
-//     cumulativeDegree = (cumulativeDegree + (360 * (point.percentage / 100)))
-//   })
-//
-//   let avg = getAverage2(winnerAngle.start, winnerAngle.end)
-//
-//   console.log(winnerAngle.start, winnerAngle.end, avg, oppositeDeg(avg))
-//
-//   return {
-//     wheelPoint: randomize ?
-//       getRandomInt(winnerAngle.start, winnerAngle.end) :
-//       data[winnerAngle.index].shapeArgs.start + 90,
-//     winnerIndex: winnerAngle.index
-//   };
-// }
+const findWinner = (data: any[], winner?: `0x${string}`, randomize = true) : winnerWheel => {
+  if (!data || !winner) {
+    return {
+      wheelPoint: 360,
+      winnerIndex: -1
+    }
+  }
+
+  let cumulativeDegree = 0;
+  let winnerAngle: AnglePoint = { index: -1, start: 0, end: 0 };
+  (data || []).forEach((point: any, i: number) => {
+    if ((new RegExp(`${winner}`, 'i')).test(point.address)) {
+      winnerAngle = {
+        index: i,
+        start: cumulativeDegree,
+        end: (cumulativeDegree + (360 * (point.percentage / 100)))
+      }
+    }
+    cumulativeDegree = (cumulativeDegree + (360 * (point.percentage / 100)))
+  })
+
+  return {
+    wheelPoint: randomize ?
+      getRandomInt(winnerAngle.start, winnerAngle.end) :
+      winnerAngle.start - ((winnerAngle.start - winnerAngle.end) / 2),
+    winnerIndex: winnerAngle.index
+  };
+}
 
 const getProgressColor = (percent: number) => {
   if (percent < 10) {
@@ -122,7 +82,7 @@ const getProgressColor = (percent: number) => {
 }
 
 const spinWheelAudioSpriteMap = {
-  start: [0, 1200, true],
+  start: [0, 500, true],
   end: [1200, 2000, false]
 } as any;
 
@@ -167,7 +127,7 @@ const Wheel = (props: WheelProps) => {
     volume: 0.8,
     interrupt: true,
   })
-  const [playWheel, stopWheel] = useSound(`/audio/wheel-spin.mp3`, {
+  const [playWheel, { stop: stopWheel, audio: wheelAudio }] = useSound(`/audio/wheel-spin.mp3`, {
     sprite: spinWheelAudioSpriteMap,
     interrupt: true,
     volume: 0.8
@@ -195,11 +155,9 @@ const Wheel = (props: WheelProps) => {
     }
 
     if (WheelState.ENDING === wheelState) {
-      if (enableAudio) {
-        playWheel?.('end')
-      } else {
-        stopWheel?.()
-      }
+      // if (enableAudio) {
+      //   setAudioRate(0.1)
+      // }
     }
 
     if (WheelState.ENDED === wheelState && enableAudio) {
@@ -209,10 +167,6 @@ const Wheel = (props: WheelProps) => {
 
   const rotateToWinner = useCallback(() => {
     const chart = chartComponentRef.current?.chart
-
-    if (triangleRef.current) {
-      triangleRef.current.destroy()
-    }
 
     if (spinIntervalRef.current) {
       clearInterval(spinIntervalRef.current)
@@ -238,43 +192,48 @@ const Wheel = (props: WheelProps) => {
 
     let wheelEnding = false
     chart.series?.[0]?.update({ startAngle: 0 });
-    // const { wheelPoint, winnerIndex } = findWinner(chart.series?.[0]?.data, winner, false)
-
-    let diff = 360 * 10
-    let startAngle = 0;
+    const { wheelPoint, winnerIndex } = findWinner(chart.series?.[0]?.data, winner, false)
     setWheelState(WheelState.START)
-    const winnerIndex = chart.series?.[0]?.data.findIndex((d: any) => {
-      return (new RegExp(`${winner}`, 'i')).test(d.address)
-    });
+
+    let diff = 360 * 30
+    let startAngle = -(wheelPoint + diff);
+    if (wheelAudio) {
+      wheelAudio.playbackRate = 1;
+    }
     spinIntervalRef.current = setInterval(() => {
-      startAngle += diff
-      if (startAngle > 360) {
-        startAngle -= 360
+      startAngle += (diff % 360)
+
+      chart.series?.[0]?.update({ startAngle: startAngle % 360 });
+
+      startAngle *= 0.99
+      // console.log(diff, startAngle, wheelPoint)
+      if (startAngle > -(360 * 15) && wheelAudio) {
+        wheelAudio.playbackRate = 0.8;
       }
 
-      chart.series?.[0]?.update({ startAngle: startAngle });
+      if (startAngle > -(360 * 5) && wheelAudio) {
+        wheelAudio.playbackRate = 0.7;
+      }
 
-      diff = diff < 360 ? diff - 5 : diff * 0.985
-      // console.log(diff, wheelPoint)
+      if (startAngle > -360 && wheelAudio) {
+        wheelAudio.playbackRate = 0.5;
+      }
 
-      if (diff <  360 && !wheelEnding) {
-        setWheelState(WheelState.ENDING)
-        const wheelPoint = radToDeg(chart.series?.[0]?.data[winnerIndex].shapeArgs.start)
-        wheelEnding = true
-
-        if (diff < wheelPoint) {
-          chart.series?.[0]?.update({ startAngle: oppositeDeg(wheelPoint) });
-          clearInterval(spinIntervalRef.current);
-          onWheelEnd(winnerIndex);
-          setHoverPlayerIndex?.(winnerIndex);
-          // chart.series?.[0]?.update({ startAngle: wheelPoint });
-          setWheelState(WheelState.ENDED)
-        }
+      if (startAngle >= -wheelPoint) {
+        clearInterval(spinIntervalRef.current);
+        onWheelEnd(winnerIndex);
+        setHoverPlayerIndex?.(winnerIndex);
+        // chart.series?.[0]?.update({ startAngle: wheelPoint });
+        setWheelState(WheelState.ENDED)
       }
     }, animationSpeed)
   }, [chartComponentRef])
 
   useEffect(() => {
+    if (triangleRef.current) {
+      triangleRef.current.destroy()
+    }
+
     if (RoundStatus.Open === status) {
       setWheelState(WheelState.NONE)
     }

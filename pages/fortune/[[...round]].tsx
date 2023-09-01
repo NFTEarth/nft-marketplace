@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {useCountdown} from 'usehooks-ts'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {
@@ -14,7 +14,7 @@ import {useMediaQuery} from "react-responsive";
 import {useAccount} from "wagmi";
 import {useConnectModal} from "@rainbow-me/rainbowkit";
 import {useRouter} from "next/router";
-import {formatEther, formatUnits, parseEther} from "viem";
+import {formatUnits, parseEther} from "viem";
 import {AddressZero} from "@ethersproject/constants"
 import Link from 'next/link'
 import Image from "next/legacy/image"
@@ -40,7 +40,7 @@ import useFortuneStatus, {FortuneStatus} from "hooks/useFortuneStatus";
 import supportedChains, {FORTUNE_CHAINS} from "utils/chains";
 import {styled} from 'stitches.config'
 import {GetStaticPaths, GetStaticProps, InferGetStaticPropsType, NextPage} from "next";
-import { basicFetcher } from "../../utils/fetcher";
+import {basicFetcher} from "../../utils/fetcher";
 
 type FortuneData = {
   enableAudio: boolean
@@ -111,7 +111,7 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
   }])
 
   const parsedEthValue = BigInt(parseEther(`${valueEth === '' ? 0 : +valueEth}`).toString())
-  const secondDiff = (+roundData?.cutoffTime || 0) - ((new Date()).getTime() / 1000);
+  const secondDiff = useMemo(() => (+roundData?.cutoffTime || 0) - ((new Date()).getTime() / 1000), [roundData?.cutoffTime]);
   const duration = secondDiff < 0 ? 0 : Math.round(secondDiff);
 
   const [countdown, { startCountdown, stopCountdown, resetCountdown }] = useCountdown({
@@ -211,7 +211,7 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
                   amount: BigInt(d.tokenAmount)
                 });
               }
-              p.amount = p.amount + BigInt(d.tokenAmount)
+              p.amount += BigInt(d.tokenAmount)
             }
 
             return p
@@ -270,7 +270,6 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
 
   useEffect(() => {
     resetCountdown();
-    startCountdown()
 
     if (roundData?.status === RoundStatus.Cancelled && !router.query.round) {
       setTimeout(() => {
@@ -285,7 +284,7 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
         setShowEntryForm(false);
       }
     }
-  }, [roundData?.status])
+  }, [roundData?.status, router])
 
   useEffect(() => {
     if (!!router.query.round) {

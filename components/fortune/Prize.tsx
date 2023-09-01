@@ -4,6 +4,7 @@ import {TokenMedia, useTokens} from "@reservoir0x/reservoir-kit-ui";
 import CryptoCurrencyIcon from "../primitives/CryptoCurrencyIcon";
 import {Flex, FormatCryptoCurrency, Text, Tooltip} from "../primitives";
 import Player, {PlayerType} from "./Player";
+import {AddressZero} from "@ethersproject/constants";
 
 export type TokenType = 'ETH' | 'ERC20' | 'ERC721'
 export type PrizeDepositor = {
@@ -90,7 +91,7 @@ const FortunePrize : FC<{ data: PrizeType, valuePerEntry: number }> = ({ data, v
           )}
         </Flex>
         <Flex css={{ p: '$2'}}>
-          <FormatCryptoCurrency amount={data.amount || data.price} />
+          <FormatCryptoCurrency amount={data.amount || data.price} decimals={18} address={data.type === 'ERC721' ? AddressZero : data.address} />
         </Flex>
       </Flex>
     </Tooltip>

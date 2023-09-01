@@ -328,5 +328,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 
   'body #nprogress .bar': {
     background: '#8DFF79 linear-gradient(-109.6deg, #8DFF79 11.2%, ##79FFEB 91.1%)'
+  },
+
+  '.roulette_container': {
+    transform: 'rotate(-20deg)'
   }
 }

@@ -4,20 +4,30 @@ type AudioOptions = {
   loop?: boolean
   interrupt?: boolean
   volume?: number
+  rate?: number
   sprite?: Record<string, [number, number, boolean | undefined]>
 }
 
 const audioStore: Record<string, HTMLAudioElement> = {}
+type SoundContext = {
+  stop: (id?: string) => void
+  audio?: HTMLAudioElement
+}
 
-const useSound = (src: string, options: AudioOptions) => {
+const useSound = (src: string, options: AudioOptions) : [(id?: string) => void, SoundContext] => {
   const audioRef = useRef<HTMLAudioElement>()
 
   useEffect(() => {
-    audioRef.current = new Audio(src)
-    audioRef.current.load();
+    if (audioStore[src]) {
+      audioRef.current = audioStore[src]
+    } else {
+      audioRef.current = new Audio(src)
+      audioRef.current.load();
+      audioStore[src] = audioRef.current
+    }
     audioRef.current.loop = !!options.loop;
+    audioRef.current.playbackRate = options.rate || 1
     audioRef.current.volume = options.volume || 1
-    audioStore[src] = audioRef.current
   }, [options])
 
 
@@ -61,7 +71,7 @@ const useSound = (src: string, options: AudioOptions) => {
     }
   }, [audioRef])
 
-  return [play,stop]
+  return [play, {  stop, audio: audioRef.current }]
 }
 
 export default useSound
