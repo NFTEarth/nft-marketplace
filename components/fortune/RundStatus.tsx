@@ -3,10 +3,11 @@ import {Avatar} from "../primitives/Avatar";
 import Jazzicon from "react-jazzicon/dist/Jazzicon";
 import {jsNumberForAddress} from "react-jazzicon";
 import {truncateAddress} from "../../utils/truncate";
-import {FC} from "react";
+import {FC, useEffect, useMemo, useRef} from "react";
 import {PlayerType} from "./Player";
 import {useFortune, useMounted} from "../../hooks";
 import {Round, RoundStatus} from "../../hooks/useFortuneRound";
+import useCountdown from "../../hooks/useCountdown";
 
 type RoundStatusProps = {
   totalPrize: bigint
@@ -17,8 +18,11 @@ type RoundStatusProps = {
 
 const FortuneRoundStatus: FC<RoundStatusProps> = (props) => {
   const { winner, totalPrize, totalPrizeUsd, loadingNewRound } = props;
+  const progressIntervalRef = useRef<ReturnType<typeof setInterval>>();
   const { data: round } = useFortune<Round>(q => q.round)
-  const { data: countdown } = useFortune<number>(q => q.countdown)
+  const cutOffTime = useMemo(() => round?.cutoffTime || 0, [round])
+  const [_hours, minutes, seconds] = useCountdown(cutOffTime * 1000)
+  const isEnded = minutes === 0 && seconds === 0
 
   const isMounted = useMounted()
 
@@ -43,10 +47,10 @@ const FortuneRoundStatus: FC<RoundStatusProps> = (props) => {
       {([RoundStatus.Open, RoundStatus.Drawing, RoundStatus.Drawn].includes(round?.status) && !winner) && (
         <FormatCryptoCurrency textStyle="h3" logoHeight={35} amount={totalPrize} maximumFractionDigits={4} />
       )}
-      {(!winner || countdown > 0) && (
+      {(!winner || !isEnded) && (
         <FormatCurrency amount={totalPrizeUsd} />
       )}
-      {(round?.status === RoundStatus.Open && countdown < 1) && (
+      {(round?.status === RoundStatus.Open && isEnded) && (
         <Text style="subtitle1" css={{ color: '$primary10', textAlign: 'center' }}>Validating round...</Text>
       )}
       {[RoundStatus.Drawing].includes(round?.status) && (

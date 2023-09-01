@@ -28,7 +28,6 @@ type winnerWheel = {
 
 type FortuneData = {
   round: Round
-  countdown: number
   players: PlayerType[]
   enableAudio: boolean
   hoverPlayerIndex: number
@@ -98,8 +97,10 @@ const Wheel = (props: WheelProps) => {
   const { container, winner, onWheelEnd, ...restProps } = props;
   const [wheelState, setWheelState] = useState(0)
   const [audioRate, setAudioRate] = useState(1)
+  const [progress, setProgress] = useState(0)
   const chartComponentRef = useRef<typeof HighchartsReact>(null);
   const spinIntervalRef = useRef<ReturnType<typeof setInterval>>();
+  const progressIntervalRef = useRef<ReturnType<typeof setInterval>>();
   const triangleRef = useRef<any>();
   const animationSpeed = 30;
   const isMounted = useMounted()
@@ -107,7 +108,6 @@ const Wheel = (props: WheelProps) => {
 
   const { data: {
     round,
-    countdown,
     players,
     enableAudio,
     hoverPlayerIndex
@@ -246,12 +246,21 @@ const Wheel = (props: WheelProps) => {
     }
   }, [status, roundId])
 
-  const progress = useMemo(() => {
-    const start = cutoffTime - duration;
-    const current = ((new Date()).getTime() / 1000);
+  useEffect(() => {
+    if (progressIntervalRef.current) {
+      clearInterval(progressIntervalRef.current)
+    }
 
-    return 100 * (1 - (current - start) / (cutoffTime - start))
-  }, [cutoffTime, duration, countdown]);
+    progressIntervalRef.current = setInterval(() => {
+      const start = cutoffTime - duration;
+      const current = ((new Date()).getTime() / 1000);
+      setProgress(100 * (1 - (current - start) / (cutoffTime - start)))
+    }, 1000)
+
+    return () => {
+      clearInterval(progressIntervalRef.current)
+    }
+  }, [cutoffTime, duration]);
 
   const options = useMemo<Highcharts.Options>(() => {
     return {

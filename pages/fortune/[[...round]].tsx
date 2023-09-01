@@ -1,5 +1,4 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {useCountdown} from 'usehooks-ts'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {
   faArrowLeft,
@@ -41,6 +40,7 @@ import supportedChains, {FORTUNE_CHAINS} from "utils/chains";
 import {styled} from 'stitches.config'
 import {GetStaticPaths, GetStaticProps, InferGetStaticPropsType, NextPage} from "next";
 import {basicFetcher} from "../../utils/fetcher";
+import useCountdown from "hooks/useCountdown";
 
 type FortuneData = {
   enableAudio: boolean
@@ -53,13 +53,7 @@ type FortuneData = {
 
 const Video = styled('video', {});
 
-const convertTimer = (time: number) : string => {
-  const mind = time % (60 * 60);
-  const minutes = Math.floor(mind / 60);
-
-  const secd = mind % 60;
-  const seconds = Math.ceil(secd);
-
+const convertTimer = (minutes: number, seconds: number) : string => {
   return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
 }
 
@@ -94,7 +88,7 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
     enableAudio,
     valueEth,
     selections,
-  }, setRound, setCountdown, setPlayers, setEnableAudio } = useFortune<FortuneData>(d => d)
+  }, setRound, setPlayers, setEnableAudio } = useFortune<FortuneData>(d => d)
   const { openConnectModal } = useConnectModal()
   const marketplaceChain = useMarketplaceChain()
   const { address } = useAccount()
@@ -110,17 +104,12 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
     totalNumberOfEntries: BigInt(0)
   }])
 
+  const cutOffTime = useMemo(() => roundData?.cutoffTime || 0, [roundData])
   const parsedEthValue = BigInt(parseEther(`${valueEth === '' ? 0 : +valueEth}`).toString())
-  const secondDiff = useMemo(() => (+roundData?.cutoffTime || 0) - ((new Date()).getTime() / 1000), [roundData?.cutoffTime]);
-  const duration = secondDiff < 0 ? 0 : Math.round(secondDiff);
+  const [_hours, minutes, seconds] = useCountdown(cutOffTime * 1000)
+  const isEnded = minutes === 0 && seconds === 0
 
-  const [countdown, { startCountdown, stopCountdown, resetCountdown }] = useCountdown({
-    countStart: duration,
-    countStop: 0,
-    intervalMs: mounted ? 1000 : 0,
-  })
-
-  const convertedCountdown = convertTimer(countdown)
+  const convertedCountdown = convertTimer(minutes, seconds)
 
   const usdConversions = useCoinConversion(
     'USD',
@@ -269,21 +258,13 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
   }, [roundData])
 
   useEffect(() => {
-    setCountdown?.(countdown)
-  }, [countdown])
-
-  useEffect(() => {
-    resetCountdown();
-
     if (roundData?.status === RoundStatus.Cancelled && !router.query.round) {
       setTimeout(() => {
         setActiveRound(undefined)
       }, 3 * 1000)
     }
 
-    if (roundData?.status === RoundStatus.Open) {
-      startCountdown()
-    } else {
+    if (roundData?.status !== RoundStatus.Open) {
       if (showEntryForm) {
         setShowEntryForm(false);
       }
@@ -482,7 +463,7 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
                     pt: '100%'
                   }}>
                     <Wheel
-                      countdown={countdown}
+                      isEnded={isEnded}
                       winner={roundData?.winner as `0x${string}`}
                       onWheelEnd={(winnerIndex: number) => {
                         setPlayerWinner(players[winnerIndex])
@@ -698,7 +679,7 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
                 </Video>
                 {mounted && (
                   <FortuneEnterButton
-                    disabled={countdown < 1 || roundData?.status !== RoundStatus.Open}
+                    disabled={isEnded || roundData?.status !== RoundStatus.Open}
                     onClick={handleEnter}
                   />
                 )}
@@ -786,7 +767,7 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
             ) : (
               mounted ? (
                 <FortuneEnterButton
-                  disabled={countdown < 1 || roundData?.status !== RoundStatus.Open}
+                  disabled={isEnded || roundData?.status !== RoundStatus.Open}
                   onClick={handleEnter}
                 />
               ) : null

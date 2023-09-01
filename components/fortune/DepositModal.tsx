@@ -74,7 +74,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
   const [ error, setError] = useState<any>()
   const [ isSuccess, setIsSuccess] = useState(false)
   const marketplaceChain = useMarketplaceChain()
-  const { data: { round, countdown, selections, valueEth }, } = useFortune<FortuneData>(q => q )
+  const { data: { round, selections, valueEth }, } = useFortune<FortuneData>(q => q )
   const fortuneChain = FORTUNE_CHAINS.find(c => c.id === marketplaceChain.id);
   const [openModal, setOpenModal] = useState(false)
   const { addToast } = useContext(ToastContext)
@@ -82,6 +82,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
     chain: marketplaceChain,
     transport: http()
   })
+  const timeDiff =  (round.cutoffTime - ((new Date()).getTime() / 1000)) / 60
 
   const walletClient = createWalletClient({
     chain: marketplaceChain,
@@ -257,7 +258,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
         gap: 20
       }}
     >
-      {(countdown < 30 && round?.status === RoundStatus.Open) && (
+      {(timeDiff < 30 && round?.status === RoundStatus.Open) && (
         <Text css={{ color: 'orange', textAlign: 'center' }}>
           {`Alert: less than 30 seconds left in round, your transaction might not make it in time.`}
         </Text>
@@ -265,7 +266,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
       <Button
         disabled={round?.status !== RoundStatus.Open || isApprovalLoading || step === 4  || disabled}
         size="large"
-        color={countdown < 30 ? 'red' : 'primary'}
+        color={timeDiff < 30 ? 'red' : 'primary'}
         css={{
           justifyContent: 'center'
         }}
