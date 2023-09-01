@@ -1,7 +1,4 @@
-import Head from "../components/fortune/Head";
 import {Box, Flex, Text} from "../components/primitives";
-import supportedChains, {FORTUNE_CHAINS} from "../utils/chains";
-import ChainToggle from "../components/common/ChainToggle";
 import Layout from "../components/Layout";
 
 const OfflinePage = () => {
@@ -36,3 +33,5 @@ const OfflinePage = () => {
     </Layout>
   )
 }
+
+export default OfflinePage
