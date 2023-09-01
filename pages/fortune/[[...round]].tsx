@@ -696,10 +696,12 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
                 >
                   <source src="/video/space.mp4" type="video/mp4" />
                 </Video>
-                <FortuneEnterButton
-                  disabled={countdown < 1 || roundData?.status !== RoundStatus.Open}
-                  onClick={handleEnter}
-                />
+                {mounted && (
+                  <FortuneEnterButton
+                    disabled={countdown < 1 || roundData?.status !== RoundStatus.Open}
+                    onClick={handleEnter}
+                  />
+                )}
               </Flex>
             </>
           )}
@@ -782,10 +784,12 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
                 disabled={!roundData || !(parsedEthValue >= BigInt(roundData?.valuePerEntry || 0) || (Object.keys(selections)).length > 0)}
               />
             ) : (
-              <FortuneEnterButton
-                disabled={countdown < 1 || roundData?.status !== RoundStatus.Open}
-                onClick={handleEnter}
-              />
+              mounted ? (
+                <FortuneEnterButton
+                  disabled={countdown < 1 || roundData?.status !== RoundStatus.Open}
+                  onClick={handleEnter}
+                />
+              ) : null
             )}
           </Flex>
         </Box>

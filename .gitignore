@@ -39,3 +39,6 @@ yarn-error.log*
 
 # Sentry Auth Token
 .sentryclirc
+public/sw.js
+public/fallback-*.js
+public/workbox-*.js
