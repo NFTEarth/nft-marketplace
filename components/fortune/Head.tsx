@@ -61,6 +61,7 @@ const Head: FC<Props> = ({
       <link rel="icon" type="image/png" sizes="16x16" href="/fortune/favicon-16x16.png" />
       <link rel="manifest" href="/fortune/manifest.json" />
       <link rel="shortcut icon" href="/fortune/favicon.ico" />
+      <link rel="mask-icon" href="/fortune/fortune.svg" color="#de05ff" />
 
       <link rel='apple-touch-startup-image' href='/images/fortune-og.png' sizes='1536x2048' />
 
