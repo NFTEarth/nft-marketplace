@@ -15,7 +15,7 @@ type FortuneStatusResult = {
 }
 
 const useFortuneStatus = (options?: SWRConfiguration) => {
-  const { data, isLoading, mutate } = useSWR<FortuneStatusResult>(
+  const { data, isLoading, isValidating, mutate } = useSWR<FortuneStatusResult>(
     [
       `query GetFortune {
         fortune(id: "nftearth") {
@@ -40,7 +40,7 @@ const useFortuneStatus = (options?: SWRConfiguration) => {
   return {
     data: data?.fortune,
     mutate,
-    isLoading
+    isLoading: isLoading || isValidating
   };
 }
 

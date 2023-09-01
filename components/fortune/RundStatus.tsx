@@ -50,7 +50,7 @@ const FortuneRoundStatus: FC<RoundStatusProps> = (props) => {
       {(!winner || !isEnded) && (
         <FormatCurrency amount={totalPrizeUsd} />
       )}
-      {(round?.status === RoundStatus.Open && isEnded) && (
+      {(round?.status === RoundStatus.Open && isEnded && !loadingNewRound) && (
         <Text style="subtitle1" css={{ color: '$primary10', textAlign: 'center' }}>Validating round...</Text>
       )}
       {[RoundStatus.Drawing].includes(round?.status) && (
