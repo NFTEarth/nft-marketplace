@@ -101,7 +101,7 @@ const FortuneRoundStatus: FC<RoundStatusProps> = (props) => {
           </Text>
           <Flex css={{ gap: 20 }}>
             <FormatCryptoCurrency textStyle="subtitle1" logoHeight={15} amount={totalPrize} maximumFractionDigits={2} />
-            <Text style="subtitle1">{`${((round?.numberOfEntries || 1) / (winner?.entry || 0)).toFixed(1)}x WIN`}</Text>
+            <Text style="subtitle1">{`${(+`${BigInt(round?.numberOfEntries || 1) / BigInt(winner?.entry || 0)}`).toFixed(1)}x WIN`}</Text>
           </Flex>
         </Flex>
       )}

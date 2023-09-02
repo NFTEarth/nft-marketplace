@@ -92,15 +92,15 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
     shortName: shortEnsName,
   } = useENSResolver(round?.winner)
 
-  const winnerEntry = (round.deposits
+  const winnerEntry: bigint = round.deposits
     .filter(d => new RegExp(round.winner as string, 'i').test(d.depositor))
-    .reduce((a, b) => a + b.entriesCount, 0) || 0);
-  const winnerEntryValue = BigInt(winnerEntry * round.valuePerEntry)
-  const yourEntry = BigInt(round.valuePerEntry * round.deposits
+    .reduce((a, b) => a + BigInt(b.entriesCount), BigInt(0));
+  const winnerEntryValue = BigInt(winnerEntry) * BigInt(round.valuePerEntry)
+  const yourEntry = BigInt(round.valuePerEntry) * round.deposits
     .filter(d => new RegExp(address as string, 'i').test(d.depositor))
-    .reduce((a, b) => a + b.entriesCount, 0))
-  const prizePool = BigInt(round.numberOfEntries * round.valuePerEntry)
-  const ROI = (round.numberOfEntries / winnerEntry).toFixed(2);
+    .reduce((a, b) => a + BigInt(b.entriesCount), BigInt(0))
+  const prizePool = BigInt(BigInt(round.numberOfEntries) * BigInt(round.valuePerEntry))
+  const ROI = (+`${(BigInt(round.numberOfEntries || 1) / BigInt(winnerEntry || 1))}`).toFixed(2);
 
   return (
     <TableRow
