@@ -236,7 +236,7 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
           price: BigInt(d.entriesCount) * BigInt(roundData.valuePerEntry),
           amount: BigInt(d.tokenAmount),
           tokenId: BigInt(d.tokenId),
-          totalNumberOfEntries: BigInt(d.entriesCount)
+          totalNumberOfEntries: BigInt(d.participant.totalNumberOfEntries)
         })
       }
     })
