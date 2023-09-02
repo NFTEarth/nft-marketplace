@@ -22,7 +22,7 @@ export type PrizeType = {
   tokenId?: bigint
 }
 
-const FortunePrize : FC<{ data: PrizeType, valuePerEntry: number }> = ({ data, valuePerEntry, ...restProps }) => {
+const FortunePrize : FC<{ data: PrizeType, valuePerEntry: bigint }> = ({ data, valuePerEntry, ...restProps }) => {
   const { data: tokens } = useTokens({
     tokens: [`${data.address}:${data.tokenId}`],
   }, {

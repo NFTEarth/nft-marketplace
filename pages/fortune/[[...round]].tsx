@@ -127,7 +127,7 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
   const yourEntries = BigInt(roundData?.deposits?.filter(p => (new RegExp(address as string, 'i').test(p.depositor as string)))
     .reduce((a, b) => a + BigInt(b.participant.totalNumberOfEntries || 0), BigInt(0)) || 0) * BigInt(roundData?.valuePerEntry || 0)
   const currentPlayer = players.find(p => (new RegExp(address as string, 'i')).test(p.address));
-  const yourWinChance = currentPlayer ? Math.round((currentPlayer?.entry || 1) / (roundData?.numberOfEntries || 1) * 100) : 0
+  const yourWinChance = currentPlayer ? Math.round((+`${currentPlayer?.entry}` || 1) / (+`${roundData?.numberOfEntries}` || 1) * 100) : 0
   const ethConversion =
     currencyToUsdConversions['ETH']
   const totalPrizeUsd =
@@ -148,21 +148,21 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
     const newPlayers: PlayerType[] = [];
 
     (roundData?.deposits || []).forEach((d: Deposit) => {
-      const winChance = Math.round(d.entriesCount / (roundData?.numberOfEntries || 1) * 100)
+      const winChance = ((+`${d.participant.totalNumberOfEntries}` || 1) / (+`${roundData?.numberOfEntries}` || 1) * 100)
       const colorHash = Math.floor(+d.depositor*16777215).toString(16)
       const existingPlayer = newPlayers.findIndex(p => p.address === d.depositor)
 
       let player = {
         index: newPlayers.length,
         address: d.depositor as `0x${string}`,
-        entry: d.entriesCount,
+        entry: d.participant.totalNumberOfEntries,
         y: winChance,
         color: `#${colorHash.substring(0, 2)}${colorHash.substring(8, 10)}${colorHash.substring(16, 18)}`
       };
 
       if (existingPlayer > -1) {
-        newPlayers[existingPlayer].entry += d.entriesCount
-        newPlayers[existingPlayer].y += winChance
+        newPlayers[existingPlayer].entry = d.participant.totalNumberOfEntries
+        newPlayers[existingPlayer].y = winChance
       } else {
         newPlayers.push(player)
       }
@@ -236,7 +236,7 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
           price: BigInt(d.entriesCount) * BigInt(roundData.valuePerEntry),
           amount: BigInt(d.tokenAmount),
           tokenId: BigInt(d.tokenId),
-          totalNumberOfEntries: BigInt(d.participant.totalNumberOfEntries)
+          totalNumberOfEntries: BigInt(d.entriesCount)
         })
       }
     })

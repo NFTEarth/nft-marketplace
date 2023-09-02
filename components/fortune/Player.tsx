@@ -11,7 +11,7 @@ import {Round, RoundStatus} from "../../hooks/useFortuneRound";
 export interface PlayerType extends Highcharts.PointOptionsObject {
   index: number
   address: `0x${string}`
-  entry: number
+  entry: bigint
   y: number
   color: string
   shortAddress?: string
@@ -22,7 +22,7 @@ export interface PlayerType extends Highcharts.PointOptionsObject {
 
 type PlayerProps = {
   data: PlayerType,
-  valuePerEntry: number
+  valuePerEntry: bigint
 }
 
 const Player: FC<PlayerProps> = ({ data, valuePerEntry, ...restProps }) => {

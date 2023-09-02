@@ -26,7 +26,7 @@ export type Deposit = {
   tokenAmount: number
   tokenId: number
   tokenType: TokenType
-  entriesCount: number
+  entriesCount: bigint
   indice: number
   claimed: boolean
   participant: Participant
@@ -40,8 +40,8 @@ export type Round = {
   duration: number
   maximumNumberOfDeposits: number
   maximumNumberOfParticipants: number
-  valuePerEntry: number
-  numberOfEntries: number
+  valuePerEntry: bigint
+  numberOfEntries: bigint
   numberOfParticipants: number
   winner: string
   drawnHash: string
