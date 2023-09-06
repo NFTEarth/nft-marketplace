@@ -3,14 +3,13 @@ import Script from "next/script";
 import { Box } from 'components/primitives'
 import Navbar from './navbar'
 import {useMounted} from 'hooks'
+import {useMediaQuery} from "react-responsive";
 
 type Props = {
   children: ReactNode
 }
 
 const Layout: FC<Props> = ({ children }) => {
-  const isMounted = useMounted()
-
   return (
     <>
       <Box
@@ -37,6 +36,7 @@ const Layout: FC<Props> = ({ children }) => {
           color: 'transparent',
           notifications: true,
           glyph: ['https://app.nftearth.exchange/images/chat-discord.svg', '60px'],
+          css: '&:not(.open) .button { bottom: 60px; } @media only screen and (max-width: 600px) { &:not(.open) .button { bottom: 100px; } }'
         })`}
       </Script>
     </>

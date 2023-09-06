@@ -492,8 +492,8 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
                     <FontAwesomeIcon
                       icon={enableAudio ? faVolumeMute : faVolumeUp}
                       color={enableAudio ? '#222' : '#000'}
-                      width={30}
-                      height={30}
+                      width={20}
+                      height={20}
                     />
                   </Button>
                 </Flex>

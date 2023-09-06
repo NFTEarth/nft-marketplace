@@ -216,7 +216,7 @@ const IndexPage: NextPage = () => {
                     <Flex justify="center" css={{ gap: 24, zIndex: 2 }}>
                       {profile?.twitter_id && (
                         <Link target="_blank" href={`https://twitter.com/${profile?.twitter_username}`}>
-                          <FontAwesomeIcon icon={faTwitter} size="sm"  style={{
+                          <FontAwesomeIcon icon={faTwitter} width={40} height={40}  style={{
                             padding: 5,
                             border: '1px #fff solid',
                             borderRadius: 5,
@@ -225,7 +225,7 @@ const IndexPage: NextPage = () => {
                       )}
                       {profile?.discord_id && (
                         <Link target="_blank" href={`https://discord.com/users/${profile?.discord_id}`}>
-                          <FontAwesomeIcon icon={faDiscord} size="xl" style={{
+                          <FontAwesomeIcon icon={faDiscord} width={40} height={40} style={{
                             padding: 5,
                             border: '1px #fff solid',
                             borderRadius: 5,
@@ -292,7 +292,7 @@ const IndexPage: NextPage = () => {
                               {/*)}*/}
                               {(address === accountAddress) && (
                                 <Button as="a" color="secondary" href={`/api/social/discord?wallet=${accountAddress}`} size="xs">
-                                  <FontAwesomeIcon icon={faDiscord} size="sm" />
+                                  <FontAwesomeIcon icon={faDiscord} width={16} height={16} />
                                   {!profile?.discord_id ? 'Connect Discord' : 'Re-Connect Discord'}
                                 </Button>
                               )}

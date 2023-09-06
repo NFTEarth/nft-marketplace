@@ -178,7 +178,7 @@ export const AccountSidebar: FC = () => {
                           cursor: 'pointer',
                         }}
                       >
-                        <FontAwesomeIcon icon={faStore} />
+                        <FontAwesomeIcon icon={faStore} width={16} height={16} />
                         <Text style="body1">My Items</Text>
                       </Flex>
                     </Link>
@@ -192,7 +192,7 @@ export const AccountSidebar: FC = () => {
                           cursor: 'pointer',
                         }}
                       >
-                        <FontAwesomeIcon icon={faList} />
+                        <FontAwesomeIcon icon={faList} width={16} height={16} />
                         <Text style="body1">Listings</Text>
                       </Flex>
                     </Link>
@@ -206,7 +206,7 @@ export const AccountSidebar: FC = () => {
                           cursor: 'pointer',
                         }}
                       >
-                        <FontAwesomeIcon icon={faHand} />
+                        <FontAwesomeIcon icon={faHand} width={16} height={16} />
                         <Text style="body1">Offers Made</Text>
                       </Flex>
                     </Link>
@@ -220,7 +220,7 @@ export const AccountSidebar: FC = () => {
                           cursor: 'pointer',
                         }}
                       >
-                        <FontAwesomeIcon icon={faChartLine} />
+                        <FontAwesomeIcon icon={faChartLine} width={16} height={16} />
                         <Text style="body1">Activity</Text>
                       </Flex>
                     </Link>

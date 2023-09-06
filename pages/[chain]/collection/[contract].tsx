@@ -477,7 +477,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       />
                       <Sweep
                         collectionId={collection.id}
-                        buttonChildren={<FontAwesomeIcon icon={faBroom} />}
+                        buttonChildren={<FontAwesomeIcon icon={faBroom} width={25} height={25} />}
                         buttonCss={{
                           minWidth: 48,
                           minHeight: 48,
