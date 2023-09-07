@@ -23,7 +23,7 @@ import { CSS } from '@stitches/react'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
-import { mainnet, arbitrum } from "wagmi/chains";
+import { arbitrum } from "wagmi/chains";
 import { zeroAddress } from 'viem'
 
 
