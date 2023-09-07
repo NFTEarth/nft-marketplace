@@ -29,7 +29,7 @@ import LoadingSpinner from "components/common/LoadingSpinner";
 import {Box, Button, Flex, FormatCryptoCurrency, Text} from 'components/primitives'
 import FortuneEnterButton from "components/fortune/EnterButton";
 import FortuneDepositModal from "components/fortune/DepositModal";
-import FortuneRoundStatus from "components/fortune/RundStatus";
+import FortuneRoundStatus from "components/fortune/RoundStatus";
 import FortuneFooter from "components/fortune/Footer";
 import BetaLogo from "components/fortune/BetaLogo";
 import Head from "components/fortune/Head";
