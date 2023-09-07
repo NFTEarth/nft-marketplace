@@ -130,17 +130,6 @@ const CollectionOffer: FC<Props> = ({
     ]
   }
 
-  if (marketplaceChain.id === base.id) {
-    bidCurrencies = [
-      {
-        contract: '0xc2106ca72996e49bBADcB836eeC52B765977fd20',
-        symbol: 'NFTE',
-        decimals: 18,
-        coinGeckoId: 'nftearth',
-      },
-    ]
-  }
-
   const trigger = (
     <Button css={buttonCss} color="primary" {...buttonProps}>
       {buttonChildren
