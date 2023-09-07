@@ -80,17 +80,17 @@ const Bid: FC<Props> = ({
         decimals: 18,
         coinGeckoId: 'nftearth',
       },
-      {
-        contract: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-        symbol: 'USDC',
-        decimals: 6,
-        coinGeckoId: 'usd-coin',
-      },
     ]
   }
 
   if (marketplaceChain.id === arbitrum.id) {
     bidCurrencies = [
+      {
+        contract: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+        symbol: 'WETH',
+        decimals: 18,
+        coinGeckoId: 'weth',
+      },
       {
         contract: '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
         symbol: 'NFTE',

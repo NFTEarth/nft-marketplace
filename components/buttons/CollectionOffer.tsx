@@ -23,6 +23,9 @@ import { CSS } from '@stitches/react'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
+import { arbitrum } from "wagmi/chains";
+import { zeroAddress } from 'viem'
+
 
 type Props = {
   collection: NonNullable<ReturnType<typeof useCollections>['data']>[0]
@@ -93,14 +96,37 @@ const CollectionOffer: FC<Props> = ({
       {
         contract: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
         symbol: 'WETH',
-        coinGeckoId: 'ethereum',
+        coinGeckoId: 'weth',
       },
       {
-        contract: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-        symbol: 'USDC',
-        decimals: 6,
-        coinGeckoId: 'usd-coin',
+        contract: '0x8c223a82E07feCB49D602150d7C2B3A4c9630310',
+        symbol: 'NFTE',
+        decimals: 18,
+        coinGeckoId: 'nftearth',
       },
+    ]
+  }
+
+  if (marketplaceChain.id === arbitrum.id) {
+    bidCurrencies = [
+      {
+        contract: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+        symbol: 'WETH',
+        decimals: 18,
+        coinGeckoId: 'weth',
+      },
+      {
+        contract: '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
+        symbol: 'NFTE',
+        decimals: 18,
+        coinGeckoId: 'nftearth',
+      },
+      {
+        contract: '0x912CE59144191C1204E64559FE8253a0e49E6548',
+        symbol: 'ARB',
+        decimals: 18,
+        coinGeckoId: 'arbitrum',
+      }
     ]
   }
 
