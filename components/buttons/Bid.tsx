@@ -72,7 +72,7 @@ const Bid: FC<Props> = ({
       {
         contract: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
         symbol: 'WETH',
-        coinGeckoId: 'weth',
+        coinGeckoId: 'ethereum',
       },
       {
         contract: '0x8c223a82E07feCB49D602150d7C2B3A4c9630310',
