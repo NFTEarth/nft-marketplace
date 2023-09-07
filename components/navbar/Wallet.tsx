@@ -98,15 +98,6 @@ const currencies = [
     },
     coinGeckoId: 'arbitrum',
   },
-  /*{
-    address: '0xc2106ca72996e49bbadcb836eec52b765977fd20',
-    symbol: 'NFTE',
-    decimals: base.nativeCurrency.decimals,
-    chain: {
-      id: base.id,
-      name: base.name,
-  },*/
-  },
 ]
 
 type EnhancedCurrency = (typeof currencies)[0] & {
