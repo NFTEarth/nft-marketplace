@@ -51,16 +51,16 @@ const FortuneRoundStatus: FC<RoundStatusProps> = (props) => {
         <FormatCurrency amount={totalPrizeUsd} />
       )}
       {(round?.status === RoundStatus.Open && isEnded && !loadingNewRound) && (
-        <Text style="subtitle1" css={{ color: '$primary10', textAlign: 'center' }}>Validating round...</Text>
+        <Text style="subtitle1" css={{ color: '$primary10', textAlign: 'center' }}>Validating round: this process takes about 1 minute to complete.</Text>
       )}
       {[RoundStatus.Drawing].includes(round?.status) && (
-        <Text style="subtitle1" css={{ color: '$primary10', textAlign: 'center' }}>Drawing Winner...</Text>
+        <Text style="subtitle1" css={{ color: '$primary10', textAlign: 'center' }}>Drawing Winner!</Text>
       )}
       {round?.status === RoundStatus.Cancelled && (
         <Text style="h5" css={{ color: '$primary10', mt: 20 }}>Round Cancelled</Text>
       )}
       {loadingNewRound && (
-        <Text style="subtitle1" css={{ color: '$primary10', textAlign: 'center' }}>Loading new round...</Text>
+        <Text style="subtitle1" css={{ color: '$primary10', textAlign: 'center' }}>Loading A New Round</Text>
       )}
       {winner && (
         <Flex
