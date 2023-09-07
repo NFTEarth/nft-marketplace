@@ -35,7 +35,7 @@ const Layout: FC<Props> = ({ children }) => {
           channel: '1146477051033956544',
           color: 'transparent',
           notifications: true,
-          glyph: ['https://app.nftearth.exchange/images/chat-discord.svg', '60px'],
+          glyph: ['https://nftearth.exchange/images/chat-discord.svg', '60px'],
           css: '&:not(.open) .button { bottom: 60px; } @media only screen and (max-width: 600px) { &:not(.open) .button { bottom: 100px; } }'
         })`}
       </Script>
