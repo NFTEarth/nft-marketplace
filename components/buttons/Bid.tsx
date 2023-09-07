@@ -72,7 +72,7 @@ const Bid: FC<Props> = ({
       {
         contract: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
         symbol: 'WETH',
-        coinGeckoId: 'ethereum',
+        coinGeckoId: 'weth',
       },
       {
         contract: '0x8c223a82E07feCB49D602150d7C2B3A4c9630310',
@@ -85,11 +85,11 @@ const Bid: FC<Props> = ({
 
   if (marketplaceChain.id === arbitrum.id) {
     bidCurrencies = [
-       {
+      {
         contract: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-        symbol: 'NFTE',
+        symbol: 'WETH',
         decimals: 18,
-        coinGeckoId: 'nftearth',
+        coinGeckoId: 'weth',
       },
       {
         contract: '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
