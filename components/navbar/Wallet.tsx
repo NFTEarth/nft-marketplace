@@ -145,10 +145,10 @@ const Wallet = () => {
       address,
       chainId: arbitrum.id,  
   })
-  const baseBalance = useBalance({
+  /*const baseBalance = useBalance({
     address,
     chainId: base.id,  
-  })
+  })*/
 
   const usdConversions = useCoinConversion(
     'USD',
@@ -180,10 +180,10 @@ const Wallet = () => {
             balance = arbitrumBalance.data?.value || 0n
             break
           }
-          case base.id: { 
+          /*case base.id: { 
             balance = baseBalance.data?.value || 0n
             break 
-          }
+          }*/
         }
       } else {
         const index = nonNativeCurrencies.findIndex(
