@@ -36,8 +36,8 @@ const resourcesSectionLinks = [
     href: '/learn-nfts',
   },
   {
-    name: 'Buy NFTE',
-    href: 'https://app.uniswap.org/#/swap?outputCurrency=0x51b902f19a56f0c8e409a34a215ad2673edf3284&chain=arbitrum',
+    name: 'Swap NFTE',
+    href: 'https://www.sushi.com/swap?chainId=42161&token1=0x51b902f19a56f0c8e409a34a215ad2673edf3284',
   },
   {
     name: 'Brand Assets',
@@ -139,7 +139,7 @@ export const Footer = () => {
           <a
             target="_blank"
             rel="noopener noreferrer"
-            href="https://discord.gg/nftearth"
+            href="https://discord.gg/56a7u3wDkX"
             aria-label="Discord"
           >
             <Button
