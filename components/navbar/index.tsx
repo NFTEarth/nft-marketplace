@@ -126,8 +126,17 @@ const Navbar = () => {
             <Link href="/bridge">
               <NavItem active={router.pathname == '/bridge'}>Bridge</NavItem>
             </Link>
+            <Link href="https://www.sushi.com/swap?chainId=42161&token1=0x51b902f19a56f0c8e409a34a215ad2673edf3284" target="_blank">
+              <NavItem>Swap NFTE</NavItem>
+            </Link>
             <Link href="https://www.sushi.com/pool/42161:0xd2aaa8fc5c39dbe68344bc42d4513ea344e5d696" target="_blank">
-              <NavItem>Rewards</NavItem>
+              <NavItem>LP Rewards</NavItem>
+            </Link>
+            <Link href="/staking">
+              <NavItem active={router.pathname == '/staking'}>Staking</NavItem>
+            </Link>
+            <Link href="/ai">
+              <NavItem active={router.pathname == '/ai'}>AI NFT</NavItem>
             </Link>
           </Flex>
         </Flex>

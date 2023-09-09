@@ -200,7 +200,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             color="subtle"
             css={{ mb: 48, textAlign: 'left' }}
           >
-            Omnichain NFT hub | Powered by NFTEarth
+            Omnichain NFT Hub | Powered by NFTEarth
           </Text>
         </Flex>
         {!isSmallDevice ? <ChainStats /> : null}
