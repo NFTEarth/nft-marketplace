@@ -135,8 +135,8 @@ const Navbar = () => {
             <Link href="/staking">
               <NavItem active={router.pathname == '/staking'}>Staking</NavItem>
             </Link>
-            <Link href="/ai">
-              <NavItem active={router.pathname == '/ai'}>AI NFT</NavItem>
+            <Link href="https://smartnft.nftearth.exchange" target="_blank">
+              <NavItem>SmartNFT</NavItem>
             </Link>
           </Flex>
         </Flex>
