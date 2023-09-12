@@ -32,8 +32,12 @@ const SectionLink: FC<SectionLinkProps> = ({ name, href }) => (
 
 const resourcesSectionLinks = [
   {
-    name: 'Learn About NFTs',
-    href: '/learn-nfts',
+    name: 'Medium',
+    href: 'https://medium.com/@nftearth',
+  },
+  {
+    name: 'Telegram',
+    href: 'https://t.me/nftearth_community',
   },
   {
     name: 'Swap NFTE',
@@ -54,10 +58,23 @@ const developerSectionLinks = [
     name: 'GitHub',
     href: 'https://github.com/NFTEarth',
   },
+  {
+    name: 'CoinGecko',
+    href: 'https://www.coingecko.com/en/coins/nftearth',
+  },
+  {
+    name: 'CoinMarketCap',
+    href: 'https://coinmarketcap.com/currencies/nftearth',
+  },
+  
 
 ]
 
 const companySectionLinks = [
+ {
+    name: 'Governance',
+    href: 'https://snapshot.org/#/nftearthl2.eth',
+  },
   {
     name: 'Contact: team@layer2nfts.org',
     href: 'mailto:team@layer2nfts.org',
