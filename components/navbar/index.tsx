@@ -7,7 +7,6 @@ import Link from 'next/link'
 import Image from "next/legacy/image"
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import NavItem from './NavItem'
-import ThemeSwitcher from './ThemeSwitcher'
 import HamburgerMenu from './HamburgerMenu'
 import MobileSearch from './MobileSearch'
 import { useMediaQuery } from 'react-responsive'
@@ -15,6 +14,15 @@ import { useMarketplaceChain, useMounted } from '../../hooks'
 import { useAccount } from 'wagmi'
 import CartButton from './CartButton'
 import { AccountSidebar } from 'components/navbar/AccountSidebar'
+import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {
+  faChartBar,
+  faChevronDown,
+  faGift,
+  faArrowsLeftRight,
+  faBridge
+} from "@fortawesome/free-solid-svg-icons";
 
 export const NAVBAR_HEIGHT = 81
 export const NAVBAR_HEIGHT_MOBILE = 77
@@ -94,8 +102,8 @@ const Navbar = () => {
       align="center"
       justify="between"
     >
-      <Box css={{ flex: 1 }}>
-        <Flex align="center">
+      <Flex align="center" justify="between" css={{ flex: 1 }}>
+        <Flex align="center" css={{ flex: 1 }}>
           <Link href={`/${routePrefix}`}>
             <Box css={{ width: 112, cursor: 'pointer' }}>
               {<Image
@@ -106,41 +114,141 @@ const Navbar = () => {
               />}
             </Box>
           </Link>
-          <Box css={{ flex: 1, px: '$5', maxWidth: 600 }}>
+          <Flex css={{ flex: 1, px: '$5', maxWidth: 600 }}>
             <GlobalSearch
               ref={searchRef}
               placeholder="Search NFTs..."
               containerCss={{ width: '100%' }}
               key={router.asPath}
             />
-          </Box>
-          <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
-            <Link href={`/${routePrefix}/collection-rankings`}>
-              <NavItem active={router.pathname.includes('collection-rankings')}>
-                Collections
-              </NavItem>
-            </Link>
-            <Link href="/fortune">
-              <NavItem active={router.pathname == '/quests'}>Fortune</NavItem>
-            </Link>
-            <Link href="/bridge">
-              <NavItem active={router.pathname == '/bridge'}>Bridge</NavItem>
-            </Link>
-            <Link href="https://www.sushi.com/swap?chainId=42161&token1=0x51b902f19a56f0c8e409a34a215ad2673edf3284" target="_blank">
-              <NavItem>Swap NFTE</NavItem>
-            </Link>
-            <Link href="https://www.sushi.com/pool/42161:0xd2aaa8fc5c39dbe68344bc42d4513ea344e5d696" target="_blank">
-              <NavItem>LP Rewards</NavItem>
-            </Link>
-            <Link href="/staking">
-              <NavItem active={router.pathname == '/staking'}>Staking</NavItem>
-            </Link>
-            <Link href="https://smartnft.nftearth.exchange" target="_blank">
-              <NavItem>SmartNFT</NavItem>
-            </Link>
           </Flex>
         </Flex>
-      </Box>
+        <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
+          <Link href={`/${routePrefix}/collection-rankings`}>
+            <NavItem active={router.pathname.includes('collection-rankings')}>
+              Collections
+            </NavItem>
+          </Link>
+          <Dropdown
+            modal={false}
+            trigger={
+              <NavItem>
+                {`Token`}
+                <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faChevronDown}/>
+              </NavItem>
+            }
+            contentProps={{
+              asChild: true,
+              forceMount: true,
+              sideOffset: 35
+            }}
+          >
+            <DropdownMenuItem
+              as={Link}
+              href="/bridge"
+              css={{
+                display: 'flex',
+                py: '$3',
+                width: '100%',
+                alignItems: 'center',
+                gap: 10
+              }}
+            >
+              <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faBridge} width={20} height={20}/>
+              Bridge
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              as={Link}
+              href="https://www.sushi.com/swap?chainId=42161&token1=0x51b902f19a56f0c8e409a34a215ad2673edf3284"
+              target="_blank"
+              css={{
+                display: 'flex',
+                py: '$3',
+                width: '100%',
+                alignItems: 'center',
+                gap: 10
+              }}
+            >
+              <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faArrowsLeftRight} width={20} height={20}/>
+              Swap NFT
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              as={Link}
+              href="https://www.sushi.com/pool/42161:0xd2aaa8fc5c39dbe68344bc42d4513ea344e5d696"
+              target="_blank"
+              css={{
+                display: 'flex',
+                py: '$3',
+                width: '100%',
+                alignItems: 'center',
+                gap: 10
+              }}
+            >
+              <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faGift} width={20} height={20}/>
+              LP Rewards
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              as={Link}
+              href="https://staking.nftearth.exchange"
+              target="_blank"
+              css={{
+                display: 'flex',
+                py: '$3',
+                width: '100%',
+                alignItems: 'center',
+                gap: 10
+              }}
+            >
+              <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faChartBar} width={20} height={20}/>
+              {`Staking`}
+            </DropdownMenuItem>
+          </Dropdown>
+          <Dropdown
+            modal={false}
+            trigger={
+              <NavItem>
+                {`Products`}
+                <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faChevronDown}/>
+              </NavItem>
+            }
+            contentProps={{
+              asChild: true,
+              forceMount: true,
+              sideOffset: 35
+            }}
+          >
+            <DropdownMenuItem
+              as={Link}
+              href="/fortune"
+              css={{
+                display: 'flex',
+                py: '$3',
+                width: '100%',
+                alignItems: 'center',
+                gap: 10
+              }}
+            >
+              <Image src="/images/fortune.png" width={20} height={20} objectFit="contain" alt="Fortune"/>
+              {`Fortune`}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              as={Link}
+              href="https://smartnft.nftearth.exchange"
+              target="_blank"
+              css={{
+                display: 'flex',
+                py: '$3',
+                width: '100%',
+                alignItems: 'center',
+                gap: 10
+              }}
+            >
+              <Image src="/images/smartnft.png" width={20} height={20} objectFit="contain" alt="SmartNFT"/>
+              {`SmartNFT`}
+            </DropdownMenuItem>
+          </Dropdown>
+        </Flex>
+      </Flex>
 
       <Flex css={{ gap: '$3' }} justify="end" align="center">
         <CartButton />

@@ -244,7 +244,7 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
             <TransactionProgress
               justify="center"
               css={{mb: '$3'}}
-              fromImgs={['/icons/fortune.png']}
+              fromImgs={['/images/fortune.png']}
               toImgs={['/icons/arbitrum-icon-light.svg']}
             />
           )}
@@ -255,7 +255,7 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
             <TransactionProgress
               justify="center"
               css={{ mb: '$3' }}
-              fromImgs={['/icons/fortune.png']}
+              fromImgs={['/images/fortune.png']}
               toImgs={['/icons/arbitrum-icon-light.svg']}
             />
           )}

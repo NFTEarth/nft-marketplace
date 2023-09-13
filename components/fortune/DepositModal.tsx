@@ -331,7 +331,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
             justify="center"
             css={{ mb: '$3' }}
             fromImgs={['/icons/arbitrum-icon-light.svg']}
-            toImgs={['/icons/fortune.png']}
+            toImgs={['/images/fortune.png']}
           />
         )}
         {isSuccess && (

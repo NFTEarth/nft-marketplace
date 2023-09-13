@@ -16,6 +16,7 @@ import {formatEther, formatUnits, parseEther, parseUnits, solidityPacked} from '
 import {ContractFunctionConfig, zeroAddress} from "viem";
 import {useDebounce} from "usehooks-ts";
 import {Abi} from "abitype";
+import Image from 'next/image'
 
 import Layout from "components/Layout";
 import { Select, Box, Button, Flex, Text } from "components/primitives";
@@ -381,6 +382,17 @@ const BridgePage = () => {
               </Box>
             </Flex>
           </Flex>
+        </Flex>
+        <Flex
+          direction="column"
+          align="center"
+          css={{
+            mt: '$3',
+            textAlign: 'right'
+          }}
+        >
+          <Text style="body3">Powered by</Text>
+          <Image src="/images/LayerZero_Logo.svg" width={150} height={40} alt="LayerZero" />
         </Flex>
       </Box>
     </Layout>

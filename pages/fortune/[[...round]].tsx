@@ -8,6 +8,7 @@ import {
   faVolumeMute,
   faVolumeUp,
 } from "@fortawesome/free-solid-svg-icons";
+import { faLinkedin } from '@fortawesome/free-brands-svg-icons'
 import {useCoinConversion} from "@reservoir0x/reservoir-kit-ui";
 import {useMediaQuery} from "react-responsive";
 import {useAccount} from "wagmi";
@@ -356,7 +357,7 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
       >
         <Flex justify="between" css={{ mb: 30 }}>
           <Flex align="center" css={{ gap: 10 }}>
-            <Image src="/icons/fortune.png" width={40} height={40} objectFit="contain" alt="Fortune"/>
+            <Image src="/images/fortune.png" width={40} height={40} objectFit="contain" alt="Fortune"/>
             <Text style="h4">Fortune</Text>
             <BetaLogo />
           </Flex>

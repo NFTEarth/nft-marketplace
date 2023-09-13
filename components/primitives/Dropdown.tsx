@@ -39,6 +39,10 @@ const AnimatedDropdownMenuContent = forwardRef<
         opacity: 0,
         transition: { duration: 0.1 },
       }}
+      style={{
+        display: 'flex',
+        flexDirection: 'column'
+      }}
     >
       {children}
     </motion.div>

@@ -215,7 +215,7 @@ const ClaimModal: FC<ClaimModalProps> = ({ open: defaultOpen, rewards, disabled,
           <TransactionProgress
             justify="center"
             css={{ mb: '$3' }}
-            fromImgs={['/icons/fortune.png']}
+            fromImgs={['/images/fortune.png']}
             toImgs={['/icons/arbitrum-icon-light.svg']}
           />
         )}

@@ -96,7 +96,7 @@ const FortuneHistory = () => {
       >
         <Flex justify="between" css={{ mb: 30 }}>
           <Flex align="center" css={{ gap: 10 }}>
-            <Image src="/icons/fortune.png" width={40} height={40} objectFit="contain" alt="Fortune"/>
+            <Image src="/images/fortune.png" width={40} height={40} objectFit="contain" alt="Fortune"/>
             <Text style="h4">Fortune</Text>
             <BetaLogo />
           </Flex>

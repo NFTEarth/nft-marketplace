@@ -40,7 +40,7 @@ const HistoryTable : FC<Props> = ({ data }) => {
       rounds &&
       rounds.length === 0 ? (
         <Flex direction="column" align="center" css={{ py: '$6', gap: '$4' }}>
-          <img src="/icons/fortune.png" width={40} height={40} />
+          <img src="/images/fortune.png" width={40} height={40} />
           <Text>No History</Text>
         </Flex>
       ) : (
