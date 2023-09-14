@@ -380,7 +380,7 @@ const DetailsSettings:FC<Props> = ({ profile }) => {
             {/*  justify="between"*/}
             {/*>*/}
             {/*  <Text>*/}
-            {/*    <FontAwesomeIcon icon={faTwitter} width={16} height={16} style={{ marginRight: 10 }} />*/}
+            {/*    <FontAwesomeIcon icon={faTwitter} width={16} height={16} style={{ marginRight: 10, display: 'inline-block' }} />*/}
             {/*    {`Twitter`}*/}
             {/*  </Text>*/}
             {/*  <Button as="a" color="primary" href={`/api/social/twitter?wallet=${address}`} size="xs" css={{ justifyContent: 'center'}}>*/}
@@ -392,7 +392,7 @@ const DetailsSettings:FC<Props> = ({ profile }) => {
               justify="between"
             >
               <Text>
-                <FontAwesomeIcon icon={faDiscord} width={16} height={16} style={{ marginRight: 10 }} />
+                <FontAwesomeIcon icon={faDiscord} width={30} height={30} style={{ marginRight: 10, display: 'inline-block' }} />
                 {`Discord`}
               </Text>
               <Button as="a" color="primary" href={`/api/social/discord?wallet=${address}`} size="xs">

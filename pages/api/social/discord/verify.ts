@@ -98,7 +98,7 @@ const handleDiscordVerify = async (req: NextApiRequest, res: NextApiResponse) =>
     });
   }
 
-  return res.redirect(`/portfolio/${wallet}`);
+  return res.redirect(`/portfolio/settings`);
 }
 
 export default handleDiscordVerify;
