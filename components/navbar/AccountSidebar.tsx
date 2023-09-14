@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react'
 import { AnimatedOverlay, Content } from 'components/primitives/Dialog'
 import { useAccount, useDisconnect } from 'wagmi'
-import { useENSResolver } from 'hooks'
+import {useENSResolver, useProfile} from 'hooks'
 import { Box, Button, Flex, Grid, Text } from 'components/primitives'
 import { Avatar } from 'components/primitives/Avatar'
 import Jazzicon from 'react-jazzicon/dist/Jazzicon'
@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faChartLine,
   faClose,
-  faCopy,
+  faCopy, faGear,
   faHand,
   faList,
   faRightFromBracket,
@@ -33,6 +33,7 @@ export const AccountSidebar: FC = () => {
     shortName: shortEnsName,
   } = useENSResolver(address)
   const [open, setOpen] = useState(false)
+  const { data: profile } = useProfile(address)
 
   useEffect(() => {
     setOpen(false)
@@ -135,9 +136,9 @@ export const AccountSidebar: FC = () => {
                           }}
                         >
                           <Text style="body1">
-                            {shortEnsName ? shortEnsName : shortAddress}
+                            {profile?.username ||  shortEnsName || shortAddress}
                           </Text>
-                          {!shortEnsName ? (
+                          {!profile?.username && !shortEnsName ? (
                             <FontAwesomeIcon
                               icon={faCopy}
                               width={16}
@@ -145,7 +146,7 @@ export const AccountSidebar: FC = () => {
                             />
                           ) : null}
                         </Flex>
-                        {shortEnsName ? (
+                        {(shortEnsName || profile?.username) ? (
                           <Flex
                             align="center"
                             css={{
@@ -225,7 +226,23 @@ export const AccountSidebar: FC = () => {
                       </Flex>
                     </Link>
                   </Grid>
-                  <Wallet />
+                  <Wallet
+                    exp={profile?.exp}
+                  />
+                  <Link href="/portfolio/settings">
+                    <Flex
+                      align="center"
+                      css={{
+                        gap: 6,
+                        p: '$3',
+                        color: '$gray10',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faGear} width={16} height={16} />
+                      <Text style="body1">Settings</Text>
+                    </Flex>
+                  </Link>
                   <Flex
                     justify="between"
                     align="center"

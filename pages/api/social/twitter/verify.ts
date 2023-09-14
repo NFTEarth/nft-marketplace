@@ -63,9 +63,10 @@ const handleTwitterVerify = async (req: NextApiRequest, res: NextApiResponse) =>
     }).catch(() => null)
 
     if (!existingAccount) {
-      await account.insertOne({
-        wallet: wallet,
-        exp: 0
+      return res.json({
+        status: 'ERROR',
+        code: 404,
+        message: 'Account not registered.'
       })
     }
 

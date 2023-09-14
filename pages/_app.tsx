@@ -17,6 +17,7 @@ import {
   darkTheme as rainbowDarkTheme,
 } from '@rainbow-me/rainbowkit'
 import { WagmiConfig, createConfig, configureChains } from 'wagmi'
+import {SessionProvider} from 'next-auth/react'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { publicProvider } from 'wagmi/providers/public'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
@@ -87,13 +88,15 @@ Router.events.on("routeChangeComplete", nProgress.done);
 function AppWrapper(props: AppProps & { baseUrl: string }) {
   return (
     <WagmiConfig config={wagmiClient}>
-      <ChainContextProvider>
-        <AnalyticsProvider>
-          <ReferralContextProvider>
-            <MyApp {...props} />
-          </ReferralContextProvider>
-        </AnalyticsProvider>
-      </ChainContextProvider>
+      <SessionProvider>
+        <ChainContextProvider>
+          <AnalyticsProvider>
+            <ReferralContextProvider>
+              <MyApp {...props} />
+            </ReferralContextProvider>
+          </AnalyticsProvider>
+        </ChainContextProvider>
+      </SessionProvider>
     </WagmiConfig>
   )
 }

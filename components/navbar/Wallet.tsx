@@ -1,3 +1,8 @@
+import {FC, useMemo, useState} from 'react'
+import { useAccount, useContractReads, erc20ABI, useBalance } from 'wagmi'
+import { zeroAddress, formatUnits } from 'viem'
+import { mainnet, polygon, optimism, arbitrum } from 'wagmi/chains'
+import { useCoinConversion } from '@reservoir0x/reservoir-kit-ui'
 import CryptoCurrencyIcon from 'components/primitives/CryptoCurrencyIcon'
 import {
   Button,
@@ -6,14 +11,8 @@ import {
   FormatCurrency,
   Text,
 } from 'components/primitives'
-import { mainnet, polygon, optimism, arbitrum } from 'wagmi/chains'
-import { useAccount, useContractReads, erc20ABI, useBalance } from 'wagmi'
-import { useMemo, useState } from 'react'
-import { zeroAddress, formatUnits } from 'viem'
-import { useCoinConversion } from '@reservoir0x/reservoir-kit-ui'
-import {useProfile} from "../../hooks";
-import {formatNumber} from "../../utils/numbers";
-import { base } from 'utils/chains'
+import {useProfile} from "hooks";
+import {formatNumber} from "utils/numbers";
 
 //CONFIGURABLE: Here you may configure currencies that you want to display in the wallet menu. Native currencies,
 //like ETH/MATIC etc need to be fetched in a different way. Configure them below
@@ -114,10 +113,13 @@ const currencyCoingeckoIds = currencies
   .map((currency) => currency.coinGeckoId)
   .join(',')
 
-const Wallet = () => {
+type WalletProps = {
+  exp: string
+}
+
+const Wallet : FC<WalletProps> = ({ exp }) => {
   const [viewAll, setViewAll] = useState(false)
   const { address } = useAccount()
-  const { data: profile } = useProfile(address)
   const { data: nonNativeBalances } = useContractReads({
     contracts: nonNativeCurrencies.map((currency) => ({
       abi: erc20ABI,
@@ -258,7 +260,7 @@ const Wallet = () => {
             <Text style="body2" color="subtle" css={{ mb: '$2' }}>
               Total XP
             </Text>
-            <Text style="h5" css={{ mb: '$4' }}>{formatNumber(profile?.exp || 0)}</Text>
+            <Text style="h5" css={{ mb: '$4' }}>{formatNumber(exp || 0)}</Text>
           </Flex>
         </Flex>
         <Button

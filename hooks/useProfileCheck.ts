@@ -1,10 +1,10 @@
 import useSWR, {SWRConfiguration} from "swr";
 
-export default function useProfile(address: string | undefined, options?: SWRConfiguration) {
-  const { data, mutate, isValidating, isLoading } = useSWR(
-    (address && address !== '' ) ? `/api/profile?address=${address}` :  null,
+export default function useProfile(username: string | undefined, options?: SWRConfiguration) {
+  const { data, isLoading } = useSWR(
+    (username && username !== '' ) ? `/api/profile/check?username=${username}` :  null,
     (url: string) => {
-      if (!address) {
+      if (!username) {
         return null
       }
       return fetch(url).then((response) => response.json())
@@ -19,8 +19,6 @@ export default function useProfile(address: string | undefined, options?: SWRCon
 
   return {
     data,
-    mutate,
-    isValidating,
     isLoading
   };
 }

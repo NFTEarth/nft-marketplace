@@ -20,7 +20,7 @@ import { TokenFilters } from 'components/common/TokenFilters'
 import { FilterButton } from 'components/common/FilterButton'
 import { ListingsTable } from 'components/portfolio/ListingsTable'
 import { OffersTable } from 'components/portfolio/OffersTable'
-import { faCopy, faWallet } from '@fortawesome/free-solid-svg-icons'
+import {faCopy, faGlobe, faWallet} from '@fortawesome/free-solid-svg-icons'
 import { faTwitter, faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import ChainToggle from 'components/common/ChainToggle'
@@ -79,12 +79,10 @@ const IndexPage: NextPage = () => {
     !router.query.address || router.query.address[0] === accountAddress
 
   const {
-    avatar: ensAvatar,
-    name: resolvedEnsName,
     shortAddress,
   } = useENSResolver(address)
-  const avatar = profile?.twitter_avatar || profile?.discord_avatar || ensAvatar
-  const banner = profile?.twitter_banner || profile?.discord_banner
+  const avatar = profile?.profileImage
+  const banner = profile?.bannerImage
 
   let collectionQuery: Parameters<typeof useUserCollections>['1'] = {
     limit: 100,
@@ -176,7 +174,7 @@ const IndexPage: NextPage = () => {
 
   return (
     <>
-      <Head title={`Profile - ${resolvedEnsName ? resolvedEnsName : shortAddress}`}/>
+      <Head title={`Profile - ${profile?.username || shortAddress}`}/>
       <Layout>
         <Flex
           direction="column"
@@ -234,6 +232,15 @@ const IndexPage: NextPage = () => {
                           }} />
                         </Link>
                       )}
+                      {profile?.website && (
+                        <Link target="_blank" href={profile.website}>
+                          <FontAwesomeIcon icon={faGlobe} width={40} height={40} style={{
+                            padding: 5,
+                            border: '1px #fff solid',
+                            borderRadius: 5,
+                          }} />
+                        </Link>
+                      )}
                     </Flex>
                   </Flex>
                   <Flex direction="column" css={{ marginTop: -135, p: '$5' }}>
@@ -259,7 +266,7 @@ const IndexPage: NextPage = () => {
                         <Flex align="center" justify="center" css={{ flex: 1, alignContent: 'space-between' }}>
                           <Flex direction="column">
                             <Text style="h5">
-                              {resolvedEnsName ? resolvedEnsName : shortAddress}
+                              {profile?.username || shortAddress}
                             </Text>
                             <CopyText text={address as string}>
                               <Flex align="center" css={{ cursor: 'pointer' }}>
@@ -284,22 +291,6 @@ const IndexPage: NextPage = () => {
                       </Flex>
                       <Flex justify="end" align="end" css={{ flex: 1}}>
                         <Flex direction="column" align="end" css={{ gap: 20 }}>
-                          <Flex align="end" justify="end" direction="column" css={{ gap: 20 }}>
-                            <Flex css={{ gap: 24 }}>
-                              {/*{(address === accountAddress) && (*/}
-                              {/*  <Button as="a" color="secondary" href={`/api/social/twitter?wallet=${accountAddress}`} size="xs" css={{ justifyContent: 'center'}}>*/}
-                              {/*    <FontAwesomeIcon icon={faTwitter} size="sm" />*/}
-                              {/*    {!profile?.twitter_id ? 'Connect Twitter' : 'Re-Connect Twitter'}*/}
-                              {/*  </Button>*/}
-                              {/*)}*/}
-                              {(address === accountAddress) && (
-                                <Button as="a" color="secondary" href={`/api/social/discord?wallet=${accountAddress}`} size="xs">
-                                  <FontAwesomeIcon icon={faDiscord} width={16} height={16} />
-                                  {!profile?.discord_id ? 'Connect Discord' : 'Re-Connect Discord'}
-                                </Button>
-                              )}
-                            </Flex>
-                          </Flex>
                           <ChainToggle />
                         </Flex>
                       </Flex>

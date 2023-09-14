@@ -3,20 +3,12 @@ import {NextApiRequest, NextApiResponse} from "next";
 
 const account = db.collection('account')
 
-const handleProfile = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { address } = req.query;
-
-  if (!address) {
-    return res.json({
-      status: 'ERROR',
-      code: 408,
-      message: 'Invalid session, please reconnect your wallet',
-    })
-  }
+const handleProfileCheck = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { username } = req.query;
 
   const accountData = await account.findOne({
-    wallet: {
-      $regex: address,
+    username: {
+      $regex: username,
       $options: 'i'
     }
   }, {
@@ -34,4 +26,4 @@ const handleProfile = async (req: NextApiRequest, res: NextApiResponse) => {
   return res.json(accountData || null)
 }
 
-export default handleProfile;
+export default handleProfileCheck;

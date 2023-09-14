@@ -178,7 +178,7 @@ const Navbar = () => {
               }}
             >
               <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faArrowsLeftRight} width={20} height={20}/>
-              Swap NFT
+              Swap NFTE
             </DropdownMenuItem>
             <DropdownMenuItem
               as={Link}
