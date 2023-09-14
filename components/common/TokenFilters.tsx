@@ -95,9 +95,9 @@ export const TokenFilters: FC<Props> = ({
                   <Image
                     style={{
                       borderRadius: '4px',
-                      objectFit: 'cover',
                       aspectRatio: '1/1',
                     }}
+                    unoptimized
                     loader={({ src }) => src}
                     src={optimizeImage(
                       collection?.collection?.image as string,

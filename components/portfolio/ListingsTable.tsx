@@ -157,9 +157,9 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
               <Img
                 css={{
                   borderRadius: '4px',
-                  objectFit: 'cover',
                   aspectRatio: '1/1',
                 }}
+                unoptimized
                 loader={({ src }) => src}
                 src={imageSrc}
                 alt={`${listing?.id}`}
@@ -299,9 +299,9 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
             <Img
               css={{
                 borderRadius: '4px',
-                objectFit: 'cover',
                 aspectRatio: '1/1',
               }}
+              unoptimized
               loader={({ src }) => src}
               src={imageSrc as string}
               alt={`${criteriaData?.token?.name}`}

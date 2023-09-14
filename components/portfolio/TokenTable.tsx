@@ -346,9 +346,9 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
               <Image
                 style={{
                   borderRadius: '4px',
-                  objectFit: 'cover',
                   aspectRatio: '1/1',
                 }}
+                unoptimized
                 loader={({src}) => src}
                 src={imageSrc}
                 alt={`${token?.token?.name}`}
@@ -662,9 +662,9 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                 <Image
                   style={{
                     borderRadius: '4px',
-                    objectFit: 'cover',
                     aspectRatio: '1/1',
                   }}
+                  unoptimized
                   loader={({src}) => src}
                   src={imageSrc}
                   alt={`${token?.token?.name}`}

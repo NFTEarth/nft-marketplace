@@ -106,12 +106,12 @@ const Navbar = () => {
         <Flex align="center" css={{ flex: 1 }}>
           <Link href={`/${routePrefix}`}>
             <Box css={{ width: 112, cursor: 'pointer' }}>
-              {<Image
+              <Image
                 src="/nftearth-icon.svg"
                 width={50}
                 height={50}
                 alt="NFTEarth"
-              />}
+              />
             </Box>
           </Link>
           <Flex css={{ flex: 1, px: '$5', maxWidth: 600 }}>

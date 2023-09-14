@@ -168,10 +168,10 @@ export const MobileTokenFilters: FC<Props> = ({
                   <Image
                     style={{
                       borderRadius: '4px',
-                      objectFit: 'cover',
                       aspectRatio: '1/1',
                     }}
                     loader={({ src }) => src}
+                    unoptimized
                     src={optimizeImage(
                       collection?.collection?.image as string,
                       250

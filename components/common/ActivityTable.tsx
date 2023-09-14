@@ -247,8 +247,9 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                 <Flex align="center">
                   {imageSrc && (
                     <Image
-                      style={{ borderRadius: '4px', objectFit: 'cover' }}
+                      style={{ borderRadius: '4px' }}
                       loader={({ src }) => src}
+                      unoptimized
                       src={imageSrc}
                       alt={`${activity.token?.tokenName} Token Image`}
                       width={48}
@@ -374,8 +375,9 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
           <Flex align="center">
             {imageSrc && (
               <Img
-                style={{ borderRadius: '4px', objectFit: 'cover' }}
+                style={{ borderRadius: '4px' }}
                 loader={({ src }) => src}
+                unoptimized
                 src={imageSrc}
                 alt="Activity Token Image"
                 width={48}

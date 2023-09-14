@@ -236,7 +236,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     width: 64,
                     height: 64,
                     borderRadius: 8,
-                    objectFit: 'cover',
                   }}
                   alt="Collection Page Image"
                 />

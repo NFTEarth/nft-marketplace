@@ -54,12 +54,13 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     {
       startTime,
       fillType,
-      limit: 20,
+      limit: 10,
       includeRecentSales: true,
     },
     {
       revalidateOnMount: true,
       refreshInterval: 300000,
+      loadingTimeout: 30 * 1000,
       fallbackData: [
         ssr.topSellingCollections[marketplaceChain.id].collections,
       ],
@@ -266,7 +267,7 @@ export const getStaticProps: GetStaticProps<{
     {
       startTime: startTime,
       fillType: 'sale',
-      limit: 20,
+      limit: 10,
       includeRecentSales: true,
     }
 

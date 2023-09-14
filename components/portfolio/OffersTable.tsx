@@ -167,9 +167,9 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, isOwner, mutate }) => {
               <Img
                 css={{
                   borderRadius: '4px',
-                  objectFit: 'cover',
                   aspectRatio: '1/1',
                 }}
+                unoptimized
                 loader={({ src }) => src}
                 src={imageSrc}
                 alt={`${offer?.id}`}
@@ -324,9 +324,9 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, isOwner, mutate }) => {
             <Img
               css={{
                 borderRadius: '4px',
-                objectFit: 'cover',
                 aspectRatio: '1/1',
               }}
+              unoptimized
               loader={({ src }) => src}
               src={imageSrc}
               alt={`${criteriaData?.token?.name}`}

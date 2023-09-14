@@ -165,7 +165,7 @@ const IndexPage: NextPage = () => {
 
   useEffect(() => {
     router.query.tab = tabValue
-    router.push(router, undefined, { shallow: true })
+    router.push(router.pathname, undefined, { shallow: true })
   }, [tabValue])
 
   if (!isMounted) {

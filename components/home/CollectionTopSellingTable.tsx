@@ -219,7 +219,6 @@ const RecentSalesCell: FC<{
                     borderRadius: 8,
                     width: 56,
                     height: 56,
-                    objectFit: 'cover',
                   }}
                 />
               </Flex>
@@ -292,7 +291,6 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
                     borderRadius: 8,
                     width: 48,
                     height: 48,
-                    objectFit: 'cover',
                   }}
                   alt="Collection Image"
                   width={48}
@@ -466,7 +464,6 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
                     borderRadius: 8,
                     width: 48,
                     height: 48,
-                    objectFit: 'cover',
                   }}
                   alt="Collection Image"
                   width={48}
@@ -630,7 +627,6 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
                     borderRadius: 8,
                     width: 48,
                     height: 48,
-                    objectFit: 'cover',
                   }}
                   alt="Collection Image"
                   width={48}

@@ -203,7 +203,6 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
                   borderRadius: 8,
                   width: 56,
                   height: 56,
-                  objectFit: 'cover',
                 }}
                 alt="Collection Image"
                 width={56}
