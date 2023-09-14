@@ -75,6 +75,7 @@ type Props = {
   itemView: ItemView
   acceptModalOpen?: boolean
   setSelectedItems: Dispatch<SetStateAction<UserToken[]>>
+  refetch: () => void
 }
 
 const ownerDesktopTemplateColumns = '1.25fr repeat(3, .75fr) 1.5fr'
@@ -93,6 +94,7 @@ export const TokenTable = forwardRef<TokenTableRef, Props>(
       isOwner,
       itemView,
       setSelectedItems,
+      refetch
     },
     ref
   ) => {
@@ -173,9 +175,12 @@ export const TokenTable = forwardRef<TokenTableRef, Props>(
             css={{py: '$6', gap: '$4', width: '100%'}}
           >
             <Text css={{color: '$gray11'}}>
-              <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl"/>
+              <FontAwesomeIcon icon={faMagnifyingGlass} width={16} height={16}/>
             </Text>
             <Text css={{color: '$gray11'}}>No items found</Text>
+            <Button size="xs" onClick={() => mutate()}>
+              <FontAwesomeIcon icon={faRefresh} width={16} height={16}/>
+            </Button>
           </Flex>
         ) : (
           <Flex direction="column" css={{width: '100%'}}>
@@ -246,7 +251,7 @@ export const TokenTable = forwardRef<TokenTableRef, Props>(
                 ))}
               </Grid>
             )}
-            <div ref={loadMoreRef}></div>
+            <div ref={loadMoreRef} />
           </Flex>
         )}
         {isValidating && (

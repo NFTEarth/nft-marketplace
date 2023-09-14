@@ -21,7 +21,7 @@ import { useMarketplaceChain, useTimeSince } from 'hooks'
 import CancelListing from 'components/buttons/CancelListing'
 import { Address } from 'wagmi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGasPump, faTag } from '@fortawesome/free-solid-svg-icons'
+import {faGasPump, faRefresh, faTag} from '@fortawesome/free-solid-svg-icons'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { ChainContext } from 'context/ChainContextProvider'
 import Img from 'components/primitives/Img'
@@ -76,6 +76,9 @@ export const ListingsTable: FC<Props> = ({ address, isOwner }) => {
             <FontAwesomeIcon icon={faTag} size="2xl" />
           </Text>
           <Text css={{ color: '$gray11' }}>No listings yet</Text>
+          <Button size="xs" onClick={() => mutate()}>
+            <FontAwesomeIcon icon={faRefresh} width={16} height={16}/>
+          </Button>
         </Flex>
       ) : (
         <Flex direction="column" css={{ width: '100%', pb: '$2' }}>
@@ -90,7 +93,7 @@ export const ListingsTable: FC<Props> = ({ address, isOwner }) => {
               />
             )
           })}
-          <Box ref={loadMoreRef} css={{ height: 20 }}></Box>
+          <Box ref={loadMoreRef} css={{ height: 20 }}/>
         </Flex>
       )}
       {isValidating && (

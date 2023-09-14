@@ -88,6 +88,7 @@ const IndexPage: NextPage = () => {
 
   let collectionQuery: Parameters<typeof useUserCollections>['1'] = {
     limit: 100,
+
   }
 
   const { chain } = useContext(ChainContext)
@@ -102,6 +103,7 @@ const IndexPage: NextPage = () => {
     data: collections,
     isLoading: collectionsLoading,
     fetchNextPage,
+    mutate,
   } = useUserCollections(address as string, collectionQuery)
 
   // Batch listing logic
@@ -341,6 +343,7 @@ const IndexPage: NextPage = () => {
                             filterCollection={filterCollection}
                             setFilterCollection={setFilterCollection}
                             loadMoreCollections={fetchNextPage}
+                            isLoading={collectionsLoading}
                           />
                         ) : (
                           <TokenFilters
@@ -412,6 +415,7 @@ const IndexPage: NextPage = () => {
                             setSelectedItems={setSelectedItems}
                             isOwner={isOwner}
                             itemView={itemView}
+                            refetch={mutate}
                           />
                         </Box>
                         {!isSmallDevice && (

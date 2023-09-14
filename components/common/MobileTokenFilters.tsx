@@ -17,6 +17,7 @@ type Collections =
   | ReturnType<typeof useUserCollections>['data']
 
 type Props = {
+  isLoading: boolean
   collections: Collections
   filterCollection: string | undefined
   setFilterCollection: Dispatch<SetStateAction<string | undefined>>
@@ -24,6 +25,7 @@ type Props = {
 }
 
 export const MobileTokenFilters: FC<Props> = ({
+  isLoading,
   collections,
   filterCollection,
   setFilterCollection,
@@ -78,7 +80,7 @@ export const MobileTokenFilters: FC<Props> = ({
     </Flex>
   )
 
-  if (collections?.length === 0 || collections == null) {
+  if (collections?.length === 0 || collections == null || isLoading) {
     return null
   }
 
