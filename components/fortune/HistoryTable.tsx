@@ -260,10 +260,10 @@ const RoundTableRow: FC<RoundTableRowProps> = ({ round }) => {
                   )
                 )}
                 {[RoundStatus.Open, RoundStatus.Drawing].includes(round.status) && (
-                  <FontAwesomeIcon icon={faClockFour} size="2xl" color={round.status === RoundStatus.Drawing ? 'green' : '#ddd'} />
+                  <FontAwesomeIcon icon={faClockFour} width={16} height={16} color={round.status === RoundStatus.Drawing ? 'green' : '#ddd'} />
                 )}
                 {round.status === RoundStatus.Cancelled && (
-                  <FontAwesomeIcon icon={faTimesCircle} size="2xl" color="red" />
+                  <FontAwesomeIcon icon={faTimesCircle} width={16} height={16} color="red" />
                 )}
               </Flex>
               {round.status === RoundStatus.Drawn && (
