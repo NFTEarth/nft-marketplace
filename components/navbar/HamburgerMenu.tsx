@@ -4,7 +4,7 @@ import * as RadixDialog from '@radix-ui/react-dialog'
 import {
   faBars,
   faXmark,
-  faRightFromBracket,
+  faRightFromBracket, faChevronDown, faBridge, faGift,
 } from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faTwitter} from '@fortawesome/free-brands-svg-icons'
@@ -17,6 +17,8 @@ import {FullscreenModal} from 'components/common/FullscreenModal'
 import {useENSResolver, useMarketplaceChain} from 'hooks'
 import ThemeSwitcher from 'components/navbar/ThemeSwitcher'
 import Wallet from 'components/navbar/Wallet'
+import {Collapsible} from "../primitives/Collapsible";
+import {DropdownMenuItem} from "../primitives/Dropdown";
 
 const HamburgerMenu = () => {
   const {address, isConnected} = useAccount()
@@ -87,16 +89,16 @@ const HamburgerMenu = () => {
             </Flex>
           </RadixDialog.Close>
         </Flex>
-        {isConnected ? (
-          <Flex
-            css={{
-              flexDirection: 'column',
-              justifyContent: 'flex-start',
-              height: '100%',
-              py: '$5',
-              px: '$4',
-            }}
-          >
+        <Flex
+          css={{
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            height: '100%',
+            py: '$5',
+            px: '$4',
+          }}
+        >
+          {isConnected && (
             <Link href={`/portfolio/${address}`} legacyBehavior>
               <Flex
                 css={{
@@ -121,141 +123,47 @@ const HamburgerMenu = () => {
                 </Flex>
               </Flex>
             </Link>
-            <Link href={`/${routePrefix}/collection-rankings`} legacyBehavior>
-              <Text
-                style="subtitle1"
-                css={{
-                  borderBottom: '1px solid $gray4',
-                  cursor: 'pointer',
-                  pb: '$4',
-                  pt: '24px',
-                }}
-              >
-                Collections
-              </Text>
-            </Link>
-            <Link href="/fortune" legacyBehavior>
-              <Text
-                style="subtitle1"
-                css={{
-                  borderBottom: '1px solid $gray4',
-                  cursor: 'pointer',
-                  pb: '$4',
-                  pt: '24px',
-                }}
-              >
-                Fortune
-              </Text>
-            </Link>
-            <Link href="/bridge" legacyBehavior>
-              <Text
-                style="subtitle1"
-                css={{
-                  borderBottom: '1px solid $gray4',
-                  cursor: 'pointer',
-                  pb: '$4',
-                  pt: '24px',
-                }}
-              >
-                Bridge
-              </Text>
-            </Link>
-            <Link href="https://www.sushi.com/pool/42161:0xd2aaa8fc5c39dbe68344bc42d4513ea344e5d696" target="_blank" legacyBehavior>
-              <Text
-                style="subtitle1"
-                css={{
-                  borderBottom: '1px solid $gray4',
-                  cursor: 'pointer',
-                  pb: '$4',
-                  pt: '24px',
-                }}
-              >
-                Rewards
-              </Text>
-            </Link>
-            <Link href="/portfolio" legacyBehavior>
-              <Flex
-                direction="column"
-                css={{
-                  borderBottom: '1px solid $gray4',
-                  cursor: 'pointer',
-                  pb: '$4',
-                  pt: '24px',
-                  gap: '$1',
-                }}
-              >
-                <Text style="subtitle1">Portfolio</Text>
-                <Text style="body3" color="subtle">
-                  Manage your items, collections, listings and offers
-                </Text>
-              </Flex>
-            </Link>
-            <Wallet/>
-            <Flex
+          )}
+          <Link href={`/${routePrefix}/collection-rankings`} legacyBehavior>
+            <Text
+              style="subtitle1"
               css={{
-                justifyContent: 'space-between',
-                cursor: 'pointer',
-                alignItems: 'center',
                 borderBottom: '1px solid $gray4',
+                cursor: 'pointer',
+                pb: '$4',
+                pt: '24px',
               }}
-              onClick={() => disconnect()}
             >
-              <Text
-                style="subtitle1"
+              Collections
+            </Text>
+          </Link>
+          <Collapsible
+            trigger={
+              <Flex
+                justify="between"
                 css={{
+                  width: '100%',
+                  borderBottom: '1px solid $gray4',
+                  cursor: 'pointer',
                   pb: '$4',
                   pt: '24px',
                 }}
               >
-                Logout
-              </Text>
-              <Box css={{color: '$gray10'}}>
-                <FontAwesomeIcon
-                  icon={faRightFromBracket}
-                  width={16}
-                  height={16}
-                />
-              </Box>
-            </Flex>
-          </Flex>
-        ) : (
-          <Flex
-            direction="column"
-            justify="between"
-            css={{
-              height: '100%',
-              pb: '$5',
-              px: '$4',
-            }}
-          >
-            <Flex direction="column">
-              <Link href={`/${routePrefix}/collection-rankings`} legacyBehavior>
                 <Text
                   style="subtitle1"
-                  css={{
-                    borderBottom: '1px solid $gray4',
-                    cursor: 'pointer',
-                    pb: '$4',
-                    pt: '24px',
-                  }}
                 >
-                  Collections
+                  Token
                 </Text>
-              </Link>
-              <Link href="/fortune" legacyBehavior>
-                <Text
-                  style="subtitle1"
-                  css={{
-                    borderBottom: '1px solid $gray4',
-                    cursor: 'pointer',
-                    pb: '$4',
-                    pt: '24px',
-                    width: '100%',
-                  }}
-                >
-                  Fortune
-                </Text>
-              </Link>
+                <FontAwesomeIcon icon={faChevronDown} width={20} height={20}/>
+              </Flex>
+            }>
+            <Flex
+              direction="column"
+              css={{
+                backgroundColor: '$gray2',
+                px: '$4'
+              }}
+            >
               <Link href="/bridge" legacyBehavior>
                 <Text
                   style="subtitle1"
@@ -264,13 +172,24 @@ const HamburgerMenu = () => {
                     cursor: 'pointer',
                     pb: '$4',
                     pt: '24px',
-                    width: '100%',
                   }}
                 >
                   Bridge
                 </Text>
               </Link>
-              
+              <Link href="https://www.sushi.com/swap?chainId=42161&token1=0x51b902f19a56f0c8e409a34a215ad2673edf3284" target="_blank" legacyBehavior>
+                <Text
+                  style="subtitle1"
+                  css={{
+                    borderBottom: '1px solid $gray4',
+                    cursor: 'pointer',
+                    pb: '$4',
+                    pt: '24px',
+                  }}
+                >
+                  Swap NFT
+                </Text>
+              </Link>
               <Link href="https://www.sushi.com/pool/42161:0xd2aaa8fc5c39dbe68344bc42d4513ea344e5d696" target="_blank" legacyBehavior>
                 <Text
                   style="subtitle1"
@@ -279,13 +198,12 @@ const HamburgerMenu = () => {
                     cursor: 'pointer',
                     pb: '$4',
                     pt: '24px',
-                    width: '100%',
                   }}
                 >
-                  Rewards
+                  LP Rewards
                 </Text>
               </Link>
-              <Link href="/portfolio" legacyBehavior>
+              <Link href="https://staking.nftearth.exchange" target="_blank" legacyBehavior>
                 <Text
                   style="subtitle1"
                   css={{
@@ -293,18 +211,121 @@ const HamburgerMenu = () => {
                     cursor: 'pointer',
                     pb: '$4',
                     pt: '24px',
-                    width: '100%',
                   }}
                 >
-                  Portfolio
+                  Staking
                 </Text>
               </Link>
             </Flex>
+          </Collapsible>
+          <Collapsible
+            trigger={
+              <Flex
+                justify="between"
+                css={{
+                  width: '100%',
+                  borderBottom: '1px solid $gray4',
+                  cursor: 'pointer',
+                  pb: '$4',
+                  pt: '24px',
+                }}
+              >
+                <Text
+                  style="subtitle1"
+                >
+                  Products
+                </Text>
+                <FontAwesomeIcon icon={faChevronDown} width={20} height={20}/>
+              </Flex>
+            }>
+            <Flex
+              direction="column"
+              css={{
+                backgroundColor: '$gray2',
+                px: '$4'
+              }}
+            >
+              <Link href="/fortune" legacyBehavior>
+                <Text
+                  style="subtitle1"
+                  css={{
+                    borderBottom: '1px solid $gray4',
+                    cursor: 'pointer',
+                    pb: '$4',
+                    pt: '24px',
+                  }}
+                >
+                  Fortune
+                </Text>
+              </Link>
+              <Link href="https://smartnft.nftearth.exchange" target="_blank" legacyBehavior>
+                <Text
+                  style="subtitle1"
+                  css={{
+                    borderBottom: '1px solid $gray4',
+                    cursor: 'pointer',
+                    pb: '$4',
+                    pt: '24px',
+                  }}
+                >
+                  SmartNFT
+                </Text>
+              </Link>
+            </Flex>
+          </Collapsible>
+          <Link href="/portfolio" legacyBehavior>
+            <Flex
+              direction="column"
+              css={{
+                borderBottom: '1px solid $gray4',
+                cursor: 'pointer',
+                pb: '$4',
+                pt: '24px',
+                gap: '$1',
+              }}
+            >
+              <Text style="subtitle1">Portfolio</Text>
+              <Text style="body3" color="subtle">
+                Manage your items, collections, listings and offers
+              </Text>
+            </Flex>
+          </Link>
+          {isConnected ? (
+            <>
+              <Wallet/>
+              <Flex
+                css={{
+                  justifyContent: 'space-between',
+                  cursor: 'pointer',
+                  alignItems: 'center',
+                  borderBottom: '1px solid $gray4',
+                }}
+                onClick={() => disconnect()}
+              >
+                <Text
+                  style="subtitle1"
+                  css={{
+                    pb: '$4',
+                    pt: '24px',
+                  }}
+                >
+                  Logout
+                </Text>
+                <Box css={{color: '$gray10'}}>
+                  <FontAwesomeIcon
+                    icon={faRightFromBracket}
+                    width={16}
+                    height={16}
+                  />
+                </Box>
+              </Flex>
+            </>
+          ) : (
             <Box>
               <ConnectWalletButton/>
             </Box>
-          </Flex>
-        )}
+          )}
+        </Flex>
         <Flex
           css={{
             pt: '24px',
