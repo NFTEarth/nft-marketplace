@@ -294,13 +294,13 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                 }}
               >
                 <Link href="https://github.com/westonnelson" target="_blank">
-                  <FontAwesomeIcon icon={faGithub} size="lg" color="#fff" />
+                  <FontAwesomeIcon icon={faGithub} width={16} height={16} color="#fff" />
                 </Link>
                 <Link href="https://x.com/westonnelson/" target="_blank">
-                  <FontAwesomeIcon icon={faTwitter} size="lg" color="#fff" />
+                  <FontAwesomeIcon icon={faTwitter} width={16} height={16} color="#fff" />
                 </Link>
                 <Link href="https://discordapp.com/users/456602347209228288" target="_blank">
-                  <FontAwesomeIcon icon={faDiscord} size="lg" color="#fff" />
+                  <FontAwesomeIcon icon={faDiscord} width={16} height={16} color="#fff" />
                 </Link>
               </Flex>
             </Flex>
@@ -328,16 +328,16 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                 }}
               >
                 <Link href="https://www.linkedin.com/in/ihsan-fauzi-rahman/" target="_blank">
-                  <FontAwesomeIcon icon={faLinkedin} size="lg" color="#fff" />
+                  <FontAwesomeIcon icon={faLinkedin} width={16} height={16} color="#fff" />
                 </Link>
                 <Link href="https://github.com/ryuzaki01" target="_blank">
-                  <FontAwesomeIcon icon={faGithub} size="lg" color="#fff" />
+                  <FontAwesomeIcon icon={faGithub} width={16} height={16} color="#fff" />
                 </Link>
                 <Link href="https://x.com/ShinjiKagehisa/" target="_blank">
-                  <FontAwesomeIcon icon={faTwitter} size="lg" color="#fff" />
+                  <FontAwesomeIcon icon={faTwitter} width={16} height={16} color="#fff" />
                 </Link>
                 <Link href="https://discordapp.com/users/210760420766515210" target="_blank">
-                  <FontAwesomeIcon icon={faDiscord} size="lg" color="#fff" />
+                  <FontAwesomeIcon icon={faDiscord} width={16} height={16} color="#fff" />
                 </Link>
               </Flex>
             </Flex>
@@ -365,10 +365,10 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                 }}
               >
                 <Link href="https://x.com/0xMaestro/" target="_blank">
-                  <FontAwesomeIcon icon={faTwitter} size="lg" color="#fff" />
+                  <FontAwesomeIcon icon={faTwitter} width={16} height={16} color="#fff" />
                 </Link>
                 <Link href="https://discordapp.com/users/896166209932886040" target="_blank">
-                  <FontAwesomeIcon icon={faDiscord} size="lg" color="#fff" />
+                  <FontAwesomeIcon icon={faDiscord} width={16} height={16} color="#fff" />
                 </Link>
               </Flex>
             </Flex>
@@ -396,10 +396,10 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                 }}
               >
                 <Link href="https://x.com/_SirJoey/" target="_blank">
-                  <FontAwesomeIcon icon={faTwitter} size="lg" color="#fff" />
+                  <FontAwesomeIcon icon={faTwitter} width={16} height={16} color="#fff" />
                 </Link>
                 <Link href="https://discordapp.com/users/239724646465929216" target="_blank">
-                  <FontAwesomeIcon icon={faDiscord} size="lg" color="#fff" />
+                  <FontAwesomeIcon icon={faDiscord} width={16} height={16} color="#fff" />
                 </Link>
               </Flex>
             </Flex>
