@@ -134,7 +134,15 @@ const Navbar = () => {
             trigger={
               <NavItem>
                 {`Token`}
-                <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faChevronDown} width={20} height={20}/>
+                <FontAwesomeIcon
+                  icon={faChevronDown}
+                  width={16}
+                  height={16}
+                  style={{
+                    marginLeft: 5,
+                    display: 'inline-block'
+                  }}
+                />
               </NavItem>
             }
             contentProps={{
@@ -208,7 +216,15 @@ const Navbar = () => {
             trigger={
               <NavItem>
                 {`Products`}
-                <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faChevronDown} width={20} height={20}/>
+                <FontAwesomeIcon
+                  icon={faChevronDown}
+                  width={16}
+                  height={16}
+                  style={{
+                    marginLeft: 5,
+                    display: 'inline-block'
+                  }}
+                />
               </NavItem>
             }
             contentProps={{

@@ -283,7 +283,7 @@ const GlobalSearch = forwardRef<
             color: '$gray11',
           }}
         >
-          <FontAwesomeIcon icon={faMagnifyingGlass} />
+          <FontAwesomeIcon icon={faMagnifyingGlass} width={20} height={20} />
         </Box>
       )}
 
