@@ -77,7 +77,7 @@ const PortfolioSettings : NextPage<Props> = ({ ssr }) => {
     }
   })
 
-  if (isLoadingSignature || isValidating || isLoading || isLoadingSignature) {
+  if (isLoadingSignature || isLoadingSignature) {
     return (
       <Layout>
         <Flex align="center" justify="center" css={{ py: '40vh' }}>

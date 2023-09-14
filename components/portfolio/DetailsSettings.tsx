@@ -98,7 +98,7 @@ const DetailsSettings:FC<Props> = ({ profile }) => {
           console.log('newFileName', newFileName)
           await fileUpload(acceptedFiles[0], newFileName);
 
-          setProfileImage(`https://nftearth-images.storage.googleapis.com/${newFileName}`);
+          setProfileImage(`https://nftearth-image.storage.googleapis.com/${newFileName}`);
         }
       }
     }
@@ -120,7 +120,7 @@ const DetailsSettings:FC<Props> = ({ profile }) => {
           const newFileName = `profile-banner-${profile._id}.${acceptedFiles[0].name.split('.').pop()}`;
           await fileUpload(acceptedFiles[0], newFileName);
 
-          setBannerImage(`https://nftearth-images.storage.googleapis.com/${newFileName}`);
+          setBannerImage(`https://nftearth-image.storage.googleapis.com/${newFileName}`);
         }
       },
       onError: err => console.log(err)
@@ -157,6 +157,11 @@ const DetailsSettings:FC<Props> = ({ profile }) => {
         headers: {
           'Content-Type': 'application/json',
         },
+      })
+      addToast?.({
+        title: 'Success',
+        status: 'success',
+        description: 'Profile details updated'
       })
     } catch (err: any) {
       addToast?.({
