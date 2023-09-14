@@ -1,9 +1,10 @@
-import { useState } from 'react'
-import { useTheme } from 'next-themes'
-import {useAccount} from "wagmi"
+import {useEffect, useState} from 'react'
+import {useAccount, useConnect, useSignMessage} from "wagmi"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faGear, faGift} from '@fortawesome/free-solid-svg-icons'
-import { Text, Flex, Box, Grid } from 'components/primitives'
+import {useSession} from "next-auth/react";
+import {signIn} from "next-auth/react";
+import {Text, Flex, Box, Grid, Button} from 'components/primitives'
 import Layout from 'components/Layout'
 import SettingsContentContainer from "components/portfolio/SettingsContentContainer"
 import DetailsSettings from 'components/portfolio/DetailsSettings'
@@ -14,26 +15,50 @@ import {
   InferGetServerSidePropsType,
   NextPage
 } from "next";
+import {recoverMessageAddress} from "viem";
+import {AuthOptions, getServerSession} from "next-auth";
+import {authOptions} from "../api/auth/[...nextauth]";
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>
 
 const PortfolioSettings : NextPage<Props> = ({ ssr }) => {
   const [activeTab, setActiveTab] = useState<string | null>('details')
-  const { address, isConnecting } = useAccount()
+  const { data, update } = useSession()
+  const { data: signMessageData, error, isLoading: isLoadingSignature, signMessage, variables } = useSignMessage()
 
   const {
     data: profile,
-    mutate,
     isLoading,
     isValidating,
   } = useProfile(
-    address,
+    // @ts-ignore
+    data?.wallet,
     {
-      revalidateOnMount: true,
-      fallbackData: [ssr.profile],
+      revalidateOnMount: false,
+      fallbackData: ssr.profile,
       revalidateIfStale: false,
     }
   )
+
+  useEffect(() => {
+    (async () => {
+      if (variables?.message && signMessageData) {
+        const recoveredAddress = await recoverMessageAddress({
+          message: variables?.message,
+          signature: signMessageData,
+        })
+
+        await signIn('credentials', { redirect: false, wallet: recoveredAddress } );
+        await update();
+      }
+    })()
+  }, [signMessageData, variables?.message])
+
+  useEffect(() => {
+    if (!data) {
+      signMessage({ message: 'Authenticate NFTEarth' })
+    }
+  }, [data])
 
   const getCssTab = (tab: string) => ({
     tab: {
@@ -52,11 +77,24 @@ const PortfolioSettings : NextPage<Props> = ({ ssr }) => {
     }
   })
 
-  if (!ssr.profile) {
+  if (isLoadingSignature || isValidating || isLoading || isLoadingSignature) {
     return (
       <Layout>
         <Flex align="center" justify="center" css={{ py: '40vh' }}>
           <LoadingSpinner />
+        </Flex>
+      </Layout>
+    )
+  }
+
+  if (!profile) {
+    return (
+      <Layout>
+        <Flex direction="column" align="center" justify="center" css={{ py: '40vh', gap: 20 }}>
+          <Text>Please sign the message to Authorize the access</Text>
+          <Button onClick={() => {
+            signMessage({ message: 'Authenticate NFTEarth' })
+          }}>Sign</Button>
         </Flex>
       </Layout>
     )
@@ -148,8 +186,16 @@ export const getServerSideProps: GetServerSideProps<{
   ssr: {
     profile?: any
   }
-}> = async ({ params }) => {
-  const profile = {}
+}> = async ({ req, res }) => {
+  const session: any = await getServerSession(
+    req,
+    res,
+    authOptions as AuthOptions
+  )
+
+  const profile = session ? await fetch(`${process.env.NEXT_PUBLIC_HOST_URL}/api/profile?address=${session.wallet}`)
+    .then(res => res.json())
+    .catch(() => null) : null
 
   return {
     props: { ssr: { profile } }

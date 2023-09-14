@@ -358,7 +358,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               />
               <Text style="h4" color="primary">Elias Pederiva</Text>
               <Text>aka Maestro</Text>
-              <Text style="h5">Marketer, Advisor</Text>
+              <Text style="h5">Head of Marketing</Text>
               <Flex
                 css={{
                   gap: 10

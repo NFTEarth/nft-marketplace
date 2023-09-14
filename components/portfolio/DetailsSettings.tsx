@@ -3,7 +3,7 @@ import { useDropzone, FileError } from 'react-dropzone';
 import { Text, Flex, Box, Input, Button, TextArea, Select } from 'components/primitives'
 import { StyledInput } from "components/primitives/Input";
 import { ToastContext } from 'context/ToastContextProvider'
-import {useDebounce, useMarketplaceChain, useProfileCheck} from "hooks";
+import {useDebounce, useMounted, useProfileCheck} from "hooks";
 import {useAccount} from "wagmi";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faDiscord, faTwitter} from "@fortawesome/free-brands-svg-icons";
@@ -57,12 +57,12 @@ const DetailsSettings:FC<Props> = ({ profile }) => {
   const { addToast } = useContext(ToastContext)
   const [loading, setLoading] = useState(false);
   const { address } = useAccount()
-  const { data: sessionData, status } = useSession()
+  const mounted = useMounted()
 
   const [username, setUsername] = useState('')
   const [bio, setBio] = useState('')
-  const [profileImage, setProfileImage] = useState<string | undefined>(undefined)
-  const [bannerImage, setBannerImage] = useState<string | undefined>(undefined)
+  const [profileImage, setProfileImage] = useState<string | undefined>('')
+  const [bannerImage, setBannerImage] = useState<string | undefined>('')
   const [websiteLink, setWebsiteLink] = useState('')
 
   const debouncedUsername = useDebounce(username, 1000);
@@ -166,6 +166,10 @@ const DetailsSettings:FC<Props> = ({ profile }) => {
     }
 
     setLoading(false)
+  }
+
+  if (!mounted) {
+    return null;
   }
   
   return (

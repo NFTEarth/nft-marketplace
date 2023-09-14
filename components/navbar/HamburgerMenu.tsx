@@ -17,9 +17,17 @@ import {FullscreenModal} from 'components/common/FullscreenModal'
 import {useENSResolver, useMarketplaceChain, useProfile} from 'hooks'
 import Wallet from 'components/navbar/Wallet'
 import {Collapsible} from "../primitives/Collapsible";
+import {signOut} from "next-auth/react";
 
 const HamburgerMenu = () => {
-  const {address, isConnected} = useAccount()
+  const {
+    address,
+    isConnected,
+  } = useAccount({
+    onDisconnect: async () => {
+      await signOut({ callbackUrl: '/' });
+    }
+  })
   const {
     avatar: ensAvatar,
     shortAddress,

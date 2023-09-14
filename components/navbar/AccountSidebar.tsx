@@ -22,9 +22,14 @@ import CopyText from 'components/common/CopyText'
 import Link from 'next/link'
 import Wallet from './Wallet'
 import { useRouter } from 'next/router'
+import {signOut} from "next-auth/react";
 
 export const AccountSidebar: FC = () => {
-  const { address } = useAccount()
+  const { address } = useAccount({
+    onDisconnect: async () => {
+      await signOut({ callbackUrl: '/' });
+    }
+  })
   const { disconnect } = useDisconnect()
   const router = useRouter()
   const {

@@ -1,7 +1,8 @@
+import { FC } from 'react'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
+
 import Box from 'components/primitives/Box'
 import Button from 'components/primitives/Button'
-import { FC } from 'react'
 
 type Props = {}
 
@@ -21,7 +22,7 @@ export const ConnectWalletButton: FC<Props> = () => {
               if (!mounted || !account || !chain) {
                 return (
                   <Button
-                    css={{ flex: 1, color:"$lime12", justifyContent: 'center' }}
+                    css={{ flex: 1, color:"#000", justifyContent: 'center' }}
                     corners="rounded"
                     onClick={openConnectModal}
                     type="button"
