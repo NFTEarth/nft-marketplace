@@ -4,7 +4,7 @@ import * as RadixDialog from '@radix-ui/react-dialog'
 import {
   faBars,
   faXmark,
-  faRightFromBracket, faChevronDown, faBridge, faGift,
+  faRightFromBracket, faChevronDown, faBridge, faGift, faGear,
 } from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faTwitter} from '@fortawesome/free-brands-svg-icons'
@@ -14,11 +14,9 @@ import {useAccount, useDisconnect} from 'wagmi'
 import {ConnectWalletButton} from 'components/ConnectWalletButton'
 import Jazzicon, {jsNumberForAddress} from 'react-jazzicon'
 import {FullscreenModal} from 'components/common/FullscreenModal'
-import {useENSResolver, useMarketplaceChain} from 'hooks'
-import ThemeSwitcher from 'components/navbar/ThemeSwitcher'
+import {useENSResolver, useMarketplaceChain, useProfile} from 'hooks'
 import Wallet from 'components/navbar/Wallet'
 import {Collapsible} from "../primitives/Collapsible";
-import {DropdownMenuItem} from "../primitives/Dropdown";
 
 const HamburgerMenu = () => {
   const {address, isConnected} = useAccount()
@@ -29,6 +27,7 @@ const HamburgerMenu = () => {
   } = useENSResolver(address)
   const {disconnect} = useDisconnect()
   const {routePrefix} = useMarketplaceChain()
+  const { data: profile } = useProfile(address)
 
   const trigger = (
     <Button
@@ -292,7 +291,29 @@ const HamburgerMenu = () => {
           </Link>
           {isConnected ? (
             <>
-              <Wallet/>
+              <Wallet exp={profile?.exp}/>
+              <Link href="/portfolio/settings" legacyBehavior>
+                <Text
+                  style="subtitle1"
+                  css={{
+                    borderBottom: '1px solid $gray4',
+                    cursor: 'pointer',
+                    pb: '$4',
+                    pt: '24px',
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={faGear}
+                    width={16}
+                    height={16}
+                    style={{
+                      marginRight: 10,
+                      display: 'inline-block'
+                    }}
+                  />
+                  {`Settings`}
+                </Text>
+              </Link>
               <Flex
                 css={{
                   justifyContent: 'space-between',

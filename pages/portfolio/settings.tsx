@@ -129,6 +129,14 @@ const PortfolioSettings : NextPage<Props> = ({ ssr }) => {
                 profile={profile}
               />
             </SettingsContentContainer>
+            <SettingsContentContainer
+              tab='referral'
+              tabLabel='referral'
+              activeTab={activeTab}
+              icon={faGift}
+              setActiveTab={() => setActiveTab('referral')}>
+              <Flex/>
+            </SettingsContentContainer>
           </Box>
         </Grid>
       </Box>
