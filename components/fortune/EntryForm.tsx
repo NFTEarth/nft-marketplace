@@ -14,16 +14,15 @@ import {
   parseEther
 } from "viem";
 import {useMediaQuery} from "react-responsive";
+import {arbitrum} from "viem/chains";
 
 import NumericalInput from "../bridge/NumericalInput";
 import {Button, CryptoCurrencyIcon, Flex, FormatCryptoCurrency, Text} from "../primitives";
-import {useFortune, useMarketplaceChain, useMounted} from "hooks";
+import {useFortune, useMarketplaceChain, useMounted, useFortuneCurrencies} from "hooks";
 import SelectionItem from "./SelectionItem";
 import NFTEntry, {SelectionData} from "./NFTEntry";
 import FortuneDepositModal from "./DepositModal";
-import {Round} from "../../hooks/useFortuneRound";
-import useFortuneCurrencies from "../../hooks/useFortuneCurrencies";
-import {arbitrum} from "viem/chains";
+import {Round} from "hooks/useFortuneRound";
 
 type EntryProps = {
   roundId: number,

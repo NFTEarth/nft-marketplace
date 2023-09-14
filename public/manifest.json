@@ -4,17 +4,22 @@
     "description": "Omnichain NFT Hub",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#79ffa8",
-    "theme_color": "#000000",
+    "background_color": "#202425",
+    "theme_color": "#79ffa8",
     "icons": [
       {
-        "src": "..public/icon-128x128.png",
-        "sizes": "128x128",
+        "src": "/icon-192x192.png",
+        "sizes": "192x192",
         "type": "image/png"
       },
       {
-        "src": "..public/icon-256x256.png",
+        "src": "/icon-256x256.png",
         "sizes": "256x256",
+        "type": "image/png"
+      },
+      {
+        "src": "/icon-512x512.png",
+        "sizes": "512x512",
         "type": "image/png"
       }
     ]

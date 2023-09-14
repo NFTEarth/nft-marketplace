@@ -106,5 +106,5 @@ const nextConfig = {
 
 export default withPWA({
   dest: 'public',
-  scope: '/fortune',
+  scope: '/',
 })(nextConfig)

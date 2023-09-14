@@ -98,6 +98,8 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
   )
 }
 
+const color = '#79ffa8'
+
 function MyApp({
   Component,
   pageProps,

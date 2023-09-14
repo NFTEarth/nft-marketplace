@@ -1,4 +1,5 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {GetStaticPaths, GetStaticProps, InferGetStaticPropsType, NextPage} from "next";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {
   faArrowLeft,
@@ -8,7 +9,6 @@ import {
   faVolumeMute,
   faVolumeUp,
 } from "@fortawesome/free-solid-svg-icons";
-import { faLinkedin } from '@fortawesome/free-brands-svg-icons'
 import {useCoinConversion} from "@reservoir0x/reservoir-kit-ui";
 import {useMediaQuery} from "react-responsive";
 import {useAccount} from "wagmi";
@@ -34,14 +34,20 @@ import FortuneRoundStatus from "components/fortune/RoundStatus";
 import FortuneFooter from "components/fortune/Footer";
 import BetaLogo from "components/fortune/BetaLogo";
 import Head from "components/fortune/Head";
-import {useFortune, useMarketplaceChain, useMounted} from "hooks";
-import useFortuneRound, {Deposit, Round, RoundStatus} from "hooks/useFortuneRound";
-import useFortuneStatus, {FortuneStatus} from "hooks/useFortuneStatus";
-import supportedChains, {FORTUNE_CHAINS} from "utils/chains";
+import {
+  useFortune,
+  useMarketplaceChain,
+  useMounted,
+  useFortuneStatus,
+  useFortuneRound,
+  useCountdown
+} from "hooks";
+import {Deposit, Round, RoundStatus} from "hooks/useFortuneRound";
+import {FortuneStatus} from "hooks/useFortuneStatus";
+
 import {styled} from 'stitches.config'
-import {GetStaticPaths, GetStaticProps, InferGetStaticPropsType, NextPage} from "next";
-import {basicFetcher} from "../../utils/fetcher";
-import useCountdown from "hooks/useCountdown";
+import supportedChains, {FORTUNE_CHAINS} from "utils/chains";
+import {basicFetcher} from "utils/fetcher";
 
 type FortuneData = {
   enableAudio: boolean

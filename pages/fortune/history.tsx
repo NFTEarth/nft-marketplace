@@ -4,6 +4,8 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {zeroAddress} from "viem";
 import Link from "next/link";
 import Image from "next/legacy/image";
+import {useMediaQuery} from "react-responsive";
+import {useAccount} from "wagmi";
 
 import {
   Box,
@@ -18,18 +20,12 @@ import {
 import {Head} from "components/Head";
 import Layout from "components/Layout";
 import ChainToggle from "components/common/ChainToggle";
-import HistoryTable from "../../components/fortune/HistoryTable";
-import {useMarketplaceChain, useMounted} from "../../hooks";
-import {useMediaQuery} from "react-responsive";
-import useFortuneHistory from "../../hooks/useFortuneHistory";
-import {useAccount, useContractRead, useContractWrite} from "wagmi";
-import FortuneAbi from "../../artifact/FortuneAbi.json";
-import {FORTUNE_CHAINS} from "../../utils/chains";
-import ClaimModal from "../../components/fortune/ClaimModal";
-import useFortuneUserWon from "../../hooks/useFortuneUserWon";
-import {Deposit, Round} from "../../hooks/useFortuneRound";
-import WithdrawModal from "../../components/fortune/WithdrawModal";
-import BetaLogo from "../../components/fortune/BetaLogo";
+import HistoryTable from "components/fortune/HistoryTable";
+import ClaimModal from "components/fortune/ClaimModal";
+import WithdrawModal from "components/fortune/WithdrawModal";
+import BetaLogo from "components/fortune/BetaLogo";
+import {useFortuneHistory, useFortuneUserWon, useMounted} from "hooks";
+import {Round} from "hooks/useFortuneRound";
 
 const typeToStatus: Record<string, number | undefined> = {
   "all": undefined,

@@ -1,36 +1,27 @@
-import {Modal} from "../common/Modal";
-import {FC} from "preact/compat";
 import {useContext, useEffect, useMemo, useState} from "react";
-import {Button, Flex, FormatCryptoCurrency, Select, Text, Tooltip} from "../primitives";
+import {FC} from "preact/compat";
 import {
   useAccount, useContractWrite,
   useNetwork,
   useSwitchNetwork, useWaitForTransaction,
   useWalletClient
 } from "wagmi";
-import {useConnectModal} from "@rainbow-me/rainbowkit";
-import {useMarketplaceChain} from "../../hooks";
-import useFortuneToWithdraw from "../../hooks/useFortuneToWithdraw";
-import ErrorWell from "../primitives/ErrorWell";
-import LoadingSpinner from "../common/LoadingSpinner";
-import FortuneAbi from "../../artifact/FortuneAbi.json";
-import {FORTUNE_CHAINS} from "../../utils/chains";
-import TransactionProgress from "../common/TransactionProgress";
-import {Deposit} from "../../hooks/useFortuneRound";
 import {
   BaseError,
-  Chain,
   ContractFunctionRevertedError,
-  createPublicClient,
-  createWalletClient,
-  custom,
-  http
 } from "viem";
-import {ToastContext} from "../../context/ToastContextProvider";
-import expirationOptions from "../../utils/defaultExpirationOptions";
-import CryptoCurrencyIcon from "../primitives/CryptoCurrencyIcon";
-import {TokenMedia} from "@reservoir0x/reservoir-kit-ui";
-import TransferManagerAbi from "../../artifact/TransferManagerAbi.json";
+import {useConnectModal} from "@rainbow-me/rainbowkit";
+
+import {Button, Flex, FormatCryptoCurrency, Select, Text} from "../primitives";
+import ErrorWell from "../primitives/ErrorWell";
+import {Modal} from "../common/Modal";
+import LoadingSpinner from "../common/LoadingSpinner";
+import TransactionProgress from "../common/TransactionProgress";
+import {useMarketplaceChain, useFortuneToWithdraw} from "hooks";
+import {Deposit} from "hooks/useFortuneRound";
+import {FORTUNE_CHAINS} from "utils/chains";
+import {ToastContext} from "context/ToastContextProvider";
+import FortuneAbi from "artifact/FortuneAbi.json";
 
 type ClaimModalProps = {
   open?: boolean
