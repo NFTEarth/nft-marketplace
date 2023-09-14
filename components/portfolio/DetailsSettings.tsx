@@ -74,8 +74,8 @@ const DetailsSettings:FC<Props> = ({ profile }) => {
     if (profile) {
       setUsername(profile.username as string)
       setBio(profile.bio || '')
-      setProfileImage(profile.image || '')
-      setBannerImage(profile.banner || '')
+      setProfileImage(profile.profileImage || '')
+      setBannerImage(profile.bannerImage || '')
       setWebsiteLink(profile.website || '')
     }
   }, [profile])
