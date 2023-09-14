@@ -1,7 +1,8 @@
 import { FC } from 'react'
 import { Box, Text, Flex, Anchor, Button } from './primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
+import {faDiscord, faTelegram, faTelegramPlane, faTwitter} from '@fortawesome/free-brands-svg-icons'
+import {IconProp} from "@fortawesome/fontawesome-svg-core";
 
 type SectionTitleProps = {
   title: string
@@ -34,14 +35,6 @@ const resourcesSectionLinks = [
   {
     name: 'Medium',
     href: 'https://medium.com/@nftearth',
-  },
-  {
-    name: 'Telegram',
-    href: 'https://t.me/nftearth_community',
-  },
-  {
-    name: 'Swap NFTE',
-    href: 'https://www.sushi.com/swap?chainId=42161&token1=0x51b902f19a56f0c8e409a34a215ad2673edf3284',
   },
   {
     name: 'Brand Assets',
@@ -170,6 +163,25 @@ export const Footer = () => {
               aria-label="Discord"
             >
               <FontAwesomeIcon icon={faDiscord} width={14} height={14} />
+            </Button>
+          </a>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://t.me/nftearth_community"
+            aria-label="Discord"
+          >
+            <Button
+              size="xs"
+              color="gray3"
+              css={{
+                '&:hover': {
+                  background: '$gray8',
+                },
+              }}
+              aria-label="Telegram"
+            >
+              <FontAwesomeIcon icon={faTelegramPlane} width={14} height={14} />
             </Button>
           </a>
         </Flex>
