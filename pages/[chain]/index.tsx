@@ -4,6 +4,7 @@ import {
   InferGetStaticPropsType,
   NextPage,
 } from 'next'
+import Image from 'next/image'
 import { Text, Flex, Box } from 'components/primitives'
 import Layout from 'components/Layout'
 import { paths } from '@reservoir0x/reservoir-sdk'
@@ -25,6 +26,8 @@ import { FillTypeToggle } from 'components/home/FillTypeToggle'
 import { TimeFilterToggle } from 'components/home/TimeFilterToggle'
 import HeroSection from "components/HeroSection";
 import fetcher from 'utils/fetcher'
+import Link from 'next/link'
+import {faDiscord, faGithub, faLinkedin, faTwitter} from "@fortawesome/free-brands-svg-icons";
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -120,11 +123,17 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               },
             }}
           >
-            <Text style="h3" css={{ flexShrink: 0 }}>
+            <Text style={{
+              '@initial': 'h4',
+              '@md': 'h3'
+            }} css={{ flexShrink: 0 }}>
               Explore NFTs
             </Text>{' '}
             <Flex css={{ gap: '$3', maxWidth: '100%' }}>
-              <Text style="h3" color="subtle">
+              <Text style={{
+                '@initial': 'h4',
+                '@md': 'h3'
+              }} color="subtle">
                 on
               </Text>
               <Dropdown
@@ -149,7 +158,10 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                       alt={`${marketplaceChain.name} Logo`}
                       style={{ width: 40, height: 40 }}
                     />
-                    <Text style="h3" ellipsify>
+                    <Text  style={{
+                      '@initial': 'h4',
+                      '@md': 'h3'
+                    }} ellipsify>
                       {' ' + marketplaceChain.name}
                     </Text>
                     <Box
@@ -231,6 +243,167 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               fillType={fillType}
             />
           )}
+        </Flex>
+        <Flex
+          direction="column"
+          align="center"
+          justify="center"
+          css={{
+            maxWidth: 1400,
+            px: 40,
+            py: 100,
+            gap: 100
+          }}
+        >
+          <Text
+            style="h4"
+            css={{
+              textAlign: 'center'
+            }}
+          >
+            {`Who we are :`}
+          </Text>
+          <Flex css={{
+            gap: 40,
+            display: 'grid',
+            gridTemplateColumns: '1fr',
+            '@lg' : {
+              gridTemplateColumns: '1fr 1fr 1fr 1fr',
+            }
+          }}>
+            <Flex
+              direction="column"
+              align="center"
+            >
+              <Image
+                src="/images/profile/weston.jpeg"
+                width={80}
+                height={80}
+                style={{
+                  borderRadius: '60%',
+                  overflow: 'hidden'
+                }}
+                alt="Weston"
+              />
+              <Text style="h4" color="primary">Weston Nelson</Text>
+              <Text>aka WΞston</Text>
+              <Text style="h5">Project Lead</Text>
+              <Flex
+                css={{
+                  gap: 10
+                }}
+              >
+                <Link href="https://github.com/westonnelson" target="_blank">
+                  <FontAwesomeIcon icon={faGithub} size="lg" color="#fff" />
+                </Link>
+                <Link href="https://x.com/westonnelson/" target="_blank">
+                  <FontAwesomeIcon icon={faTwitter} size="lg" color="#fff" />
+                </Link>
+                <Link href="https://discordapp.com/users/456602347209228288" target="_blank">
+                  <FontAwesomeIcon icon={faDiscord} size="lg" color="#fff" />
+                </Link>
+              </Flex>
+            </Flex>
+            <Flex
+              direction="column"
+              align="center"
+            >
+              <Image
+                src="/images/profile/ryuzaki.jpeg"
+                width={80}
+                height={80}
+                style={{
+                  borderRadius: '60%',
+                  overflow: 'hidden',
+                  marginBottom: 10
+                }}
+                alt="Weston"
+              />
+              <Text style="h4" color="primary">Ihsan Fauzi Rahman</Text>
+              <Text>aka Ryuzaki01</Text>
+              <Text style="h5">Lead Developer</Text>
+              <Flex
+                css={{
+                  gap: 10
+                }}
+              >
+                <Link href="https://www.linkedin.com/in/ihsan-fauzi-rahman/" target="_blank">
+                  <FontAwesomeIcon icon={faLinkedin} size="lg" color="#fff" />
+                </Link>
+                <Link href="https://github.com/ryuzaki01" target="_blank">
+                  <FontAwesomeIcon icon={faGithub} size="lg" color="#fff" />
+                </Link>
+                <Link href="https://x.com/ShinjiKagehisa/" target="_blank">
+                  <FontAwesomeIcon icon={faTwitter} size="lg" color="#fff" />
+                </Link>
+                <Link href="https://discordapp.com/users/210760420766515210" target="_blank">
+                  <FontAwesomeIcon icon={faDiscord} size="lg" color="#fff" />
+                </Link>
+              </Flex>
+            </Flex>
+            <Flex
+              direction="column"
+              align="center"
+            >
+              <Image
+                src="/images/profile/maestro.png"
+                width={80}
+                height={80}
+                style={{
+                  borderRadius: '60%',
+                  overflow: 'hidden',
+                  marginBottom: 10
+                }}
+                alt="Weston"
+              />
+              <Text style="h4" color="primary">Elias Pederiva</Text>
+              <Text>aka Maestro</Text>
+              <Text style="h5">Marketer, Advisor</Text>
+              <Flex
+                css={{
+                  gap: 10
+                }}
+              >
+                <Link href="https://x.com/0xMaestro/" target="_blank">
+                  <FontAwesomeIcon icon={faTwitter} size="lg" color="#fff" />
+                </Link>
+                <Link href="https://discordapp.com/users/896166209932886040" target="_blank">
+                  <FontAwesomeIcon icon={faDiscord} size="lg" color="#fff" />
+                </Link>
+              </Flex>
+            </Flex>
+            <Flex
+              direction="column"
+              align="center"
+            >
+              <Image
+                src="/images/profile/joey.png"
+                width={80}
+                height={80}
+                style={{
+                  borderRadius: '60%',
+                  overflow: 'hidden',
+                  marginBottom: 10
+                }}
+                alt="Weston"
+              />
+              <Text style="h4" color="primary">SirJoey</Text>
+              <Text>-</Text>
+              <Text style="h5">Head of Business Dev</Text>
+              <Flex
+                css={{
+                  gap: 10
+                }}
+              >
+                <Link href="https://x.com/_SirJoey/" target="_blank">
+                  <FontAwesomeIcon icon={faTwitter} size="lg" color="#fff" />
+                </Link>
+                <Link href="https://discordapp.com/users/239724646465929216" target="_blank">
+                  <FontAwesomeIcon icon={faDiscord} size="lg" color="#fff" />
+                </Link>
+              </Flex>
+            </Flex>
+          </Flex>
         </Flex>
         <Footer />
       </Box>

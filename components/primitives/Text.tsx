@@ -60,6 +60,9 @@ export default styled('span', {
       },
     },
     color: {
+      primary: {
+        color: '$primary13',
+      },
       dark: {
         color: '#000',
       },
