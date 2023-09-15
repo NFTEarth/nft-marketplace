@@ -499,12 +499,20 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
                   </Box>
                 </Flex>
                 <Flex justify="end">
-                  <Button color="primary" size="xs" onClick={() => {
-                    setEnableAudio?.(!enableAudio)
-                  }}>
+                  <Button
+                    color="ghost"
+                    size="xs"
+                    css={{
+                      backgroundColor: 'hsla(111,100%,74%, 0.1)',
+                      px: 10
+                    }}
+                    onClick={() => {
+                      setEnableAudio?.(!enableAudio)
+                    }}
+                  >
                     <FontAwesomeIcon
-                      icon={enableAudio ? faVolumeMute : faVolumeUp}
-                      color={enableAudio ? '#222' : '#000'}
+                      icon={enableAudio ? faVolumeUp : faVolumeMute}
+                      color={enableAudio ? '#8EFF7A' : '#F00'}
                       width={20}
                       height={20}
                     />
