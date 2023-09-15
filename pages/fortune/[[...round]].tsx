@@ -345,7 +345,7 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
   return (
     <Layout>
       {enableAudio && (
-        <audio autoPlay playsInline hidden>
+        <audio autoPlay playsInline loop hidden>
           <source src="/audio/bgm-low.webm" />
           <source src="/audio/bgm-low.mp3" />
         </audio>
