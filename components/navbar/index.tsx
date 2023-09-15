@@ -167,7 +167,7 @@ const Navbar = () => {
             </DropdownMenuItem>
             <DropdownMenuItem
               as={Link}
-              href="https://www.sushi.com/swap?chainId=42161&token1=0x51b902f19a56f0c8e409a34a215ad2673edf3284"
+              href="https://app.uniswap.org/swap?outputCurrency=0x51b902f19a56f0c8e409a34a215ad2673edf3284&chain=arbitrum"
               target="_blank"
               css={{
                 display: 'flex',
@@ -182,7 +182,7 @@ const Navbar = () => {
             </DropdownMenuItem>
             <DropdownMenuItem
               as={Link}
-              href="https://www.sushi.com/pool/42161:0xd2aaa8fc5c39dbe68344bc42d4513ea344e5d696"
+              href="https://merkl.angle.money"
               target="_blank"
               css={{
                 display: 'flex',
@@ -208,7 +208,7 @@ const Navbar = () => {
               }}
             >
               <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faChartBar} width={20} height={20}/>
-              {`Staking`}
+              {`Staking Rewards`}
             </DropdownMenuItem>
           </Dropdown>
           <Dropdown
