@@ -99,7 +99,6 @@ This is a Next.js app that can be easily deployed using [Vercel](https://vercel.
 
 ## Contact
 
-Twitter: [@reservoir0x](https://twitter.com/reservoir0x)
-Project Link: [Reservoir](https://reservoirprotocol.github.io/)
+X: [@NFTEarth_L2](https://twitter.com/NFTEarth_L2)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
