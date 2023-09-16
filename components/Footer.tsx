@@ -64,13 +64,17 @@ const developerSectionLinks = [
 ]
 
 const companySectionLinks = [
- {
+  {
     name: 'Governance',
     href: 'https://snapshot.org/#/nftearthl2.eth',
   },
   {
-    name: 'Contact: team@layer2nfts.org',
-    href: 'mailto:team@layer2nfts.org',
+    name: 'Governance Discussion',
+    href: 'https://discord.com/channels/1062256160264171520/1063532288866005043',
+  },
+  {
+    name: 'Contact: team@nftearth.exchange',
+    href: 'mailto:team@nftearth.exchange',
   },
   {
     name: 'Terms',
