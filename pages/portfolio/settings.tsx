@@ -56,7 +56,7 @@ const PortfolioSettings : NextPage<Props> = ({ ssr }) => {
 
   useEffect(() => {
     if (!data) {
-      signMessage({ message: 'Authenticate NFTEarth' })
+      signMessage({ message: 'Sign this message to prove your ownership of this wallet' })
     }
   }, [data])
 
@@ -91,9 +91,9 @@ const PortfolioSettings : NextPage<Props> = ({ ssr }) => {
     return (
       <Layout>
         <Flex direction="column" align="center" justify="center" css={{ py: '40vh', gap: 20 }}>
-          <Text>Please sign the message to Authorize the access</Text>
+          <Text>Sign this message to prove your ownership of this wallet </Text>
           <Button onClick={() => {
-            signMessage({ message: 'Authenticate NFTEarth' })
+            signMessage({ message: 'Sign this message to prove your ownership of this wallet' })
           }}>Sign</Button>
         </Flex>
       </Layout>
@@ -149,7 +149,7 @@ const PortfolioSettings : NextPage<Props> = ({ ssr }) => {
                 <Box css={{ width: 16 }}>
                   <FontAwesomeIcon icon={faGift} />
                 </Box>
-                <Text css={getCssTab('referral').text}>Referral (Soon)</Text>
+                <Text css={getCssTab('referral').text}> Your Referral Dashboard (Coming Soon)</Text>
               </Flex>
             </Box>
           </Flex>
