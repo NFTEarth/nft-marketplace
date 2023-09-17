@@ -37,6 +37,8 @@ import ReferralContextProvider, {
   ReferralContext,
 } from 'context/ReferralContextProvider'
 import FortuneContextProvider from "../context/FortuneContextProvider";
+import { Analytics } from '@vercel/analytics/react';
+
 
 //CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
 const inter = Inter({
@@ -46,6 +48,8 @@ const inter = Inter({
 export const NORMALIZE_ROYALTIES = process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES
   ? process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES === 'true'
   : false
+
+const projectId = '43f64cebd8e57e82652232682308e822';
 
 const WALLET_CONNECT_PROJECT_ID =
   process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || ''
@@ -57,7 +61,7 @@ const { chains, publicClient } = configureChains(supportedChains, [
 
 const { connectors } = getDefaultWallets({
   appName: 'NFTEarth',
-  projectId: WALLET_CONNECT_PROJECT_ID,
+  projectId,
   chains,
 })
 
@@ -93,6 +97,7 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
           <AnalyticsProvider>
             <ReferralContextProvider>
               <MyApp {...props} />
+              <Analytics />
             </ReferralContextProvider>
           </AnalyticsProvider>
         </ChainContextProvider>

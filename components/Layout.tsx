@@ -4,7 +4,6 @@ import { Box } from 'components/primitives'
 import Navbar from './navbar'
 import {useMounted} from 'hooks'
 import {useMediaQuery} from "react-responsive";
-import { Analytics } from '@vercel/analytics/react';
 
 type Props = {
   children: ReactNode
@@ -24,7 +23,6 @@ const Layout: FC<Props> = ({ children }) => {
         <Box css={{ maxWidth: 1920, mx: 'auto' }}>
           <Navbar />
           <main>{children}</main>
-          <Analytics />
         </Box>
       </Box>
       <Script
