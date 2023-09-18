@@ -122,16 +122,16 @@ const StakingPage = () => {
     enabled: !!address,
   })
 
-  const [nfteBalance, xNfteBalance, totalStakedNfte, totalSupplyNfte, totalSupplyXNfte] = useMemo(() => {
+  const [nfteBalance, xNfteBalance, totalStakedNfte, totalSupplyNfte, totalSupplyXNfte, staking] = useMemo(() => {
     return nfteData || []
   }, [nfteData])
 
   const stakingTitle = useMemo(() => {
-    const APY = '35.45';
+    const APY = '78.45';
 
     if (nfteBalance?.result === 0n) {
       return (
-        <Text style="h3">You don’t have any NFTE/WETH LP positions available to stake in your wallet.</Text>
+        <Text style="h3">You don’t have any NFTE LP positions to stake in your wallet.</Text>
       )
     }
 
@@ -139,11 +139,11 @@ const StakingPage = () => {
       <Text style="h4">
         {`You have `}
         <Text style="h4" color="primary">
-          {`${formatBN(xNfteBalance?.result || 0n, 2, 18, {})} xNFTE`}
+          {`${formatBN(nfteBalance?.result || 0n, 2, 18, {})} NFTE`}
         </Text>
         {` and `}
         <Text style="h4" color="primary">
-          {`${formatBN(nfteBalance?.result || 0n, 2, 18, {})} NFTE`}
+          {`${formatBN(xNfteBalance?.result || 0n, 2, 18, {})} NFTE LP`}
         </Text>
         {` available to stake at `}
         <Text style="h4" color="primary">
@@ -289,7 +289,7 @@ const StakingPage = () => {
               mb: 50
             }}>
             {stakingTitle}
-            <Text css={{ maxWidth: '75%' }}>{`Lock your NFTE/WETH LP tokens obtain through Gamma Strategies to receive xNFTE. xNFTE holders control protocl governance and earn all revenue sharing from the DAO. NFTEarth is governed entirely by xNFTE holders.`}</Text>
+            <Text css={{ maxWidth: '75%' }}>{`Lock your NFTE LP tokens obtained through Gamma Strategies to receive xNFTE. xNFTE holders control protocl governance and earn all revenue sharing from the DAO. NFTEarth is governed entirely by xNFTE holders.`}</Text>
           </Flex>
           <Flex
             css={{
@@ -497,7 +497,7 @@ const StakingPage = () => {
                       height: 20
                     }}
                   />
-                  <Text style="body4">Total xNFTE</Text>
+                  <Text style="body4">Total NFTE LP Supply</Text>
                 </Flex>
               </Flex>
               <FormatCrypto
@@ -572,7 +572,7 @@ const StakingPage = () => {
                     textDecoration: 'underline'
                   }
                 }}
-              >{`Learn more in the NFTEarth DAO documentation`}</Text>
+              >{`Learn more in the NFTEarth DAO docs`}</Text>
               <Flex
                 css={{
                   flexWrap: 'wrap',
@@ -592,7 +592,7 @@ const StakingPage = () => {
                       mb: '0.5625rem',
                       display: 'inline-block'
                     }}
-                  >My NFTE/WETH LP Locked</Text>
+                  >My NFTE LP Locked</Text>
                   <FormatCryptoCurrency
                     amount={0n}
                     textStyle="h6"
@@ -687,7 +687,7 @@ const StakingPage = () => {
             textAlign: 'right'
           }}
         >
-          <Text style="body3">Powered by NFTEarth</Text>
+          <Text style="h5">Powered by NFTEarth</Text>
           {/*<Image src="/images/LayerZero_Logo.svg" width={150} height={40} alt="LayerZero" />*/}
         </Flex>
       </Box>

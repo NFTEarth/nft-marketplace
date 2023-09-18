@@ -4,7 +4,6 @@ import {
   mainnet,
   polygon,
   optimism,
-  avalanche,
   bsc
 } from 'wagmi/chains'
 
@@ -250,15 +249,7 @@ export const OFT_CHAINS = [
     darkIconUrl: '/icons/linea-icon-light.svg',
     coingeckoNetworkId: 'linea'
   },
-  {
-    id: avalanche.id,
-    lzId: 106,
-    name: avalanche.name,
-    address: '0xD47E4F1ef1AA4090bc27420BDD5cB379Ced81440',
-    lightIconUrl: '/icons/avalanche-icon-dark.svg',
-    darkIconUrl: '/icons/avalanche-icon-light.svg',
-    coingeckoNetworkId: 'avalanche'
-  },
+
   // {
   //   id: 5000,
   //   lzId: 181,
