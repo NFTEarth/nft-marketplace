@@ -36,6 +36,8 @@
     "@sentry/nextjs": "^7.53.1",
     "@types/howler": "2.1.2",
     "@types/uuid": "^9.0.1",
+    "@uniswap/sdk": "^3.0.3",
+    "@uniswap/v3-core": "^1.0.1",
     "@upstash/redis": "^1.22.0",
     "canvas-confetti": "^1.6.0",
     "dayjs": "^1.11.6",

@@ -11,7 +11,6 @@ import { Anchor, Button, Flex, Text, Box } from '../primitives'
 import { styled } from '../../stitches.config'
 import { Dialog } from '../primitives/Dialog'
 import LoadingSpinner from './LoadingSpinner'
-import NFTEarthLogoWhiteText from 'public/NFTEarthLogoWhiteText'
 
 const Title = styled(DialogPrimitive.Title, {
   margin: 0,
@@ -30,12 +29,6 @@ type Props = {
   | 'trigger'
   | 'onFocusCapture'
 >
-
-const Logo = styled(NFTEarthLogoWhiteText, {
-  '& .letter': {
-    fill: '$gray12',
-  },
-})
 
 export const Modal = forwardRef<ElementRef<typeof Dialog>, Props>(
   (

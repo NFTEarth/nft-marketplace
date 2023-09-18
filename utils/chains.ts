@@ -206,6 +206,10 @@ export const OFT_CHAINS = [
     lzId: 110,
     name: arbitrum.name,
     address: '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
+    xNFTe: '0x82496243c0a1a39c5c6250bf0115c134Ba76698c',
+    staking: '0xE57bd15448C3b2D1dBAD598775DD2F36F93EBf90',
+    feeDistributor: '0x9138A2e628f92a42397B3B600E86047AE49aCa98',
+    uniswapV3Pool: '0x17ee09e7a2cc98b0b053b389a162fc86a67b9407',
     lightIconUrl: '/icons/arbitrum-icon-dark.svg',
     darkIconUrl: '/icons/arbitrum-icon-light.svg',
     coingeckoNetworkId: 'arbitrum-one'

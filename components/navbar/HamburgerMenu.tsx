@@ -184,7 +184,7 @@ const HamburgerMenu = () => {
                   Bridge
                 </Text>
               </Link>
-              <Link href="https://www.sushi.com/swap?chainId=42161&token1=0x51b902f19a56f0c8e409a34a215ad2673edf3284" target="_blank" legacyBehavior>
+              <Link href="https://app.uniswap.org/swap?outputCurrency=0x51b902f19a56f0c8e409a34a215ad2673edf3284&chain=arbitrum" target="_blank" legacyBehavior>
                 <Text
                   style="subtitle1"
                   css={{
@@ -197,7 +197,7 @@ const HamburgerMenu = () => {
                   Swap NFTE
                 </Text>
               </Link>
-              <Link href="https://www.sushi.com/pool/42161:0xd2aaa8fc5c39dbe68344bc42d4513ea344e5d696" target="_blank" legacyBehavior>
+              <Link href="https://merkl.angle.money" target="_blank" legacyBehavior>
                 <Text
                   style="subtitle1"
                   css={{

@@ -20,11 +20,11 @@ export default styled('span', {
       },
       h4: {
         fontWeight: 700,
-        fontSize: 24,
+        fontSize: 32,
       },
       h5: {
         fontWeight: 700,
-        fontSize: 20,
+        fontSize: 24,
       },
       h6: {
         fontWeight: 700,

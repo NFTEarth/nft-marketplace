@@ -40,10 +40,10 @@ const Button = styled('button', {
       },
       tertiary: {
         backgroundColor: 'transparent',
-        color: '$black',
         outline: '1px solid $primary13',
         '&:hover': {
-          backgroundColor: '$primary12',
+          backgroundColor: '$primary13',
+          color: '#000',
         },
       },
       gray3: {

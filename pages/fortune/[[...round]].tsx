@@ -288,7 +288,7 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
         setActiveRound(undefined)
       }, 10 * 1000)
     }
-  }, [playerWinner])
+  }, [playerWinner, router])
 
   const handleEnter = useCallback((e: Event) => {
     e.preventDefault()

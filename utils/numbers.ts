@@ -52,12 +52,14 @@ const truncateFractionAndFormat = (
  * @param amount An ETH amount
  * @param maximumFractionDigits Number of decimal digits
  * @param decimals Number of decimal digits for the atomic unit
+ * @param options Intl.NumberFormatOptions
  * @returns returns the ETH value as a `string` or `-` if the amount is `null` or `undefined`
  */
 function formatBN(
   amount: string | number | bigint | null | undefined,
   maximumFractionDigits: number,
-  decimals: number = 18
+  decimals: number = 18,
+  options?: Intl.NumberFormatOptions
 ) {
   if (typeof amount === 'undefined' || amount === null) return '-'
 
@@ -78,6 +80,7 @@ function formatBN(
     useGrouping: true,
     notation: 'compact',
     compactDisplay: 'short',
+    ...options
   }
 
   // New issue introduced in Safari v16 causes a regression and now need lessPrecision flagged in format options

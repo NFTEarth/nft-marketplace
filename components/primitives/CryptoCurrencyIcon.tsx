@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, {FC, useMemo} from 'react'
 import { StyledComponent } from '@stitches/react/types/styled-component'
 import { useReservoirClient } from '@reservoir0x/reservoir-kit-ui'
 import { zeroAddress } from 'viem'
@@ -24,11 +24,25 @@ const CryptoCurrencyIcon: FC<Props> = ({
   )
 
   const tokenChain = OFT_CHAINS.find(c => c.id === chain?.id)
-  const isNFTE = address.toLowerCase() === tokenChain?.address.toLowerCase()
+
+  const imageSrc = useMemo(() => {
+    const isNFTE = address.toLowerCase() === tokenChain?.address.toLowerCase()
+    const isXNFTE = address.toLowerCase() === tokenChain?.xNFTe?.toLowerCase()
+
+    if (isNFTE) {
+      return '/icons/currency/nfte.png'
+    }
+
+    if (isXNFTE) {
+      return '/icons/currency/xnfte.svg'
+    }
+
+    return `${chain?.baseApiUrl}/redirect/currency/${address}/icon/v1`;
+  }, [address, tokenChain, chain])
 
   return (
     <StyledImg
-      src={isNFTE ? '/icons/currency/nfte.png' : `${chain?.baseApiUrl}/redirect/currency/${address}/icon/v1`}
+      src={imageSrc}
       css={css}
     />
   )

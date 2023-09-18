@@ -38,8 +38,6 @@ const fileUpload = async (file: File, newFileName: string) => {
   const {url, fields} = await res.json();
   const formData = new FormData();
 
-  console.log(url, fields)
-
   const blob = file.slice(0, file.size, file.type);
 
   Object.entries({...fields, file: new File([blob], newFileName, {type: file.type})}).forEach(([key, value]) => {
@@ -95,7 +93,6 @@ const DetailsSettings:FC<Props> = ({ profile }) => {
         if (acceptedFiles.length > 0) {
           const newFileName = `profile-image-${profile._id}.${acceptedFiles[0].name.split('.').pop()}`;
 
-          console.log('newFileName', newFileName)
           await fileUpload(acceptedFiles[0], newFileName);
 
           setProfileImage(`https://nftearth-image.storage.googleapis.com/${newFileName}`);
@@ -222,7 +219,7 @@ const DetailsSettings:FC<Props> = ({ profile }) => {
           )}
         </Box>
         <Box css={{ marginBottom: 32 }}>
-          <Text style="h6" css={{ color: '$gray11' }}>Description</Text>
+          <Text style="h6" css={{ color: '$gray11' }}>Bio</Text>
           <TextArea
             disabled={loading}
             rows={5}
