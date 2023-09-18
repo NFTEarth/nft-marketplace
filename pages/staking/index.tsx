@@ -44,6 +44,8 @@ import { ChainId, Token, WETH, Fetcher, Route } from "@uniswap/sdk";
 import { abi as UniswapV3PoolAbi } from "@uniswap/v3-core/artifacts/contracts/UniswapV3Pool.sol/UniswapV3Pool.json";
 import {arbitrum} from "viem/chains";
 import Link from "next/link";
+import XNFTEAbi from 'artifact/XNFTEAbi.json'
+import NFTELPAbi from 'artifact/NFTELPAbi.json'
 
 const currentAPY = 0.05
 
@@ -125,7 +127,7 @@ const StakingPage = () => {
   }, [nfteData])
 
   const stakingTitle = useMemo(() => {
-    const APY = '1.45';
+    const APY = '35.45';
 
     if (nfteBalance?.result === 0n) {
       return (
@@ -287,7 +289,7 @@ const StakingPage = () => {
               mb: 50
             }}>
             {stakingTitle}
-            <Text css={{ maxWidth: '75%' }}>{`Lock your NFTE/WETH LP tokens to receive xNFTE, the unit of NFTEarth governance voting power. NFTEarth is governed entirely by xNFTE holders.`}</Text>
+            <Text css={{ maxWidth: '75%' }}>{`Lock your NFTE/WETH LP tokens obtain through Gamma Strategies to receive xNFTE. xNFTE holders control protocl governance and earn all revenue sharing from the DAO. NFTEarth is governed entirely by xNFTE holders.`}</Text>
           </Flex>
           <Flex
             css={{
@@ -562,7 +564,7 @@ const StakingPage = () => {
               <Text style="h5">My Voting Power</Text>
               <Text
                 as={Link}
-                href="https://docs.nftearth.exchange/"
+                href="https://docs.nftearth.exchange/nfte-token/xnfte-and-nfte-staking"
                 target="_blank"
                 style="body3"
                 css={{
