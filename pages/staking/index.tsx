@@ -129,7 +129,7 @@ const StakingPage = () => {
 
     if (nfteBalance?.result === 0n) {
       return (
-        <Text style="h3">You don’t have NFTE available to stake in your wallet.</Text>
+        <Text style="h3">You don’t have any NFTE/WETH LP positions available to stake in your wallet.</Text>
       )
     }
 
@@ -287,7 +287,7 @@ const StakingPage = () => {
               mb: 50
             }}>
             {stakingTitle}
-            <Text css={{ maxWidth: '75%' }}>{`Lock your NFTE tokens to receive xNFTE, the unit of NFTEarth governance voting power. NFTEarth is governed entirely by NFTE token holders via voting escrow.`}</Text>
+            <Text css={{ maxWidth: '75%' }}>{`Lock your NFTE/WETH LP tokens to receive xNFTE, the unit of NFTEarth governance voting power. NFTEarth is governed entirely by xNFTE holders.`}</Text>
           </Flex>
           <Flex
             css={{
@@ -330,7 +330,7 @@ const StakingPage = () => {
                     whiteSpace: 'nowrap'
                   }}
                 >
-                  Available
+                  Available To Stake
                 </Button>
                 <Button
                   color="ghost"
@@ -457,7 +457,7 @@ const StakingPage = () => {
                       height: 20
                     }}
                   />
-                  <Text style="body4">Percent NFTE Locked</Text>
+                  <Text style="body4">Percent of NFTE Locked</Text>
                 </Flex>
               </Flex>
               <Text
@@ -542,7 +542,7 @@ const StakingPage = () => {
                   width: '100%'
                 }}
               >
-                {`${(439)} days`}
+                {`${(345)} days`}
               </Text>
             </Flex>
             <Flex css={{
@@ -559,7 +559,7 @@ const StakingPage = () => {
                 ml: '1rem',
               }
             }} direction="column">
-              <Text style="h5">My Voting power</Text>
+              <Text style="h5">My Voting Power</Text>
               <Text
                 as={Link}
                 href="https://docs.nftearth.exchange/"
@@ -570,7 +570,7 @@ const StakingPage = () => {
                     textDecoration: 'underline'
                   }
                 }}
-              >{`Learn more on NFTEarth Dao documentation >`}</Text>
+              >{`Learn more in the NFTEarth DAO documentation`}</Text>
               <Flex
                 css={{
                   flexWrap: 'wrap',
@@ -590,7 +590,7 @@ const StakingPage = () => {
                       mb: '0.5625rem',
                       display: 'inline-block'
                     }}
-                  >My NFTE Locked</Text>
+                  >My NFTE/WETH LP Locked</Text>
                   <FormatCryptoCurrency
                     amount={0n}
                     textStyle="h6"
@@ -622,7 +622,7 @@ const StakingPage = () => {
                       mb: '0.5625rem',
                       display: 'inline-block'
                     }}
-                  >Average Lock</Text>
+                  >Average Lock Time</Text>
                 </div>
               </Flex>
             </Flex>
@@ -656,7 +656,7 @@ const StakingPage = () => {
             href="https://discord.com/channels/1062256160264171520/1063532288866005043"
             target="_blank"
           >
-            Governance Forum
+            Governance Discussion
           </Button>
           <Button
             color="primary"
@@ -674,7 +674,7 @@ const StakingPage = () => {
             href="https://snapshot.org/#/nftearthl2.eth"
             target="_blank"
           >
-            Vote on Snapshot
+            Snapshot Voting Portal
           </Button>
         </Flex>
         <Flex
@@ -685,7 +685,7 @@ const StakingPage = () => {
             textAlign: 'right'
           }}
         >
-          <Text style="body3">Powered by</Text>
+          <Text style="body3">Powered by NFTEarth</Text>
           {/*<Image src="/images/LayerZero_Logo.svg" width={150} height={40} alt="LayerZero" />*/}
         </Flex>
       </Box>
