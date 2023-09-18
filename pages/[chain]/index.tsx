@@ -261,7 +261,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               textAlign: 'center'
             }}
           >
-            {`Who we are :`}
+            {`Team`}
           </Text>
           <Flex css={{
             gap: 40,
@@ -388,7 +388,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                 alt="Weston"
               />
               <Text style="h4" color="primary">SirJoey</Text>
-              <Text>-</Text>
+              <Text>aka SirEthALot</Text>
               <Text style="h5">Head of Business Dev</Text>
               <Flex
                 css={{

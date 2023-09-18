@@ -14,9 +14,9 @@ type Props = {
  * @param description - The description of the page.
  */
 export const Head: FC<Props> = ({
-  ogImage = '/og-image.png',
-  title = 'NFTEarth | Omnichain NFT Hub',
-  description = 'NFTEarth is an Omnichain NFT Protocol.',
+  ogImage = '/res2,png',
+  title = 'NFTEarth',
+  description = 'NFTEarth | Omnichain NFT Protocol',
 }) => {
   return (
     <NextHead>
