@@ -5,7 +5,7 @@ import {
 } from "wagmi";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faLock} from "@fortawesome/free-solid-svg-icons";
-import {ContractFunctionConfig, zeroAddress} from "viem";
+import {ContractFunctionConfig, formatEther, zeroAddress} from "viem";
 import {Abi} from "abitype";
 
 import Layout from "components/Layout";
@@ -113,7 +113,7 @@ const StakingPage = () => {
   }, [nfteLPBalance, xNfteBalance, totalSupplyXNfte])
 
   const stakedPercent = useMemo(() => {
-    return parseInt(((BigInt(lp?.totalStaked || 0n) * BigInt(10000)) / BigInt(lp?.totalSupply || 1n)).toString()) / 100
+    return (+formatEther(lp?.totalStaked || 0n) / +formatEther(lp?.totalSupply || 1n)) * 100
   }, [lp])
 
   if (!isMounted) {
