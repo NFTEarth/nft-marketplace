@@ -79,37 +79,41 @@ const StakingPage = () => {
     ]
     >({
     contracts: [
+      // LPNFTE Balance
       {
         abi: NFTEOFT,
-        address: chain?.address as `0x${string}`,
+        address: chain?.LPNFTE as `0x${string}`,
         chainId: arbitrum.id,
         functionName: 'balanceOf',
         args: [address as `0x${string}`]
       },
+      // xNFTE Balance
       {
         abi: NFTEOFT,
-        address: chain?.xNFTe as `0x${string}`,
+        address: chain?.xNFTE as `0x${string}`,
         chainId: arbitrum.id,
         functionName: 'balanceOf',
         args: [address as `0x${string}`],
       },
+      // Staked LPNFTE
       {
         abi: NFTEOFT,
-        address: chain?.address as `0x${string}`,
+        address: chain?.LPNFTE as `0x${string}`,
         chainId: arbitrum.id,
         functionName: 'balanceOf',
-        args: [chain?.staking as `0x${string}`],
+        args: [chain?.xNFTE as `0x${string}`],
       },
+      // Total Supply LPNFTE
       {
         abi: NFTEOFT,
-        address: chain?.address as `0x${string}`,
+        address: chain?.LPNFTE as `0x${string}`,
         functionName: 'totalSupply',
         chainId: arbitrum.id,
         args: [],
       },
       {
         abi: NFTEOFT,
-        address: chain?.xNFTe as `0x${string}`,
+        address: chain?.xNFTE as `0x${string}`,
         functionName: 'totalSupply',
         chainId: arbitrum.id,
         args: [],
@@ -120,16 +124,16 @@ const StakingPage = () => {
     enabled: !!address,
   })
 
-  const [nfteBalance, xNfteBalance, totalStakedNfte, totalSupplyNfte, totalSupplyXNfte] = useMemo(() => {
+  const [nfteLPBalance, xNfteBalance, totalStakedNfteLP, totalSupplyNfteLP, totalSupplyXNfte] = useMemo(() => {
     return nfteData || []
   }, [nfteData])
 
   const stakingTitle = useMemo(() => {
     const APY = '1.45';
 
-    if (nfteBalance?.result === 0n) {
+    if (nfteLPBalance?.result === 0n) {
       return (
-        <Text style="h3">You don’t have NFTE available to stake in your wallet.</Text>
+        <Text style="h3">You don’t have LP NFTE available to stake in your wallet.</Text>
       )
     }
 
@@ -141,7 +145,7 @@ const StakingPage = () => {
         </Text>
         {` and `}
         <Text style="h4" color="primary">
-          {`${formatBN(nfteBalance?.result || 0n, 2, 18, {})} NFTE`}
+          {`${formatBN(nfteLPBalance?.result || 0n, 2, 18, {})} LP NFTE`}
         </Text>
         {` available to stake at `}
         <Text style="h4" color="primary">
@@ -151,15 +155,15 @@ const StakingPage = () => {
       </Text>
     );
 
-  }, [nfteBalance, xNfteBalance, totalStakedNfte, totalSupplyNfte, totalSupplyXNfte])
+  }, [nfteLPBalance, xNfteBalance, totalStakedNfteLP, totalSupplyNfteLP, totalSupplyXNfte])
 
   const stakedPercent = useMemo(() => {
-    return parseInt(((BigInt(totalStakedNfte?.result || 0n) * BigInt(10000)) / BigInt(totalSupplyNfte?.result || 1n)).toString()) / 100
-  }, [totalStakedNfte, totalSupplyNfte])
+    return parseInt(((BigInt(totalStakedNfteLP?.result || 0n) * BigInt(10000)) / BigInt(totalSupplyNfteLP?.result || 1n)).toString()) / 100
+  }, [totalStakedNfteLP, totalSupplyNfteLP])
 
   useEffect(() => {
-    if (nfteBalance?.result) {
-      const val = formatUnits(BigInt(bridgePercent) * BigInt(nfteBalance?.result) / BigInt(100), 18)
+    if (nfteLPBalance?.result) {
+      const val = formatUnits(BigInt(bridgePercent) * BigInt(nfteLPBalance?.result) / BigInt(100), 18)
       setValueEth(val)
     }
   }, [debouncedPercent])
@@ -430,7 +434,7 @@ const StakingPage = () => {
                   textAlign: 'right',
                   width: '100%'
                 }}
-                amount={totalStakedNfte?.result || 0n}
+                amount={totalStakedNfteLP?.result || 0n}
               />
             </Flex>
             <Flex css={{
@@ -488,7 +492,7 @@ const StakingPage = () => {
                   }}
                 >
                   <CryptoCurrencyIcon
-                    address={chain?.xNFTe || zeroAddress}
+                    address={chain?.xNFTE || zeroAddress}
                     chainId={arbitrum.id}
                     css={{
                       width: 20,
@@ -611,7 +615,7 @@ const StakingPage = () => {
                     amount={xNfteBalance?.result || 0n}
                     textStyle="h6"
                     logoHeight={20}
-                    address={chain?.xNFTe || zeroAddress}
+                    address={chain?.xNFTE || zeroAddress}
                     chainId={arbitrum.id}
                   />
                 </div>

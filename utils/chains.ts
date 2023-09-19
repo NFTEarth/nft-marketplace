@@ -182,7 +182,22 @@ export const NFT_BRIDGE : Record<number, NFTBridge> = {
   }
 }
 
-export const OFT_CHAINS = [
+export type OFTChain = {
+  id: number
+  lzId: number
+  name: string
+  routePrefix?: string
+  address: `0x${string}`
+  LPNFTE?: `0x${string}`
+  xNFTE?: `0x${string}`
+  feeDistributor?: `0x${string}`
+  uniswapV3Pool?: `0x${string}`
+  lightIconUrl: string
+  darkIconUrl: string
+  coingeckoNetworkId: string
+}
+
+export const OFT_CHAINS : OFTChain[] = [
   {
     id: mainnet.id,
     lzId: 101,
@@ -205,9 +220,10 @@ export const OFT_CHAINS = [
     id: arbitrum.id,
     lzId: 110,
     name: arbitrum.name,
+    routePrefix: 'arbitrum',
     address: '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
-    xNFTe: '0x82496243c0a1a39c5c6250bf0115c134Ba76698c',
-    staking: '0xE57bd15448C3b2D1dBAD598775DD2F36F93EBf90',
+    LPNFTE: '0x82496243c0a1a39c5c6250bf0115c134Ba76698c',
+    xNFTE: '0xE57bd15448C3b2D1dBAD598775DD2F36F93EBf90',
     feeDistributor: '0x9138A2e628f92a42397B3B600E86047AE49aCa98',
     uniswapV3Pool: '0x17ee09e7a2cc98b0b053b389a162fc86a67b9407',
     lightIconUrl: '/icons/arbitrum-icon-dark.svg',
