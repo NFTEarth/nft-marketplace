@@ -220,7 +220,7 @@ const HamburgerMenu = () => {
                     pt: '24px',
                   }}
                 >
-                  {`Staking Rewards`}
+                  {`xNFTE`}
                 </Text>
               </Link>
             </Flex>

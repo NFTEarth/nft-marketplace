@@ -188,7 +188,7 @@ const StakingTab: FC<Props> = (props) => {
         addToast?.({
           title: 'Success',
           status: 'success',
-          description: "Staking Success !"
+          description: "Staking Success!"
         })
         onSuccess()
       }).catch(e => {
