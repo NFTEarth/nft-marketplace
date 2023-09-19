@@ -249,7 +249,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
           align="center"
           justify="center"
           css={{
-            maxWidth: 1400,
+            width: '100%',
             px: 40,
             py: 100,
             gap: 100
@@ -319,7 +319,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                 }}
                 alt="Weston"
               />
-              <Text style="h4" color="primary">Ihsan Fauzi Rahman</Text>
+              <Text style="h4" color="primary">Ihsan Rahman</Text>
               <Text>aka Ryuzaki01</Text>
               <Text style="h5">Lead Developer</Text>
               <Flex
