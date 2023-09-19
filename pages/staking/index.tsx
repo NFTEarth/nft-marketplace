@@ -230,7 +230,7 @@ const StakingPage = () => {
                   }}
                 >
                   {activeTab === 'stakes' && (
-                    <StakeList />
+                    <StakeList lockedBalance={depositor?.lockedBalance || BigInt(0)} />
                   )}
                   {activeTab === 'staking' && (
                     <StakingList nfteLPBalance={nfteLPBalance?.result || BigInt(0)}/>

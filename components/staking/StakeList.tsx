@@ -1,9 +1,103 @@
-import {Box} from "../primitives";
+import {Box, Button, CryptoCurrencyIcon, Flex, Text} from "../primitives";
+import {FC} from "react";
+import Link from "next/link";
+import {formatBN} from "../../utils/numbers";
 
-const StakeList = () => {
+type Props = {
+  lockedBalance: bigint
+}
+
+const StakeList : FC<Props> = (props) => {
+  const { lockedBalance } = props
+
   return (
     <>
-      {(new Array(4).fill('')).map((x, i) => (
+      {parseInt(lockedBalance.toString()) > 0 ? (
+        <Button
+          as={Link}
+          href="/staking/arbitrum"
+          css={{
+            p: '1rem',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            backgroundColor: 'rgba(255,255,255,0.1)',
+            borderColor: 'transparent',
+            borderWidth:  1,
+            borderStyle: 'solid',
+            transition: 'border-color 0.3s',
+            '&:hover': {
+              backgroundColor: 'rgba(255,255,255,0.1)',
+              borderColor: '#fff',
+            }
+          }}
+        >
+          <Flex
+            justify="between"
+            css={{
+              width: '100%'
+            }}
+          >
+            <CryptoCurrencyIcon
+              address="0x82496243c0a1a39c5c6250bf0115c134Ba76698c"
+              css={{
+                width: 20,
+                height: 20
+              }}
+            />
+            <Flex
+              align="center"
+              css={{
+                gap: 5,
+                background: '$gray11',
+                px: 10,
+                borderRadius: 8
+              }}
+            >
+              <img src="/icons/arbitrum-icon-dark.svg" width={14} height={14}  alt="Arbitrum"/>
+              <Text style="body3" color="dark">Arbitrum</Text>
+            </Flex>
+          </Flex>
+          <Flex
+            justify="between"
+            css={{
+              width: '100%'
+            }}
+          >
+            <Flex
+              direction="column"
+            >
+              <Text style="body3">Token</Text>
+              <Text style="h6">NFTE LP</Text>
+            </Flex>
+            <Flex
+              direction="column"
+            >
+              <Text style="body3" css={{ textAlign: 'right' }}>APY</Text>
+              <Text style="h6">78.45%</Text>
+            </Flex>
+          </Flex>
+          <Flex
+            direction="column"
+          >
+            <Text style="body3">Locked Balance</Text>
+            <Text style="subtitle1">{formatBN(lockedBalance || BigInt(0), 2, 18, { notation: "standard" })}</Text>
+          </Flex>
+        </Button>
+      ) : (
+        <Box
+          css={{
+            border: '1px dashed #999999',
+            opacity: 0.2,
+            minWidth: '16.125rem',
+            background: '#323232',
+            minHeight: '9.875rem',
+            borderRadius: '0.75rem',
+            content: ' '
+          }}
+        />
+      )}
+      {(new Array(3).fill('')).map((x, i) => (
         <Box
           key={`box-${i}`}
           css={{
