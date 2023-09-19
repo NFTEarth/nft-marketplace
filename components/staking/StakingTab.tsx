@@ -18,16 +18,18 @@ import {useMounted} from "../../hooks";
 import {useConnectModal} from "@rainbow-me/rainbowkit";
 import {ToastContext} from "../../context/ToastContextProvider";
 import ERC20Abi from "../../artifact/ERC20Abi.json";
+import {StakingDepositor} from "../../hooks/useStakingDepositor";
 
 type Props = {
   APY: number
   value: string
   duration: number
+  depositor: StakingDepositor | null
   chain: OFTChain | null
 }
 
 const StakingTab: FC<Props> = (props) => {
-  const { APY, value, duration, chain } = props
+  const { APY, value, duration, chain, depositor } = props
   const { data: signer } = useWalletClient()
   const isMounted = useMounted()
   const { chain: activeChain } = useNetwork()
@@ -37,7 +39,9 @@ const StakingTab: FC<Props> = (props) => {
   })
   const {addToast} = useContext(ToastContext)
 
-  const now = useRef(dayjs())
+
+  const timeStamp = parseInt(`${depositor?.lockEndTimestamp}`) * 1000;
+  const newTime = timeStamp > 0 ? dayjs(timeStamp) : dayjs()
   const isZeroValue = parseEther(`${+value}`) <= BigInt(0)
   const isZeroDuration = duration < 1
   const votingPower = useMemo(() => {
@@ -52,16 +56,52 @@ const StakingTab: FC<Props> = (props) => {
     args: [signer?.account.address, chain?.xNFTE],
   })
 
+  const stakingArgs = useMemo(() => {
+    if ((depositor?.lockedBalance || BigInt(0)) > BigInt(0)) {
+
+      if (!isZeroValue && !isZeroDuration) {
+        return {
+          functionName: 'increase_amount_and_time',
+          args:[
+            parseEther(`${+value}` || '0'),
+            Math.round(newTime.add(duration, 'months').toDate().getTime() / 1000)
+          ]
+        }
+      }
+
+      if (isZeroValue && !isZeroDuration) {
+        return {
+          functionName: 'increase_unlock_time',
+          args:[
+            Math.round(newTime.add(duration, 'months').toDate().getTime() / 1000)
+          ]
+        }
+      }
+
+      if (!isZeroValue && isZeroDuration) {
+        return {
+          functionName: 'increase_amount',
+          args:[
+            parseEther(`${+value}` || '0'),
+          ]
+        }
+      }
+    }
+
+    return {
+      functionName: 'create_lock',
+      args: [
+        parseEther(`${+value}` || '0'),
+        Math.round(newTime.add(duration, 'months').toDate().getTime() / 1000)
+      ]
+    }
+  }, [depositor, duration, value, newTime, isZeroValue, isZeroDuration])
+
   const { config, error: preparedError } = usePrepareContractWrite({
     enabled: !!signer && !!chain?.xNFTE && !isZeroValue && !isZeroDuration,
     address: chain?.xNFTE as `0x${string}`,
     abi: xNFTEAbi,
-    functionName: 'create_lock',
-    value: BigInt(0),
-    args: [
-      parseEther(`${+value}` || '0'),
-      Math.round(now.current.add(duration, 'months').toDate().getTime() / 1000)
-    ],
+    ...stakingArgs
   })
 
   const { writeAsync, error, data, isLoading } = useContractWrite(config)
@@ -239,7 +279,7 @@ const StakingTab: FC<Props> = (props) => {
         }}
       >
         <Text style="body2">Time Left</Text>
-        <Text style="body2">{isZeroDuration ? '- days' : `${dayjs(now.current).add(duration, 'months').diff(now.current, 'days')} days`}</Text>
+        <Text style="body2">{isZeroDuration ? '- days' : `${dayjs(newTime).add(duration, 'months').diff(newTime, 'days')} days`}</Text>
       </Flex>
       <Flex
         justify="between"
@@ -256,7 +296,7 @@ const StakingTab: FC<Props> = (props) => {
             gap: 5
           }}
         >
-          <Text style="body2">{isZeroDuration ? '-' : dayjs(now.current).add(duration, 'months').format('HH:mm, MMM, D, YYYY')}</Text>
+          <Text style="body2">{isZeroDuration ? '-' : dayjs(newTime).add(duration, 'months').format('HH:mm, MMM, D, YYYY')}</Text>
           <FontAwesomeIcon icon={faLock} width={10} height={10}/>
         </Flex>
       </Flex>

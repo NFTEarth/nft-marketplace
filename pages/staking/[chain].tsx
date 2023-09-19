@@ -17,6 +17,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faCircleInfo} from "@fortawesome/free-solid-svg-icons";
 import StakingTab from "../../components/staking/StakingTab";
 import UnStakingTab from "../../components/staking/UnstakingTab";
+import {useStakingDepositor} from "../../hooks";
 
 const NFTEOFT = NFTEOFTAbi as Abi
 
@@ -27,18 +28,13 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
   const [activeTab, setActiveTab] = useState('staking')
   const [valueEth, setValueEth] = useState<string>('0.0')
   const [duration, setDuration] = useState<string>('0')
-
-  const chain = ssr.chain
-
   const { address } = useAccount()
+  const { data: depositor } = useStakingDepositor(address, { refreshInterval: 5000 })
+  const chain = ssr.chain
 
   const { data: nfteData } : { data: any } = useContractReads<
     [
       ContractFunctionConfig<typeof NFTEOFT, 'balanceOf', 'view'>,
-      ContractFunctionConfig<typeof NFTEOFT, 'balanceOf', 'view'>,
-      ContractFunctionConfig<typeof NFTEOFT, 'balanceOf', 'view'>,
-      ContractFunctionConfig<typeof NFTEOFT, 'totalSupply', 'view'>,
-      ContractFunctionConfig<typeof NFTEOFT, 'totalSupply', 'view'>
     ]
     >({
     contracts: [
@@ -152,6 +148,9 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
               <Button
                 size="xs"
                 color="ghost"
+                onClick={() => {
+                  setActiveTab('staking')
+                }}
                 css={{
                   px: 0,
                   mr: 30
@@ -160,6 +159,9 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
               <Button
                 size="xs"
                 color="ghost"
+                onClick={() => {
+                  setActiveTab('unstaking')
+                }}
                 css={{
                   px: 0,
                   '&:disabled': {
@@ -289,6 +291,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
                   value={valueEth}
                   duration={parseInt(duration)}
                   chain={chain}
+                  depositor={depositor}
                 />
               )}
               {activeTab === "unstaking" && (
