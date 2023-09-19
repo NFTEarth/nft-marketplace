@@ -98,7 +98,7 @@ const StakingTab: FC<Props> = (props) => {
   }, [depositor, duration, value, newTime, isZeroValue, isZeroDuration])
 
   const { config, error: preparedError } = usePrepareContractWrite({
-    enabled: !!address && !!chain?.xNFTE && (!isZeroValue && !isZeroDuration) || (BigInt(depositor?.lockedBalance || 0)) > BigInt(0),
+    enabled: BigInt(allowance || 0) >= parseEther(`${+value}` || '0') && !!address && !!chain?.xNFTE && (!isZeroValue && !isZeroDuration) || (BigInt(depositor?.lockedBalance || 0)) > BigInt(0),
     address: chain?.xNFTE as `0x${string}`,
     abi: xNFTEAbi,
     ...stakingArgs
