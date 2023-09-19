@@ -102,7 +102,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
               color: '$gray10'
             }}
           >{`>`}</Text>
-          <Text style="subtitle1">{`NFTE${ssr.chain?.name}`}</Text>
+          <Text style="subtitle1">{`xNFTE ${ssr.chain?.name}`}</Text>
         </Flex>
         <Flex
           direction="column"
@@ -192,7 +192,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
                   justify="between"
                 >
                   <Text style="body3">Select Amount</Text>
-                  <Text style="body3">{`Balance : ${formatBN(nfteLPBalance?.result?.toString() || 0, 4, 18 || 10)}`}</Text>
+                  <Text style="body3">{`Balance: ${formatBN(nfteLPBalance?.result?.toString() || 0, 4, 18 || 10)}`}</Text>
                 </Flex>
                 <Box
                   css={{
@@ -214,7 +214,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
                     css={{
                       pl: 40,
                       pr: 80,
-                      boxShadow: 'inset 0 0 0 2px $$focusColor'
+                      boxShadow: 'inset 0 0 0 2px'
                     }}
                   />
                   <CryptoCurrencyIcon
@@ -242,7 +242,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
                     gap: 5
                   }}
                 >
-                  <Text style="body3">Stake Duration (1 to 36 months)</Text>
+                  <Text style="body3">Stake Duration (1 to 12 months)</Text>
                   <Tooltip
                     content={
                       <Text
@@ -280,7 +280,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
                   css={{
                     pl: 10,
                     pr: 80,
-                    boxShadow: 'inset 0 0 0 2px $$focusColor',
+                    boxShadow: 'inset 0 0 0 2px',
                   }}
                 />
               </Flex>
