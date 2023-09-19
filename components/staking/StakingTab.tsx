@@ -3,7 +3,7 @@ import {Box, Button, CryptoCurrencyIcon, Flex, Text, Tooltip} from "../primitive
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleInfo, faLock} from "@fortawesome/free-solid-svg-icons";
 import {OFTChain} from "../../utils/chains";
-import {BaseError, ContractFunctionExecutionError, ContractFunctionRevertedError, parseEther} from "viem";
+import {BaseError, ContractFunctionExecutionError, ContractFunctionRevertedError, formatEther, parseEther} from "viem";
 import dayjs from "dayjs";
 import {
   useContractRead,
@@ -19,6 +19,7 @@ import {useConnectModal} from "@rainbow-me/rainbowkit";
 import {ToastContext} from "../../context/ToastContextProvider";
 import ERC20Abi from "../../artifact/ERC20Abi.json";
 import {StakingDepositor} from "../../hooks/useStakingDepositor";
+import {formatBN, formatNumber} from "../../utils/numbers";
 
 type Props = {
   APY: number
@@ -39,14 +40,10 @@ const StakingTab: FC<Props> = (props) => {
   })
   const {addToast} = useContext(ToastContext)
 
-
-  const timeStamp = parseInt(`${depositor?.lockEndTimestamp}`) * 1000;
+  const timeStamp = parseInt(`${depositor?.lockEndTimestamp || 0}`) * 1000;
   const newTime = timeStamp > 0 ? dayjs(timeStamp) : dayjs()
   const isZeroValue = parseEther(`${+value}`) <= BigInt(0)
   const isZeroDuration = duration < 1
-  const votingPower = useMemo(() => {
-    return (parseInt((parseEther(`${+value}`) / parseEther(`${0.01}`)).toString()) / 12) * duration
-  }, [value, duration])
 
   const { data: allowance } = useContractRead<typeof xNFTEAbi, 'allowance', bigint>({
     enabled: !!signer && !!chain?.xNFTE,
@@ -105,12 +102,12 @@ const StakingTab: FC<Props> = (props) => {
   })
 
   const { writeAsync, error, data, isLoading } = useContractWrite(config)
-
+  const valueN = parseEther(`${+value}` || '0')
   const { writeAsync: approveAsync, isLoading: isLoadingApproval } = useContractWrite<typeof ERC20Abi, 'approve', undefined>({
     address: chain?.LPNFTE as `0x${string}`,
     abi: ERC20Abi,
     functionName: 'approve',
-    args:  [chain?.xNFTE as `0x${string}`, parseEther(`${+value}` || '0')],
+    args:  [chain?.xNFTE as `0x${string}`, valueN],
   })
 
   const { isLoading: isLoadingTransaction, isSuccess = true } = useWaitForTransaction({
@@ -119,11 +116,11 @@ const StakingTab: FC<Props> = (props) => {
   })
 
   const buttonText = useMemo(() => {
-    if (isZeroValue) {
+    if (isZeroValue && !depositor?.lockedBalance) {
       return 'Enter Values'
     }
 
-    if (isZeroDuration) {
+    if (isZeroDuration && !depositor?.lockedBalance) {
       return 'Enter Duration'
     }
 
@@ -153,8 +150,16 @@ const StakingTab: FC<Props> = (props) => {
 
     return 'Stake'
   }, [value, duration, preparedError]);
-  const disableButton = useMemo(() => isZeroValue || isZeroDuration || !!preparedError || isLoading || isLoadingApproval || isLoadingTransaction,
-    [isZeroDuration, isZeroValue, preparedError, isLoading, isLoadingApproval, isLoadingTransaction])
+
+  const totalValue = depositor?.lockedBalance ? BigInt(depositor?.lockedBalance) + valueN : valueN
+  const totalDuration = newTime.add(duration, 'months').diff(dayjs(), 'months')
+
+  const votingPower = useMemo(() => {
+    return ((+formatEther(totalValue) / 0.01) / 12) * totalDuration
+  }, [totalValue, duration])
+
+  const disableButton = useMemo(() => ((isZeroValue || isZeroDuration) && !depositor?.lockedBalance) || !!preparedError || isLoading || isLoadingApproval || isLoadingTransaction,
+    [isZeroDuration, isZeroValue, depositor, preparedError, isLoading, isLoadingApproval, isLoadingTransaction])
 
   const handleStake = async () => {
     if (switchNetworkAsync && activeChain) {
@@ -243,7 +248,7 @@ const StakingTab: FC<Props> = (props) => {
               height: 20
             }}
           />
-          <Text style="body2">{`${value} LP NFTE`}</Text>
+          <Text style="body2">{`${formatBN(totalValue, 2, 18)} LP NFTE`}</Text>
         </Flex>
       </Flex>
       <Flex
@@ -269,7 +274,7 @@ const StakingTab: FC<Props> = (props) => {
               height: 20
             }}
           />
-          <Text style="body2">{`${votingPower.toFixed(2)} xNFTE`}</Text>
+          <Text style="body2">{`${formatNumber(votingPower, 2)} xNFTE`}</Text>
         </Flex>
       </Flex>
       <Flex
@@ -279,7 +284,7 @@ const StakingTab: FC<Props> = (props) => {
         }}
       >
         <Text style="body2">Time Left</Text>
-        <Text style="body2">{isZeroDuration ? '- days' : `${dayjs(newTime).add(duration, 'months').diff(newTime, 'days')} days`}</Text>
+        <Text style="body2">{totalDuration <= 0 ? '- days' : `${dayjs(newTime).add(duration, 'months').diff(newTime, 'days')} days`}</Text>
       </Flex>
       <Flex
         justify="between"
@@ -296,7 +301,7 @@ const StakingTab: FC<Props> = (props) => {
             gap: 5
           }}
         >
-          <Text style="body2">{isZeroDuration ? '-' : dayjs(newTime).add(duration, 'months').format('HH:mm, MMM, D, YYYY')}</Text>
+          <Text style="body2">{totalDuration <= 0 ? '-' : dayjs(newTime).add(duration, 'months').format('HH:mm, MMM, D, YYYY')}</Text>
           <FontAwesomeIcon icon={faLock} width={10} height={10}/>
         </Flex>
       </Flex>

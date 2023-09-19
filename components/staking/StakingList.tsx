@@ -2,6 +2,7 @@ import {Box, Button, CryptoCurrencyIcon, Flex, Text} from "../primitives";
 import {FC} from "react";
 import Link from "next/link";
 import {formatBN} from "../../utils/numbers";
+import { arbitrum } from "viem/chains";
 
 type Props = {
   nfteLPBalance: bigint
@@ -40,6 +41,7 @@ const StakingList: FC<Props> = (props) => {
           >
             <CryptoCurrencyIcon
               address="0x82496243c0a1a39c5c6250bf0115c134Ba76698c"
+              chainId={arbitrum.id}
               css={{
                 width: 20,
                 height: 20

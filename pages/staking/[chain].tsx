@@ -1,14 +1,13 @@
 import {FC, useMemo, useState} from "react";
 import {GetStaticPaths, GetStaticProps, InferGetStaticPropsType} from "next";
-import {basicFetcher} from "utils/fetcher";
 import {OFT_CHAINS, OFTChain} from "utils/chains";
 import {Box, Button, CryptoCurrencyIcon, Flex, Text, Tooltip} from "components/primitives";
 import Layout from "../../components/Layout";
 import Link from "next/link";
 import NumericalInput from "../../components/bridge/NumericalInput";
 import {formatUnits, parseUnits} from "ethers";
-import {useAccount, useContractReads, useNetwork, useWalletClient} from "wagmi";
-import {ContractFunctionConfig, parseEther} from "viem";
+import {useAccount, useContractReads} from "wagmi";
+import {ContractFunctionConfig} from "viem";
 import {arbitrum} from "viem/chains";
 import NFTEOFTAbi from 'artifact/NFTEOFTAbi.json'
 import {Abi} from "abitype";
