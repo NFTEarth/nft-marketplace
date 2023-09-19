@@ -6,6 +6,7 @@ import {OFTChain} from "../../utils/chains";
 import {BaseError, ContractFunctionExecutionError, ContractFunctionRevertedError, formatEther, parseEther} from "viem";
 import dayjs from "dayjs";
 import {
+  useAccount,
   useContractRead,
   useContractWrite,
   useNetwork, usePrepareContractWrite,
@@ -32,7 +33,7 @@ type Props = {
 
 const StakingTab: FC<Props> = (props) => {
   const { APY, value, duration, chain, onSuccess, depositor } = props
-  const { data: signer } = useWalletClient()
+  const { address } = useAccount()
   const isMounted = useMounted()
   const { chain: activeChain } = useNetwork()
   const { openConnectModal } = useConnectModal()
@@ -48,11 +49,11 @@ const StakingTab: FC<Props> = (props) => {
   const isZeroDuration = duration < 1
 
   const { data: allowance } = useContractRead<typeof xNFTEAbi, 'allowance', bigint>({
-    enabled: !!signer && !!chain?.xNFTE,
+    enabled: !!address && !!chain?.xNFTE,
     abi:  ERC20Abi,
     address: chain?.LPNFTE as `0x${string}`,
     functionName:  'allowance',
-    args: [signer?.account.address, chain?.xNFTE],
+    args: [address, chain?.xNFTE],
   })
 
   const stakingArgs = useMemo(() => {
@@ -97,7 +98,7 @@ const StakingTab: FC<Props> = (props) => {
   }, [depositor, duration, value, newTime, isZeroValue, isZeroDuration])
 
   const { config, error: preparedError } = usePrepareContractWrite({
-    enabled: !!signer && !!chain?.xNFTE && !isZeroValue && !isZeroDuration,
+    enabled: !!address && !!chain?.xNFTE && (!isZeroValue && !isZeroDuration) || (BigInt(depositor?.lockedBalance || 0)) > BigInt(0),
     address: chain?.xNFTE as `0x${string}`,
     abi: xNFTEAbi,
     ...stakingArgs
@@ -118,6 +119,10 @@ const StakingTab: FC<Props> = (props) => {
   })
 
   const buttonText = useMemo(() => {
+    if (!address) {
+      return 'Connect Wallet'
+    }
+
     if (isZeroValue && !depositor?.lockedBalance) {
       return 'Enter Values'
     }
@@ -170,8 +175,9 @@ const StakingTab: FC<Props> = (props) => {
       }
     }
 
-    if (!signer) {
-      openConnectModal?.()
+    if (!address) {
+      await openConnectModal?.()
+      return;
     }
 
     if (BigInt(allowance || 0) < parseEther(`${+value}` || '0')) {
