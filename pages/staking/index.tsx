@@ -73,7 +73,8 @@ const StakingPage = () => {
         args: [],
       }
     ],
-    watch: true,
+    watch: false,
+    staleTime: 1000 * 60,
     allowFailure: true,
     enabled: !!address,
   })

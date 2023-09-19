@@ -41,7 +41,8 @@ const StakingTab: FC<Props> = (props) => {
   const {addToast} = useContext(ToastContext)
 
   const timeStamp = parseInt(`${depositor?.lockEndTimestamp || 0}`) * 1000;
-  const newTime = timeStamp > 0 ? dayjs(timeStamp) : dayjs()
+  const newTime = timeStamp > 0 ? new Date(timeStamp) : new Date()
+  const timePlusDuration = dayjs(newTime).add(duration, 'months')
   const isZeroValue = parseEther(`${+value}`) <= BigInt(0)
   const isZeroDuration = duration < 1
 
@@ -61,7 +62,7 @@ const StakingTab: FC<Props> = (props) => {
           functionName: 'increase_amount_and_time',
           args:[
             parseEther(`${+value}` || '0'),
-            Math.round(newTime.add(duration, 'months').toDate().getTime() / 1000)
+            Math.round(timePlusDuration.toDate().getTime() / 1000)
           ]
         }
       }
@@ -70,7 +71,7 @@ const StakingTab: FC<Props> = (props) => {
         return {
           functionName: 'increase_unlock_time',
           args:[
-            Math.round(newTime.add(duration, 'months').toDate().getTime() / 1000)
+            Math.round(timePlusDuration.toDate().getTime() / 1000)
           ]
         }
       }
@@ -89,7 +90,7 @@ const StakingTab: FC<Props> = (props) => {
       functionName: 'create_lock',
       args: [
         parseEther(`${+value}` || '0'),
-        Math.round(newTime.add(duration, 'months').toDate().getTime() / 1000)
+        Math.round(timePlusDuration.toDate().getTime() / 1000)
       ]
     }
   }, [depositor, duration, value, newTime, isZeroValue, isZeroDuration])
@@ -152,14 +153,13 @@ const StakingTab: FC<Props> = (props) => {
   }, [value, duration, preparedError]);
 
   const totalValue = depositor?.lockedBalance ? BigInt(depositor?.lockedBalance) + valueN : valueN
-  const totalDuration = newTime.add(duration, 'months').diff(dayjs(), 'months')
+  const totalDuration = timePlusDuration.diff(dayjs(), 'months')
 
   const votingPower = useMemo(() => {
     return ((+formatEther(totalValue) / 0.01) / 12) * totalDuration
   }, [totalValue, duration])
 
-  const disableButton = useMemo(() => ((isZeroValue || isZeroDuration) && !depositor?.lockedBalance) || !!preparedError || isLoading || isLoadingApproval || isLoadingTransaction,
-    [isZeroDuration, isZeroValue, depositor, preparedError, isLoading, isLoadingApproval, isLoadingTransaction])
+  const disableButton = ((isZeroValue || isZeroDuration) && !depositor?.lockedBalance) || !!preparedError || isLoading || isLoadingApproval || isLoadingTransaction
 
   const handleStake = async () => {
     if (switchNetworkAsync && activeChain) {
@@ -284,7 +284,7 @@ const StakingTab: FC<Props> = (props) => {
         }}
       >
         <Text style="body2">Time Left</Text>
-        <Text style="body2">{totalDuration <= 0 ? '- days' : `${dayjs(newTime).add(duration, 'months').diff(newTime, 'days')} days`}</Text>
+        <Text style="body2">{totalDuration <= 0 ? '- days' : `${timePlusDuration.diff(newTime, 'days')} days`}</Text>
       </Flex>
       <Flex
         justify="between"
@@ -301,7 +301,7 @@ const StakingTab: FC<Props> = (props) => {
             gap: 5
           }}
         >
-          <Text style="body2">{totalDuration <= 0 ? '-' : dayjs(newTime).add(duration, 'months').format('HH:mm, MMM, D, YYYY')}</Text>
+          <Text style="body2">{totalDuration <= 0 ? '-' : timePlusDuration.format('HH:mm, MMM, D, YYYY')}</Text>
           <FontAwesomeIcon icon={faLock} width={10} height={10}/>
         </Flex>
       </Flex>

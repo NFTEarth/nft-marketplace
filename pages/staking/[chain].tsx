@@ -46,7 +46,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
         args: [address as `0x${string}`]
       }
     ],
-    watch: true,
+    watch: false,
     allowFailure: true,
     enabled: !!address,
   })
