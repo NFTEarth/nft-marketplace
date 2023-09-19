@@ -43,9 +43,7 @@ const StakingPage = () => {
     [
       ContractFunctionConfig<typeof NFTEOFT, 'balanceOf', 'view'>,
       ContractFunctionConfig<typeof NFTEOFT, 'balanceOf', 'view'>,
-      ContractFunctionConfig<typeof NFTEOFT, 'balanceOf', 'view'>,
       ContractFunctionConfig<typeof NFTEOFT, 'totalSupply', 'view'>,
-      ContractFunctionConfig<typeof NFTEOFT, 'totalSupply', 'view'>
     ]
     >({
     contracts: [

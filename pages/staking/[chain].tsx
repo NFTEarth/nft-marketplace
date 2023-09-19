@@ -244,7 +244,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
                     gap: 5
                   }}
                 >
-                  <Text style="body3">Stake Duration (1 to 36 months)</Text>
+                  <Text style="body3">Stake Duration (1 to 12 months)</Text>
                   <Tooltip
                     content={
                       <Text
@@ -266,10 +266,26 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
                 </Flex>
                 <NumericalInput
                   value={duration}
-                  onUserInput={setDuration}
+                  onUserInput={(val) => {
+                    if (val === '') {
+                      setDuration(val)
+                    }
+
+                    let newVal = val
+                    if (parseInt(newVal) < 1) {
+                      newVal = '1'
+                    }
+
+                    if (parseInt(newVal) > 12) {
+                      newVal = '12'
+                    }
+
+                    setDuration(newVal.replace(/[^\d]/g, ''))
+                  }}
                   min={1}
                   max={12}
                   step={1}
+                  inputMode="numeric"
                   icon={<Button size="xs" onClick={() => setDuration('12')}>MAX</Button>}
                   iconStyles={{
                     top: 4,

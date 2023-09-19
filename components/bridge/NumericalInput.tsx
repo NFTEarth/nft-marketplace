@@ -25,7 +25,6 @@ const NumericalInput = React.memo(function InnerInput({
 
   return (
     <Input
-      {...rest}
       value={value}
       onFocus={(event) => event.target.select()}
       onChange={event => {
@@ -59,7 +58,9 @@ const NumericalInput = React.memo(function InnerInput({
       placeholder='0.0'
       minLength={1}
       maxLength={79}
-      spellCheck='false' />
+      spellCheck='false'
+      {...rest}
+    />
   );
 });
 
