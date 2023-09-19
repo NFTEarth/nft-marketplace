@@ -197,8 +197,7 @@ const Navbar = () => {
             </DropdownMenuItem>
             <DropdownMenuItem
               as={Link}
-              href="https://staking.nftearth.exchange"
-              target="_blank"
+              href="/staking"
               css={{
                 display: 'flex',
                 py: '$3',

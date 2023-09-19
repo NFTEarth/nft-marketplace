@@ -210,7 +210,7 @@ const HamburgerMenu = () => {
                   LP Rewards
                 </Text>
               </Link>
-              <Link href="https://staking.nftearth.exchange" target="_blank" legacyBehavior>
+              <Link href="/staking" legacyBehavior>
                 <Text
                   style="subtitle1"
                   css={{
@@ -220,7 +220,7 @@ const HamburgerMenu = () => {
                     pt: '24px',
                   }}
                 >
-                  Staking
+                  {`Staking Rewards`}
                 </Text>
               </Link>
             </Flex>
