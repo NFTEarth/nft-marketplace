@@ -29,7 +29,7 @@ const StakingList: FC<Props> = (props) => {
             transition: 'border-color 0.3s',
             '&:hover': {
               backgroundColor: 'rgba(255,255,255,0.1)',
-              borderColor: '#fff',
+              borderColor: '#79ffa8',
             }
           }}
         >
@@ -89,7 +89,7 @@ const StakingList: FC<Props> = (props) => {
       ) : (
         <Box
           css={{
-            border: '1px dashed #999999',
+            border: '1px dashed #79ffa8',
             opacity: 0.2,
             minWidth: '16.125rem',
             background: '#323232',
@@ -99,11 +99,11 @@ const StakingList: FC<Props> = (props) => {
           }}
         />
       )}
-      {(new Array(3).fill('')).map((x, i) => (
+      {(new Array(2).fill('')).map((x, i) => (
         <Box
           key={`box-${i}`}
           css={{
-            border: '1px dashed #999999',
+            border: '1px dashed #79ffa8',
             opacity: 0.2,
             minWidth: '16.125rem',
             background: '#323232',
