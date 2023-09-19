@@ -173,7 +173,7 @@ const StakingTab: FC<Props> = (props) => {
       openConnectModal?.()
     }
 
-    if (allowance || BigInt(0) < parseEther(`${+value}` || '0')) {
+    if (BigInt(allowance || 0) < parseEther(`${+value}` || '0')) {
       await approveAsync?.()
     }
 
