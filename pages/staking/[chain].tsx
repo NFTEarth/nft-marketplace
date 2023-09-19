@@ -16,7 +16,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faCircleInfo} from "@fortawesome/free-solid-svg-icons";
 import StakingTab from "../../components/staking/StakingTab";
 import UnStakingTab from "../../components/staking/UnstakingTab";
-import {useStakingDepositor} from "../../hooks";
+import {useMounted, useStakingDepositor} from "../../hooks";
 import {useRouter} from "next/router";
 
 const NFTEOFT = NFTEOFTAbi as Abi
@@ -29,6 +29,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
   const [valueEth, setValueEth] = useState<string>('0.0')
   const [duration, setDuration] = useState<string>('0')
   const { address } = useAccount()
+  const mounted = useMounted()
   const router = useRouter()
   const { data: depositor } = useStakingDepositor(address, { refreshInterval: 5000 })
   const chain = ssr.chain
@@ -69,6 +70,10 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
   const handleSetMaxValue = () => {
     const val = formatUnits(nfteLPBalance?.result, 18)
     setValueEth(val)
+  }
+
+  if (!mounted) {
+    return null;
   }
 
   return (

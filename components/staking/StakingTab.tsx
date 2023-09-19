@@ -43,7 +43,7 @@ const StakingTab: FC<Props> = (props) => {
   const {addToast} = useContext(ToastContext)
 
   const timeStamp = parseInt(`${depositor?.lockEndTimestamp || 0}`) * 1000;
-  const newTime = timeStamp > 0 ? new Date(timeStamp) : new Date()
+  const newTime = timeStamp > 0 && timeStamp > (new Date()).getTime() ? new Date(timeStamp) : new Date()
   const timePlusDuration = dayjs(newTime).add(duration, 'months')
   const isZeroValue = parseEther(`${+value}`) <= BigInt(0)
   const isZeroDuration = duration < 1
@@ -55,6 +55,8 @@ const StakingTab: FC<Props> = (props) => {
     functionName:  'allowance',
     args: [address, chain?.xNFTE],
   })
+
+  const requireAllowance = BigInt(allowance || 0) < parseEther(`${+value}` || '0');
 
   const stakingArgs = useMemo(() => {
     if ((depositor?.lockedBalance || BigInt(0)) > BigInt(0)) {
@@ -97,8 +99,8 @@ const StakingTab: FC<Props> = (props) => {
     }
   }, [depositor, duration, value, newTime, isZeroValue, isZeroDuration])
 
-  const { config, error: preparedError } = usePrepareContractWrite({
-    enabled: BigInt(allowance || 0) >= parseEther(`${+value}` || '0') && !!address && !!chain?.xNFTE && (!isZeroValue && !isZeroDuration) || (BigInt(depositor?.lockedBalance || 0)) > BigInt(0),
+  const { config, error: preparedError, refetch } = usePrepareContractWrite({
+    enabled: !requireAllowance && !!address && !!chain?.xNFTE && (!isZeroValue && !isZeroDuration) || (BigInt(depositor?.lockedBalance || 0)) > BigInt(0),
     address: chain?.xNFTE as `0x${string}`,
     abi: xNFTEAbi,
     ...stakingArgs
@@ -119,6 +121,10 @@ const StakingTab: FC<Props> = (props) => {
   })
 
   const buttonText = useMemo(() => {
+    if (requireAllowance) {
+      return 'Approve Spending'
+    }
+
     if (!address) {
       return 'Connect Wallet'
     }
@@ -168,19 +174,12 @@ const StakingTab: FC<Props> = (props) => {
   const disableButton = ((isZeroValue || isZeroDuration) && !depositor?.lockedBalance) || !!preparedError || isLoading || isLoadingApproval || isLoadingTransaction
 
   const handleStake = async () => {
-    if (switchNetworkAsync && activeChain) {
-      const ch = await switchNetworkAsync(chain?.id)
-      if (ch.id !== chain?.id) {
-        return false
-      }
-    }
-
     if (!address) {
       await openConnectModal?.()
       return;
     }
 
-    if (BigInt(allowance || 0) < parseEther(`${+value}` || '0')) {
+    if (requireAllowance) {
       await approveAsync?.()
     }
 
@@ -193,6 +192,7 @@ const StakingTab: FC<Props> = (props) => {
         })
         onSuccess()
       }).catch(e => {
+        refetch()
         addToast?.({
           title: 'Error',
           status: 'error',
