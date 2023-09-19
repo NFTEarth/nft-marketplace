@@ -2,12 +2,11 @@ import {FC, useContext, useMemo, useRef} from "react";
 import {Box, Button, CryptoCurrencyIcon, Flex, Text, Tooltip} from "../primitives";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleInfo, faLock} from "@fortawesome/free-solid-svg-icons";
-import chains, {OFTChain} from "../../utils/chains";
-import {formatBN} from "../../utils/numbers";
+import {OFTChain} from "../../utils/chains";
 import {BaseError, ContractFunctionExecutionError, ContractFunctionRevertedError, parseEther} from "viem";
 import dayjs from "dayjs";
 import {
-  useAccount, useContractRead,
+  useContractRead,
   useContractWrite,
   useNetwork, usePrepareContractWrite,
   useSwitchNetwork,

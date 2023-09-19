@@ -18,6 +18,8 @@ export { default as useFortuneDepositors } from './useFortuneDepositors'
 export { default as useFortuneHistory } from './useFortuneHistory'
 export { default as useFortuneToWithdraw } from './useFortuneToWithdraw'
 export { default as useFortuneUserWon } from './useFortuneUserWon'
+export { default as useStakingDepositor } from './useStakingDepositor'
+export { default as useStakingLP } from './useStakingLP'
 export { default as useCountdown } from './useCountdown'
 export { default as useDebounce } from './useDebounce'
 

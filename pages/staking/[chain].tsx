@@ -12,11 +12,9 @@ import {ContractFunctionConfig, parseEther} from "viem";
 import {arbitrum} from "viem/chains";
 import NFTEOFTAbi from 'artifact/NFTEOFTAbi.json'
 import {Abi} from "abitype";
-import {useRouter} from "next/router";
-import {useMounted} from "../../hooks";
 import {formatBN} from "../../utils/numbers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faCircleInfo, faInfo, faInfoCircle} from "@fortawesome/free-solid-svg-icons";
+import {faCircleInfo} from "@fortawesome/free-solid-svg-icons";
 import StakingTab from "../../components/staking/StakingTab";
 import UnStakingTab from "../../components/staking/UnstakingTab";
 
@@ -24,7 +22,7 @@ const NFTEOFT = NFTEOFTAbi as Abi
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
-const APY = 1.49
+const APY = 78.45
 const StakingChainPage: FC<Props> = ({ ssr }) => {
   const [activeTab, setActiveTab] = useState('staking')
   const [valueEth, setValueEth] = useState<string>('0.0')
@@ -51,37 +49,6 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
         chainId: arbitrum.id,
         functionName: 'balanceOf',
         args: [address as `0x${string}`]
-      },
-      // xNFTE Balance
-      {
-        abi: NFTEOFT,
-        address: chain?.xNFTE as `0x${string}`,
-        chainId: arbitrum.id,
-        functionName: 'balanceOf',
-        args: [address as `0x${string}`],
-      },
-      // Staked LPNFTE
-      {
-        abi: NFTEOFT,
-        address: chain?.LPNFTE as `0x${string}`,
-        chainId: arbitrum.id,
-        functionName: 'balanceOf',
-        args: [chain?.xNFTE as `0x${string}`],
-      },
-      // Total Supply LPNFTE
-      {
-        abi: NFTEOFT,
-        address: chain?.LPNFTE as `0x${string}`,
-        functionName: 'totalSupply',
-        chainId: arbitrum.id,
-        args: [],
-      },
-      {
-        abi: NFTEOFT,
-        address: chain?.xNFTE as `0x${string}`,
-        functionName: 'totalSupply',
-        chainId: arbitrum.id,
-        args: [],
       }
     ],
     watch: true,
@@ -98,7 +65,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
     }
   }
 
-  const [nfteLPBalance, xNfteBalance, totalStakedNfteLP, totalSupplyNfteLP, totalSupplyXNfte] = useMemo(() => {
+  const [nfteLPBalance] = useMemo(() => {
     return nfteData || []
   }, [nfteData])
 

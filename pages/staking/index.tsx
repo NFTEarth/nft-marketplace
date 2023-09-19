@@ -1,27 +1,16 @@
-import {useCallback, useContext, useEffect, useMemo, useState} from "react";
+import {useMemo, useState} from "react";
 import {
   useAccount,
-  useSwitchNetwork,
   useContractReads,
-  useContractWrite,
-  useWalletClient,
-  useWaitForTransaction,
-  useContractRead,
-  useNetwork
 } from "wagmi";
-import {useConnectModal} from "@rainbow-me/rainbowkit";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faArrowRight, faLock} from "@fortawesome/free-solid-svg-icons";
-import {formatEther, formatUnits, parseEther, parseUnits, solidityPacked} from 'ethers';
+import {faLock} from "@fortawesome/free-solid-svg-icons";
 import {ContractFunctionConfig, zeroAddress} from "viem";
-import {useDebounce} from "usehooks-ts";
 import {Abi} from "abitype";
-import Image from 'next/image'
 
 import Layout from "components/Layout";
 import {Footer} from "components/Footer";
 import {
-  Select,
   Box,
   Button,
   Flex,
@@ -30,44 +19,25 @@ import {
   FormatCrypto,
   FormatCryptoCurrency
 } from "components/primitives";
-import Slider from "components/primitives/Slider";
-import NumericalInput from "components/bridge/NumericalInput";
 
-import {useMounted} from "hooks";
-import {formatBN, formatNumber} from "utils/numbers";
+import {useMounted, useStakingDepositor, useStakingLP} from "hooks";
+import {formatBN} from "utils/numbers";
 import {OFT_CHAINS} from "utils/chains";
-import {ToastContext} from "context/ToastContextProvider";
 import NFTEOFTAbi from 'artifact/NFTEOFTAbi.json'
-import {hexZeroPad} from "@ethersproject/bytes";
-import {BigNumber} from "@ethersproject/bignumber";
-import { ChainId, Token, WETH, Fetcher, Route } from "@uniswap/sdk";
-import { abi as UniswapV3PoolAbi } from "@uniswap/v3-core/artifacts/contracts/UniswapV3Pool.sol/UniswapV3Pool.json";
 import {arbitrum} from "viem/chains";
 import Link from "next/link";
-
-const currentAPY = 0.05
+import StakingList from "components/staking/StakingList";
+import StakeList from "../../components/staking/StakeList";
+import ClaimList from "../../components/staking/ClaimList";
 
 const StakingPage = () => {
-  const { addToast } = useContext(ToastContext)
-  const [ fromChainId, setFromChainId ] = useState<number>(OFT_CHAINS[0].id)
-  const [ toChainId, setToChainId ] = useState<number>(OFT_CHAINS[1].id)
-  const { openConnectModal } = useConnectModal()
-  const [bridgePercent, setBridgePercent] = useState(0);
-  const [valueEth, setValueEth] = useState<string>('0.0')
-  const { switchNetworkAsync } = useSwitchNetwork({
-    chainId: fromChainId,
-  })
-  const { data: signer } = useWalletClient()
-  const isMounted = useMounted()
-  const { chain: activeChain } = useNetwork()
-  const { address } = useAccount()
-
-  const debouncedPercent = useDebounce(bridgePercent, 500);
-  const debouncedValueEth = useDebounce(valueEth, 500);
-
-  const NFTEOFT = NFTEOFTAbi as Abi
-
   const chain = OFT_CHAINS.find((chain) => chain.id === arbitrum.id)
+  const isMounted = useMounted()
+  const [activeTab, setActiveTab] = useState('stakes')
+  const { address } = useAccount()
+  const { data: depositor } = useStakingDepositor(address, { refreshInterval: 5000 })
+  const { data: lp } = useStakingLP(chain?.LPNFTE, { refreshInterval: 5000 })
+  const NFTEOFT = NFTEOFTAbi as Abi
 
   const { data: nfteData } : { data: any } = useContractReads<
     [
@@ -95,22 +65,6 @@ const StakingPage = () => {
         functionName: 'balanceOf',
         args: [address as `0x${string}`],
       },
-      // Staked LPNFTE
-      {
-        abi: NFTEOFT,
-        address: chain?.LPNFTE as `0x${string}`,
-        chainId: arbitrum.id,
-        functionName: 'balanceOf',
-        args: [chain?.xNFTE as `0x${string}`],
-      },
-      // Total Supply LPNFTE
-      {
-        abi: NFTEOFT,
-        address: chain?.LPNFTE as `0x${string}`,
-        functionName: 'totalSupply',
-        chainId: arbitrum.id,
-        args: [],
-      },
       {
         abi: NFTEOFT,
         address: chain?.xNFTE as `0x${string}`,
@@ -124,16 +78,16 @@ const StakingPage = () => {
     enabled: !!address,
   })
 
-  const [nfteLPBalance, xNfteBalance, totalStakedNfteLP, totalSupplyNfteLP, totalSupplyXNfte] = useMemo(() => {
+  const [nfteLPBalance, xNfteBalance, totalSupplyXNfte] = useMemo(() => {
     return nfteData || []
   }, [nfteData])
 
   const stakingTitle = useMemo(() => {
-    const APY = '1.45';
+    const APY = '78.45';
 
     if (nfteLPBalance?.result === 0n) {
       return (
-        <Text style="h3">You don’t have LP NFTE available to stake in your wallet.</Text>
+        <Text style="h3">You don’t have any NFTE LP positions to stake in your wallet.</Text>
       )
     }
 
@@ -155,106 +109,11 @@ const StakingPage = () => {
       </Text>
     );
 
-  }, [nfteLPBalance, xNfteBalance, totalStakedNfteLP, totalSupplyNfteLP, totalSupplyXNfte])
+  }, [nfteLPBalance, xNfteBalance, totalSupplyXNfte])
 
   const stakedPercent = useMemo(() => {
-    return parseInt(((BigInt(totalStakedNfteLP?.result || 0n) * BigInt(10000)) / BigInt(totalSupplyNfteLP?.result || 1n)).toString()) / 100
-  }, [totalStakedNfteLP, totalSupplyNfteLP])
-
-  useEffect(() => {
-    if (nfteLPBalance?.result) {
-      const val = formatUnits(BigInt(bridgePercent) * BigInt(nfteLPBalance?.result) / BigInt(100), 18)
-      setValueEth(val)
-    }
-  }, [debouncedPercent])
-
-  // const { writeAsync, data, isLoading } = useContractWrite<typeof NFTEOFTAbi, 'sendFrom', undefined>({
-  //   address: chain.address as `0x${string}`,
-  //   abi: NFTEOFTAbi,
-  //   functionName: 'sendFrom',
-  //   value: BigInt(0),
-  //   args: [
-  //     address || '0x',
-  //
-  //     hexZeroPad(address || '0x', 32),
-  //     parseEther(debouncedValueEth || '0'),
-  //     [address, zeroAddress, '0x']
-  //   ],
-  // })
-
-  // const { isLoading: isLoadingTransaction, isSuccess = true } = useWaitForTransaction({
-  //   hash: data?.hash,
-  //   enabled: !!data?.hash
-  // })
-
-  const handleSetValue = (val: string) => {
-    try {
-      parseUnits(val, 18);
-      setValueEth(val);
-    } catch (e) {
-      setValueEth('0');
-    }
-  }
-
-  const handleBridge = async () => {
-    if (switchNetworkAsync && activeChain?.id !== fromChainId) {
-      const newChain = await switchNetworkAsync(fromChainId)
-      if (newChain.id !== fromChainId) {
-        return false
-      }
-    }
-
-    if (!signer) {
-      openConnectModal?.()
-    }
-
-    // await writeAsync?.()
-    //   .then(() => {
-    //     setBridgePercent(0)
-    //     setValueEth('0.0')
-    //   }).catch(e => {
-    //     addToast?.({
-    //       title: 'Error',
-    //       description: e.cause?.reason || e.shortMessage || e.message
-    //     })
-    //   })
-  }
-
-  const handleSetFromChain = useCallback((id: string) => {
-    const idInt = parseInt(id);
-
-    setFromChainId(idInt);
-
-    if (toChainId === idInt) {
-      setToChainId(OFT_CHAINS.find((chain) => chain.id !== idInt)?.id || 10)
-    }
-  }, [toChainId])
-
-  const handleSetToChain = useCallback((id: string) => {
-    const idInt = parseInt(id);
-
-    setToChainId(idInt);
-
-    if (chain?.id === idInt) {
-      setFromChainId(OFT_CHAINS.find((chain) => chain?.id !== idInt)?.id || 1)
-    }
-  }, [chain])
-
-  const trigger = useMemo(() => (
-    <Select.Trigger
-      title={chain?.name}
-      css={{
-        py: '$3',
-        width: 'auto'
-      }}
-    >
-      <Select.Value asChild>
-        <Flex align="center" justify="center" css={{ gap: 10 }}>
-          <img style={{ height: 17 }} src={chain?.darkIconUrl} />
-        </Flex>
-      </Select.Value>
-    </Select.Trigger>
-  ), [chain])
+    return parseInt(((BigInt(lp?.totalStaked || 0n) * BigInt(10000)) / BigInt(lp?.totalSupply || 1n)).toString()) / 100
+  }, [lp])
 
   if (!isMounted) {
     return null;
@@ -291,7 +150,7 @@ const StakingPage = () => {
               mb: 50
             }}>
             {stakingTitle}
-            <Text css={{ maxWidth: '75%' }}>{`Lock your NFTE tokens to receive xNFTE, the unit of NFTEarth governance voting power. NFTEarth is governed entirely by NFTE token holders via voting escrow.`}</Text>
+            <Text css={{ maxWidth: '75%' }}>{`Lock your NFTE LP tokens obtained through Gamma Strategies to receive xNFTE. xNFTE holders control protocl governance and earn all revenue sharing from the DAO. NFTEarth is governed entirely by xNFTE holders.`}</Text>
           </Flex>
           <Flex
             css={{
@@ -324,6 +183,9 @@ const StakingPage = () => {
                     mr: '1rem',
                     whiteSpace: 'nowrap'
                   }}
+                  onClick={() => {
+                    setActiveTab('stakes')
+                  }}
                 >
                  Your Stakes
                 </Button>
@@ -333,14 +195,20 @@ const StakingPage = () => {
                     mr: '1rem',
                     whiteSpace: 'nowrap'
                   }}
+                  onClick={() => {
+                    setActiveTab('staking')
+                  }}
                 >
-                  Available
+                  Available To Stake
                 </Button>
                 <Button
                   color="ghost"
                   css={{
                     mr: '1rem',
                     whiteSpace: 'nowrap'
+                  }}
+                  onClick={() => {
+                    setActiveTab('claim')
                   }}
                 >
                   Claim Staking Fees
@@ -361,20 +229,15 @@ const StakingPage = () => {
                     }
                   }}
                 >
-                  {(new Array(4).fill('')).map((x, i) => (
-                    <Box
-                      key={`box-${i}`}
-                      css={{
-                        border: '1px dashed #999999',
-                        opacity: 0.2,
-                        minWidth: '16.125rem',
-                        background: '#323232',
-                        minHeight: '9.875rem',
-                        borderRadius: '0.75rem',
-                        content: ' '
-                      }}
-                    />
-                  ))}
+                  {activeTab === 'stakes' && (
+                    <StakeList />
+                  )}
+                  {activeTab === 'staking' && (
+                    <StakingList nfteLPBalance={nfteLPBalance?.result || BigInt(0)}/>
+                  )}
+                  {activeTab === 'claim' && (
+                    <ClaimList />
+                  )}
                 </Flex>
               </Box>
             </Flex>
@@ -416,7 +279,7 @@ const StakingPage = () => {
                       height: 20
                     }}
                   />
-                  <Text style="body4">Total NFTE Locked</Text>
+                  <Text style="body4">Total NFTE LP Locked</Text>
                 </Flex>
                 <FontAwesomeIcon icon={faLock} width={12} height={12}/>
               </Flex>
@@ -434,7 +297,7 @@ const StakingPage = () => {
                   textAlign: 'right',
                   width: '100%'
                 }}
-                amount={totalStakedNfteLP?.result || 0n}
+                amount={lp?.totalStaked || 0n}
               />
             </Flex>
             <Flex css={{
@@ -461,7 +324,7 @@ const StakingPage = () => {
                       height: 20
                     }}
                   />
-                  <Text style="body4">Percent NFTE Locked</Text>
+                  <Text style="body4">Percent of NFTE LP Locked</Text>
                 </Flex>
               </Flex>
               <Text
@@ -546,7 +409,7 @@ const StakingPage = () => {
                   width: '100%'
                 }}
               >
-                {`${(439)} days`}
+                {`${(345)} days`}
               </Text>
             </Flex>
             <Flex css={{
@@ -563,10 +426,10 @@ const StakingPage = () => {
                 ml: '1rem',
               }
             }} direction="column">
-              <Text style="h5">My Voting power</Text>
+              <Text style="h5">My Voting Power</Text>
               <Text
                 as={Link}
-                href="https://docs.nftearth.exchange/"
+                href="https://docs.nftearth.exchange/nfte-token/xnfte-and-nfte-staking"
                 target="_blank"
                 style="body3"
                 css={{
@@ -574,7 +437,7 @@ const StakingPage = () => {
                     textDecoration: 'underline'
                   }
                 }}
-              >{`Learn more on NFTEarth Dao documentation >`}</Text>
+              >{`Learn more in the NFTEarth DAO docs`}</Text>
               <Flex
                 css={{
                   flexWrap: 'wrap',
@@ -594,9 +457,9 @@ const StakingPage = () => {
                       mb: '0.5625rem',
                       display: 'inline-block'
                     }}
-                  >My NFTE Locked</Text>
+                  >My NFTE LP Locked</Text>
                   <FormatCryptoCurrency
-                    amount={0n}
+                    amount={depositor?.lockedBalance || 0n}
                     textStyle="h6"
                     logoHeight={20}
                     address={chain?.address || zeroAddress}
@@ -626,7 +489,7 @@ const StakingPage = () => {
                       mb: '0.5625rem',
                       display: 'inline-block'
                     }}
-                  >Average Lock</Text>
+                  >Average Lock Time</Text>
                 </div>
               </Flex>
             </Flex>
@@ -660,7 +523,7 @@ const StakingPage = () => {
             href="https://discord.com/channels/1062256160264171520/1063532288866005043"
             target="_blank"
           >
-            Governance Forum
+            Governance Discussion
           </Button>
           <Button
             color="primary"
@@ -678,19 +541,8 @@ const StakingPage = () => {
             href="https://snapshot.org/#/nftearthl2.eth"
             target="_blank"
           >
-            Vote on Snapshot
+            Snapshot Voting Portal
           </Button>
-        </Flex>
-        <Flex
-          direction="column"
-          align="center"
-          css={{
-            mt: '$5',
-            textAlign: 'right'
-          }}
-        >
-          <Text style="body3">Powered by</Text>
-          {/*<Image src="/images/LayerZero_Logo.svg" width={150} height={40} alt="LayerZero" />*/}
         </Flex>
       </Box>
       <Box
