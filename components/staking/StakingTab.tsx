@@ -27,10 +27,11 @@ type Props = {
   duration: number
   depositor: StakingDepositor | null
   chain: OFTChain | null
+  onSuccess: () => void
 }
 
 const StakingTab: FC<Props> = (props) => {
-  const { APY, value, duration, chain, depositor } = props
+  const { APY, value, duration, chain, onSuccess, depositor } = props
   const { data: signer } = useWalletClient()
   const isMounted = useMounted()
   const { chain: activeChain } = useNetwork()
@@ -179,11 +180,16 @@ const StakingTab: FC<Props> = (props) => {
 
     await writeAsync?.()
       .then(() => {
-        // setBridgePercent(0)
-        // setValueEth('0.0')
+        addToast?.({
+          title: 'Success',
+          status: 'success',
+          description: "Staking Success !"
+        })
+        onSuccess()
       }).catch(e => {
         addToast?.({
           title: 'Error',
+          status: 'error',
           description: e.cause?.reason || e.shortMessage || e.message
         })
       })
