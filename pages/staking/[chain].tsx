@@ -281,8 +281,8 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
                     }
 
                     let newVal = val
-                    if (parseInt(newVal) < 1) {
-                      newVal = '1'
+                    if (parseInt(newVal) < 0) {
+                      newVal = '0'
                     }
 
                     if (parseInt(newVal) > 12) {
@@ -291,7 +291,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
 
                     setDuration(newVal.replace(/[^\d]/g, ''))
                   }}
-                  min={1}
+                  min={0}
                   max={12}
                   step={1}
                   inputMode="numeric"

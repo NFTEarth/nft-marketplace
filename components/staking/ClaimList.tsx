@@ -3,7 +3,7 @@ import {Box} from "../primitives";
 const ClaimList = () => {
   return (
     <>
-      {(new Array(3).fill('')).map((x, i) => (
+      {(new Array(4).fill('')).map((x, i) => (
         <Box
           key={`box-${i}`}
           css={{

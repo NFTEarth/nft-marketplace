@@ -101,7 +101,7 @@ const StakingList: FC<Props> = (props) => {
           }}
         />
       )}
-      {(new Array(2).fill('')).map((x, i) => (
+      {(new Array(3).fill('')).map((x, i) => (
         <Box
           key={`box-${i}`}
           css={{
