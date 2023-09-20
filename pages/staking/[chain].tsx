@@ -224,7 +224,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
                   <NumericalInput
                     value={valueEth}
                     onUserInput={handleSetValue}
-                    icon={<Button size="xs" onClick={() => handleSetMaxValue()}>MAX</Button>}
+                    icon={<Button size="xs" onClick={() => handleSetMaxValue()}>Max Amount</Button>}
                     iconStyles={{
                       top: 4,
                       right: 4,
@@ -264,7 +264,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
                     gap: 5
                   }}
                 >
-                  <Text style="body3">Stake Duration (1 to 12 months)</Text>
+                  <Text style="body3">Stake Duration (1 year max)</Text>
                   <Tooltip
                     content={
                       <Text
@@ -291,7 +291,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
                   max={12}
                   step={1}
                   inputMode="numeric"
-                  icon={<Button size="xs" onClick={() => setDuration('12')}>MAX</Button>}
+                  icon={<Button size="xs" onClick={() => setDuration('12')}>Max Time</Button>}
                   iconStyles={{
                     top: 4,
                     right: 4,
