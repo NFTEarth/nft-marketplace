@@ -7,6 +7,8 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faLock} from "@fortawesome/free-solid-svg-icons";
 import {ContractFunctionConfig, formatEther, zeroAddress} from "viem";
 import {Abi} from "abitype";
+import {arbitrum} from "viem/chains";
+import Link from "next/link";
 
 import Layout from "components/Layout";
 import {Footer} from "components/Footer";
@@ -19,16 +21,16 @@ import {
   FormatCrypto,
   FormatCryptoCurrency
 } from "components/primitives";
+import StakingList from "components/staking/StakingList";
+import StakeList from "components/staking/StakeList";
+import ClaimList from "components/staking/ClaimList";
 
 import {useMounted, useStakingDepositor, useStakingLP} from "hooks";
-import {formatBN} from "utils/numbers";
+
 import {OFT_CHAINS} from "utils/chains";
+import {formatBN} from "utils/numbers";
+
 import NFTEOFTAbi from 'artifact/NFTEOFTAbi.json'
-import {arbitrum} from "viem/chains";
-import Link from "next/link";
-import StakingList from "components/staking/StakingList";
-import StakeList from "../../components/staking/StakeList";
-import ClaimList from "../../components/staking/ClaimList";
 
 const StakingPage = () => {
   const chain = OFT_CHAINS.find((chain) => chain.id === arbitrum.id)

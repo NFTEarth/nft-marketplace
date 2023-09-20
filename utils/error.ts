@@ -9,16 +9,21 @@ import {
 export const parseError = (error: any) => {
   let name = 'Generic Error'
   let message = ''
-  let data = null
   if (error instanceof BaseError) {
-    const isInsufficientFundsError = error.walk(e => e instanceof InsufficientFundsError) instanceof InsufficientFundsError
-    const isUserRejectedRequestError = error.walk(e => e instanceof UserRejectedRequestError) instanceof UserRejectedRequestError
-    const revertError = error.walk(error => error instanceof ContractFunctionRevertedError)
-    const execError = error.walk(error => error instanceof ContractFunctionExecutionError)
+    const insufficientFundsError = error.walk(e => e instanceof InsufficientFundsError)
+    const userRejectedRequestError = error.walk(e => e instanceof UserRejectedRequestError)
+    const revertError = error.walk(e => e instanceof ContractFunctionRevertedError)
+    const execError = error.walk(e => e instanceof ContractFunctionExecutionError)
     name = error.name
-    if (revertError instanceof ContractFunctionRevertedError) {
+    if (insufficientFundsError instanceof InsufficientFundsError) {
+      console.log('insufficientFundsError', insufficientFundsError)
+      message = 'Insufficient Fund'
+    } else if (userRejectedRequestError instanceof UserRejectedRequestError) {
+      console.log('userRejectedRequestError', userRejectedRequestError)
+      message = userRejectedRequestError.shortMessage
+    } else if (revertError instanceof ContractFunctionRevertedError) {
       console.log('revertError', revertError)
-      message = revertError.reason || revertError.shortMessage || ''
+      message = revertError.reason || revertError.shortMessage || revertError.message
     } else if (execError instanceof ContractFunctionExecutionError) {
       console.log('execError', execError)
       message = execError.cause.shortMessage ?? ''

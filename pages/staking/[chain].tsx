@@ -1,23 +1,27 @@
 import {FC, useMemo, useState} from "react";
 import {GetStaticPaths, GetStaticProps, InferGetStaticPropsType} from "next";
-import {OFT_CHAINS, OFTChain} from "utils/chains";
-import {Box, Button, CryptoCurrencyIcon, Flex, Text, Tooltip} from "components/primitives";
-import Layout from "../../components/Layout";
-import Link from "next/link";
-import NumericalInput from "../../components/bridge/NumericalInput";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faCircleInfo} from "@fortawesome/free-solid-svg-icons";
 import {formatUnits, parseUnits} from "ethers";
 import {useAccount, useContractReads} from "wagmi";
 import {ContractFunctionConfig} from "viem";
 import {arbitrum} from "viem/chains";
-import NFTEOFTAbi from 'artifact/NFTEOFTAbi.json'
-import {Abi} from "abitype";
-import {formatBN} from "../../utils/numbers";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faCircleInfo} from "@fortawesome/free-solid-svg-icons";
-import StakingTab from "../../components/staking/StakingTab";
-import UnStakingTab from "../../components/staking/UnstakingTab";
-import {useMounted, useStakingDepositor} from "../../hooks";
 import {useRouter} from "next/router";
+import {Abi} from "abitype";
+import Link from "next/link";
+
+import Layout from "components/Layout";
+import {Box, Button, CryptoCurrencyIcon, Flex, Text, Tooltip} from "components/primitives";
+import NumericalInput from "components/bridge/NumericalInput";
+import StakingTab from "components/staking/StakingTab";
+import UnStakingTab from "components/staking/UnstakingTab";
+
+import {useMounted, useStakingDepositor} from "hooks";
+
+import {OFT_CHAINS, OFTChain} from "utils/chains";
+import {formatBN} from "utils/numbers";
+
+import NFTEOFTAbi from 'artifact/NFTEOFTAbi.json'
 
 const NFTEOFT = NFTEOFTAbi as Abi
 

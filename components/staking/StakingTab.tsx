@@ -1,18 +1,12 @@
 import {FC, useContext, useMemo} from "react";
-import {Box, Button, CryptoCurrencyIcon, Flex, Text, Tooltip} from "../primitives";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleInfo, faLock} from "@fortawesome/free-solid-svg-icons";
-import {OFTChain} from "../../utils/chains";
 import {
-  BaseError,
-  ContractFunctionExecutionError,
-  UserRejectedRequestError,
-  ContractFunctionRevertedError,
-  InsufficientFundsError,
   parseEther,
   formatEther
 } from "viem";
 import dayjs, {Dayjs} from "dayjs";
+import { MaxUint256 } from "ethers";
 import {
   useAccount,
   useContractRead,
@@ -21,15 +15,20 @@ import {
   useSwitchNetwork,
   useWaitForTransaction,
 } from "wagmi";
-import xNFTEAbi from 'artifact/xNFTEAbi.json'
-import {useMounted} from "../../hooks";
 import {useConnectModal} from "@rainbow-me/rainbowkit";
-import {ToastContext} from "../../context/ToastContextProvider";
-import ERC20Abi from "../../artifact/ERC20Abi.json";
-import {StakingDepositor} from "../../hooks/useStakingDepositor";
-import {formatBN, formatNumber} from "../../utils/numbers";
-import { MaxUint256 } from "ethers";
-import {parseError} from "../../utils/error";
+
+import {Box, Button, CryptoCurrencyIcon, Flex, Text, Tooltip} from "../primitives";
+
+import {ToastContext} from "context/ToastContextProvider";
+import {useMounted} from "hooks";
+import {StakingDepositor} from "hooks/useStakingDepositor";
+
+import {formatBN, formatNumber} from "utils/numbers";
+import {OFTChain} from "utils/chains";
+import {parseError} from "utils/error";
+
+import ERC20Abi from "artifact/ERC20Abi.json";
+import xNFTEAbi from 'artifact/xNFTEAbi.json'
 
 type Props = {
   APY: number

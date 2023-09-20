@@ -1,8 +1,10 @@
-import {Box, Button, CryptoCurrencyIcon, Flex, Text} from "../primitives";
 import {FC} from "react";
 import Link from "next/link";
-import {formatBN} from "../../utils/numbers";
 import {arbitrum} from "viem/chains";
+
+import {Box, Button, CryptoCurrencyIcon, Flex, Text} from "../primitives";
+
+import {formatBN} from "utils/numbers";
 
 type Props = {
   lockedBalance: bigint
