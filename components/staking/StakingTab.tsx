@@ -28,8 +28,9 @@ import {OFTChain} from "utils/chains";
 import {parseError} from "utils/error";
 
 import ERC20Abi from "artifact/ERC20Abi.json";
-import xNFTEAbi from 'artifact/xNFTEAbi.json'
+import XNFTEAbi from 'artifact/XNFTEAbi.json'
 import {getPublicClient} from "@wagmi/core";
+import {roundToWeek} from "../../utils/round";
 
 type Props = {
   APY: number
@@ -38,13 +39,6 @@ type Props = {
   depositor: StakingDepositor | null
   chain: OFTChain | null
   onSuccess: () => void
-}
-
-const roundToWeek = (date: Dayjs) : Dayjs => {
-  const aWeek = 7 * 24 * 60 * 60
-  let timestamp = date.unix()
-  timestamp = Math.round(Math.round(timestamp / aWeek) * aWeek)
-  return dayjs(timestamp * 1000)
 }
 
 const StakingTab: FC<Props> = (props) => {
@@ -66,7 +60,7 @@ const StakingTab: FC<Props> = (props) => {
   const isZeroDuration = duration < 1
   const hasLockedBalance = (BigInt(depositor?.lockedBalance || 0)) > BigInt(0)
 
-  const { data: allowance, refetch: refetchAllowance } = useContractRead<typeof xNFTEAbi, 'allowance', bigint>({
+  const { data: allowance, refetch: refetchAllowance } = useContractRead<typeof XNFTEAbi, 'allowance', bigint>({
     enabled: !!address && !!chain?.xNFTE,
     abi:  ERC20Abi,
     address: chain?.LPNFTE as `0x${string}`,
@@ -119,7 +113,7 @@ const StakingTab: FC<Props> = (props) => {
   const { config, error: preparedError, refetch: refetchPrepareContract } = usePrepareContractWrite({
     enabled: !!address && !!chain?.xNFTE && hasLockedBalance || (!isZeroValue && !isZeroDuration),
     address: chain?.xNFTE as `0x${string}`,
-    abi: xNFTEAbi,
+    abi: XNFTEAbi,
     ...stakingArgs
   })
 

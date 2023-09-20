@@ -1,4 +1,4 @@
-import {FC, useMemo, useState} from "react";
+import {FC, useEffect, useMemo, useState} from "react";
 import {GetStaticPaths, GetStaticProps, InferGetStaticPropsType} from "next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faCircleInfo} from "@fortawesome/free-solid-svg-icons";
@@ -22,8 +22,12 @@ import {OFT_CHAINS, OFTChain} from "utils/chains";
 import {formatBN} from "utils/numbers";
 
 import NFTEOFTAbi from 'artifact/NFTEOFTAbi.json'
+import dayjs from "dayjs";
+import {roundToWeek} from "../../utils/round";
+import XNFTEAbi from "../../artifact/XNFTEAbi.json";
 
 const NFTEOFT = NFTEOFTAbi as Abi
+const XNFTE = XNFTEAbi as Abi
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -32,15 +36,16 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
   const [activeTab, setActiveTab] = useState('staking')
   const [valueEth, setValueEth] = useState<string>('0.0')
   const [duration, setDuration] = useState<string>('0')
+  const [maxDuration, setMaxDuration] = useState<string>('12')
   const { address } = useAccount()
   const mounted = useMounted()
   const router = useRouter()
-  const { data: depositor } = useStakingDepositor(address, { refreshInterval: 5000 })
   const chain = ssr.chain
 
   const { data: nfteData } : { data: any } = useContractReads<
     [
       ContractFunctionConfig<typeof NFTEOFT, 'balanceOf', 'view'>,
+      ContractFunctionConfig<typeof XNFTE, 'locked', 'view'>,
     ]
     >({
     contracts: [
@@ -51,6 +56,14 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
         chainId: arbitrum.id,
         functionName: 'balanceOf',
         args: [address as `0x${string}`]
+      },
+      // xNFTE Locked
+      {
+        abi: XNFTE,
+        address: chain?.xNFTE as `0x${string}`,
+        functionName: 'locked',
+        chainId: arbitrum.id,
+        args: [address as `0x${string}`],
       }
     ],
     watch: false,
@@ -58,7 +71,17 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
     enabled: !!address,
   })
 
-  const [nfteLPBalance] = nfteData || []
+  const [nfteLPBalance, locked] = nfteData || []
+
+  useEffect(() => {
+    if (new Date((parseInt(`${locked?.result?.[1]}`) || 0) * 1000) > new Date()) {
+      const timeStamp =  new Date(parseInt(`${locked?.result?.[1] || 0}`) * 1000);
+      const roundedTime = dayjs(timeStamp)
+      const oneYear = roundToWeek(dayjs().add(1, 'year'))
+      const monthLeft = oneYear.diff(roundedTime, 'months')
+      setMaxDuration(`${monthLeft}`)
+    }
+  }, [locked])
 
   const handleSetValue = (val: string) => {
     try {
@@ -75,8 +98,8 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
       newVal = 0
     }
 
-    if (newVal > 12) {
-      newVal = 12
+    if (newVal > +maxDuration) {
+      newVal = +maxDuration
     }
 
     setDuration(`${newVal}`)
@@ -224,7 +247,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
                   <NumericalInput
                     value={valueEth}
                     onUserInput={handleSetValue}
-                    icon={<Button size="xs" onClick={() => handleSetMaxValue()}>Max Amount</Button>}
+                    icon={<Button size="xs" onClick={() => handleSetMaxValue()}>MAX</Button>}
                     iconStyles={{
                       top: 4,
                       right: 4,
@@ -264,7 +287,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
                     gap: 5
                   }}
                 >
-                  <Text style="body3">Stake Duration (1 year max)</Text>
+                  <Text style="body3">{+maxDuration < 1 ? 'You have reached max Duration' : 'Stake Duration (1 year max)'}</Text>
                   <Tooltip
                     content={
                       <Text
@@ -286,12 +309,13 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
                 </Flex>
                 <NumericalInput
                   value={duration}
+                  disabled={+maxDuration < 1}
                   onUserInput={handleSetDuration}
                   min={0}
-                  max={12}
+                  max={maxDuration}
                   step={1}
                   inputMode="numeric"
-                  icon={<Button size="xs" onClick={() => setDuration('12')}>Max Time</Button>}
+                  icon={<Button size="xs" onClick={() => setDuration(`${maxDuration}`)}>MAX</Button>}
                   iconStyles={{
                     top: 4,
                     right: 4,
@@ -313,7 +337,12 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
                   value={valueEth}
                   duration={parseInt(duration)}
                   chain={chain}
-                  depositor={depositor}
+                  depositor={{
+                    id: address as `0x${string}`,
+                    totalBalance: 0n,
+                    lockedBalance: locked?.result?.[0],
+                    lockEndTimestamp: locked?.result?.[1],
+                  }}
                   onSuccess={() => {
                     setDuration('0')
                     setValueEth('0.0')

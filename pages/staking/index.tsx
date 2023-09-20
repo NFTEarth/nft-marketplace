@@ -25,33 +25,35 @@ import StakingList from "components/staking/StakingList";
 import StakeList from "components/staking/StakeList";
 import ClaimList from "components/staking/ClaimList";
 
-import {useMounted, useStakingDepositor, useStakingLP} from "hooks";
+import {useMounted, useStakingLP} from "hooks";
 
 import {OFT_CHAINS} from "utils/chains";
 import {formatBN} from "utils/numbers";
 
-import NFTEOFTAbi from 'artifact/NFTEOFTAbi.json'
+import ERC20Abi from 'artifact/ERC20Abi.json'
+import XNFTEAbi from 'artifact/XNFTEAbi.json'
+
+const ERC20 = ERC20Abi as Abi
+const XNFTE = XNFTEAbi as Abi
 
 const StakingPage = () => {
   const chain = OFT_CHAINS.find((chain) => chain.id === arbitrum.id)
   const isMounted = useMounted()
   const [activeTab, setActiveTab] = useState('stakes')
   const { address } = useAccount()
-  const { data: depositor } = useStakingDepositor(address, { refreshInterval: 5000 })
   const { data: lp } = useStakingLP(chain?.LPNFTE, { refreshInterval: 5000 })
-  const NFTEOFT = NFTEOFTAbi as Abi
-
   const { data: nfteData } : { data: any } = useContractReads<
     [
-      ContractFunctionConfig<typeof NFTEOFT, 'balanceOf', 'view'>,
-      ContractFunctionConfig<typeof NFTEOFT, 'balanceOf', 'view'>,
-      ContractFunctionConfig<typeof NFTEOFT, 'totalSupply', 'view'>,
+      ContractFunctionConfig<typeof ERC20, 'balanceOf', 'view'>,
+      ContractFunctionConfig<typeof ERC20, 'balanceOf', 'view'>,
+      ContractFunctionConfig<typeof ERC20, 'totalSupply', 'view'>,
+      ContractFunctionConfig<typeof XNFTE, 'locked', 'view'>,
     ]
     >({
     contracts: [
       // LPNFTE Balance
       {
-        abi: NFTEOFT,
+        abi: ERC20,
         address: chain?.LPNFTE as `0x${string}`,
         chainId: arbitrum.id,
         functionName: 'balanceOf',
@@ -59,27 +61,35 @@ const StakingPage = () => {
       },
       // xNFTE Balance
       {
-        abi: NFTEOFT,
+        abi: ERC20,
         address: chain?.xNFTE as `0x${string}`,
         chainId: arbitrum.id,
         functionName: 'balanceOf',
         args: [address as `0x${string}`],
       },
+      // xNFTE TotalSupply
       {
-        abi: NFTEOFT,
+        abi: ERC20,
         address: chain?.xNFTE as `0x${string}`,
         functionName: 'totalSupply',
         chainId: arbitrum.id,
         args: [],
+      },
+      // xNFTE Locked
+      {
+        abi: XNFTE,
+        address: chain?.xNFTE as `0x${string}`,
+        functionName: 'locked',
+        chainId: arbitrum.id,
+        args: [address as `0x${string}`],
       }
     ],
-    watch: false,
-    staleTime: 1000 * 60,
+    watch: true,
     allowFailure: true,
     enabled: !!address,
   })
 
-  const [nfteLPBalance, xNfteBalance, totalSupplyXNfte] = nfteData || []
+  const [nfteLPBalance, xNfteBalance, totalSupplyXNfte, locked] = nfteData || []
 
   const stakingTitle = useMemo(() => {
     const APY = '78.45';
@@ -202,7 +212,7 @@ const StakingPage = () => {
                     setActiveTab('stakes')
                   }}
                 >
-                 Your Stakes
+                  Your Stakes
                 </Button>
                 <Button
                   color="ghost"
@@ -245,7 +255,7 @@ const StakingPage = () => {
                   }}
                 >
                   {activeTab === 'stakes' && (
-                    <StakeList lockedBalance={depositor?.lockedBalance || BigInt(0)} />
+                    <StakeList lockedBalance={locked?.result?.[0] || BigInt(0)} />
                   )}
                   {activeTab === 'staking' && (
                     <StakingList nfteLPBalance={nfteLPBalance?.result || BigInt(0)}/>
@@ -474,7 +484,7 @@ const StakingPage = () => {
                     }}
                   >My NFTE LP Locked</Text>
                   <FormatCryptoCurrency
-                    amount={depositor?.lockedBalance || 0n}
+                    amount={locked?.result?.[0] || 0n}
                     textStyle="h6"
                     logoHeight={20}
                     address={chain?.address || zeroAddress}
