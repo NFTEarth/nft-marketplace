@@ -132,6 +132,13 @@ const StakingPage = () => {
           .
         </Text>
         <Text css={{ maxWidth: '75%' }}>{`xNFTE holders control protocol governance and earn all revenue sharing from the DAO. NFTEarth is governed entirely by xNFTE holders.`}</Text>
+        <Flex css={{ mt: 20}}>
+          <Button
+            color="primary"
+            as={Link}
+            href="/staking/pool"
+          >Get NFTE LP</Button>
+        </Flex>
       </Flex>
     );
 

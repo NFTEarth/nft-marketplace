@@ -9,7 +9,7 @@ export type StakingDepositor = {
   id: `0x${string}`
   token?: NFTELPToken
   totalBalance: bigint
-  lockedBalance: bigint
+  lockedBalance?: bigint
   lockStartTimestamp?: bigint
   lockEndTimestamp?: bigint
 }
