@@ -207,7 +207,7 @@ const Navbar = () => {
               }}
             >
               <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faChartBar} width={20} height={20}/>
-              {`Staking Rewards`}
+              {`xNFTE`}
             </DropdownMenuItem>
           </Dropdown>
           <Dropdown
