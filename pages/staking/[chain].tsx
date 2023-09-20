@@ -58,6 +58,8 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
     enabled: !!address,
   })
 
+  const [nfteLPBalance] = nfteData || []
+
   const handleSetValue = (val: string) => {
     try {
       parseUnits(val, 18);
@@ -67,9 +69,18 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
     }
   }
 
-  const [nfteLPBalance] = useMemo(() => {
-    return nfteData || []
-  }, [nfteData])
+  const handleSetDuration = (val: string) => {
+    let newVal = parseInt(val)
+    if (newVal < 0) {
+      newVal = 0
+    }
+
+    if (newVal > 12) {
+      newVal = 12
+    }
+
+    setDuration(`${newVal}`)
+  }
 
   const handleSetMaxValue = () => {
     const val = formatUnits(nfteLPBalance?.result, 18)
@@ -275,22 +286,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
                 </Flex>
                 <NumericalInput
                   value={duration}
-                  onUserInput={(val) => {
-                    if (val === '') {
-                      setDuration(val)
-                    }
-
-                    let newVal = val
-                    if (parseInt(newVal) < 0) {
-                      newVal = '0'
-                    }
-
-                    if (parseInt(newVal) > 12) {
-                      newVal = '12'
-                    }
-
-                    setDuration(newVal.replace(/[^\d]/g, ''))
-                  }}
+                  onUserInput={handleSetDuration}
                   min={0}
                   max={12}
                   step={1}

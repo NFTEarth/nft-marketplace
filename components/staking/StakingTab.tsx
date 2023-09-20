@@ -29,6 +29,7 @@ import {parseError} from "utils/error";
 
 import ERC20Abi from "artifact/ERC20Abi.json";
 import xNFTEAbi from 'artifact/xNFTEAbi.json'
+import de from "@walletconnect/legacy-modal/dist/cjs/browser/languages/de";
 
 type Props = {
   APY: number
@@ -159,7 +160,7 @@ const StakingTab: FC<Props> = (props) => {
     }
 
     return 'Stake'
-  }, [value, duration, preparedError]);
+  }, [address, isZeroValue, isZeroDuration, depositor, preparedError, requireAllowance]);
 
   const totalValue = depositor?.lockedBalance ? BigInt(depositor?.lockedBalance) + valueN : valueN
   const totalDays = timePlusDuration.diff(dayjs(), 'days')

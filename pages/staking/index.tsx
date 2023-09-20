@@ -79,9 +79,7 @@ const StakingPage = () => {
     enabled: !!address,
   })
 
-  const [nfteLPBalance, xNfteBalance, totalSupplyXNfte] = useMemo(() => {
-    return nfteData || []
-  }, [nfteData])
+  const [nfteLPBalance, xNfteBalance, totalSupplyXNfte] = nfteData || []
 
   const stakingTitle = useMemo(() => {
     const APY = '78.45';
