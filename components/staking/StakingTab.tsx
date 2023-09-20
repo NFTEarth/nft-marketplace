@@ -149,14 +149,14 @@ const StakingTab: FC<Props> = (props) => {
       return 'Enter Duration'
     }
 
+    if (requireAllowance) {
+      return 'Approve Spending'
+    }
+
     if (preparedError) {
       const { message } = parseError(preparedError)
 
       return message
-    }
-
-    if (requireAllowance) {
-      return 'Approve Spending'
     }
 
     return 'Stake'
@@ -164,12 +164,13 @@ const StakingTab: FC<Props> = (props) => {
 
   const totalValue = depositor?.lockedBalance ? BigInt(depositor?.lockedBalance) + valueN : valueN
   const totalDays = timePlusDuration.diff(dayjs(), 'days')
+  const totalMonths = timePlusDuration.diff(dayjs(), 'months')
 
   const votingPower = useMemo(() => {
-    return (+formatEther(totalValue) / 0.01) / 12 * totalDays / 30
-  }, [totalValue, totalDays])
+    return (+formatEther(totalValue) / 0.01) / 12 * totalMonths
+  }, [totalValue, totalMonths])
 
-  const disableButton = ((isZeroValue || isZeroDuration) && !depositor?.lockedBalance) || !requireAllowance || !!preparedError || isLoading || isLoadingApproval || isLoadingTransaction
+  const disableButton = ((isZeroValue || isZeroDuration) && !depositor?.lockedBalance) || (!!preparedError && !requireAllowance) || isLoading || isLoadingApproval || isLoadingTransaction
 
   const handleStake = async () => {
     try {
