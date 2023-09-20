@@ -4,7 +4,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleInfo, faLock} from "@fortawesome/free-solid-svg-icons";
 import {OFTChain} from "../../utils/chains";
 import {BaseError, ContractFunctionExecutionError, ContractFunctionRevertedError, formatEther, parseEther} from "viem";
-import dayjs from "dayjs";
+import dayjs, {Dayjs} from "dayjs";
 import {
   useAccount,
   useContractRead,
@@ -12,7 +12,6 @@ import {
   useNetwork, usePrepareContractWrite,
   useSwitchNetwork,
   useWaitForTransaction,
-  useWalletClient
 } from "wagmi";
 import xNFTEAbi from 'artifact/xNFTEAbi.json'
 import {useMounted} from "../../hooks";
@@ -31,6 +30,13 @@ type Props = {
   onSuccess: () => void
 }
 
+const roundToWeek = (date: Dayjs) : Dayjs => {
+  const aWeek = 7 * 24 * 60 * 60
+  let timestamp = date.unix()
+  timestamp = Math.round(Math.round(timestamp / aWeek) * aWeek)
+  return dayjs(timestamp * 1000)
+}
+
 const StakingTab: FC<Props> = (props) => {
   const { APY, value, duration, chain, onSuccess, depositor } = props
   const { address } = useAccount()
@@ -44,7 +50,7 @@ const StakingTab: FC<Props> = (props) => {
 
   const timeStamp = parseInt(`${depositor?.lockEndTimestamp || 0}`) * 1000;
   const newTime = timeStamp > 0 && timeStamp > (new Date()).getTime() ? new Date(timeStamp) : new Date()
-  const timePlusDuration = dayjs(newTime).add(duration, 'months')
+  const timePlusDuration = roundToWeek(dayjs(newTime).add(duration, 'months'))
   const isZeroValue = parseEther(`${+value}`) <= BigInt(0)
   const isZeroDuration = duration < 1
 
@@ -165,11 +171,11 @@ const StakingTab: FC<Props> = (props) => {
   }, [value, duration, preparedError]);
 
   const totalValue = depositor?.lockedBalance ? BigInt(depositor?.lockedBalance) + valueN : valueN
-  const totalDuration = timePlusDuration.diff(dayjs(), 'months')
+  const totalDays = timePlusDuration.diff(dayjs(), 'days')
 
   const votingPower = useMemo(() => {
-    return ((+formatEther(totalValue) / 0.01) / 12) * totalDuration
-  }, [totalValue, duration])
+    return (+formatEther(totalValue) / 0.01) / 12 * totalDays / 30
+  }, [totalValue, totalDays])
 
   const disableButton = ((isZeroValue || isZeroDuration) && !depositor?.lockedBalance) || !!preparedError || isLoading || isLoadingApproval || isLoadingTransaction
 
@@ -296,7 +302,7 @@ const StakingTab: FC<Props> = (props) => {
         }}
       >
         <Text style="body2">Time Left</Text>
-        <Text style="body2">{totalDuration <= 0 ? '- days' : `${timePlusDuration.diff(newTime, 'days')} days`}</Text>
+        <Text style="body2">{totalDays < 0 ? '- days' : `${totalDays} days`}</Text>
       </Flex>
       <Flex
         justify="between"
@@ -313,7 +319,7 @@ const StakingTab: FC<Props> = (props) => {
             gap: 5
           }}
         >
-          <Text style="body2">{totalDuration <= 0 ? '-' : timePlusDuration.format('HH:mm, MMM, D, YYYY')}</Text>
+          <Text style="body2">{totalDays < 0 ? '-' : timePlusDuration.format('HH:mm, MMM, D, YYYY')}</Text>
           <FontAwesomeIcon icon={faLock} width={10} height={10}/>
         </Flex>
       </Flex>
