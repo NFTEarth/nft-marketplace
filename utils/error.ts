@@ -36,6 +36,10 @@ export const parseError = (error: any) => {
     message = error?.cause?.reason || error.message
   }
 
+  if (message === 'Voting lock can be 3 years max') {
+    message = 'Voting lock can not exceed 1 year'
+  }
+
   return {
     name,
     message,
