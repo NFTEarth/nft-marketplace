@@ -25,6 +25,7 @@ import Erc20WethAbi from 'artifact/Erc20WethAbi.json'
 import UniProxyAbi from 'artifact/UniProxyAbi.json'
 import {useDebounce} from "usehooks-ts";
 import {useMounted} from "../../hooks";
+import {useDebouncedEffect} from "@react-hookz/web";
 
 const WETH_ADDRESS = '0x82af49447d8a07e3bd95bd0d56f35241523fbab1'
 
@@ -39,10 +40,11 @@ const PoolPage = () => {
   const [valueWEth, setValueWEth] = useState<string>('0.0')
   const [valueNFTE, setValueNFTE] = useState<string>('0.0')
   const [changedValue, setChangedValue] = useState('')
+  const [loading, setLoading] = useState(false)
   const publicClient = getPublicClient()
   const {addToast} = useContext(ToastContext)
-  const debouncedValueWEth = useDebounce(valueWEth, 500)
-  const debouncedValueNFTE = useDebounce(valueNFTE, 500)
+  const debouncedValueWEth = useDebounce(valueWEth, 2000)
+  const debouncedValueNFTE = useDebounce(valueNFTE, 2000)
   const isZeroValue = parseEther(`${+valueWEth}`) <= BigInt(0)
 
   const chain = OFT_CHAINS.find(p => p.id === arbitrum.id)
@@ -99,13 +101,22 @@ const PoolPage = () => {
     enabled: !!address,
   })
 
-  useEffect(() => {
+  const [wethBalance, nfteLPbalance, nfteBalance] = balanceData || [] as any
+  const [wethAllowance, nfteAllowance] = allowanceData || [] as any
+  const wethValue = useMemo(() => parseEther(`${+valueWEth}` || '0'), [valueWEth])
+  const nfteValue = useMemo(() => parseEther(`${+valueNFTE}` || '0'), [valueNFTE])
+  const requireWethAllowance = useMemo(() =>BigInt(wethAllowance?.result || 0) < wethValue, [wethAllowance, wethValue])
+  const requireNFTEAllowance = useMemo(() => BigInt(nfteAllowance?.result || 0) < nfteValue, [nfteAllowance, nfteValue]);
+  const isLackOfWeth = useMemo(() => BigInt(wethBalance?.result || 0) < wethValue,  [wethValue, wethBalance])
+
+  useDebouncedEffect(() => {
     if (changedValue === '') {
       return;
     }
 
+    setLoading(true)
     const isWethChange = changedValue === 'weth'
-    const value = parseEther(`${+(isWethChange ? debouncedValueWEth : debouncedValueNFTE)}`)
+    const value = isWethChange ? wethValue : nfteValue
 
     if (value > BigInt(0)) {
       publicClient.readContract(
@@ -115,30 +126,25 @@ const PoolPage = () => {
           functionName: 'getDepositAmount',
           args: [chain?.LPNFTE as `0x${string}`, isWethChange ? WETH_ADDRESS : chain?.address as `0x${string}`, value]
         }).then((res: any) => {
-          if (isWethChange) {
-            setValueNFTE(`${formatEther((BigInt(res[1] - res[0]) / BigInt(2)) + BigInt(res[0]), 'wei')}`)
-          } else {
-            setValueWEth(`${formatEther((BigInt(res[1] - res[0]) / BigInt(2)) + BigInt(res[0]), 'wei')}`)
-          }
-          setChangedValue('')
-        })
+        if (isWethChange) {
+          setValueNFTE(`${formatEther((BigInt(res[1] - res[0]) / BigInt(2)) + BigInt(res[0]), 'wei')}`)
+        } else {
+          setValueWEth(`${formatEther((BigInt(res[1] - res[0]) / BigInt(2)) + BigInt(res[0]), 'wei')}`)
+        }
+        setChangedValue('')
+        setLoading(false)
+      })
     }
-  }, [debouncedValueWEth, debouncedValueNFTE, changedValue])
+  }, [changedValue, wethValue, nfteValue], 1000)
 
-  const [wethBalance, nfteLPbalance, nfteBalance] = balanceData || [] as any
-  const [wethAllowance, nfteAllowance] = allowanceData || [] as any
-  const wethValue = parseEther(`${+debouncedValueWEth}` || '0')
-  const nfteValue = parseEther(`${+debouncedValueNFTE}` || '0')
-  const requireWethAllowance = BigInt(wethAllowance?.result || 0) < wethValue;
-  const requireNFTEAllowance = BigInt(nfteAllowance?.result || 0) < nfteValue;
-  const isLackOfWeth = BigInt(wethBalance?.result || 0) < wethValue
+  const args = useMemo(() => [nfteValue, wethValue, address, chain?.LPNFTE, [0,0,0,0]], [nfteValue, wethValue, address, chain])
 
   const { config, error: preparedError, refetch: refetchPrepareContract } = usePrepareContractWrite({
     enabled: !!address && !!chain?.xNFTE && !isZeroValue,
     address: chain?.uniProxy as `0x${string}`,
     abi: UniProxy,
     functionName: 'deposit',
-    args: [nfteValue, wethValue, address, chain?.LPNFTE, [0,0,0,0]]
+    args
   })
 
   const { writeAsync, error, data, isLoading } = useContractWrite(config)
@@ -200,13 +206,651 @@ const PoolPage = () => {
     handleSetNFTEValue(val)
   }
 
-  const disableButton = isZeroValue || (!!preparedError && !requireNFTEAllowance && !requireWethAllowance) || isLoading || isLoadingWethApproval || isLoadingNFTEApproval || isLoadingWrapEth || isLoadingTransaction
+  const disableButton = isZeroValue || loading || (!!preparedError && !requireNFTEAllowance && !requireWethAllowance) || isLoading || isLoadingWethApproval || isLoadingNFTEApproval || isLoadingWrapEth || isLoadingTransaction
 
   const buttonText = useMemo(() => {
     if (!address) {
       return 'Connect Wallet'
     }
 
+    console.log(isLackOfWeth, requireNFTEAllowance, requireWethAllowance, preparedError
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    )
     if (isLackOfWeth) {
       return 'Wrap ETH'
     }
