@@ -7,7 +7,7 @@ import {
 } from "viem";
 
 export const parseError = (error: any) => {
-  let name = 'Generic Error'
+  let name = 'Error'
   let message = ''
   if (error instanceof BaseError) {
     const insufficientFundsError = error.walk(e => e instanceof InsufficientFundsError)

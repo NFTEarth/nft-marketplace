@@ -208,9 +208,9 @@ const StakingTab: FC<Props> = (props) => {
       await refetchAllowance();
       await refetchPrepareContract()
       addToast?.({
-        title: 'Error',
+        title: parseError(e).name,
         status: 'error',
-        description: e.cause?.reason || e.shortMessage || e.message
+        description: parseError(e).message
       })
     }
   }, [requireAllowance, writeAsync, approveAsync, openConnectModal, addToast, onSuccess])
