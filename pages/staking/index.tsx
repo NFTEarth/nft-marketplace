@@ -86,7 +86,18 @@ const StakingPage = () => {
 
     if (nfteLPBalance?.result === 0n) {
       return (
-        <Text style="h3">You don’t have any NFTE LP positions to stake in your wallet.</Text>
+        <Text css={{ maxWidth: '75%' }}>
+        Get NFTE LP tokens from{' '}
+        <a
+          href="https://app.gamma.xyz/vault/uni/arbitrum/details/nfte-weth-10000-wide"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: 'red' }}  // This line sets the color to red
+        >
+          Gamma Strategies
+        </a>{' '}
+        to stake and receive xNFTE. xNFTE holders control protocol governance and earn all revenue sharing from the DAO. NFTEarth is governed entirely by xNFTE holders.
+      </Text>
       )
     }
 
@@ -149,7 +160,18 @@ const StakingPage = () => {
               mb: 50
             }}>
             {stakingTitle}
-            <Text css={{ maxWidth: '75%' }}>{`Lock your NFTE LP tokens obtained through Gamma Strategies to receive xNFTE. xNFTE holders control protocl governance and earn all revenue sharing from the DAO. NFTEarth is governed entirely by xNFTE holders.`}</Text>
+            <Text css={{ maxWidth: '75%' }}>
+            Lock your NFTE LP tokens obtained from{' '}
+            <a
+            href="https://app.gamma.xyz/vault/uni/arbitrum/details/nfte-weth-10000-wide"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: 'red' }}  // This line sets the color to red
+            >
+            Gamma Strategies
+            </a>{' '}
+            to receive xNFTE. xNFTE holders control protocol governance and earn all revenue sharing from the DAO. NFTEarth is governed entirely by xNFTE holders.
+            </Text>
           </Flex>
           <Flex
             css={{
@@ -436,7 +458,7 @@ const StakingPage = () => {
                     textDecoration: 'underline'
                   }
                 }}
-              >{`Learn more in the NFTEarth DAO docs`}</Text>
+              >{`Learn more about xNFTE in the NFTEarth docs`}</Text>
               <Flex
                 css={{
                   flexWrap: 'wrap',
