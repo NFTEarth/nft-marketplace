@@ -1,4 +1,4 @@
-import {FC, useContext, useMemo} from "react";
+import {FC, useCallback, useContext, useMemo} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleInfo, faLock} from "@fortawesome/free-solid-svg-icons";
 import {
@@ -30,6 +30,7 @@ import {parseError} from "utils/error";
 import ERC20Abi from "artifact/ERC20Abi.json";
 import xNFTEAbi from 'artifact/xNFTEAbi.json'
 import de from "@walletconnect/legacy-modal/dist/cjs/browser/languages/de";
+import {getPublicClient} from "@wagmi/core";
 
 type Props = {
   APY: number
@@ -56,6 +57,7 @@ const StakingTab: FC<Props> = (props) => {
   const { switchNetworkAsync } = useSwitchNetwork({
     chainId: chain?.id,
   })
+  const publicClient = getPublicClient()
   const {addToast} = useContext(ToastContext)
 
   const timeStamp = parseInt(`${depositor?.lockEndTimestamp || 0}`) * 1000;
@@ -65,7 +67,7 @@ const StakingTab: FC<Props> = (props) => {
   const isZeroDuration = duration < 1
   const hasLockedBalance = (BigInt(depositor?.lockedBalance || 0)) > BigInt(0)
 
-  const { data: allowance } = useContractRead<typeof xNFTEAbi, 'allowance', bigint>({
+  const { data: allowance, refetch: refetchAllowance } = useContractRead<typeof xNFTEAbi, 'allowance', bigint>({
     enabled: !!address && !!chain?.xNFTE,
     abi:  ERC20Abi,
     address: chain?.LPNFTE as `0x${string}`,
@@ -115,8 +117,8 @@ const StakingTab: FC<Props> = (props) => {
     }
   }, [depositor, duration, value, newTime, isZeroValue, isZeroDuration])
 
-  const { config, error: preparedError, refetch } = usePrepareContractWrite({
-    enabled: !!address && !!chain?.xNFTE && !requireAllowance && hasLockedBalance || (!isZeroValue && !isZeroDuration),
+  const { config, error: preparedError, refetch: refetchPrepareContract } = usePrepareContractWrite({
+    enabled: !!address && !!chain?.xNFTE && hasLockedBalance || (!isZeroValue && !isZeroDuration),
     address: chain?.xNFTE as `0x${string}`,
     abi: xNFTEAbi,
     ...stakingArgs
@@ -172,7 +174,7 @@ const StakingTab: FC<Props> = (props) => {
 
   const disableButton = ((isZeroValue || isZeroDuration) && !depositor?.lockedBalance) || (!!preparedError && !requireAllowance) || isLoading || isLoadingApproval || isLoadingTransaction
 
-  const handleStake = async () => {
+  const handleStake = useCallback(async () => {
     try {
       if (!address) {
         await openConnectModal?.()
@@ -180,7 +182,17 @@ const StakingTab: FC<Props> = (props) => {
 
       if (requireAllowance) {
         await approveAsync?.()
-          .then(() => refetch())
+          .then((res) => {
+            return publicClient.waitForTransactionReceipt(
+              {
+                confirmations: 5,
+                hash: res.hash
+              }
+            )
+          }).then(async () => {
+            await refetchAllowance();
+            await refetchPrepareContract()
+          })
       }
 
       await writeAsync?.()
@@ -193,14 +205,15 @@ const StakingTab: FC<Props> = (props) => {
           onSuccess()
         })
     } catch (e: any) {
-      await refetch()
+      await refetchAllowance();
+      await refetchPrepareContract()
       addToast?.({
         title: 'Error',
         status: 'error',
         description: e.cause?.reason || e.shortMessage || e.message
       })
     }
-  }
+  }, [requireAllowance, writeAsync, approveAsync, openConnectModal, addToast, onSuccess])
 
   return (
     <Box>
