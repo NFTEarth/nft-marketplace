@@ -1,11 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { ethers, AlchemyProvider, Contract, parseEther} from 'ethers'
-import {Redis} from "@upstash/redis";
+import { ethers, AlchemyProvider, Contract} from 'ethers'
 
 import { FORTUNE_CHAINS } from 'utils/chains'
 import FortuneAbi from 'artifact/FortuneAbi.json'
 
-const redis = Redis.fromEnv()
+const chain = FORTUNE_CHAINS[0]
+const provider = new AlchemyProvider(42161, process.env.NEXT_PUBLIC_ALCHEMY_ID);
+const signer = new ethers.Wallet(process.env.SIGNER_PKEY as string, provider);
 
 export default async function handler(
   request: NextApiRequest,
@@ -17,10 +18,6 @@ export default async function handler(
   //   response.status(404).end();
   //   return;
   // }
-
-  const chain = FORTUNE_CHAINS[0]
-  const provider = new AlchemyProvider(42161, process.env.NEXT_PUBLIC_ALCHEMY_ID);
-  const signer = new ethers.Wallet(process.env.SIGNER_PKEY as string, provider);
 
   const fortune = new Contract(chain.address, FortuneAbi, signer)
 
