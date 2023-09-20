@@ -116,10 +116,8 @@ const PoolPage = () => {
           args: [chain?.LPNFTE as `0x${string}`, isWethChange ? WETH_ADDRESS : chain?.address as `0x${string}`, value]
         }).then((res: any) => {
           if (isWethChange) {
-            console.log(formatEther(res[0], 'wei'))
             setValueNFTE(`${formatEther((BigInt(res[1] - res[0]) / BigInt(2)) + BigInt(res[0]), 'wei')}`)
           } else {
-            console.log(formatEther(res[0], 'wei'))
             setValueWEth(`${formatEther((BigInt(res[1] - res[0]) / BigInt(2)) + BigInt(res[0]), 'wei')}`)
           }
           setChangedValue('')
@@ -133,7 +131,7 @@ const PoolPage = () => {
   const nfteValue = parseEther(`${+debouncedValueNFTE}` || '0')
   const requireWethAllowance = BigInt(wethAllowance?.result || 0) < wethValue;
   const requireNFTEAllowance = BigInt(nfteAllowance?.result || 0) < nfteValue;
-  const isLackOfWeth = BigInt(wethBalance?.result) < wethValue
+  const isLackOfWeth = BigInt(wethBalance?.result || 0) < wethValue
 
   const { config, error: preparedError, refetch: refetchPrepareContract } = usePrepareContractWrite({
     enabled: !!address && !!chain?.xNFTE && !isZeroValue,
@@ -183,7 +181,7 @@ const PoolPage = () => {
   }
 
   const handleSetMaxValue = () => {
-    const val = formatUnits(BigInt(wethBalance?.result), 18)
+    const val = formatUnits(BigInt(wethBalance?.result || 0), 18)
     handleSetValue(val)
   }
 
@@ -198,7 +196,7 @@ const PoolPage = () => {
   }
 
   const handleSetMaxNFTEValue = () => {
-    const val = formatUnits(BigInt(nfteBalance?.result), 18)
+    const val = formatUnits(BigInt(nfteBalance?.result || 0), 18)
     handleSetNFTEValue(val)
   }
 
