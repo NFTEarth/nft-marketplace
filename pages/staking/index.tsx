@@ -86,37 +86,43 @@ const StakingPage = () => {
 
     if (nfteLPBalance?.result === 0n) {
       return (
-        <Text css={{ maxWidth: '75%' }}>
-        Get NFTE LP tokens from{' '}
-        <a
-          href="https://app.gamma.xyz/vault/uni/arbitrum/details/nfte-weth-10000-wide"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ color: 'red' }}  // This line sets the color to red
+        <Flex
+          direction="column"
         >
-          Gamma Strategies
-        </a>{' '}
-        to stake and receive xNFTE. xNFTE holders control protocol governance and earn all revenue sharing from the DAO. NFTEarth is governed entirely by xNFTE holders.
-      </Text>
+          <Text style="h4">You don’t have any NFTE LP positions to stake in your wallet.</Text>
+          <Text css={{ maxWidth: '75%' }}>{`xNFTE holders control protocl governance and earn all revenue sharing from the DAO. NFTEarth is governed entirely by xNFTE holders.`}</Text>
+          <Flex css={{ mt: 20}}>
+            <Button
+              color="primary"
+              as={Link}
+              href="/staking/pool"
+            >Get NFTE LP</Button>
+          </Flex>
+        </Flex>
       )
     }
 
     return (
-      <Text style="h4">
-        {`You have `}
-        <Text style="h4" color="primary">
-          {`${formatBN(xNfteBalance?.result || 0n, 2, 18, {})} xNFTE`}
+      <Flex
+        direction="column"
+      >
+        <Text style="h4">
+          {`You have `}
+          <Text style="h4" color="primary">
+            {`${formatBN(xNfteBalance?.result || 0n, 2, 18, {})} xNFTE`}
+          </Text>
+          {` and `}
+          <Text style="h4" color="primary">
+            {`${formatBN(nfteLPBalance?.result || 0n, 2, 18, {})} LP NFTE`}
+          </Text>
+          {` available to stake at `}
+          <Text style="h4" color="primary">
+            {`${APY}% APY`}
+          </Text>
+          .
         </Text>
-        {` and `}
-        <Text style="h4" color="primary">
-          {`${formatBN(nfteLPBalance?.result || 0n, 2, 18, {})} LP NFTE`}
-        </Text>
-        {` available to stake at `}
-        <Text style="h4" color="primary">
-          {`${APY}% APY`}
-        </Text>
-        .
-      </Text>
+        <Text css={{ maxWidth: '75%' }}>{`xNFTE holders control protocol governance and earn all revenue sharing from the DAO. NFTEarth is governed entirely by xNFTE holders.`}</Text>
+      </Flex>
     );
 
   }, [nfteLPBalance, xNfteBalance, totalSupplyXNfte])
@@ -160,18 +166,6 @@ const StakingPage = () => {
               mb: 50
             }}>
             {stakingTitle}
-            <Text css={{ maxWidth: '75%' }}>
-            Lock your NFTE LP tokens obtained from{' '}
-            <a
-            href="https://app.gamma.xyz/vault/uni/arbitrum/details/nfte-weth-10000-wide"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: 'red' }}  // This line sets the color to red
-            >
-            Gamma Strategies
-            </a>{' '}
-            to receive xNFTE. xNFTE holders control protocol governance and earn all revenue sharing from the DAO. NFTEarth is governed entirely by xNFTE holders.
-            </Text>
           </Flex>
           <Flex
             css={{

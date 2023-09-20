@@ -189,8 +189,8 @@ export type OFTChain = {
   address: `0x${string}`
   LPNFTE?: `0x${string}`
   xNFTE?: `0x${string}`
+  uniProxy?: `0x${string}`
   feeDistributor?: `0x${string}`
-  uniswapV3Pool?: `0x${string}`
   lightIconUrl: string
   darkIconUrl: string
   coingeckoNetworkId: string
@@ -224,7 +224,7 @@ export const OFT_CHAINS : OFTChain[] = [
     LPNFTE: '0x82496243c0a1a39c5c6250bf0115c134Ba76698c',
     xNFTE: '0xE57bd15448C3b2D1dBAD598775DD2F36F93EBf90',
     feeDistributor: '0x9138A2e628f92a42397B3B600E86047AE49aCa98',
-    uniswapV3Pool: '0x17ee09e7a2cc98b0b053b389a162fc86a67b9407',
+    uniProxy: '0x82FcEB07a4D01051519663f6c1c919aF21C27845',
     lightIconUrl: '/icons/arbitrum-icon-dark.svg',
     darkIconUrl: '/icons/arbitrum-icon-light.svg',
     coingeckoNetworkId: 'arbitrum-one'

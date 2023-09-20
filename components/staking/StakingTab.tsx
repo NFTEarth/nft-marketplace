@@ -29,7 +29,6 @@ import {parseError} from "utils/error";
 
 import ERC20Abi from "artifact/ERC20Abi.json";
 import xNFTEAbi from 'artifact/xNFTEAbi.json'
-import de from "@walletconnect/legacy-modal/dist/cjs/browser/languages/de";
 import {getPublicClient} from "@wagmi/core";
 
 type Props = {
