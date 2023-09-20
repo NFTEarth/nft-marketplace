@@ -1,9 +1,17 @@
-import {FC, useContext, useMemo, useRef} from "react";
+import {FC, useContext, useMemo} from "react";
 import {Box, Button, CryptoCurrencyIcon, Flex, Text, Tooltip} from "../primitives";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleInfo, faLock} from "@fortawesome/free-solid-svg-icons";
 import {OFTChain} from "../../utils/chains";
-import {BaseError, ContractFunctionExecutionError, ContractFunctionRevertedError, formatEther, parseEther} from "viem";
+import {
+  BaseError,
+  ContractFunctionExecutionError,
+  UserRejectedRequestError,
+  ContractFunctionRevertedError,
+  InsufficientFundsError,
+  parseEther,
+  formatEther
+} from "viem";
 import dayjs, {Dayjs} from "dayjs";
 import {
   useAccount,
@@ -20,6 +28,8 @@ import {ToastContext} from "../../context/ToastContextProvider";
 import ERC20Abi from "../../artifact/ERC20Abi.json";
 import {StakingDepositor} from "../../hooks/useStakingDepositor";
 import {formatBN, formatNumber} from "../../utils/numbers";
+import { MaxUint256 } from "ethers";
+import {parseError} from "../../utils/error";
 
 type Props = {
   APY: number
@@ -53,6 +63,7 @@ const StakingTab: FC<Props> = (props) => {
   const timePlusDuration = roundToWeek(dayjs(newTime).add(duration, 'months'))
   const isZeroValue = parseEther(`${+value}`) <= BigInt(0)
   const isZeroDuration = duration < 1
+  const hasLockedBalance = (BigInt(depositor?.lockedBalance || 0)) > BigInt(0)
 
   const { data: allowance } = useContractRead<typeof xNFTEAbi, 'allowance', bigint>({
     enabled: !!address && !!chain?.xNFTE,
@@ -66,7 +77,6 @@ const StakingTab: FC<Props> = (props) => {
 
   const stakingArgs = useMemo(() => {
     if ((depositor?.lockedBalance || BigInt(0)) > BigInt(0)) {
-
       if (!isZeroValue && !isZeroDuration) {
         return {
           functionName: 'increase_amount_and_time',
@@ -106,7 +116,7 @@ const StakingTab: FC<Props> = (props) => {
   }, [depositor, duration, value, newTime, isZeroValue, isZeroDuration])
 
   const { config, error: preparedError, refetch } = usePrepareContractWrite({
-    enabled: !requireAllowance && !!address && !!chain?.xNFTE && (!isZeroValue && !isZeroDuration) || (BigInt(depositor?.lockedBalance || 0)) > BigInt(0),
+    enabled: !!address && !!chain?.xNFTE && !requireAllowance && hasLockedBalance || (!isZeroValue && !isZeroDuration),
     address: chain?.xNFTE as `0x${string}`,
     abi: xNFTEAbi,
     ...stakingArgs
@@ -118,7 +128,7 @@ const StakingTab: FC<Props> = (props) => {
     address: chain?.LPNFTE as `0x${string}`,
     abi: ERC20Abi,
     functionName: 'approve',
-    args:  [chain?.xNFTE as `0x${string}`, valueN],
+    args:  [chain?.xNFTE as `0x${string}`, MaxUint256],
   })
 
   const { isLoading: isLoadingTransaction, isSuccess = true } = useWaitForTransaction({
@@ -127,10 +137,6 @@ const StakingTab: FC<Props> = (props) => {
   })
 
   const buttonText = useMemo(() => {
-    if (requireAllowance) {
-      return 'Approve Spending'
-    }
-
     if (!address) {
       return 'Connect Wallet'
     }
@@ -144,27 +150,13 @@ const StakingTab: FC<Props> = (props) => {
     }
 
     if (preparedError) {
-      let errorName = '';
-      let errorDesc = ''
-      if (preparedError instanceof BaseError) {
-        const revertError = preparedError.walk(error => error instanceof ContractFunctionRevertedError)
-        const execError = preparedError.walk(error => error instanceof ContractFunctionExecutionError)
-        if (revertError instanceof ContractFunctionRevertedError) {
-          errorName = revertError.data?.errorName ?? ''
-          errorDesc = revertError.reason || revertError.shortMessage || ''
-        } else if (execError instanceof ContractFunctionExecutionError) {
-          errorName = execError.cause?.name ?? ''
-          errorDesc = execError.cause.shortMessage ?? ''
-        } else {
-          errorName = (error as any)?.cause?.name || (error as any).name || ''
-          errorDesc = (error as any)?.cause?.shortMessage || (error as any).cause?.message || (error as any).message || ''
-        }
-      } else {
-        errorName = 'Error'
-        errorDesc = preparedError.message
-      }
+      const { message } = parseError(preparedError)
 
-      return errorDesc
+      return message
+    }
+
+    if (requireAllowance) {
+      return 'Approve Spending'
     }
 
     return 'Stake'
@@ -177,34 +169,36 @@ const StakingTab: FC<Props> = (props) => {
     return (+formatEther(totalValue) / 0.01) / 12 * totalDays / 30
   }, [totalValue, totalDays])
 
-  const disableButton = ((isZeroValue || isZeroDuration) && !depositor?.lockedBalance) || !!preparedError || isLoading || isLoadingApproval || isLoadingTransaction
+  const disableButton = ((isZeroValue || isZeroDuration) && !depositor?.lockedBalance) || !requireAllowance || !!preparedError || isLoading || isLoadingApproval || isLoadingTransaction
 
   const handleStake = async () => {
-    if (!address) {
-      await openConnectModal?.()
-      return;
-    }
+    try {
+      if (!address) {
+        await openConnectModal?.()
+      }
 
-    if (requireAllowance) {
-      await approveAsync?.()
-    }
+      if (requireAllowance) {
+        await approveAsync?.()
+          .then(() => refetch())
+      }
 
-    await writeAsync?.()
-      .then(() => {
-        addToast?.({
-          title: 'Success',
-          status: 'success',
-          description: "Staking Success!"
+      await writeAsync?.()
+        .then(() => {
+          addToast?.({
+            title: 'Success',
+            status: 'success',
+            description: "Staking Success!"
+          })
+          onSuccess()
         })
-        onSuccess()
-      }).catch(e => {
-        refetch()
-        addToast?.({
-          title: 'Error',
-          status: 'error',
-          description: e.cause?.reason || e.shortMessage || e.message
-        })
+    } catch (e: any) {
+      await refetch()
+      addToast?.({
+        title: 'Error',
+        status: 'error',
+        description: e.cause?.reason || e.shortMessage || e.message
       })
+    }
   }
 
   return (
