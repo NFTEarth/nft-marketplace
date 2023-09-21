@@ -1,12 +1,20 @@
 import {useCallback, useContext, useEffect, useMemo, useState} from "react";
-import {useAccount, useContractReads, useContractWrite, usePrepareContractWrite, useWaitForTransaction} from "wagmi";
+import {
+  useAccount,
+  useBalance,
+  useContractReads,
+  useContractWrite,
+  usePrepareContractWrite,
+  useWaitForTransaction
+} from "wagmi";
 import { formatEther, formatUnits, parseEther, parseUnits} from "viem";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSquarePlus} from "@fortawesome/free-solid-svg-icons";
 import {useConnectModal} from "@rainbow-me/rainbowkit";
 import {getPublicClient} from "@wagmi/core";
 import {arbitrum} from "viem/chains";
-import {MaxUint256, solidityPacked} from "ethers";
+import {MaxUint256} from "ethers";
+import {useDebouncedEffect} from "@react-hookz/web";
 import Link from "next/link";
 import {Abi} from "abitype";
 
@@ -15,17 +23,15 @@ import {Box, Button, CryptoCurrencyIcon, Flex, Text, Tooltip} from "components/p
 import NumericalInput from "components/bridge/NumericalInput";
 
 import {ToastContext} from "context/ToastContextProvider";
+import {useMounted} from "hooks";
 
-import {formatBN, formatNumber} from "utils/numbers";
 import {OFT_CHAINS} from "utils/chains";
 import {parseError} from "utils/error";
 
 import ERC20Abi from 'artifact/ERC20Abi.json'
 import Erc20WethAbi from 'artifact/Erc20WethAbi.json'
 import UniProxyAbi from 'artifact/UniProxyAbi.json'
-import {useDebounce} from "usehooks-ts";
-import {useMounted} from "../../hooks";
-import {useDebouncedEffect} from "@react-hookz/web";
+import {formatBN} from "../../utils/numbers";
 
 const WETH_ADDRESS = '0x82af49447d8a07e3bd95bd0d56f35241523fbab1'
 
@@ -43,11 +49,29 @@ const PoolPage = () => {
   const [loading, setLoading] = useState(false)
   const publicClient = getPublicClient()
   const {addToast} = useContext(ToastContext)
-  const debouncedValueWEth = useDebounce(valueWEth, 2000)
-  const debouncedValueNFTE = useDebounce(valueNFTE, 2000)
-  const isZeroValue = parseEther(`${+valueWEth}`) <= BigInt(0)
-
   const chain = OFT_CHAINS.find(p => p.id === arbitrum.id)
+
+  const ethBalance = useBalance({
+    address,
+    chainId: arbitrum.id
+  })
+  const wethBalance = useBalance({
+    address,
+    token: WETH_ADDRESS,
+    chainId: arbitrum.id
+  })
+  const nfteBalance = useBalance({
+    address,
+    token: chain?.address,
+    chainId: arbitrum.id
+  })
+  const nfteLPBalance = useBalance({
+    address,
+    token: chain?.LPNFTE,
+    chainId: arbitrum.id
+  })
+
+  const isZeroValue = parseEther(`${+valueWEth}`) <= BigInt(0)
 
   const { data: allowanceData, refetch: refetchAllowance } = useContractReads({
     contracts: [
@@ -69,45 +93,12 @@ const PoolPage = () => {
     enabled: !!address,
   })
 
-  const { data: balanceData, refetch: refetchBalance } = useContractReads({
-    contracts: [
-      // Weth Balance
-      {
-        abi: ERC20,
-        address: WETH_ADDRESS as `0x${string}`,
-        chainId: arbitrum.id,
-        functionName: 'balanceOf',
-        args: [address as `0x${string}`]
-      },
-      // NFTE LP Balance
-      {
-        abi: ERC20,
-        address: chain?.LPNFTE as `0x${string}`,
-        chainId: arbitrum.id,
-        functionName: 'balanceOf',
-        args: [address as `0x${string}`]
-      },
-      // NFTE Balance
-      {
-        abi: ERC20,
-        address: chain?.address as `0x${string}`,
-        chainId: arbitrum.id,
-        functionName: 'balanceOf',
-        args: [address as `0x${string}`]
-      }
-    ],
-    watch: true,
-    allowFailure: true,
-    enabled: !!address,
-  })
-
-  const [wethBalance, nfteLPbalance, nfteBalance] = balanceData || [] as any
   const [wethAllowance, nfteAllowance] = allowanceData || [] as any
   const wethValue = useMemo(() => parseEther(`${+valueWEth}` || '0'), [valueWEth])
   const nfteValue = useMemo(() => parseEther(`${+valueNFTE}` || '0'), [valueNFTE])
   const requireWethAllowance = useMemo(() =>BigInt(wethAllowance?.result || 0) < wethValue, [wethAllowance, wethValue])
   const requireNFTEAllowance = useMemo(() => BigInt(nfteAllowance?.result || 0) < nfteValue, [nfteAllowance, nfteValue]);
-  const isLackOfWeth = useMemo(() => BigInt(wethBalance?.result || 0) < wethValue,  [wethValue, wethBalance])
+  const isNeedWethWrap = useMemo(() => BigInt(wethBalance?.data?.value || 0) < wethValue && BigInt(ethBalance.data?.value || 0) >= wethValue,  [wethValue, ethBalance, wethBalance])
 
   useDebouncedEffect(() => {
     if (changedValue === '') {
@@ -187,8 +178,7 @@ const PoolPage = () => {
   }
 
   const handleSetMaxValue = () => {
-    const val = formatUnits(BigInt(wethBalance?.result || 0), 18)
-    handleSetValue(val)
+    handleSetValue(formatBN(wethBalance?.data?.value, 8, 18) || '0')
   }
 
   const handleSetNFTEValue = (val: string) => {
@@ -202,8 +192,7 @@ const PoolPage = () => {
   }
 
   const handleSetMaxNFTEValue = () => {
-    const val = formatUnits(BigInt(nfteBalance?.result || 0), 18)
-    handleSetNFTEValue(val)
+    handleSetNFTEValue(formatBN(nfteBalance?.data?.value, 8, 18) || '0')
   }
 
   const disableButton = isZeroValue || loading || (!!preparedError && !requireNFTEAllowance && !requireWethAllowance) || isLoading || isLoadingWethApproval || isLoadingNFTEApproval || isLoadingWrapEth || isLoadingTransaction
@@ -213,645 +202,9 @@ const PoolPage = () => {
       return 'Connect Wallet'
     }
 
-    console.log(isLackOfWeth, requireNFTEAllowance, requireWethAllowance, preparedError
+    console.log(isNeedWethWrap, requireNFTEAllowance, requireWethAllowance, preparedError)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    )
-    if (isLackOfWeth) {
+    if (isNeedWethWrap) {
       return 'Wrap ETH'
     }
 
@@ -870,7 +223,7 @@ const PoolPage = () => {
     }
 
     return 'Add Liquidity'
-  }, [address, preparedError, isLackOfWeth, requireNFTEAllowance, requireWethAllowance]);
+  }, [address, preparedError, isNeedWethWrap, requireNFTEAllowance, requireWethAllowance]);
 
   const handleAddLiquidity = useCallback(async () => {
     try {
@@ -878,7 +231,7 @@ const PoolPage = () => {
         await openConnectModal?.()
       }
 
-      if (isLackOfWeth) {
+      if (isNeedWethWrap) {
         await wrapEthAsync?.()
           .then((res) => {
             return publicClient.waitForTransactionReceipt(
@@ -1031,7 +384,7 @@ const PoolPage = () => {
                 justify="between"
               >
                 <Text style="body3">Amount</Text>
-                <Text style="body3">{`Balance: ${formatBN(wethBalance?.result?.toString() || 0, 4, 18 || 10)}`}</Text>
+                <Text style="body3">{`Balance: ${formatBN(wethBalance.data?.value, 8, 18)}`}</Text>
               </Flex>
               <Box
                 css={{
@@ -1085,7 +438,7 @@ const PoolPage = () => {
                 justify="between"
               >
                 <Text style="body3">Amount</Text>
-                <Text style="body3">{`Balance: ${formatBN(nfteBalance?.result?.toString() || 0, 4, 18 || 10)}`}</Text>
+                <Text style="body3">{`Balance: ${formatBN(nfteBalance.data?.value, 8, 18)}`}</Text>
               </Flex>
               <Box
                 css={{
@@ -1146,7 +499,7 @@ const PoolPage = () => {
                     height: 20
                   }}
                 />
-                <Text style="body2">{`${formatBN(nfteLPbalance?.result || BigInt(0), 2, 18)} NFTE LP`}</Text>
+                <Text style="body2">{`${nfteLPBalance.data?.formatted} NFTE LP`}</Text>
               </Flex>
             </Flex>
             {/*<Flex*/}
