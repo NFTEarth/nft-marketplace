@@ -8,6 +8,9 @@ import {parseError} from "../../utils/error";
 import {useContext} from "react";
 import {ToastContext} from "../../context/ToastContextProvider";
 import LoadingSpinner from "../common/LoadingSpinner";
+import Link from "next/link";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faExternalLink} from "@fortawesome/free-solid-svg-icons";
 
 const claimableTokens : `0x${string}`[] = [
   '0x82af49447d8a07e3bd95bd0d56f35241523fbab1'
@@ -43,7 +46,30 @@ const ClaimList = () => {
           addToast?.({
             title: 'Success',
             status: 'success',
-            description: "Claim Reward Success!"
+            description: (
+              <Flex
+                direction="column"
+              >
+                <Text css={{ fontSize: 'inherit' }}>{`Claim Reward Success!`}</Text>
+                <Link
+                  href={`${arbitrum.blockExplorers.etherscan.url}/tx/${data?.hash}`}
+                  target="_blank"
+                  style={{
+                    marginTop: 20
+                  }}
+                >
+                  {`See Receipt`}
+                  <FontAwesomeIcon
+                    icon={faExternalLink}
+                    width={15}
+                    height={15}
+                    style={{
+                      marginLeft: 10
+                    }}
+                  />
+                </Link>
+              </Flex>
+            )
           })
         })
     } catch (e: any) {
