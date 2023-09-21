@@ -284,7 +284,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
                     gap: 5
                   }}
                 >
-                  <Text style="body3">{+maxDuration < 1 ? 'You have reached max Duration' : 'Stake Duration (1 year max)'}</Text>
+                  <Text style="body3">{+maxDuration < 1 ? 'You have reached max Duration' : `Stake Duration (${+maxDuration > 1 ? `1 to ${maxDuration}` : '1'}) months`}</Text>
                   <Tooltip
                     content={
                       <Text

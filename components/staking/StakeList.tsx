@@ -17,7 +17,7 @@ const StakeList : FC<Props> = (props) => {
 
   return (
     <>
-      {parseInt(lockedBalance.toString()) > 0 ? (
+      {parseInt(lockedBalance?.toString() || '0') > 0 ? (
         <Button
           as={Link}
           href="/staking/arbitrum"
@@ -76,12 +76,6 @@ const StakeList : FC<Props> = (props) => {
               <Text style="body3">Token</Text>
               <Text style="h6">NFTE LP</Text>
             </Flex>
-            <Flex
-              direction="column"
-            >
-              <Text style="body3" css={{ textAlign: 'right' }}>APY</Text>
-              <Text style="h6">78.45%</Text>
-            </Flex>
           </Flex>
           <Flex
             justify="between"
@@ -99,7 +93,7 @@ const StakeList : FC<Props> = (props) => {
               direction="column"
             >
               <Text style="body3">Days Left</Text>
-              <Text style="subtitle1">{dayjs(+`${lockEndTimestamp}` * 1000).diff(dayjs(), 'days')}</Text>
+              <Text style="subtitle1" css={{ textAlign: 'right' }}>{dayjs(+`${lockEndTimestamp}` * 1000).diff(dayjs(), 'days')}</Text>
             </Flex>
           </Flex>
         </Button>
