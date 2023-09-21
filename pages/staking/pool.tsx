@@ -106,7 +106,7 @@ const PoolPage = () => {
   const nfteValue = useMemo(() => parseEther(valueNFTE as `${number}`), [valueNFTE])
   const requireWethAllowance = useMemo(() =>BigInt(wethAllowance?.result || 0) < wethValue, [wethAllowance, wethValue])
   const requireNFTEAllowance = useMemo(() => BigInt(nfteAllowance?.result || 0) < nfteValue, [nfteAllowance, nfteValue]);
-  const isNeedWethWrap = useMemo(() => BigInt(wethBalance?.data?.value || 0) < wethValue && BigInt(ethBalance.data?.value || 0) >= wethValue,  [wethValue, ethBalance, wethBalance])
+  const requireETHWrap = useMemo(() => BigInt(wethBalance?.data?.value || 0) < wethValue && BigInt(ethBalance.data?.value || 0) >= wethValue,  [wethValue, ethBalance, wethBalance])
 
   useDebouncedEffect(() => {
     if (changedValue === '') {
@@ -207,14 +207,14 @@ const PoolPage = () => {
     handleSetNFTEValue(formatBN(nfteBalance?.data?.value, 6, 18) || '0')
   }
 
-  const disableButton = isZeroValue || loading || (!!preparedError && !requireNFTEAllowance && !requireWethAllowance && !isNeedWethWrap) || isLoading || isLoadingWethApproval || isLoadingNFTEApproval || isLoadingWrapEth || isLoadingTransaction
+  const disableButton = isZeroValue || loading || (!!preparedError && !requireNFTEAllowance && !requireWethAllowance && !requireETHWrap) || isLoading || isLoadingWethApproval || isLoadingNFTEApproval || isLoadingWrapEth || isLoadingTransaction
 
   const buttonText = useMemo(() => {
     if (!address) {
       return 'Connect Wallet'
     }
 
-    if (isNeedWethWrap) {
+    if (requireETHWrap) {
       return 'Wrap ETH'
     }
 
@@ -233,7 +233,7 @@ const PoolPage = () => {
     }
 
     return 'Add Liquidity'
-  }, [address, preparedError, isNeedWethWrap, requireNFTEAllowance, requireWethAllowance]);
+  }, [address, preparedError, requireETHWrap, requireNFTEAllowance, requireWethAllowance]);
 
   const handleAddLiquidity = useCallback(async () => {
     try {
@@ -241,7 +241,7 @@ const PoolPage = () => {
         await openConnectModal?.()
       }
 
-      if (isNeedWethWrap) {
+      if (requireETHWrap) {
         await wrapEthAsync?.()
           .then((res) => {
             return publicClient.waitForTransactionReceipt(
@@ -303,7 +303,7 @@ const PoolPage = () => {
         description: parseError(e).message
       })
     }
-  }, [requireWethAllowance, requireNFTEAllowance, writeAsync, approveWethAsync, approveNFTEAsync, openConnectModal, addToast])
+  }, [requireWethAllowance, requireNFTEAllowance, requireETHWrap, writeAsync, wrapEthAsync, approveWethAsync, approveNFTEAsync, openConnectModal, addToast])
 
   if (!mounted) {
     return null;
