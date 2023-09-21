@@ -11,7 +11,7 @@ import {
   useAccount,
   useContractRead,
   useContractWrite,
-  useNetwork, usePrepareContractWrite,
+  useNetwork, usePrepareContractWrite, UsePrepareContractWriteConfig,
   useSwitchNetwork,
   useWaitForTransaction,
 } from "wagmi";
@@ -27,8 +27,8 @@ import {formatBN, formatNumber} from "utils/numbers";
 import {OFTChain} from "utils/chains";
 import {parseError} from "utils/error";
 
-import ERC20Abi from "artifact/ERC20Abi.json";
-import XNFTEAbi from 'artifact/XNFTEAbi.json'
+import ERC20Abi from "artifact/ERC20Abi";
+import XNFTEAbi from 'artifact/XNFTEAbi'
 import {getPublicClient} from "@wagmi/core";
 import {roundToWeek} from "../../utils/round";
 
@@ -60,12 +60,12 @@ const StakingTab: FC<Props> = (props) => {
   const isZeroDuration = duration < 1
   const hasLockedBalance = (BigInt(depositor?.lockedBalance || 0)) > BigInt(0)
 
-  const { data: allowance, refetch: refetchAllowance } = useContractRead<typeof XNFTEAbi, 'allowance', bigint>({
+  const { data: allowance, refetch: refetchAllowance } = useContractRead({
     enabled: !!address && !!chain?.xNFTE,
     abi:  ERC20Abi,
     address: chain?.LPNFTE as `0x${string}`,
     functionName:  'allowance',
-    args: [address, chain?.xNFTE],
+    args: [address as `0x${string}`, chain?.xNFTE as `0x${string}`],
   })
 
   const requireAllowance = BigInt(allowance || 0) < parseEther(`${+value}` || '0');
@@ -114,12 +114,12 @@ const StakingTab: FC<Props> = (props) => {
     enabled: !!address && !!chain?.xNFTE && hasLockedBalance || (!isZeroValue && !isZeroDuration),
     address: chain?.xNFTE as `0x${string}`,
     abi: XNFTEAbi,
-    ...stakingArgs
+    ...stakingArgs as any
   })
 
   const { writeAsync, error, data, isLoading } = useContractWrite(config)
   const valueN = parseEther(`${+value}` || '0')
-  const { writeAsync: approveAsync, isLoading: isLoadingApproval } = useContractWrite<typeof ERC20Abi, 'approve', undefined>({
+  const { writeAsync: approveAsync, isLoading: isLoadingApproval } = useContractWrite({
     address: chain?.LPNFTE as `0x${string}`,
     abi: ERC20Abi,
     functionName: 'approve',
@@ -131,16 +131,20 @@ const StakingTab: FC<Props> = (props) => {
     enabled: !!data?.hash
   })
 
+  const totalValue = depositor?.lockedBalance ? BigInt(depositor?.lockedBalance) + valueN : valueN
+  const totalDays = timePlusDuration.diff(dayjs(), 'days')
+  const totalMonths = timePlusDuration.diff(dayjs(), 'months')
+
   const buttonText = useMemo(() => {
     if (!address) {
       return 'Connect Wallet'
     }
 
-    if (isZeroValue && !depositor?.lockedBalance) {
+    if (isZeroValue && totalValue <= BigInt(0)) {
       return 'Enter Values'
     }
 
-    if (isZeroDuration && !depositor?.lockedBalance) {
+    if (isZeroDuration && totalDays <= 0) {
       return 'Enter Duration'
     }
 
@@ -154,12 +158,16 @@ const StakingTab: FC<Props> = (props) => {
       return message
     }
 
-    return 'Stake'
-  }, [address, isZeroValue, isZeroDuration, depositor, preparedError, requireAllowance]);
+    if (isZeroValue) {
+      return 'Increase Duration'
+    }
 
-  const totalValue = depositor?.lockedBalance ? BigInt(depositor?.lockedBalance) + valueN : valueN
-  const totalDays = timePlusDuration.diff(dayjs(), 'days')
-  const totalMonths = timePlusDuration.diff(dayjs(), 'months')
+    if (isZeroDuration) {
+      return 'Increase Amount'
+    }
+
+    return 'Stake'
+  }, [address, isZeroValue, isZeroDuration, totalDays, totalValue, preparedError, requireAllowance]);
 
   const votingPower = useMemo(() => {
     return (+formatEther(totalValue) / 0.01) / 12 * totalMonths

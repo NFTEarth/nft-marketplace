@@ -5,8 +5,8 @@ import Image from "next/image";
 import {CryptoCurrencyIcon, Flex, FormatCryptoCurrency, Text} from "../primitives";
 import {FORTUNE_CHAINS} from "../../utils/chains";
 import {useAccount, useContractRead} from "wagmi";
-import ERC721Abi from "../../artifact/ERC721Abi.json";
-import ERC20Abi from "../../artifact/ERC20Abi.json";
+import ERC721Abi from "../../artifact/ERC721Abi";
+import ERC20Abi from "../../artifact/ERC20Abi";
 import {useMarketplaceChain} from "../../hooks";
 
 type dataItemProps = {
@@ -19,20 +19,20 @@ const SelectionItem: FC<dataItemProps> = ({ data, onApprove }) => {
   const marketplaceChain = useMarketplaceChain()
   const fortuneChain = FORTUNE_CHAINS.find(c => c.id === marketplaceChain.id);
 
-  const { data: isApproved } = useContractRead<typeof ERC721Abi, 'isApprovedForAll', boolean>({
+  const { data: isApproved } = useContractRead({
     enabled: !!fortuneChain?.address && !!data.contract && !!address && data.type === 'erc721' && !!onApprove,
     abi: ERC721Abi,
     address: data.contract as `0x${string}`,
     functionName: 'isApprovedForAll',
-    args: [address, fortuneChain?.address],
+    args: [address as `0x${string}`, fortuneChain?.address as `0x${string}`],
   })
 
-  const { data: allowance } = useContractRead<typeof ERC20Abi, 'allowance', bigint>({
+  const { data: allowance } = useContractRead({
     enabled: !!fortuneChain?.address && !!data.contract && !!address && data.type === 'erc20' && !!onApprove,
     abi:  ERC20Abi,
     address: data.contract as `0x${string}`,
     functionName:  'allowance',
-    args: [address, fortuneChain?.address],
+    args: [address as `0x${string}`, fortuneChain?.address as `0x${string}`],
   })
 
   useEffect(() => {

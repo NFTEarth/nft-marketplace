@@ -20,8 +20,8 @@ import {useAccount, useContractRead, useContractWrite, useWaitForTransaction} fr
 import TransferManagerAbi from "../../artifact/TransferManagerAbi.json";
 import FortuneAbi from "../../artifact/FortuneAbi.json";
 import {AddressZero} from "@ethersproject/constants";
-import ERC20Abi from "../../artifact/ERC20Abi.json";
-import ERC721Abi from "../../artifact/ERC721Abi.json";
+import ERC20Abi from "../../artifact/ERC20Abi";
+import ERC721Abi from "../../artifact/ERC721Abi";
 import {useFortune, useMarketplaceChain} from "../../hooks";
 import {FORTUNE_CHAINS} from "../../utils/chains";
 import {ToastContext} from "../../context/ToastContextProvider";
@@ -178,10 +178,10 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
           address: selection.contract as `0x${string}`,
           abi: selectionAbi,
           functionName: selectionFunc,
-          args: [address, fortuneChain?.transferManager]
+          args: [address as `0x${string}`, fortuneChain?.transferManager as `0x${string}`]
         })
 
-        if (selection.type === 'erc20' && BigInt(data as number) >= (selection.values?.[0] || BigInt(0))) {
+        if (selection.type === 'erc20' && BigInt(data) >= (selection.values?.[0] || BigInt(0))) {
           continue
         }
 
@@ -195,9 +195,9 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
           address: selection.contract as `0x${string}`,
           abi: selectionAbi,
           functionName: selectionApprovalFunc,
-          args: selection.type === 'erc20' ?
+          args: (selection.type === 'erc20' ?
             [fortuneChain?.transferManager as `0x${string}`, selection.values?.[0]] :
-            [fortuneChain?.transferManager as `0x${string}`, true],
+            [fortuneChain?.transferManager as `0x${string}`, true]) as any,
           account
         })
 

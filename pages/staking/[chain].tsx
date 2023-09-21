@@ -9,6 +9,7 @@ import {arbitrum} from "viem/chains";
 import {useRouter} from "next/router";
 import {Abi} from "abitype";
 import Link from "next/link";
+import dayjs from "dayjs";
 
 import Layout from "components/Layout";
 import {Box, Button, CryptoCurrencyIcon, Flex, Text, Tooltip} from "components/primitives";
@@ -20,14 +21,10 @@ import {useMounted, useStakingDepositor} from "hooks";
 
 import {OFT_CHAINS, OFTChain} from "utils/chains";
 import {formatBN} from "utils/numbers";
+import {roundToWeek} from "utils/round";
 
-import NFTEOFTAbi from 'artifact/NFTEOFTAbi.json'
-import dayjs from "dayjs";
-import {roundToWeek} from "../../utils/round";
-import XNFTEAbi from "../../artifact/XNFTEAbi.json";
-
-const NFTEOFT = NFTEOFTAbi as Abi
-const XNFTE = XNFTEAbi as Abi
+import NFTEOFTAbi from 'artifact/NFTEOFTAbi'
+import XNFTEAbi from "artifact/XNFTEAbi";
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -44,14 +41,14 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
 
   const { data: nfteData } : { data: any } = useContractReads<
     [
-      ContractFunctionConfig<typeof NFTEOFT, 'balanceOf', 'view'>,
-      ContractFunctionConfig<typeof XNFTE, 'locked', 'view'>,
+      ContractFunctionConfig<typeof NFTEOFTAbi, 'balanceOf', 'view'>,
+      ContractFunctionConfig<typeof XNFTEAbi, 'locked', 'view'>,
     ]
     >({
     contracts: [
       // LPNFTE Balance
       {
-        abi: NFTEOFT,
+        abi: NFTEOFTAbi,
         address: chain?.LPNFTE as `0x${string}`,
         chainId: arbitrum.id,
         functionName: 'balanceOf',
@@ -59,7 +56,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
       },
       // xNFTE Locked
       {
-        abi: XNFTE,
+        abi: XNFTEAbi,
         address: chain?.xNFTE as `0x${string}`,
         functionName: 'locked',
         chainId: arbitrum.id,

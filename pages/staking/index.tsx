@@ -5,8 +5,7 @@ import {
 } from "wagmi";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faLock} from "@fortawesome/free-solid-svg-icons";
-import {ContractFunctionConfig, formatEther, zeroAddress} from "viem";
-import {Abi} from "abitype";
+import {formatEther, zeroAddress} from "viem";
 import {arbitrum} from "viem/chains";
 import Link from "next/link";
 
@@ -30,11 +29,8 @@ import {useMounted, useStakingLP} from "hooks";
 import {OFT_CHAINS} from "utils/chains";
 import {formatBN} from "utils/numbers";
 
-import ERC20Abi from 'artifact/ERC20Abi.json'
-import XNFTEAbi from 'artifact/XNFTEAbi.json'
-
-const ERC20 = ERC20Abi as Abi
-const XNFTE = XNFTEAbi as Abi
+import ERC20Abi from 'artifact/ERC20Abi'
+import XNFTEAbi from 'artifact/XNFTEAbi'
 
 const StakingPage = () => {
   const chain = OFT_CHAINS.find((chain) => chain.id === arbitrum.id)
@@ -42,18 +38,11 @@ const StakingPage = () => {
   const [activeTab, setActiveTab] = useState('stakes')
   const { address } = useAccount()
   const { data: lp } = useStakingLP(chain?.LPNFTE, { refreshInterval: 5000 })
-  const { data: nfteData } : { data: any } = useContractReads<
-    [
-      ContractFunctionConfig<typeof ERC20, 'balanceOf', 'view'>,
-      ContractFunctionConfig<typeof ERC20, 'balanceOf', 'view'>,
-      ContractFunctionConfig<typeof ERC20, 'totalSupply', 'view'>,
-      ContractFunctionConfig<typeof XNFTE, 'locked', 'view'>,
-    ]
-    >({
+  const { data: nfteData } : { data: any } = useContractReads({
     contracts: [
       // LPNFTE Balance
       {
-        abi: ERC20,
+        abi: ERC20Abi,
         address: chain?.LPNFTE as `0x${string}`,
         chainId: arbitrum.id,
         functionName: 'balanceOf',
@@ -61,7 +50,7 @@ const StakingPage = () => {
       },
       // xNFTE Balance
       {
-        abi: ERC20,
+        abi: ERC20Abi,
         address: chain?.xNFTE as `0x${string}`,
         chainId: arbitrum.id,
         functionName: 'balanceOf',
@@ -69,15 +58,14 @@ const StakingPage = () => {
       },
       // xNFTE TotalSupply
       {
-        abi: ERC20,
+        abi: ERC20Abi,
         address: chain?.xNFTE as `0x${string}`,
         functionName: 'totalSupply',
         chainId: arbitrum.id,
-        args: [],
       },
       // xNFTE Locked
       {
-        abi: XNFTE,
+        abi: XNFTEAbi,
         address: chain?.xNFTE as `0x${string}`,
         functionName: 'locked',
         chainId: arbitrum.id,

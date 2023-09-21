@@ -1,4 +1,4 @@
-import {useCallback, useContext, useEffect, useMemo, useState} from "react";
+import {useCallback, useContext, useMemo, useState} from "react";
 import {
   useAccount,
   useBalance,
@@ -7,16 +7,15 @@ import {
   usePrepareContractWrite,
   useWaitForTransaction
 } from "wagmi";
-import { formatEther, formatUnits, parseEther, parseUnits} from "viem";
+import { formatEther, parseEther, parseUnits} from "viem";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSquarePlus} from "@fortawesome/free-solid-svg-icons";
 import {useConnectModal} from "@rainbow-me/rainbowkit";
+import {useDebouncedEffect} from "@react-hookz/web";
 import {getPublicClient} from "@wagmi/core";
 import {arbitrum} from "viem/chains";
 import {MaxUint256} from "ethers";
-import {useDebouncedEffect} from "@react-hookz/web";
 import Link from "next/link";
-import {Abi} from "abitype";
 
 import Layout from "components/Layout";
 import {Box, Button, CryptoCurrencyIcon, Flex, Text, Tooltip} from "components/primitives";
@@ -27,24 +26,24 @@ import {useMounted} from "hooks";
 
 import {OFT_CHAINS} from "utils/chains";
 import {parseError} from "utils/error";
+import {formatBN} from "utils/numbers";
 
-import ERC20Abi from 'artifact/ERC20Abi.json'
-import Erc20WethAbi from 'artifact/Erc20WethAbi.json'
-import UniProxyAbi from 'artifact/UniProxyAbi.json'
-import {formatBN} from "../../utils/numbers";
+import ERC20Abi from 'artifact/ERC20Abi'
+import ERC20WethAbi from 'artifact/ERC20WethAbi'
+import UniProxyAbi from 'artifact/UniProxyAbi'
+import ERC20OracleAbi from 'artifact/ERC20OracleAbi'
+import useUSDAndNativePrice from "../../hooks/useUSDAndNativePrice";
+import LoadingSpinner from "../../components/common/LoadingSpinner";
 
 const WETH_ADDRESS = '0x82af49447d8a07e3bd95bd0d56f35241523fbab1'
-
-const ERC20 = ERC20Abi as Abi
-const UniProxy = UniProxyAbi as Abi
-const Erc20Weth = Erc20WethAbi as Abi
 
 const PoolPage = () => {
   const mounted = useMounted()
   const { address} = useAccount()
   const { openConnectModal } = useConnectModal()
-  const [valueWEth, setValueWEth] = useState<string>('0.0')
-  const [valueNFTE, setValueNFTE] = useState<string>('0.0')
+  const [valueWEth, setValueWEth] = useState<string>('0')
+  const [valueNFTE, setValueNFTE] = useState<string>('0')
+  const [expectedNFTELP, setExpectedNFTELP] = useState<bigint>(BigInt(0))
   const [changedValue, setChangedValue] = useState('')
   const [loading, setLoading] = useState(false)
   const publicClient = getPublicClient()
@@ -70,19 +69,24 @@ const PoolPage = () => {
     token: chain?.LPNFTE,
     chainId: arbitrum.id
   })
+  const { data: usdPrice, isLoading: isLoadingUSDPrice } = useUSDAndNativePrice({
+    chainId: arbitrum.id,
+    contract: WETH_ADDRESS,
+    price: expectedNFTELP
+  })
 
   const isZeroValue = parseEther(`${+valueWEth}`) <= BigInt(0)
 
   const { data: allowanceData, refetch: refetchAllowance } = useContractReads({
     contracts: [
       {
-        abi:  ERC20,
+        abi:  ERC20Abi,
         address: WETH_ADDRESS as `0x${string}`,
         functionName:  'allowance',
         args: [address as `0x${string}`, chain?.LPNFTE as `0x${string}`],
       },
       {
-        abi:  ERC20,
+        abi:  ERC20Abi,
         address: chain?.address as `0x${string}`,
         functionName:  'allowance',
         args: [address as `0x${string}`, chain?.LPNFTE as `0x${string}`],
@@ -100,6 +104,11 @@ const PoolPage = () => {
   const requireNFTEAllowance = useMemo(() => BigInt(nfteAllowance?.result || 0) < nfteValue, [nfteAllowance, nfteValue]);
   const isNeedWethWrap = useMemo(() => BigInt(wethBalance?.data?.value || 0) < wethValue && BigInt(ethBalance.data?.value || 0) >= wethValue,  [wethValue, ethBalance, wethBalance])
 
+  const calculateExpectedLP = async (wethDeposit: bigint, nfteDeposit: bigint) => {
+    const twoHoursAgo = 60 * 60 * 2
+    setExpectedNFTELP(wethDeposit * BigInt(2))
+  }
+
   useDebouncedEffect(() => {
     if (changedValue === '') {
       return;
@@ -112,54 +121,54 @@ const PoolPage = () => {
     if (value > BigInt(0)) {
       publicClient.readContract(
         {
-          abi: UniProxy,
+          abi: UniProxyAbi,
           address: chain?.uniProxy as `0x${string}`,
           functionName: 'getDepositAmount',
           args: [chain?.LPNFTE as `0x${string}`, isWethChange ? WETH_ADDRESS : chain?.address as `0x${string}`, value]
-        }).then((res: any) => {
-        if (isWethChange) {
-          setValueNFTE(`${formatEther((BigInt(res[1] - res[0]) / BigInt(2)) + BigInt(res[0]), 'wei')}`)
-        } else {
-          setValueWEth(`${formatEther((BigInt(res[1] - res[0]) / BigInt(2)) + BigInt(res[0]), 'wei')}`)
-        }
-        setChangedValue('')
-        setLoading(false)
-      })
+        }).then(async (res) => {
+          const val = formatEther((BigInt(res[1] - res[0]) / BigInt(2)) + BigInt(res[0]), 'wei')
+          if (isWethChange) {
+            setValueNFTE(val)
+          } else {
+            setValueWEth(val)
+          }
+
+          await calculateExpectedLP(wethValue, nfteValue)
+          setChangedValue('')
+          setLoading(false)
+        })
     }
   }, [changedValue, wethValue, nfteValue], 1000)
-
-  const args = useMemo(() => [nfteValue, wethValue, address, chain?.LPNFTE, [0,0,0,0]], [nfteValue, wethValue, address, chain])
 
   const { config, error: preparedError, refetch: refetchPrepareContract } = usePrepareContractWrite({
     enabled: !!address && !!chain?.xNFTE && !isZeroValue,
     address: chain?.uniProxy as `0x${string}`,
-    abi: UniProxy,
+    abi: UniProxyAbi,
     functionName: 'deposit',
-    args
+    args: [nfteValue, wethValue, address as `0x${string}`, chain?.LPNFTE as `0x${string}`, [BigInt(0),BigInt(0),BigInt(0),BigInt(0)]]
   })
 
   const { writeAsync, error, data, isLoading } = useContractWrite(config)
 
-  const { writeAsync: approveWethAsync, isLoading: isLoadingWethApproval } = useContractWrite<typeof ERC20Abi, 'approve', undefined>({
+  const { writeAsync: approveWethAsync, isLoading: isLoadingWethApproval } = useContractWrite({
     address: WETH_ADDRESS as `0x${string}`,
     abi: ERC20Abi,
     functionName: 'approve',
     args:  [chain?.LPNFTE as `0x${string}`, MaxUint256],
   })
 
-  const { writeAsync: approveNFTEAsync, isLoading: isLoadingNFTEApproval } = useContractWrite<typeof ERC20Abi, 'approve', undefined>({
+  const { writeAsync: approveNFTEAsync, isLoading: isLoadingNFTEApproval } = useContractWrite({
     address: chain?.address as `0x${string}`,
     abi: ERC20Abi,
     functionName: 'approve',
     args:  [chain?.LPNFTE as `0x${string}`, MaxUint256],
   })
 
-  const { writeAsync: wrapEthAsync, isLoading: isLoadingWrapEth } = useContractWrite<typeof Erc20Weth, 'deposit', undefined>({
+  const { writeAsync: wrapEthAsync, isLoading: isLoadingWrapEth } = useContractWrite({
     address: WETH_ADDRESS as `0x${string}`,
-    abi: Erc20Weth,
+    abi: ERC20WethAbi,
     functionName: 'deposit',
-    value: wethValue,
-    args: [],
+    value: wethValue
   })
 
   const { isLoading: isLoadingTransaction, isSuccess = true } = useWaitForTransaction({
@@ -178,7 +187,7 @@ const PoolPage = () => {
   }
 
   const handleSetMaxValue = () => {
-    handleSetValue(formatBN(wethBalance?.data?.value, 8, 18) || '0')
+    handleSetValue(formatBN(wethBalance?.data?.value, 6, 18) || '0')
   }
 
   const handleSetNFTEValue = (val: string) => {
@@ -192,7 +201,7 @@ const PoolPage = () => {
   }
 
   const handleSetMaxNFTEValue = () => {
-    handleSetNFTEValue(formatBN(nfteBalance?.data?.value, 8, 18) || '0')
+    handleSetNFTEValue(formatBN(nfteBalance?.data?.value, 6, 18) || '0')
   }
 
   const disableButton = isZeroValue || loading || (!!preparedError && !requireNFTEAllowance && !requireWethAllowance) || isLoading || isLoadingWethApproval || isLoadingNFTEApproval || isLoadingWrapEth || isLoadingTransaction
@@ -382,7 +391,7 @@ const PoolPage = () => {
                 justify="between"
               >
                 <Text style="body3">Amount</Text>
-                <Text style="body3">{`Balance: ${formatBN(wethBalance.data?.value, 8, 18)}`}</Text>
+                <Text style="body3">{`Balance: ${formatBN(wethBalance.data?.value, 6, 18)}`}</Text>
               </Flex>
               <Box
                 css={{
@@ -436,7 +445,7 @@ const PoolPage = () => {
                 justify="between"
               >
                 <Text style="body3">Amount</Text>
-                <Text style="body3">{`Balance: ${formatBN(nfteBalance.data?.value, 8, 18)}`}</Text>
+                <Text style="body3">{`Balance: ${formatBN(nfteBalance.data?.value, 6, 18)}`}</Text>
               </Flex>
               <Box
                 css={{
@@ -500,32 +509,52 @@ const PoolPage = () => {
                 <Text style="body2">{`${nfteLPBalance.data?.formatted} NFTE LP`}</Text>
               </Flex>
             </Flex>
-            {/*<Flex*/}
-            {/*  justify="between"*/}
-            {/*  css={{*/}
-            {/*    p: '14px 16px',*/}
-            {/*    backgroundColor: '$gray2',*/}
-            {/*    borderRadius: 8*/}
-            {/*  }}*/}
-            {/*>*/}
-            {/*  <Text style="body2">Expected to receive</Text>*/}
-            {/*  <Flex*/}
-            {/*    align="center"*/}
-            {/*    css={{*/}
-            {/*      gap: 5*/}
-            {/*    }}*/}
-            {/*  >*/}
-            {/*    <CryptoCurrencyIcon*/}
-            {/*      address={chain?.LPNFTE as `0x${string}`}*/}
-            {/*      chainId={chain?.id}*/}
-            {/*      css={{*/}
-            {/*        width: 20,*/}
-            {/*        height: 20*/}
-            {/*      }}*/}
-            {/*    />*/}
-            {/*    <Text style="body2">{`${valueNFTE}  NFTE LP`}</Text>*/}
-            {/*  </Flex>*/}
-            {/*</Flex>*/}
+            <Flex
+              justify="between"
+              css={{
+                px: 16,
+              }}
+            >
+              <Text style="body2">Total liquidity providing (In USD)</Text>
+              <Flex
+                align="center"
+                css={{
+                  gap: 5
+                }}
+              >
+                {isLoadingUSDPrice ? (
+                  <LoadingSpinner />
+                ) : (
+                  <Text style="body2">{`$${formatBN(usdPrice?.usdPrice, 4, 6)}`}</Text>
+                )}
+              </Flex>
+            </Flex>
+            <Flex
+              justify="between"
+              css={{
+                p: '14px 16px',
+                backgroundColor: '$gray2',
+                borderRadius: 8
+              }}
+            >
+              <Text style="body2">Expected to receive</Text>
+              <Flex
+                align="center"
+                css={{
+                  gap: 5
+                }}
+              >
+                <CryptoCurrencyIcon
+                  address={chain?.LPNFTE as `0x${string}`}
+                  chainId={chain?.id}
+                  css={{
+                    width: 20,
+                    height: 20
+                  }}
+                />
+                <Text style="body2">{`${formatBN(expectedNFTELP, 8, 18)} NFTE LP`}</Text>
+              </Flex>
+            </Flex>
           </Flex>
           <Button
             disabled={disableButton}

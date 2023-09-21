@@ -26,7 +26,7 @@ import {useMounted} from "hooks";
 import {formatBN} from "utils/numbers";
 import {OFT_CHAINS} from "utils/chains";
 import {ToastContext} from "context/ToastContextProvider";
-import NFTEOFTAbi from 'artifact/NFTEOFTAbi.json'
+import NFTEOFTAbi from 'artifact/NFTEOFTAbi'
 import {hexZeroPad} from "@ethersproject/bytes";
 import {BigNumber} from "@ethersproject/bignumber";
 
@@ -48,8 +48,6 @@ const BridgePage = () => {
   const debouncedPercent = useDebounce(bridgePercent, 500);
   const debouncedValueEth = useDebounce(valueEth, 500);
 
-  const NFTEOFT = NFTEOFTAbi as Abi
-
   const chain = useMemo(() => {
     return OFT_CHAINS.find((chain) => chain.id === fromChainId) || OFT_CHAINS[0];
   }, [fromChainId]);
@@ -58,8 +56,8 @@ const BridgePage = () => {
     return OFT_CHAINS.find((chain) => chain.id === toChainId) || OFT_CHAINS[1];
   }, [toChainId]);
 
-  const { data: minDstGasLookup } = useContractRead<typeof NFTEOFT, 'minDstGasLookup'>({
-    abi: NFTEOFT,
+  const { data: minDstGasLookup } = useContractRead({
+    abi: NFTEOFTAbi,
     address: chain?.address as `0x${string}`,
     functionName: 'minDstGasLookup',
     args: [
@@ -72,35 +70,29 @@ const BridgePage = () => {
     enabled: !!chain && !!toChain && !!address,
   })
 
-  const { data: nfteData } : { data: any } = useContractReads<
-    [
-      ContractFunctionConfig<typeof NFTEOFT, 'balanceOf', 'view'>,
-      ContractFunctionConfig<typeof NFTEOFT, 'estimateSendFee', 'view'>
-    ],
-    true
-  >({
+  const { data: nfteData } : { data: any } = useContractReads({
     contracts: [
       {
-        abi: NFTEOFT,
+        abi: NFTEOFTAbi,
         address: chain.address as `0x${string}`,
         chainId: chain.id,
         functionName: 'balanceOf',
         args: [address as `0x${string}`],
       },
       {
-        abi: NFTEOFT,
+        abi: NFTEOFTAbi,
         address: chain.address as `0x${string}`,
         functionName: 'estimateSendFee',
         chainId: chain.id,
         args: [
           toChain.lzId,
-          hexZeroPad(address || '0x', 32),
+          hexZeroPad(address || '0x', 32) as `0x${string}`,
           BigInt(parseEther(debouncedValueEth || '0').toString()),
           false,
           solidityPacked(
             ['uint16', 'uint256'],
             [1, BigInt(minDstGasLookup ? minDstGasLookup.toString() : 200000)]
-          )
+          ) as `0x${string}`
         ],
       }
     ],
@@ -125,11 +117,15 @@ const BridgePage = () => {
     functionName: 'sendFrom',
     value: BigInt(BigNumber.from(estimateFee?.result?.[0]?.toString() || 300000000000000).div(100).mul(200).toString()),
     args: [
-      address || '0x',
+      address as `0x${string}`,
       toChain.lzId,
-      hexZeroPad(address || '0x', 32),
+      hexZeroPad(address || '0x', 32) as `0x${string}`,
       BigInt(parseEther(debouncedValueEth || '0').toString()),
-      [address, zeroAddress, '0x']
+      {
+        refundAddress: address as `0x${string}`,
+        zroPaymentAddress: zeroAddress,
+        adapterParams: '0x'
+      }
     ],
   })
 

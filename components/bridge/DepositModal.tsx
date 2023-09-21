@@ -31,8 +31,6 @@ import LoadingSpinner from "../common/LoadingSpinner";
 import {AddressZero} from "@ethersproject/constants";
 import {FullscreenModal} from "../common/FullscreenModal";
 
-import ERC721Abi from 'artifact/ERC721Abi.json'
-
 type DepositProps = {
   fromChain: number
   l1Address: `0x${string}`

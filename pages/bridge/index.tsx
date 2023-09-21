@@ -27,7 +27,7 @@ import {useMounted} from "hooks";
 import {formatBN} from "utils/numbers";
 import {OFT_CHAINS} from "utils/chains";
 import {ToastContext} from "context/ToastContextProvider";
-import NFTEOFTAbi from 'artifact/NFTEOFTAbi.json'
+import NFTEOFTAbi from 'artifact/NFTEOFTAbi'
 import {hexZeroPad} from "@ethersproject/bytes";
 import {BigNumber} from "@ethersproject/bignumber";
 
@@ -120,7 +120,7 @@ const BridgePage = () => {
     }
   }, [debouncedPercent])
 
-  const { writeAsync, data, isLoading } = useContractWrite<typeof NFTEOFTAbi, 'sendFrom', undefined>({
+  const { writeAsync, data, isLoading } = useContractWrite({
     address: chain.address as `0x${string}`,
     abi: NFTEOFTAbi,
     functionName: 'sendFrom',
@@ -128,9 +128,13 @@ const BridgePage = () => {
     args: [
       address || '0x',
       toChain.lzId,
-      hexZeroPad(address || '0x', 32),
+      hexZeroPad(address || '0x', 32) as `0x${string}`,
       BigInt(parseEther(debouncedValueEth || '0').toString()),
-      [address, zeroAddress, '0x']
+      {
+        refundAddress: address as `0x${string}`,
+        zroPaymentAddress: zeroAddress,
+        adapterParams: '0x'
+      }
     ],
   })
 

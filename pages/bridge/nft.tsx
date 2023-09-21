@@ -34,7 +34,7 @@ import {
 import {DepositModal} from "components/bridge/DepositModal";
 import useBridgeCollection from "hooks/useBridgeCollection";
 import dayjs from "dayjs";
-import ERC721Abi from "artifact/ERC721Abi.json";
+import ERC721Abi from "artifact/ERC721Abi";
 import L2ERC721BridgeAbi from "artifact/L2ERC721BridgeAbi.json";
 import LoadingSpinner from "components/common/LoadingSpinner";
 import {FullscreenModal} from "components/common/FullscreenModal";
@@ -105,7 +105,7 @@ const NFTBridgePage = () => {
     abi: ERC721Abi,
     address: contract as `0x${string}`,
     functionName: 'isApprovedForAll',
-    args: [address, bridge?.proxy],
+    args: [address as `0x${string}`, bridge?.proxy],
   })
 
   const { writeAsync: approveAll, error: approvalError } = useContractWrite({
