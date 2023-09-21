@@ -8,7 +8,11 @@ const questEntryListHandler = async (req: NextApiRequest, res: NextApiResponse) 
   const { wallet } = req.query;
 
   if (!wallet) {
-
+    return res.json({
+      status: 'ERROR',
+      code: 408,
+      message: 'Invalid session, please reconnect your wallet'
+    })
   }
 
   const accountData = await account.findOne({

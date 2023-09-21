@@ -34,8 +34,10 @@ import UniProxyAbi from 'artifact/UniProxyAbi'
 import ERC20OracleAbi from 'artifact/ERC20OracleAbi'
 import useUSDAndNativePrice from "../../hooks/useUSDAndNativePrice";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
+import useMerklReward from "../../hooks/useMerklReward";
 
 const WETH_ADDRESS = '0x82af49447d8a07e3bd95bd0d56f35241523fbab1'
+const POOL_ADDRESS = '0x17ee09e7a2cc98b0b053b389a162fc86a67b9407'
 
 const PoolPage = () => {
   const mounted = useMounted()
@@ -49,6 +51,8 @@ const PoolPage = () => {
   const publicClient = getPublicClient()
   const {addToast} = useContext(ToastContext)
   const chain = OFT_CHAINS.find(p => p.id === arbitrum.id)
+  const { data: merklData } = useMerklReward(arbitrum.id, address)
+  const poolData = merklData?.pools[POOL_ADDRESS]
 
   const ethBalance = useBalance({
     address,
