@@ -104,11 +104,6 @@ const PoolPage = () => {
   const requireNFTEAllowance = useMemo(() => BigInt(nfteAllowance?.result || 0) < nfteValue, [nfteAllowance, nfteValue]);
   const isNeedWethWrap = useMemo(() => BigInt(wethBalance?.data?.value || 0) < wethValue && BigInt(ethBalance.data?.value || 0) >= wethValue,  [wethValue, ethBalance, wethBalance])
 
-  const calculateExpectedLP = async (wethDeposit: bigint, nfteDeposit: bigint) => {
-    const twoHoursAgo = 60 * 60 * 2
-    setExpectedNFTELP(wethDeposit * BigInt(2))
-  }
-
   useDebouncedEffect(() => {
     if (changedValue === '') {
       return;
@@ -126,14 +121,15 @@ const PoolPage = () => {
           functionName: 'getDepositAmount',
           args: [chain?.LPNFTE as `0x${string}`, isWethChange ? WETH_ADDRESS : chain?.address as `0x${string}`, value]
         }).then(async (res) => {
-          const val = formatEther((BigInt(res[1] - res[0]) / BigInt(2)) + BigInt(res[0]), 'wei')
+          const otherVal = (BigInt(res[1] - res[0]) / BigInt(2)) + BigInt(res[0])
+          const val = formatEther(otherVal, 'wei')
           if (isWethChange) {
             setValueNFTE(val)
           } else {
             setValueWEth(val)
           }
 
-          await calculateExpectedLP(wethValue, nfteValue)
+          setExpectedNFTELP((isWethChange ? wethValue : otherVal) * BigInt(2))
           setChangedValue('')
           setLoading(false)
         })
@@ -441,12 +437,6 @@ const PoolPage = () => {
                 gap: 5,
               }}
             >
-              <Flex
-                justify="between"
-              >
-                <Text style="body3">Amount</Text>
-                <Text style="body3">{`Balance: ${formatBN(nfteBalance.data?.value, 6, 18)}`}</Text>
-              </Flex>
               <Box
                 css={{
                   position: 'relative'
@@ -482,6 +472,12 @@ const PoolPage = () => {
                   }}
                 />
               </Box>
+              <Flex
+                justify="between"
+              >
+                <Text style="body3">Amount</Text>
+                <Text style="body3">{`Balance: ${formatBN(nfteBalance.data?.value, 6, 18)}`}</Text>
+              </Flex>
             </Flex>
             <Flex
               justify="between"
@@ -525,7 +521,7 @@ const PoolPage = () => {
                 {isLoadingUSDPrice ? (
                   <LoadingSpinner />
                 ) : (
-                  <Text style="body2">{`$${formatBN(usdPrice?.usdPrice, 4, 6)}`}</Text>
+                  <Text style="body2">{`$${formatBN(usdPrice?.usdPrice, 2, 6)}`}</Text>
                 )}
               </Flex>
             </Flex>
