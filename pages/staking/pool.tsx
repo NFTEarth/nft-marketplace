@@ -202,8 +202,6 @@ const PoolPage = () => {
       return 'Connect Wallet'
     }
 
-    console.log(isNeedWethWrap, requireNFTEAllowance, requireWethAllowance, preparedError)
-
     if (isNeedWethWrap) {
       return 'Wrap ETH'
     }
