@@ -15,7 +15,7 @@ const StakingList: FC<Props> = (props) => {
 
   return (
     <>
-      {parseInt(nfteLPBalance.toString()) > 0 ? (
+      {BigInt(nfteLPBalance) > BigInt(0) ? (
         <Button
           as={Link}
           href="/staking/arbitrum"

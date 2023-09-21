@@ -75,7 +75,7 @@ const PoolPage = () => {
     price: expectedNFTELP
   })
 
-  const isZeroValue = parseEther(`${+valueWEth}`) <= BigInt(0)
+  const isZeroValue = parseEther(valueWEth as `${number}`, 'wei', ) <= BigInt(0)
 
   const { data: allowanceData, refetch: refetchAllowance } = useContractReads({
     contracts: [
@@ -98,8 +98,8 @@ const PoolPage = () => {
   })
 
   const [wethAllowance, nfteAllowance] = allowanceData || [] as any
-  const wethValue = useMemo(() => parseEther(`${+valueWEth}` || '0'), [valueWEth])
-  const nfteValue = useMemo(() => parseEther(`${+valueNFTE}` || '0'), [valueNFTE])
+  const wethValue = useMemo(() => parseEther(valueWEth as `${number}`), [valueWEth])
+  const nfteValue = useMemo(() => parseEther(valueNFTE as `${number}`), [valueNFTE])
   const requireWethAllowance = useMemo(() =>BigInt(wethAllowance?.result || 0) < wethValue, [wethAllowance, wethValue])
   const requireNFTEAllowance = useMemo(() => BigInt(nfteAllowance?.result || 0) < nfteValue, [nfteAllowance, nfteValue]);
   const isNeedWethWrap = useMemo(() => BigInt(wethBalance?.data?.value || 0) < wethValue && BigInt(ethBalance.data?.value || 0) >= wethValue,  [wethValue, ethBalance, wethBalance])
@@ -121,7 +121,7 @@ const PoolPage = () => {
           functionName: 'getDepositAmount',
           args: [chain?.LPNFTE as `0x${string}`, isWethChange ? WETH_ADDRESS : chain?.address as `0x${string}`, value]
         }).then(async (res) => {
-          const otherVal = (BigInt(res[1] - res[0]) / BigInt(2)) + BigInt(res[0])
+          const otherVal = ((BigInt(res[1]) - BigInt(res[0])) / BigInt(2)) + BigInt(res[0])
           const val = formatEther(otherVal, 'wei')
           if (isWethChange) {
             setValueNFTE(val)
@@ -130,6 +130,9 @@ const PoolPage = () => {
           }
 
           setExpectedNFTELP((isWethChange ? wethValue : otherVal) * BigInt(2))
+          setChangedValue('')
+          setLoading(false)
+        }).catch(() => {
           setChangedValue('')
           setLoading(false)
         })
@@ -200,7 +203,7 @@ const PoolPage = () => {
     handleSetNFTEValue(formatBN(nfteBalance?.data?.value, 6, 18) || '0')
   }
 
-  const disableButton = isZeroValue || loading || (!!preparedError && !requireNFTEAllowance && !requireWethAllowance) || isLoading || isLoadingWethApproval || isLoadingNFTEApproval || isLoadingWrapEth || isLoadingTransaction
+  const disableButton = isZeroValue || loading || (!!preparedError && !requireNFTEAllowance && !requireWethAllowance && !isNeedWethWrap) || isLoading || isLoadingWethApproval || isLoadingNFTEApproval || isLoadingWrapEth || isLoadingTransaction
 
   const buttonText = useMemo(() => {
     if (!address) {

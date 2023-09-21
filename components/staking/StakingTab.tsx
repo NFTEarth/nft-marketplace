@@ -56,7 +56,7 @@ const StakingTab: FC<Props> = (props) => {
   const timeStamp = parseInt(`${depositor?.lockEndTimestamp || 0}`) * 1000;
   const newTime = timeStamp > 0 && timeStamp > (new Date()).getTime() ? new Date(timeStamp) : new Date()
   const timePlusDuration = roundToWeek(dayjs(newTime).add(duration, 'months'))
-  const isZeroValue = parseEther(`${+value}`) <= BigInt(0)
+  const isZeroValue = parseEther(value as `${number}`) <= BigInt(0)
   const isZeroDuration = duration < 1
   const hasLockedBalance = (BigInt(depositor?.lockedBalance || 0)) > BigInt(0)
 
@@ -68,7 +68,7 @@ const StakingTab: FC<Props> = (props) => {
     args: [address as `0x${string}`, chain?.xNFTE as `0x${string}`],
   })
 
-  const requireAllowance = BigInt(allowance || 0) < parseEther(`${+value}` || '0');
+  const requireAllowance = BigInt(allowance || 0) < parseEther(value as `${number}`);
 
   const stakingArgs = useMemo(() => {
     if ((depositor?.lockedBalance || BigInt(0)) > BigInt(0)) {
@@ -76,7 +76,7 @@ const StakingTab: FC<Props> = (props) => {
         return {
           functionName: 'increase_amount_and_time',
           args:[
-            parseEther(`${+value}` || '0'),
+            parseEther(value as `${number}`),
             Math.round(timePlusDuration.toDate().getTime() / 1000)
           ]
         }
@@ -95,7 +95,7 @@ const StakingTab: FC<Props> = (props) => {
         return {
           functionName: 'increase_amount',
           args:[
-            parseEther(`${+value}` || '0'),
+            parseEther(value  as `${number}`),
           ]
         }
       }
@@ -104,7 +104,7 @@ const StakingTab: FC<Props> = (props) => {
     return {
       functionName: 'create_lock',
       args: [
-        parseEther(`${+value}` || '0'),
+        parseEther(value as `${number}`),
         Math.round(timePlusDuration.toDate().getTime() / 1000)
       ]
     }
@@ -118,7 +118,7 @@ const StakingTab: FC<Props> = (props) => {
   })
 
   const { writeAsync, error, data, isLoading } = useContractWrite(config)
-  const valueN = parseEther(`${+value}` || '0')
+  const valueN = parseEther(value  as `${number}`)
   const { writeAsync: approveAsync, isLoading: isLoadingApproval } = useContractWrite({
     address: chain?.LPNFTE as `0x${string}`,
     abi: ERC20Abi,
