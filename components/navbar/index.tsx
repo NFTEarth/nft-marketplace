@@ -178,11 +178,11 @@ const Navbar = () => {
               }}
             >
               <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faArrowsLeftRight} width={20} height={20}/>
-              Swap NFTE
+              Buy NFTE
             </DropdownMenuItem>
             <DropdownMenuItem
               as={Link}
-              href="https://merkl.angle.money"
+              href="https://app.gamma.xyz/vault/uni/arbitrum/details/nfte-weth-10000-wide"
               target="_blank"
               css={{
                 display: 'flex',
@@ -193,7 +193,7 @@ const Navbar = () => {
               }}
             >
               <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faGift} width={20} height={20}/>
-              LP Rewards
+              Create NFTE LP
             </DropdownMenuItem>
             <DropdownMenuItem
               as={Link}
