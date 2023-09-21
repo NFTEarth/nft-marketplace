@@ -566,6 +566,20 @@ const PoolPage = () => {
             {buttonText}
           </Button>
         </Flex>
+        <Flex
+          direction="column"
+          css={{
+            p: '1rem 1rem 0.75rem 1rem',
+            px: 16,
+            borderRadius: 8,
+            textAlign: 'center',
+            '@md': {
+              width: 500
+            }
+          }}
+        >
+          <Text style="body3">Claim your rewards without staking LP positions. If you are providing to more than one LP position, claiming will receive rewards for ALL your positions per network. Rewards are distributed in regular intervals. <Text style="body3" as={Link} css={{ fontWeight: 'bold', '&:hover': { textDecoration: 'underline' } }} href="https://docs.angle.money/side-products/merkl" target="_blank">Learn More</Text></Text>
+        </Flex>
       </Flex>
     </Layout>
   )

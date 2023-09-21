@@ -206,7 +206,7 @@ const Navbar = () => {
               }}
             >
               <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faDollarSign} width={20} height={20}/>
-              {`xNFTE`}
+              {`Staking Earn`}
             </DropdownMenuItem>
           </Dropdown>
           <Dropdown
