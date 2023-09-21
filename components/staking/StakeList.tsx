@@ -5,13 +5,15 @@ import {arbitrum} from "viem/chains";
 import {Box, Button, CryptoCurrencyIcon, Flex, Text} from "../primitives";
 
 import {formatBN} from "utils/numbers";
+import dayjs from "dayjs";
 
 type Props = {
   lockedBalance: bigint
+  lockEndTimestamp: bigint
 }
 
 const StakeList : FC<Props> = (props) => {
-  const { lockedBalance } = props
+  const { lockedBalance, lockEndTimestamp } = props
 
   return (
     <>
@@ -82,10 +84,23 @@ const StakeList : FC<Props> = (props) => {
             </Flex>
           </Flex>
           <Flex
-            direction="column"
+            justify="between"
+            css={{
+              width: '100%'
+            }}
           >
-            <Text style="body3">Locked Balance</Text>
-            <Text style="subtitle1">{formatBN(lockedBalance || BigInt(0), 2, 18, { notation: "standard" })}</Text>
+            <Flex
+              direction="column"
+            >
+              <Text style="body3">Locked Balance</Text>
+              <Text style="subtitle1">{formatBN(lockedBalance || BigInt(0), 2, 18, { notation: "standard" })}</Text>
+            </Flex>
+            <Flex
+              direction="column"
+            >
+              <Text style="body3">Days Left</Text>
+              <Text style="subtitle1">{dayjs(+`${lockEndTimestamp}` * 1000).diff(dayjs(), 'days')}</Text>
+            </Flex>
           </Flex>
         </Button>
       ) : (

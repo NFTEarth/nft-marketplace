@@ -250,10 +250,15 @@ const StakingPage = () => {
                   }}
                 >
                   {activeTab === 'stakes' && (
-                    <StakeList lockedBalance={locked?.result?.[0] || BigInt(0)} />
+                    <StakeList
+                      lockedBalance={locked?.result?.[0] || BigInt(0)}
+                      lockEndTimestamp={locked?.result?.[1] || BigInt(0)}
+                    />
                   )}
                   {activeTab === 'staking' && (
-                    <StakingList nfteLPBalance={nfteLPBalance?.result || BigInt(0)}/>
+                    <StakingList
+                      nfteLPBalance={nfteLPBalance?.result || BigInt(0)}
+                    />
                   )}
                   {activeTab === 'claim' && (
                     <ClaimList />
