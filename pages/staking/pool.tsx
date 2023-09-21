@@ -389,7 +389,7 @@ const PoolPage = () => {
               <Flex
                 justify="between"
               >
-                <Text style="body3">Amount</Text>
+                <Text style="body3">WETH Amount</Text>
                 <Text style="body3">{`Balance: ${formatBN(wethBalance.data?.value, 6, 18)}`}</Text>
               </Flex>
               <Box
@@ -478,7 +478,7 @@ const PoolPage = () => {
               <Flex
                 justify="between"
               >
-                <Text style="body3">Amount</Text>
+                <Text style="body3">NFTE Amount</Text>
                 <Text style="body3">{`Balance: ${formatBN(nfteBalance.data?.value, 6, 18)}`}</Text>
               </Flex>
             </Flex>
