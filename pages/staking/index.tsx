@@ -82,7 +82,7 @@ const StakingPage = () => {
   const stakingTitle = useMemo(() => {
     const APY = '78.45';
 
-    if (nfteLPBalance?.result === 0n) {
+    if (BigInt(nfteLPBalance?.result || 0) === BigInt(0) && BigInt(locked?.result?.[0] || 0) === BigInt(0)) {
       return (
         <Flex
           direction="column"
@@ -113,11 +113,7 @@ const StakingPage = () => {
           <Text style="h4" color="primary">
             {`${formatBN(nfteLPBalance?.result || 0n, 2, 18, {})} LP NFTE`}
           </Text>
-          {` available to stake at `}
-          <Text style="h4" color="primary">
-            {`${APY}% APY`}
-          </Text>
-          .
+          {` available to stake.`}
         </Text>
         <Text css={{ maxWidth: '75%' }}>{`xNFTE holders control protocol governance and earn all revenue sharing from the DAO. NFTEarth is governed entirely by xNFTE holders.`}</Text>
         <Flex css={{ mt: 20}}>
