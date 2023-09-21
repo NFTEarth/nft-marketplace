@@ -17,9 +17,9 @@ import { AccountSidebar } from 'components/navbar/AccountSidebar'
 import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
-  faChartBar,
+  faDollarSign,
   faChevronDown,
-  faGift,
+  faDroplet,
   faArrowsLeftRight,
   faBridge
 } from "@fortawesome/free-solid-svg-icons";
@@ -182,8 +182,7 @@ const Navbar = () => {
             </DropdownMenuItem>
             <DropdownMenuItem
               as={Link}
-              href="https://app.gamma.xyz/vault/uni/arbitrum/details/nfte-weth-10000-wide"
-              target="_blank"
+              href="/staking/pool"
               css={{
                 display: 'flex',
                 py: '$3',
@@ -192,8 +191,8 @@ const Navbar = () => {
                 gap: 10
               }}
             >
-              <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faGift} width={20} height={20}/>
-              Create NFTE LP
+              <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faDroplet} width={20} height={20}/>
+              Get NFTE LP
             </DropdownMenuItem>
             <DropdownMenuItem
               as={Link}
@@ -206,7 +205,7 @@ const Navbar = () => {
                 gap: 10
               }}
             >
-              <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faChartBar} width={20} height={20}/>
+              <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faDollarSign} width={20} height={20}/>
               {`xNFTE`}
             </DropdownMenuItem>
           </Dropdown>

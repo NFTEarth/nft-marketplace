@@ -197,7 +197,7 @@ const HamburgerMenu = () => {
                   Buy NFTE
                 </Text>
               </Link>
-              <Link href="https://app.gamma.xyz/vault/uni/arbitrum/details/nfte-weth-10000-wide" target="_blank" legacyBehavior>
+              <Link href="/staking/pool" legacyBehavior>
                 <Text
                   style="subtitle1"
                   css={{
@@ -207,7 +207,7 @@ const HamburgerMenu = () => {
                     pt: '24px',
                   }}
                 >
-                  Create NFTE LP
+                  Get NFTE LP
                 </Text>
               </Link>
               <Link href="/staking" legacyBehavior>
