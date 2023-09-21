@@ -519,7 +519,7 @@ const PoolPage = () => {
                 }}
               >
                 {isLoadingUSDPrice ? (
-                  <LoadingSpinner />
+                  <LoadingSpinner css={{ width: 20, height: 20,  border: '2px solid transparent', }}/>
                 ) : (
                   <Text style="body2">{`$${formatBN(usdPrice?.usdPrice, 2, 6)}`}</Text>
                 )}
