@@ -18,7 +18,7 @@ import { useNetwork } from 'wagmi'
 type ToastType = {
   id?: string
   title?: string
-  description?: string
+  description?: string | ReactNode
   action?: ReactNode
   status?: 'success' | 'error'
 }

@@ -1,6 +1,6 @@
 import {FC, useCallback, useContext, useMemo} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCircleInfo, faLock} from "@fortawesome/free-solid-svg-icons";
+import {faCircleInfo, faExternalLink, faLock} from "@fortawesome/free-solid-svg-icons";
 import {
   parseEther,
   formatEther
@@ -11,7 +11,8 @@ import {
   useAccount,
   useContractRead,
   useContractWrite,
-  useNetwork, usePrepareContractWrite, UsePrepareContractWriteConfig,
+  useNetwork,
+  usePrepareContractWrite,
   useSwitchNetwork,
   useWaitForTransaction,
 } from "wagmi";
@@ -31,6 +32,8 @@ import ERC20Abi from "artifact/ERC20Abi";
 import XNFTEAbi from 'artifact/XNFTEAbi'
 import {getPublicClient} from "@wagmi/core";
 import {roundToWeek} from "../../utils/round";
+import Link from "next/link";
+import { arbitrum } from "viem/chains";
 
 type Props = {
   APY: number
@@ -201,7 +204,30 @@ const StakingTab: FC<Props> = (props) => {
           addToast?.({
             title: 'Success',
             status: 'success',
-            description: "Staking Success!"
+            description: (
+              <Flex
+                direction="column"
+              >
+                <Text css={{ fontSize: 'inherit' }}>{`Staking Success!`}</Text>
+                <Link
+                  href={`${arbitrum.blockExplorers.etherscan.url}/tx/${data?.hash}`}
+                  target="_blank"
+                  style={{
+                    marginTop: 20
+                  }}
+                >
+                  {`See Receipt`}
+                  <FontAwesomeIcon
+                    icon={faExternalLink}
+                    width={15}
+                    height={15}
+                    style={{
+                      marginLeft: 10
+                    }}
+                  />
+                </Link>
+              </Flex>
+            )
           })
           onSuccess()
         })

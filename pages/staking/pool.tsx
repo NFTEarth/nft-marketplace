@@ -1,4 +1,4 @@
-import {useCallback, useContext, useMemo, useState} from "react";
+import {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {
   useAccount,
   useBalance,
@@ -9,7 +9,7 @@ import {
 } from "wagmi";
 import { formatEther, parseEther, parseUnits} from "viem";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faSquarePlus} from "@fortawesome/free-solid-svg-icons";
+import {faExternalLink, faSquarePlus} from "@fortawesome/free-solid-svg-icons";
 import {useConnectModal} from "@rainbow-me/rainbowkit";
 import {useDebouncedEffect} from "@react-hookz/web";
 import {getPublicClient} from "@wagmi/core";
@@ -22,7 +22,7 @@ import {Box, Button, CryptoCurrencyIcon, Flex, Text, Tooltip} from "components/p
 import NumericalInput from "components/bridge/NumericalInput";
 
 import {ToastContext} from "context/ToastContextProvider";
-import {useMounted} from "hooks";
+import {useMarketplaceChain, useMounted} from "hooks";
 
 import {OFT_CHAINS} from "utils/chains";
 import {parseError} from "utils/error";
@@ -51,8 +51,6 @@ const PoolPage = () => {
   const publicClient = getPublicClient()
   const {addToast} = useContext(ToastContext)
   const chain = OFT_CHAINS.find(p => p.id === arbitrum.id)
-  const { data: merklData } = useMerklReward(arbitrum.id, address)
-  const poolData = merklData?.pools[POOL_ADDRESS]
 
   const ethBalance = useBalance({
     address,
@@ -291,7 +289,30 @@ const PoolPage = () => {
           addToast?.({
             title: 'Success',
             status: 'success',
-            description: "Add Liquidity Success!"
+            description: (
+              <Flex
+                direction="column"
+              >
+                <Text css={{ fontSize: 'inherit' }}>{`Add Liquidity Success!`}</Text>
+                <Link
+                  href={`${arbitrum.blockExplorers.etherscan.url}/tx/${data?.hash}`}
+                  target="_blank"
+                  style={{
+                    marginTop: 20
+                  }}
+                >
+                  {`See Receipt`}
+                  <FontAwesomeIcon
+                    icon={faExternalLink}
+                    width={15}
+                    height={15}
+                    style={{
+                      marginLeft: 10
+                    }}
+                  />
+                </Link>
+              </Flex>
+            )
           })
         })
     } catch (e: any) {
