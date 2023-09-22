@@ -200,7 +200,7 @@ const StakingTab: FC<Props> = (props) => {
       }
 
       await writeAsync?.()
-        .then(() => {
+        .then((tx) => {
           addToast?.({
             title: 'Success',
             status: 'success',
@@ -210,7 +210,7 @@ const StakingTab: FC<Props> = (props) => {
               >
                 <Text css={{ fontSize: 'inherit' }}>{`Staking Success!`}</Text>
                 <Link
-                  href={`${arbitrum.blockExplorers.etherscan.url}/tx/${data?.hash}`}
+                  href={`${arbitrum.blockExplorers.etherscan.url}/tx/${tx?.hash}`}
                   target="_blank"
                   style={{
                     marginTop: 20

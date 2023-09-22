@@ -41,7 +41,7 @@ const ClaimList = () => {
   const handleClaimReward = async () => {
     try {
       await writeAsync?.()
-        .then(async () => {
+        .then(async (tx) => {
           await refetchPrepareContract()
           addToast?.({
             title: 'Success',
@@ -52,7 +52,7 @@ const ClaimList = () => {
               >
                 <Text css={{ fontSize: 'inherit' }}>{`Claim Reward Success!`}</Text>
                 <Link
-                  href={`${arbitrum.blockExplorers.etherscan.url}/tx/${data?.hash}`}
+                  href={`${arbitrum.blockExplorers.etherscan.url}/tx/${tx?.hash}`}
                   target="_blank"
                   style={{
                     marginTop: 20

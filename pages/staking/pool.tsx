@@ -285,7 +285,7 @@ const PoolPage = () => {
       }
 
       await writeAsync?.()
-        .then(() => {
+        .then((tx) => {
           addToast?.({
             title: 'Success',
             status: 'success',
@@ -295,7 +295,7 @@ const PoolPage = () => {
               >
                 <Text css={{ fontSize: 'inherit' }}>{`Add Liquidity Success!`}</Text>
                 <Link
-                  href={`${arbitrum.blockExplorers.etherscan.url}/tx/${data?.hash}`}
+                  href={`${arbitrum.blockExplorers.etherscan.url}/tx/${tx?.hash}`}
                   target="_blank"
                   style={{
                     marginTop: 20
