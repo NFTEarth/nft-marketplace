@@ -606,7 +606,7 @@ const PoolPage = () => {
             }
           }}
         >
-          <Text style="body3">Add liquidity to the NFTE-WETH LP pool. Lock up the resulting LP token xNFTE-WETH. The longer you lock (1 year max), the more xNFTE you get. <Text style="body3" as={Link} css={{ fontWeight: 'bold', '&:hover': { textDecoration: 'underline' } }} href="https://docs.nftearth.exchange/nfte-token/xnfte-and-nfte-staking" target="_blank">Learn More about xNFTE</Text></Text>
+          <Text style="body3">Add liquidity to the NFTE-WETH liquidity pool. Lock up the resulting LP token NFTE-WETH (NFTE LP). The longer you lock (1 year max), the more xNFTE you get. <Text style="body3" as={Link} css={{ fontWeight: 'bold', '&:hover': { textDecoration: 'underline' } }} href="https://docs.nftearth.exchange/nfte-token/xnfte-and-nfte-staking" target="_blank">Learn More about xNFTE</Text></Text>
         </Flex>
       </Flex>
     </Layout>
