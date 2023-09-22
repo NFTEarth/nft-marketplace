@@ -173,7 +173,7 @@ const StakingTab: FC<Props> = (props) => {
   }, [address, isZeroValue, isZeroDuration, totalDays, totalValue, preparedError, requireAllowance]);
 
   const votingPower = useMemo(() => {
-    return (+formatEther(totalValue) / 0.01) / 12 * totalMonths
+    return Math.round(Math.round(+formatEther(totalValue) * 12) / totalMonths)
   }, [totalValue, totalMonths])
 
   const disableButton = ((isZeroValue || isZeroDuration) && !depositor?.lockedBalance) || (!!preparedError && !requireAllowance) || isLoading || isLoadingApproval || isLoadingTransaction
