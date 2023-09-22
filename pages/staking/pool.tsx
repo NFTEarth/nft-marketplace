@@ -85,13 +85,13 @@ const PoolPage = () => {
         abi:  ERC20Abi,
         address: WETH_ADDRESS as `0x${string}`,
         functionName:  'allowance',
-        args: [address as `0x${string}`, chain?.LPNFTE as `0x${string}`],
+        args: [address as `0x${string}`, chain?.uniProxy as `0x${string}`],
       },
       {
         abi:  ERC20Abi,
         address: chain?.address as `0x${string}`,
         functionName:  'allowance',
-        args: [address as `0x${string}`, chain?.LPNFTE as `0x${string}`],
+        args: [address as `0x${string}`, chain?.uniProxy as `0x${string}`],
       }
     ],
     watch: false,
@@ -155,14 +155,14 @@ const PoolPage = () => {
     address: WETH_ADDRESS as `0x${string}`,
     abi: ERC20Abi,
     functionName: 'approve',
-    args:  [chain?.LPNFTE as `0x${string}`, MaxUint256],
+    args:  [chain?.uniProxy as `0x${string}`, MaxUint256],
   })
 
   const { writeAsync: approveNFTEAsync, isLoading: isLoadingNFTEApproval } = useContractWrite({
     address: chain?.address as `0x${string}`,
     abi: ERC20Abi,
     functionName: 'approve',
-    args:  [chain?.LPNFTE as `0x${string}`, MaxUint256],
+    args:  [chain?.uniProxy as `0x${string}`, MaxUint256],
   })
 
   const { writeAsync: wrapEthAsync, isLoading: isLoadingWrapEth } = useContractWrite({
