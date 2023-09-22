@@ -515,7 +515,7 @@ const PoolPage = () => {
                 borderRadius: 8
               }}
             >
-              <Text style="body2">Your Current xNFTE/WETH Balance</Text>
+              <Text style="body2">Your Current Balance</Text>
               <Flex
                 align="center"
                 css={{
@@ -530,7 +530,7 @@ const PoolPage = () => {
                     height: 20
                   }}
                 />
-                <Text style="body2">{`${nfteLPBalance.data?.formatted} NFTE LP`}</Text>
+                <Text style="body2">{`${formatBN(nfteLPBalance.data?.value, 6, nfteLPBalance.data?.decimals)} NFTE LP`}</Text>
               </Flex>
             </Flex>
             <Flex
