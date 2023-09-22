@@ -363,7 +363,7 @@ const PoolPage = () => {
               color: '$gray10'
             }}
           >{`>`}</Text>
-          <Text style="subtitle1">{`Liquidity Pool`}</Text>
+          <Text style="subtitle1">{`NFTE/WETH Liquidity Pool`}</Text>
         </Flex>
         <Flex
           direction="column"
@@ -515,7 +515,7 @@ const PoolPage = () => {
                 borderRadius: 8
               }}
             >
-              <Text style="body2">Your Existing Balance</Text>
+              <Text style="body2">Your Current xNFTE/WETH Balance</Text>
               <Flex
                 align="center"
                 css={{
@@ -539,7 +539,7 @@ const PoolPage = () => {
                 px: 16,
               }}
             >
-              <Text style="body2">Total liquidity providing (In USD)</Text>
+              <Text style="body2">Total Liquidity Providing (In USD)</Text>
               <Flex
                 align="center"
                 css={{
@@ -561,7 +561,7 @@ const PoolPage = () => {
                 borderRadius: 8
               }}
             >
-              <Text style="body2">Expected to receive</Text>
+              <Text style="body2">Expected To Receive</Text>
               <Flex
                 align="center"
                 css={{
@@ -606,7 +606,7 @@ const PoolPage = () => {
             }
           }}
         >
-          <Text style="body3">Claim your rewards without staking LP positions. If you are providing to more than one LP position, claiming will receive rewards for ALL your positions per network. Rewards are distributed in regular intervals. <Text style="body3" as={Link} css={{ fontWeight: 'bold', '&:hover': { textDecoration: 'underline' } }} href="https://docs.angle.money/side-products/merkl" target="_blank">Learn More</Text></Text>
+          <Text style="body3">Add liquidity to the NFTE-WETH LP pool. Lock up the resulting LP token xNFTE-WETH. The longer you lock (1 year max), the more xNFTE you get. <Text style="body3" as={Link} css={{ fontWeight: 'bold', '&:hover': { textDecoration: 'underline' } }} href="https://docs.nftearth.exchange/nfte-token/xnfte-and-nfte-staking" target="_blank">Learn More about xNFTE</Text></Text>
         </Flex>
       </Flex>
     </Layout>
