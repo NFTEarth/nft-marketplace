@@ -34,7 +34,7 @@ const ClaimList = () => {
     enabled: !!data?.hash,
   })
 
-  console.log('preparedData', preparedData?.result)
+  console.log('preparedData', preparedData)
   const loading = isLoading || isLoadingTransaction;
   const disableButton = isLoading || isLoadingTransaction || isSuccess
 
@@ -84,7 +84,7 @@ const ClaimList = () => {
 
   return (
     <>
-      {!preparedError ? (
+      {(BigInt(preparedData?.result?.[0] || 0) > BigInt(0)) ? (
         <Button
           disabled={disableButton}
           onClick={handleClaimReward}

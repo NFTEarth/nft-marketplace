@@ -65,7 +65,6 @@ const nextConfig = {
         destination: `/${defaultChain.routePrefix}`,
         permanent: false,
       },
-
       {
         source: '/collection/:chain/:collection',
         destination: '/:chain/collection/:collection',
