@@ -455,9 +455,47 @@ const PoolPage = () => {
             </Flex>
             <Flex
               align="center"
-              justify="center"
+              justify="between"
             >
+              <Flex>
+                {wethBalance.data?.value === BigInt(0) && (
+                  <Text
+                    as={Link}
+                    style="body3"
+                    href="https://swap.defillama.com/?chain=arbitrum&to=0x82af49447d8a07e3bd95bd0d56f35241523fbab1"
+                    target="_blank"
+                    css={{
+                      backgroundColor: '$gray8',
+                      borderRadius: 6,
+                      px: 10,
+                      py: 5
+                    }}
+                  >
+                    {`Get WETH Token`}
+                    <FontAwesomeIcon icon={faExternalLink} style={{ height: 12, width: 12, display: 'inline-block', marginLeft: 5 }}/>
+                  </Text>
+                )}
+              </Flex>
               <FontAwesomeIcon icon={faSquarePlus} style={{ height: 40, width: 40}}/>
+              <Flex>
+                {nfteBalance.data?.value === BigInt(0) && (
+                  <Text
+                    as={Link}
+                    style="body3"
+                    href="https://swap.defillama.com/?chain=arbitrum&to=0x51b902f19a56f0c8e409a34a215ad2673edf3284"
+                    target="_blank"
+                    css={{
+                      backgroundColor: '$gray8',
+                      borderRadius: 6,
+                      px: 10,
+                      py: 5
+                    }}
+                  >
+                    {`Get NFTE Token`}
+                    <FontAwesomeIcon icon={faExternalLink} style={{ height: 12, width: 12, display: 'inline-block', marginLeft: 5}}/>
+                  </Text>
+                )}
+              </Flex>
             </Flex>
             <Flex
               direction="column"

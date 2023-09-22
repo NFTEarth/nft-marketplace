@@ -53,11 +53,13 @@ export const AccountSidebar: FC = () => {
       type="button"
       color="gray3"
     >
-      {ensAvatar ? (
+      {profile?.profileImage ? (
+        <img src={profile?.profileImage} style={{ width: 40, height: 40, borderRadius: '50%' }} />
+      ) : (ensAvatar ? (
         <Avatar size="medium" src={ensAvatar} />
       ) : (
         <Jazzicon diameter={40} seed={jsNumberForAddress(address as string)} />
-      )}
+      ))}
     </Button>
   )
 
@@ -119,14 +121,13 @@ export const AccountSidebar: FC = () => {
                     <FontAwesomeIcon icon={faClose} height={16} width={16} />
                   </Button>
                   <Flex align="center" css={{ gap: '$3', ml: '$3' }}>
-                    {ensAvatar ? (
+                    {profile?.profileImage ? (
+                      <img src={profile?.profileImage} style={{ width: 44, height: 44, borderRadius: '50%' }} />
+                    ) : (ensAvatar ? (
                       <Avatar size="medium" src={ensAvatar} />
                     ) : (
-                      <Jazzicon
-                        diameter={44}
-                        seed={jsNumberForAddress(address as string)}
-                      />
-                    )}
+                      <Jazzicon diameter={44} seed={jsNumberForAddress(address as string)} />
+                    ))}
                     <CopyText
                       text={address || ''}
                       css={{ width: 'max-content' }}
