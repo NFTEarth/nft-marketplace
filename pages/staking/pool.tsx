@@ -9,7 +9,7 @@ import {
 } from "wagmi";
 import { formatEther, parseEther, parseUnits} from "viem";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faExternalLink, faSquarePlus} from "@fortawesome/free-solid-svg-icons";
+import {faChevronDown, faExternalLink, faSquarePlus} from "@fortawesome/free-solid-svg-icons";
 import {useConnectModal} from "@rainbow-me/rainbowkit";
 import {useDebouncedEffect} from "@react-hookz/web";
 import {getPublicClient} from "@wagmi/core";
@@ -35,6 +35,8 @@ import ERC20OracleAbi from 'artifact/ERC20OracleAbi'
 import useUSDAndNativePrice from "../../hooks/useUSDAndNativePrice";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import useMerklReward from "../../hooks/useMerklReward";
+import {Collapsible} from "../../components/primitives/Collapsible";
+import {truncateAddress} from "../../utils/truncate";
 
 const WETH_ADDRESS = '0x82af49447d8a07e3bd95bd0d56f35241523fbab1'
 const POOL_ADDRESS = '0x17ee09e7a2cc98b0b053b389a162fc86a67b9407'
@@ -51,6 +53,13 @@ const PoolPage = () => {
   const publicClient = getPublicClient()
   const {addToast} = useContext(ToastContext)
   const chain = OFT_CHAINS.find(p => p.id === arbitrum.id)
+  const addresses: Record<string, string> = {
+    'NFTE': chain?.address as string,
+    'WETH': WETH_ADDRESS as string,
+    'NFTE-WETH': chain?.LPNFTE as string,
+    'Staking': chain?.xNFTE as string,
+    'Pool': POOL_ADDRESS as string
+  }
 
   const ethBalance = useBalance({
     address,
@@ -335,6 +344,7 @@ const PoolPage = () => {
       <Flex
         direction="column"
         css={{
+          pb: 80,
           '@md': {
             alignItems: 'center'
           }
@@ -646,6 +656,71 @@ const PoolPage = () => {
         >
           <Text style="body3">Add liquidity to the NFTE-WETH liquidity pool. Lock up the resulting LP token NFTE-WETH (NFTE LP). The longer you lock (1 year max), the more xNFTE you get. <Text style="body3" as={Link} css={{ fontWeight: 'bold', '&:hover': { textDecoration: 'underline' } }} href="https://docs.nftearth.exchange/nfte-token/xnfte-and-nfte-staking" target="_blank">Learn More about xNFTE</Text></Text>
         </Flex>
+        <Collapsible
+          style={{
+            borderRadius: 8,
+            overflow: 'hidden',
+            marginTop: 40
+          }}
+          trigger={
+            <Button
+              corners="square"
+              color="secondary"
+
+              css={{
+                width: 300,
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text css={{ display: 'inline-block', textAlign: 'center' }}>Contract Addresses</Text>
+              <FontAwesomeIcon
+                icon={faChevronDown}
+                width={15}
+                height={15}
+              />
+            </Button>
+          }>
+          <Flex
+            direction="column"
+            css={{
+              width: 300,
+              '> div:nth-child(odd)': {
+                background: '$gray3',
+              },
+              '> div:nth-child(even)': {
+                background: '$gray5',
+              }
+            }}
+          >
+            {Object.keys(addresses).map((k, i)=> (
+              <Flex
+                key={`address-${i}`}
+                justify="between"
+                css={{
+                  px: 15,
+                  py: 10,
+                }}
+              >
+                <Text>{k}</Text>
+                <Text
+                  as={Link}
+                  href={`${arbitrum.blockExplorers.default.url}/address/${addresses[k]}`}
+                  target="_blank"
+                >
+                  {truncateAddress(addresses[k])}
+                  <FontAwesomeIcon
+                    icon={faExternalLink}
+                    width={15}
+                    height={15}
+                    style={{
+                      marginLeft: 10
+                    }}
+                  />
+                </Text>
+              </Flex>
+            ))}
+          </Flex>
+        </Collapsible>
       </Flex>
     </Layout>
   )
