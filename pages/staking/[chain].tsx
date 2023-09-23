@@ -25,10 +25,13 @@ import {roundToWeek} from "utils/round";
 
 import NFTEOFTAbi from 'artifact/NFTEOFTAbi'
 import XNFTEAbi from "artifact/XNFTEAbi";
+import AddressCollapsible from "../../components/staking/AddressCollapsible";
+
+const POOL_ADDRESS = '0x17ee09e7a2cc98b0b053b389a162fc86a67b9407'
+const APY = 78.45
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
-const APY = 78.45
 const StakingChainPage: FC<Props> = ({ ssr }) => {
   const [activeTab, setActiveTab] = useState('staking')
   const [valueEth, setValueEth] = useState<string>('0')
@@ -38,6 +41,12 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
   const mounted = useMounted()
   const router = useRouter()
   const chain = ssr.chain
+
+  const addresses: Record<string, string> = {
+    'NFTE': chain?.address as string,
+    'xNFTE': chain?.xNFTE as string,
+    'NFTE-WETH (NFTE LP)': chain?.LPNFTE as string,
+  }
 
   const { data: nfteData } : { data: any } = useContractReads<
     [
@@ -116,6 +125,8 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
       <Flex
         direction="column"
         css={{
+          mx: 20,
+          pb: 80,
           '@md': {
             alignItems: 'center'
           }
@@ -355,6 +366,10 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
             </Flex>
           </Flex>
         </Flex>
+        <AddressCollapsible
+          addresses={addresses}
+          chain={arbitrum}
+        />
       </Flex>
     </Layout>
   )
