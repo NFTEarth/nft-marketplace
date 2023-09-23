@@ -37,6 +37,10 @@ const resourcesSectionLinks = [
     href: 'https://medium.com/@nftearth',
   },
   {
+    name: 'Analytics',
+    href: 'https://dune.com/nftearth/nftearth-analytics',
+  },
+  {
     name: 'Brand Assets',
     href: 'https://docs.nftearth.exchange/resources/brand-assets',
   },
