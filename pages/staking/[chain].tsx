@@ -1,4 +1,4 @@
-import {FC, useEffect, useMemo, useState} from "react";
+import {FC, useCallback, useEffect, useMemo, useState} from "react";
 import {GetStaticPaths, GetStaticProps, InferGetStaticPropsType} from "next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faCircleInfo} from "@fortawesome/free-solid-svg-icons";
@@ -31,7 +31,7 @@ type Props = InferGetStaticPropsType<typeof getStaticProps>
 const APY = 78.45
 const StakingChainPage: FC<Props> = ({ ssr }) => {
   const [activeTab, setActiveTab] = useState('staking')
-  const [valueEth, setValueEth] = useState<string>('0.0')
+  const [valueEth, setValueEth] = useState<string>('0')
   const [duration, setDuration] = useState<string>('0')
   const [maxDuration, setMaxDuration] = useState<string>('12')
   const { address } = useAccount()
@@ -102,10 +102,10 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
     setDuration(`${newVal}`)
   }
 
-  const handleSetMaxValue = () => {
-    const val = formatUnits(nfteLPBalance?.result, 18)
-    setValueEth(val)
-  }
+  const handleSetMaxValue = useCallback(() => {
+    const val = formatBN(BigInt(nfteLPBalance.result || 0), 6, 18)
+    setValueEth(`${val}`)
+  }, [nfteLPBalance])
 
   if (!mounted) {
     return null;
@@ -244,7 +244,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
                   <NumericalInput
                     value={valueEth}
                     onUserInput={handleSetValue}
-                    icon={<Button size="xs" onClick={() => handleSetMaxValue()}>MAX</Button>}
+                    icon={<Button size="xs" onClick={handleSetMaxValue}>MAX</Button>}
                     iconStyles={{
                       top: 4,
                       right: 4,

@@ -35,8 +35,15 @@ import ERC20OracleAbi from 'artifact/ERC20OracleAbi'
 import useUSDAndNativePrice from "../../hooks/useUSDAndNativePrice";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import useMerklReward from "../../hooks/useMerklReward";
-import {Collapsible} from "../../components/primitives/Collapsible";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleRoot,
+  slideDown,
+  slideUp
+} from "../../components/primitives/Collapsible";
 import {truncateAddress} from "../../utils/truncate";
+import * as CollapsiblePrimitive from "@radix-ui/react-collapsible";
 
 const WETH_ADDRESS = '0x82af49447d8a07e3bd95bd0d56f35241523fbab1'
 const POOL_ADDRESS = '0x17ee09e7a2cc98b0b053b389a162fc86a67b9407'
@@ -49,6 +56,7 @@ const PoolPage = () => {
   const [valueNFTE, setValueNFTE] = useState<string>('0')
   const [expectedNFTELP, setExpectedNFTELP] = useState<bigint>(BigInt(0))
   const [changedValue, setChangedValue] = useState('')
+  const [collapsibleOpen, setCollapsibleOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const publicClient = getPublicClient()
   const {addToast} = useContext(ToastContext)
@@ -656,71 +664,106 @@ const PoolPage = () => {
         >
           <Text style="body3">Add liquidity to the NFTE-WETH liquidity pool. Lock up the resulting LP token NFTE-WETH (NFTE LP). The longer you lock (1 year max), the more xNFTE you get. <Text style="body3" as={Link} css={{ fontWeight: 'bold', '&:hover': { textDecoration: 'underline' } }} href="https://docs.nftearth.exchange/nfte-token/xnfte-and-nfte-staking" target="_blank">Learn More about xNFTE</Text></Text>
         </Flex>
-        <Collapsible
-          style={{
+        <CollapsibleRoot
+          onOpenChange={(open) => {
+            setCollapsibleOpen(open)
+          }}
+          open={collapsibleOpen}
+          css={{
+            backgroundColor: '$gray11',
+            width: 300,
             borderRadius: 8,
             overflow: 'hidden',
             marginTop: 40
           }}
-          trigger={
-            <Button
-              corners="square"
-              color="secondary"
-
+        >
+          <CollapsiblePrimitive.Trigger asChild>
+            <Flex
+              justify="between"
               css={{
-                width: 300,
-                justifyContent: 'space-between',
+                px: '$4',
+                py: '$3',
+                cursor: 'pointer',
+                userSelect: 'none'
               }}
             >
-              <Text css={{ display: 'inline-block', textAlign: 'center' }}>Contract Addresses</Text>
-              <FontAwesomeIcon
-                icon={faChevronDown}
-                width={15}
-                height={15}
-              />
-            </Button>
-          }>
-          <Flex
-            direction="column"
-            css={{
-              width: 300,
-              '> div:nth-child(odd)': {
-                background: '$gray3',
-              },
-              '> div:nth-child(even)': {
-                background: '$gray5',
-              }
-            }}
-          >
-            {Object.keys(addresses).map((k, i)=> (
-              <Flex
-                key={`address-${i}`}
-                justify="between"
-                css={{
-                  px: 15,
-                  py: 10,
-                }}
-              >
-                <Text>{k}</Text>
+              <Flex align="center" css={{ gap: '$3' }}>
                 <Text
-                  as={Link}
-                  href={`${arbitrum.blockExplorers.default.url}/address/${addresses[k]}`}
-                  target="_blank"
+                  style="subtitle1"
+                  css={{
+                    color: '$gray1'
+                  }}
                 >
-                  {truncateAddress(addresses[k])}
-                  <FontAwesomeIcon
-                    icon={faExternalLink}
-                    width={15}
-                    height={15}
-                    style={{
-                      marginLeft: 10
-                    }}
-                  />
+                  Contract Addresses
                 </Text>
               </Flex>
-            ))}
-          </Flex>
-        </Collapsible>
+              <Box
+                css={{
+                  color: '$gray1',
+                  transform: collapsibleOpen ? 'rotate(180deg)' : 'rotate(0)',
+                  transition: '.3s',
+                }}
+              >
+                <FontAwesomeIcon icon={faChevronDown} />
+              </Box>
+            </Flex>
+          </CollapsiblePrimitive.Trigger>
+          <CollapsibleContent
+            css={{
+              '&[data-state="open"]': {
+                animation: `${slideDown} 300ms cubic-bezier(0.87, 0, 0.13, 1)`,
+              },
+              '&[data-state="closed"]': {
+                animation: `${slideUp} 300ms cubic-bezier(0.87, 0, 0.13, 1)`,
+              },
+            }}
+          >
+            <Flex
+              direction="column"
+              css={{
+                '> div:nth-child(odd)': {
+                  background: '$gray3',
+                },
+                '> div:nth-child(even)': {
+                  background: '$gray5',
+                }
+              }}
+            >
+              {Object.keys(addresses).map((k, i)=> (
+                <Flex
+                  key={`address-${i}`}
+                  justify="between"
+                  css={{
+                    px: 15,
+                    py: 10,
+                  }}
+                >
+                  <Text>{k}</Text>
+                  <Box
+                    as={Link}
+                    href={`${arbitrum.blockExplorers.default.url}/address/${addresses[k]}`}
+                    target="_blank"
+                    css={{
+                      '&:hover': {
+                        color: '$primary11'
+                      }
+                    }}
+                  >
+                    {truncateAddress(addresses[k])}
+                    <FontAwesomeIcon
+                      icon={faExternalLink}
+                      width={15}
+                      height={15}
+                      style={{
+                        marginLeft: 10
+                      }}
+                    />
+                  </Box>
+                </Flex>
+              ))}
+            </Flex>
+          </CollapsibleContent>
+        </CollapsibleRoot>
       </Flex>
     </Layout>
   )
