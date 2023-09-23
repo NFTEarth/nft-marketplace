@@ -1,6 +1,5 @@
 import React, {ComponentPropsWithoutRef} from 'react';
 import {Input} from "../primitives";
-import {StyledInput} from "../primitives/Input";
 
 function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string

@@ -238,7 +238,7 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
                   }}
                 >
                   <CryptoCurrencyIcon address={AddressZero} chainId={marketplaceChain.id} css={{ height: 15 }} />
-                  <Text style="h6" css={{ color: '$primary13' }}>ETH and NFTE</Text>
+                  <Text style="h6" css={{ color: '$primary9' }}>ETH and NFTE</Text>
                 </Flex>
               </Flex>
               <Flex direction="column" css={{ gap: 10}}>
@@ -335,12 +335,12 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
                   }}
                   css={{
                     px: 20,
-                    boxShadow: 'inset 0 0 0 2px $colors$primary13',
+                    boxShadow: 'inset 0 0 0 2px $colors$primary9',
                     textAlign: 'right',
                     '&:hover': {
                       backgroundColor: '$gray4'
                     },
-                    '&:focus': { boxShadow: 'inset 0 0 0 2px $colors$primary13' },
+                    '&:focus': { boxShadow: 'inset 0 0 0 2px $colors$primary9' },
                   }}
                 />
                 <Flex
@@ -395,11 +395,11 @@ const FortuneEntryForm: FC<EntryProps> = ({ roundId, show, onClose }) => {
                     pl: 20,
                     pr: 70,
                     textAlign: 'right',
-                    boxShadow: 'inset 0 0 0 2px $colors$primary13',
+                    boxShadow: 'inset 0 0 0 2px $colors$primary9',
                     '&:hover': {
                       backgroundColor: '$gray4'
                     },
-                    '&:focus': { boxShadow: 'inset 0 0 0 2px $colors$primary13' },
+                    '&:focus': { boxShadow: 'inset 0 0 0 2px $colors$primary9' },
                   }}
                 />
                 <Flex

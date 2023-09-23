@@ -43,7 +43,7 @@ export const Thumb = styled(SliderPrimitive.Thumb, {
   },
   '&:focus': {
     outline: 'none',
-    boxShadow: '0 0 0 5px $primary13'
+    boxShadow: '0 0 0 5px $primary9'
   }
 })
 

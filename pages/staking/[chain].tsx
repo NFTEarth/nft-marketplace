@@ -267,7 +267,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
                     css={{
                       pl: 40,
                       pr: 80,
-                      boxShadow: 'inset 0 0 0 2px'
+                      boxShadow: '0 0 0 2px white'
                     }}
                   />
                   <CryptoCurrencyIcon
@@ -335,7 +335,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
                   css={{
                     pl: 10,
                     pr: 80,
-                    boxShadow: 'inset 0 0 0 2px',
+                    boxShadow: '0 0 0 2px white'
                   }}
                 />
               </Flex>

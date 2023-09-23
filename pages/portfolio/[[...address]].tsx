@@ -202,7 +202,7 @@ const IndexPage: NextPage = () => {
                     justify="end"
                     css={{
                       p: '$4',
-                      backgroundColor: '$primary14',
+                      backgroundColor: '$secondary8',
                       ...(banner ? {
                         backgroundImage: `url(${banner})`,
                         backgroundSize: 'cover',

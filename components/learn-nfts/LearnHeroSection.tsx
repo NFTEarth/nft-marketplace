@@ -14,7 +14,7 @@ const LearnHeroSection: FC = () => {
         borderTopLeftRadius: '20px',
         borderTopRightRadius: '20px',
         backgroundPosition: 'center center',
-        backgroundImage: `linear-gradient(109.6deg, rgb(0, 0, 0) 11.2%, $primary13 91.1%), url('/images/heroSectionBanner.png')`,
+        backgroundImage: `linear-gradient(109.6deg, rgb(0, 0, 0) 11.2%, $primary9 91.1%), url('/images/heroSectionBanner.png')`,
         '@xs': {
           display: 'block',
         },

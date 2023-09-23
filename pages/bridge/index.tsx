@@ -354,7 +354,7 @@ const BridgePage = () => {
                       css={{
                         pl: 80,
                         pr: 60,
-                        boxShadow: 'inset 0 0 0 2px $$focusColor',
+                        boxShadow: '0 0 0 2px white',
                         textAlign: 'right',
                       }}
                     />
@@ -363,7 +363,7 @@ const BridgePage = () => {
                         position: 'absolute',
                         top: 10,
                         right: 4,
-                        color: '$primary14',
+                        color: '$primary9',
                         width: 50,
                         height: 40,
                         fontSize: 18,
@@ -379,7 +379,7 @@ const BridgePage = () => {
                       <Text as="h4">Bridging...</Text>
                     )}
                     {isSuccess && (
-                      <Text css={{ color: '$primary14'}}>NFTE bridging complete. Check your address on the destination chain or LayerZero Scan to view the Tx details.</Text>
+                      <Text css={{ color: '$secondary8'}}>NFTE bridging complete. Check your address on the destination chain or LayerZero Scan to view the Tx details.</Text>
                     )}
                   </Flex>
                 </Flex>

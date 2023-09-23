@@ -31,7 +31,7 @@ export const QuestXPButton = styled(Box, {
 })
 
 export const QuestJoinButton = styled(Button, {
-    background: '$primary14',
+    background: '$secondary8',
     borderRadius: '10px',
     padding: '10px 30px',
     transition: '0.5s',

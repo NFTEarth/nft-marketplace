@@ -105,7 +105,7 @@ const FortuneHistory = () => {
           <Link href="/fortune">
             <Flex align="center" css={{ gap: 20 }}>
               <FontAwesomeIcon icon={faArrowLeft} width={16} height={16} color="hsl(145, 25%, 39%)" />
-              <Text css={{ color: '$primary13' }}>Current Round</Text>
+              <Text css={{ color: '$primary9' }}>Current Round</Text>
             </Flex>
           </Link>
           <Flex
@@ -181,7 +181,7 @@ const FortuneHistory = () => {
                 justify="between"
                 align="center"
                 css={{
-                  border: '1px solid $primary13',
+                  border: '1px solid $primary9',
                   borderRadius: 16,
                   gap: 40,
                   p: 16,
@@ -193,7 +193,7 @@ const FortuneHistory = () => {
                 justify="between"
                 align="center"
                 css={{
-                  border: '1px solid $primary13',
+                  border: '1px solid $primary9',
                   borderRadius: 16,
                   gap: 40,
                   p: 16,

@@ -354,7 +354,7 @@ const BridgePage = () => {
                         position: 'absolute',
                         top: 10,
                         right: 4,
-                        color: '$primary14',
+                        color: '$secondary8',
                         width: 50,
                         height: 40,
                         fontSize: 18,
@@ -370,7 +370,7 @@ const BridgePage = () => {
                       <Text as="h4">Bridging...</Text>
                     )}
                     {isSuccess && (
-                      <Text css={{ color: '$primary14'}}>Token bridged, you should receive the token after the blockchain confirmations</Text>
+                      <Text css={{ color: '$secondary8'}}>Token bridged, you should receive the token after the blockchain confirmations</Text>
                     )}
                   </Flex>
                 </Flex>

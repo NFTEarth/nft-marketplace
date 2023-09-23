@@ -29,7 +29,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
     >
       <Box css={{
         opacity: 0.5,
-        backgroundImage: 'linear-gradient(109.6deg, #000 11.2%, $primary13 91.1%)',
+        backgroundImage: 'linear-gradient(109.6deg, #000 11.2%, $primary9 91.1%)',
         position: 'absolute',
         top: 0,
         left: 0,
@@ -87,16 +87,8 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
             <Link href="/portfolio" passHref legacyBehavior>
               <Button
                 as="a"
-                color="secondary"
-                corners="pill"
+                color="tertiary"
                 size="large"
-                css={{
-                  width: 100,
-                  borderRadius: '$lg',
-                  color: 'white',
-                  justifyContent: 'center',
-                  border: '2px solid #79ffA8'
-                }}
               >
                 Trade
               </Button>
@@ -104,15 +96,8 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
             <Link href="/quests" passHref legacyBehavior>
               <Button
                 as="a"
-                color="secondary"
-                corners="pill"
+                color="tertiary"
                 size="large"
-                css={{
-                  borderRadius: '$lg',
-                  color: 'white',
-                  border: '2px solid #79FFA8',
-                  justifyContent: 'center'
-                }}
               >
                 Quests
               </Button>

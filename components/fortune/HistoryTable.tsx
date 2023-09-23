@@ -406,7 +406,7 @@ const TableHeading = () => {
         },
         position: 'sticky',
         top: NAVBAR_HEIGHT,
-        backgroundColor: '$primary14',
+        backgroundColor: '$secondary8',
         px: '$3',
         zIndex: 1,
       }}

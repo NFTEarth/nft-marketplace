@@ -874,10 +874,10 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                 collectionId={token?.token?.contract}
                 buttonCss={{
                   px: '32px',
-                  backgroundColor: '$primary13',
+                  backgroundColor: '$primary9',
                   color: '#000',
                   '&:hover': {
-                    backgroundColor: '$primary14',
+                    backgroundColor: '$secondary8',
                   },
                 }}
                 buttonChildren={

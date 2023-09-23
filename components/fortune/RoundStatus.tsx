@@ -89,7 +89,7 @@ const FortuneRoundStatus: FC<RoundStatusProps> = (props) => {
             style="h4"
             css={{
               color: '$primary10',
-              background: 'linear-gradient(120deg, rgb(21, 204, 50) 0%, $primary13 80%, $primary13 100%)',
+              background: 'linear-gradient(120deg, rgb(21, 204, 50) 0%, $primary9 80%, $primary9 100%)',
               '-webkit-text-fill-color': 'transparent',
               '-webkit-background-clip': 'text'
             }}>

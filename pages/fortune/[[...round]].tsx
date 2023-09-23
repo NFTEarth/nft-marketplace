@@ -547,7 +547,7 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
                     justify="center"
                     css={{
                       borderRadius: 6,
-                      border: '1px solid $primary13',
+                      border: '1px solid $primary9',
                       minWidth: 75,
                       minHeight: 38,
                     }}
@@ -742,7 +742,7 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
                       justify="center"
                       css={{
                         borderRadius: 6,
-                        border: '1px solid $primary13',
+                        border: '1px solid $primary9',
                         minWidth: 75,
                         minHeight: 38,
                       }}
