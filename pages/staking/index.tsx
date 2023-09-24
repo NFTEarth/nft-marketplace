@@ -88,7 +88,7 @@ const StakingPage = () => {
           direction="column"
         >
           <Text style="h4">You don’t have any NFTE LP positions to stake in your wallet.</Text>
-          <Text css={{ maxWidth: '75%' }}>{`xNFTE holders control protocl governance and earn all revenue sharing from the DAO. NFTEarth is governed entirely by xNFTE holders.`}</Text>
+          <Text css={{ maxWidth: '75%' }}>{`xNFTE holders control protocol governance and earn all revenue sharing from the DAO. NFTEarth is governed entirely by xNFTE holders.`}</Text>
           <Flex css={{ mt: 20}}>
             <Button
               color="primary"

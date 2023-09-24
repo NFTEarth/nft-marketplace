@@ -112,7 +112,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
   }
 
   const handleSetMaxValue = useCallback(() => {
-    const val = formatBN(BigInt(nfteLPBalance.result || 0), 6, 18)
+    const val = formatBN(BigInt(nfteLPBalance?.result || 0), 6, 18)
     setValueEth(`${val}`)
   }, [nfteLPBalance])
 
