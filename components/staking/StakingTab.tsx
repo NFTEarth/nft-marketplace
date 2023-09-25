@@ -47,7 +47,6 @@ type Props = {
 const StakingTab: FC<Props> = (props) => {
   const { APY, value, duration, chain, onSuccess, depositor } = props
   const { address } = useAccount()
-  const isMounted = useMounted()
   const { chain: activeChain } = useNetwork()
   const { openConnectModal } = useConnectModal()
   const { switchNetworkAsync } = useSwitchNetwork({
@@ -80,7 +79,7 @@ const StakingTab: FC<Props> = (props) => {
           functionName: 'increase_amount_and_time',
           args:[
             parseEther(value as `${number}`),
-            Math.round(timePlusDuration.toDate().getTime() / 1000)
+            timePlusDuration.unix()
           ]
         }
       }
@@ -89,7 +88,7 @@ const StakingTab: FC<Props> = (props) => {
         return {
           functionName: 'increase_unlock_time',
           args:[
-            Math.round(timePlusDuration.toDate().getTime() / 1000)
+            timePlusDuration.unix()
           ]
         }
       }
@@ -108,7 +107,7 @@ const StakingTab: FC<Props> = (props) => {
       functionName: 'create_lock',
       args: [
         parseEther(value as `${number}`),
-        Math.round(timePlusDuration.toDate().getTime() / 1000)
+        timePlusDuration.unix()
       ]
     }
   }, [depositor, duration, value, newTime, isZeroValue, isZeroDuration])
