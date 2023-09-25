@@ -5,7 +5,7 @@ import {
   parseEther,
   formatEther
 } from "viem";
-import dayjs, {Dayjs} from "dayjs";
+import dayjs, {} from "dayjs";
 import { MaxUint256 } from "ethers";
 import {
   useAccount,
@@ -21,7 +21,6 @@ import {useConnectModal} from "@rainbow-me/rainbowkit";
 import {Box, Button, CryptoCurrencyIcon, Flex, Text, Tooltip} from "../primitives";
 
 import {ToastContext} from "context/ToastContextProvider";
-import {useMounted} from "hooks";
 import {StakingDepositor} from "hooks/useStakingDepositor";
 
 import {formatBN, formatNumber} from "utils/numbers";
@@ -44,6 +43,9 @@ type Props = {
   onSuccess: () => void
 }
 
+export const MAX_LOCK_PERIOD_IN_DAYS = 365; // 1y
+export const MIN_LOCK_PERIOD_IN_DAYS = 30;
+
 const StakingTab: FC<Props> = (props) => {
   const { APY, value, duration, chain, onSuccess, depositor } = props
   const { address } = useAccount()
@@ -55,9 +57,9 @@ const StakingTab: FC<Props> = (props) => {
   const publicClient = getPublicClient()
   const {addToast} = useContext(ToastContext)
 
-  const timeStamp = parseInt(`${depositor?.lockEndTimestamp || 0}`) * 1000;
-  const newTime = timeStamp > 0 && timeStamp > (new Date()).getTime() ? new Date(timeStamp) : new Date()
-  const timePlusDuration = roundToWeek(dayjs(newTime).add(duration, 'months'))
+  const timeStamp = parseInt(`${depositor?.lockEndTimestamp || 0}`);
+  const newTime = timeStamp > 0 && timeStamp > dayjs().startOf('day').unix() ? dayjs.unix(timeStamp).startOf('day') : dayjs().startOf('day')
+  const timePlusDuration = roundToWeek(dayjs(newTime).add(duration * 30, 'days'))
   const isZeroValue = parseEther(value as `${number}`) <= BigInt(0)
   const isZeroDuration = duration < 1
   const hasLockedBalance = (BigInt(depositor?.lockedBalance || 0)) > BigInt(0)
