@@ -37,7 +37,7 @@ interface Pair {
   reserveUSD: string;
   token0Price: string;
   token1Price: string;
-  dexAPY: number;
+  dexAPR: number;
   isVaultToken: boolean;
   rewardsToken?: Underlying;
   dex: DexInfo;
@@ -154,7 +154,7 @@ export type LendingPool = {
   vaultTotalSupply?: Promise<number>;
   vaultRewardRate?: Promise<number>;
   vaultActive?: Promise<boolean>;
-  vaultAPY?: Promise<number>;
+  vaultAPR?: Promise<number>;
   reinvestBounty?: Promise<number>;
 }
 

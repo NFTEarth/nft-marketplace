@@ -28,7 +28,7 @@ import XNFTEAbi from "artifact/XNFTEAbi";
 import AddressCollapsible from "../../components/staking/AddressCollapsible";
 
 const POOL_ADDRESS = '0x17ee09e7a2cc98b0b053b389a162fc86a67b9407'
-const APY = 78.45
+const APR = 986.03
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -341,7 +341,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
               </Flex>
               {activeTab === "staking" && (
                 <StakingTab
-                  APY={APY}
+                  APR={APR}
                   value={valueEth}
                   duration={parseInt(duration)}
                   chain={chain}

@@ -65,7 +65,7 @@ const PoolPage = () => {
     'NFTE': chain?.address as string,
     'WETH': WETH_ADDRESS as string,
     'NFTE-WETH (NFTE LP)': chain?.LPNFTE as string,
-    'uniProxy': chain?.uniProxy as string,
+    'UniProxy': chain?.uniProxy as string,
     'Pool': POOL_ADDRESS as string
   }
 

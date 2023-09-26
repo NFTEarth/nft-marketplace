@@ -80,7 +80,7 @@ const StakingPage = () => {
   const [nfteLPBalance, xNfteBalance, totalSupplyXNfte, locked] = nfteData || []
 
   const stakingTitle = useMemo(() => {
-    const APY = '78.45';
+    const APR = '986.03';
 
     if (BigInt(nfteLPBalance?.result || 0) === BigInt(0) && BigInt(locked?.result?.[0] || 0) === BigInt(0)) {
       return (
@@ -430,7 +430,7 @@ const StakingPage = () => {
                   width: '100%'
                 }}
               >
-                {`${(345)} days`}
+                {`${(330)} days`}
               </Text>
             </Flex>
             <Flex css={{
@@ -458,7 +458,7 @@ const StakingPage = () => {
                     textDecoration: 'underline'
                   }
                 }}
-              >{`Learn more about xNFTE in the NFTEarth docs`}</Text>
+              >{`Learn more about xNFTE staking in the NFTEarth docs`}</Text>
               <Flex
                 css={{
                   flexWrap: 'wrap',
