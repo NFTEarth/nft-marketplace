@@ -87,14 +87,14 @@ const StakingPage = () => {
         <Flex
           direction="column"
         >
-          <Text style="h4">You don’t have any NFTE LP positions to stake in your wallet.</Text>
+          <Text style="h4">You don’t have any NFTE LP Vault positions to stake in your wallet.</Text>
           <Text css={{ maxWidth: '75%' }}>{`xNFTE holders control protocol governance and earn all revenue sharing from the DAO. NFTEarth is governed entirely by xNFTE holders.`}</Text>
           <Flex css={{ mt: 20}}>
             <Button
               color="primary"
               as={Link}
               href="/staking/pool"
-            >Get NFTE LP</Button>
+            >Get xNFTE</Button>
           </Flex>
         </Flex>
       )
@@ -111,7 +111,7 @@ const StakingPage = () => {
           </Text>
           {` and `}
           <Text style="h4" color="primary">
-            {`${formatBN(nfteLPBalance?.result || 0n, 2, 18, {})} LP NFTE`}
+            {`${formatBN(nfteLPBalance?.result || 0n, 2, 18, {})} NFTE LP Vault`}
           </Text>
           {` available to stake.`}
         </Text>
@@ -121,7 +121,7 @@ const StakingPage = () => {
             color="primary"
             as={Link}
             href="/staking/pool"
-          >Get NFTE LP</Button>
+          >Get xNFTE</Button>
         </Flex>
       </Flex>
     );
@@ -203,7 +203,7 @@ const StakingPage = () => {
                     setActiveTab('stakes')
                   }}
                 >
-                  Your Stakes
+                  Your xNFTE
                 </Button>
                 <Button
                   color="ghost"
@@ -215,7 +215,7 @@ const StakingPage = () => {
                     setActiveTab('staking')
                   }}
                 >
-                  Available To Stake
+                  Your NFTE LP Vault To Stake
                 </Button>
                 <Button
                   color="ghost"
@@ -227,7 +227,7 @@ const StakingPage = () => {
                     setActiveTab('claim')
                   }}
                 >
-                  Claim Staking Fees
+                  Claim Staking Rewards
                 </Button>
               </Flex>
               <Box>
@@ -264,7 +264,7 @@ const StakingPage = () => {
             </Flex>
           </Flex>
           <Flex align="start" css={{ width: '100%' }}>
-            <Text style="subtitle1">Staking Overview</Text>
+            <Text style="subtitle1">xNFTE Staking Overview</Text>
           </Flex>
           <Flex css={{
             flexDirection: 'column',
@@ -300,7 +300,7 @@ const StakingPage = () => {
                       height: 20
                     }}
                   />
-                  <Text style="body4">Total NFTE LP Locked</Text>
+                  <Text style="body4">Total NFTE LP Vault Locked</Text>
                 </Flex>
                 <FontAwesomeIcon icon={faLock} width={12} height={12}/>
               </Flex>
@@ -345,7 +345,7 @@ const StakingPage = () => {
                       height: 20
                     }}
                   />
-                  <Text style="body4">Percent of NFTE LP Locked</Text>
+                  <Text style="body4">Percent of NFTE LP Vault Locked</Text>
                 </Flex>
               </Flex>
               <Text
@@ -478,7 +478,7 @@ const StakingPage = () => {
                       mb: '0.5625rem',
                       display: 'inline-block'
                     }}
-                  >My NFTE LP Locked</Text>
+                  >My Locked NFTE LP Vault</Text>
                   <FormatCryptoCurrency
                     amount={locked?.result?.[0] || 0n}
                     textStyle="h6"
@@ -510,7 +510,7 @@ const StakingPage = () => {
                       mb: '0.5625rem',
                       display: 'inline-block'
                     }}
-                  >Average Lock Time</Text>
+                  ></Text>
                 </div>
               </Flex>
             </Flex>

@@ -45,7 +45,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
   const addresses: Record<string, string> = {
     'NFTE': chain?.address as string,
     'xNFTE': chain?.xNFTE as string,
-    'NFTE-WETH (NFTE LP)': chain?.LPNFTE as string,
+    'NFTE-WETH (NFTE Gamma Vault)': chain?.LPNFTE as string,
   }
 
   const { data: nfteData } : { data: any } = useContractReads<
@@ -295,7 +295,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
                     gap: 5
                   }}
                 >
-                  <Text style="body3">{+maxDuration < 1 ? 'You have reached max Duration' : `Stake Duration (${+maxDuration > 1 ? `1 to ${maxDuration}` : '1'}) months`}</Text>
+                  <Text style="body3">{+maxDuration < 1 ? 'You have locked for max duration' : `Stake Duration (${+maxDuration > 1 ? `1 to ${maxDuration}` : '1'}) months`}</Text>
                   <Tooltip
                     content={
                       <Text

@@ -56,7 +56,7 @@ const PortfolioSettings : NextPage<Props> = ({ ssr }) => {
 
   useEffect(() => {
     if (!data) {
-      signMessage({ message: 'Sign this message to prove your ownership of this wallet' })
+      signMessage({ message: 'NFTEarth wants you to sign in with your Ethereum account' })
     }
   }, [data])
 
@@ -93,7 +93,7 @@ const PortfolioSettings : NextPage<Props> = ({ ssr }) => {
         <Flex direction="column" align="center" justify="center" css={{ py: '40vh', gap: 20 }}>
           <Text>Sign this message to prove your ownership of this wallet </Text>
           <Button onClick={() => {
-            signMessage({ message: 'Sign this message to prove your ownership of this wallet' })
+            signMessage({ message: 'NFTEarth wants you to sign in with your Ethereum account' })
           }}>Sign</Button>
         </Flex>
       </Layout>
