@@ -23,6 +23,7 @@ import {
   faArrowsLeftRight,
   faBridge
 } from "@fortawesome/free-solid-svg-icons";
+import { link } from 'fs'
 
 export const NAVBAR_HEIGHT = 81
 export const NAVBAR_HEIGHT_MOBILE = 77
@@ -126,9 +127,9 @@ const Navbar = () => {
         <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
           <Link href={`/${routePrefix}/collection-rankings`}>
             <NavItem active={router.pathname.includes('collection-rankings')}>
-              Collections
+              xNFTE
             </NavItem>
-          </Link>
+            </Link>
           <Dropdown
             modal={false}
             trigger={
@@ -231,6 +232,36 @@ const Navbar = () => {
               sideOffset: 35
             }}
           >
+            <DropdownMenuItem
+              as={Link}
+              href="/collection-rankings"
+              css={{
+                display: 'flex',
+                py: '$3',
+                width: '100%',
+                alignItems: 'center',
+                gap: 10
+              }}
+            >
+              <Image src="/images/nftearth-icon.png" width={20} height={20} objectFit="contain" alt="Collections"/>
+              {`Collections`}
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              as={Link}
+              href="/collection-rankings"
+              css={{
+                display: 'flex',
+                py: '$3',
+                width: '100%',
+                alignItems: 'center',
+                gap: 10
+              }}
+            >
+              <Image src="/images/earthchat-icon.png" width={20} height={20} objectFit="contain" alt="Collections"/>
+              {`EarthChat`}
+            </DropdownMenuItem>
+            
             <DropdownMenuItem
               as={Link}
               href="/fortune"
