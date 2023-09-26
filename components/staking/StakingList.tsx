@@ -78,8 +78,8 @@ const StakingList: FC<Props> = (props) => {
             <Flex
               direction="column"
             >
-              <Text style="body3" css={{ textAlign: 'right' }}>APY</Text>
-              <Text style="h6">78.45%</Text>
+              <Text style="body3" css={{ textAlign: 'right' }}>APR</Text>
+              <Text style="h6">986.03%</Text>
             </Flex>
           </Flex>
           <Flex
