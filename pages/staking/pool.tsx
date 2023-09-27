@@ -7,7 +7,7 @@ import {
   usePrepareContractWrite,
   useWaitForTransaction
 } from "wagmi";
-import { formatEther, parseEther, parseUnits} from "viem";
+import {formatEther, parseEther, parseUnits, zeroAddress} from "viem";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChevronDown, faExternalLink, faSquarePlus} from "@fortawesome/free-solid-svg-icons";
 import {useConnectModal} from "@rainbow-me/rainbowkit";
@@ -69,25 +69,44 @@ const PoolPage = () => {
     'Pool': POOL_ADDRESS as string
   }
 
-  const ethBalance = useBalance({
-    address,
-    chainId: arbitrum.id
+  const { data: balanceData, refetch: refetchBalance } = useContractReads({
+    contracts: [
+      {
+        abi:  ERC20Abi,
+        address: zeroAddress as `0x${string}`,
+        functionName:  'balanceOf',
+        args: [address as `0x${string}`],
+      },
+      {
+        abi:  ERC20Abi,
+        address: WETH_ADDRESS as `0x${string}`,
+        functionName:  'balanceOf',
+        args: [address as `0x${string}`],
+      },
+      {
+        abi:  ERC20Abi,
+        address: chain?.address as `0x${string}`,
+        functionName:  'balanceOf',
+        args: [address as `0x${string}`],
+      },
+      {
+        abi:  ERC20Abi,
+        address: chain?.address as `0x${string}`,
+        functionName:  'balanceOf',
+        args: [address as `0x${string}`],
+      },
+      {
+        abi:  ERC20Abi,
+        address: chain?.LPNFTE as `0x${string}`,
+        functionName:  'balanceOf',
+        args: [address as `0x${string}`],
+      }
+    ],
+    watch: false,
+    allowFailure: true,
+    enabled: !!address,
   })
-  const wethBalance = useBalance({
-    address,
-    token: WETH_ADDRESS,
-    chainId: arbitrum.id
-  })
-  const nfteBalance = useBalance({
-    address,
-    token: chain?.address,
-    chainId: arbitrum.id
-  })
-  const nfteLPBalance = useBalance({
-    address,
-    token: chain?.LPNFTE,
-    chainId: arbitrum.id
-  })
+
   const { data: usdPrice, isLoading: isLoadingUSDPrice } = useUSDAndNativePrice({
     chainId: arbitrum.id,
     contract: WETH_ADDRESS,
@@ -116,12 +135,13 @@ const PoolPage = () => {
     enabled: !!address,
   })
 
+  const [ethBalance, wethBalance, nfteBalance, nfteLPBalance ] = balanceData || [] as any
   const [wethAllowance, nfteAllowance] = allowanceData || [] as any
   const wethValue = useMemo(() => parseEther(valueWEth as `${number}`), [valueWEth])
   const nfteValue = useMemo(() => parseEther(valueNFTE as `${number}`), [valueNFTE])
-  const requireWethAllowance = useMemo(() =>BigInt(wethAllowance?.result || 0) < wethValue, [wethAllowance, wethValue])
-  const requireNFTEAllowance = useMemo(() => BigInt(nfteAllowance?.result || 0) < nfteValue, [nfteAllowance, nfteValue]);
-  const requireETHWrap = useMemo(() => BigInt(wethBalance?.data?.value || 0) < wethValue && BigInt(ethBalance.data?.value || 0) >= wethValue,  [wethValue, ethBalance, wethBalance])
+  const requireWethAllowance = BigInt(wethAllowance?.result || 0) < wethValue
+  const requireNFTEAllowance = BigInt(nfteAllowance?.result || 0) < nfteValue;
+  const requireETHWrap = BigInt(wethBalance?.result || 0) < wethValue && BigInt(ethBalance?.result || 0) >= wethValue
 
   useDebouncedEffect(() => {
     if (changedValue === '') {
@@ -216,11 +236,11 @@ const PoolPage = () => {
 
 
   const handleSetMaxValue = useCallback(() => {
-    handleSetValue(formatBN(wethBalance?.data?.value, 6, 18) || '0')
+    handleSetValue(formatBN(BigInt(wethBalance?.result || 0), 6, 18) || '0')
   }, [wethBalance])
 
   const handleSetMaxNFTEValue = useCallback(() => {
-    handleSetNFTEValue(formatBN(nfteBalance?.data?.value, 6, 18) || '0')
+    handleSetNFTEValue(formatBN(BigInt(nfteBalance?.result || 0), 6, 18) || '0')
   }, [nfteBalance])
 
   const disableButton = isZeroValue || loading || (!!preparedError && !requireNFTEAllowance && !requireWethAllowance && !requireETHWrap) || isLoading || isLoadingWethApproval || isLoadingNFTEApproval || isLoadingWrapEth || isLoadingTransaction
@@ -268,6 +288,7 @@ const PoolPage = () => {
             )
           }).then(async () => {
             await refetchAllowance();
+            await refetchBalance();
             await refetchPrepareContract()
           })
       }
@@ -283,6 +304,7 @@ const PoolPage = () => {
             )
           }).then(async () => {
             await refetchAllowance();
+            await refetchBalance();
             await refetchPrepareContract()
           })
       }
@@ -298,6 +320,7 @@ const PoolPage = () => {
             )
           }).then(async () => {
             await refetchAllowance();
+            await refetchBalance();
             await refetchPrepareContract()
           })
       }
@@ -435,7 +458,7 @@ const PoolPage = () => {
                 justify="between"
               >
                 <Text style="body3">WETH Amount</Text>
-                <Text style="body3">{`Balance: ${formatBN(wethBalance.data?.value, 6, 18)}`}</Text>
+                <Text style="body3">{`Balance: ${formatBN(BigInt(wethBalance?.result || 0), 6, 18)}`}</Text>
               </Flex>
               <Box
                 css={{
@@ -478,7 +501,7 @@ const PoolPage = () => {
               justify="between"
             >
               <Flex>
-                {wethBalance.data?.value === BigInt(0) && (
+                {BigInt(wethBalance?.result || 0) === BigInt(0) && (
                   <Text
                     as={Link}
                     style="body3"
@@ -498,7 +521,7 @@ const PoolPage = () => {
               </Flex>
               <FontAwesomeIcon icon={faSquarePlus} style={{ height: 40, width: 40}}/>
               <Flex>
-                {nfteBalance.data?.value === BigInt(0) && (
+                {BigInt(nfteBalance?.result || 0) === BigInt(0) && (
                   <Text
                     as={Link}
                     style="body3"
@@ -562,7 +585,7 @@ const PoolPage = () => {
                 justify="between"
               >
                 <Text style="body3">NFTE Amount</Text>
-                <Text style="body3">{`Balance: ${formatBN(nfteBalance.data?.value, 6, 18)}`}</Text>
+                <Text style="body3">{`Balance: ${formatBN(BigInt(nfteBalance?.result || 0), 6, 18)}`}</Text>
               </Flex>
             </Flex>
             <Flex
@@ -588,7 +611,7 @@ const PoolPage = () => {
                     height: 20
                   }}
                 />
-                <Text style="body2">{`${formatBN(nfteLPBalance.data?.value, 6, nfteLPBalance.data?.decimals)} NFTE LP`}</Text>
+                <Text style="body2">{`${formatBN(BigInt(nfteLPBalance?.result || 0), 6, 18)} NFTE LP`}</Text>
               </Flex>
             </Flex>
             <Flex
