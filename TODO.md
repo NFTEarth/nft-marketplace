@@ -8,7 +8,7 @@ Coding Tasks In Current Workflow: As part of the overall roadmap, tasks that req
 - [ ] Add % of total NFTE tokens staked on Staking page and NFTE LP page 
   - [ ] This % is of the entire NFTE token supply (so X / 100,000,000 * 100 and expressed in %)
 - [ ] Ensure the claiming of first Epoch lockers will be available at 00:00 UTC Thursday, September 28 (beginning of Epoch 2)
-- [ ] MAX TIME bug in UI - as the MINTIME and MAXTIME are in UNIX, we need to change the inputs from 1-12 to correspond with the smart contract precise timing otherwise it reverts in many edge cases/makes the UX confusing.
+- [x] MAX TIME bug in UI - as the MINTIME and MAXTIME are in UNIX, we need to change the inputs from 1-12 to correspond with the smart contract precise timing otherwise it reverts in many edge cases/makes the UX confusing.
 - [ ] When a very low balance of NFTE-LP in wallet and user clicks `stake` UI shows "Application error: a client-side exception has occurred (see the browser console for more information)." What is cause of this? 
 - [ ] Fix the PWA bug needing to exit PWA
 

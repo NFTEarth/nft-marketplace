@@ -28,7 +28,7 @@ import {OFTChain} from "utils/chains";
 import {parseError} from "utils/error";
 
 import ERC20Abi from "artifact/ERC20Abi";
-import XNFTEAbi from 'artifact/XNFTEAbi'
+import xNFTEAbi from 'artifact/xNFTEAbi'
 import {getPublicClient} from "@wagmi/core";
 import {roundToWeek} from "../../utils/round";
 import Link from "next/link";
@@ -117,7 +117,7 @@ const StakingTab: FC<Props> = (props) => {
   const { config, error: preparedError, refetch: refetchPrepareContract } = usePrepareContractWrite({
     enabled: !!address && !!chain?.xNFTE && hasLockedBalance || (!isZeroValue && !isZeroDuration),
     address: chain?.xNFTE as `0x${string}`,
-    abi: XNFTEAbi,
+    abi: xNFTEAbi,
     ...stakingArgs as any
   })
 
@@ -140,6 +140,10 @@ const StakingTab: FC<Props> = (props) => {
   const totalMonths = timePlusDuration.diff(dayjs(), 'months')
 
   const buttonText = useMemo(() => {
+    if (isSuccess) {
+      return 'Liqudity Added'
+    }
+
     if (!address) {
       return 'Connect Wallet'
     }
@@ -177,7 +181,7 @@ const StakingTab: FC<Props> = (props) => {
     return (totalValue / BigInt(12)) * BigInt(totalMonths)
   }, [totalValue, totalMonths])
 
-  const disableButton = ((isZeroValue || isZeroDuration) && !depositor?.lockedBalance) || (!!preparedError && !requireAllowance) || isLoading || isLoadingApproval || isLoadingTransaction
+  const disableButton = ((isZeroValue || isZeroDuration) && !depositor?.lockedBalance) || (!!preparedError && !requireAllowance) || isLoading || isLoadingApproval || isLoadingTransaction || isSuccess
 
   const handleStake = useCallback(async () => {
     try {

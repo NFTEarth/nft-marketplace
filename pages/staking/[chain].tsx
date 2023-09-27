@@ -24,7 +24,7 @@ import {formatBN} from "utils/numbers";
 import {roundToWeek} from "utils/round";
 
 import NFTEOFTAbi from 'artifact/NFTEOFTAbi'
-import XNFTEAbi from "artifact/XNFTEAbi";
+import xNFTEAbi from "artifact/xNFTEAbi";
 import AddressCollapsible from "../../components/staking/AddressCollapsible";
 
 const POOL_ADDRESS = '0x17ee09e7a2cc98b0b053b389a162fc86a67b9407'
@@ -51,7 +51,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
   const { data: nfteData } : { data: any } = useContractReads<
     [
       ContractFunctionConfig<typeof NFTEOFTAbi, 'balanceOf', 'view'>,
-      ContractFunctionConfig<typeof XNFTEAbi, 'locked', 'view'>,
+      ContractFunctionConfig<typeof xNFTEAbi, 'locked', 'view'>,
     ]
     >({
     contracts: [
@@ -65,7 +65,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
       },
       // xNFTE Locked
       {
-        abi: XNFTEAbi,
+        abi: xNFTEAbi,
         address: chain?.xNFTE as `0x${string}`,
         functionName: 'locked',
         chainId: arbitrum.id,

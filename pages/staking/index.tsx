@@ -24,18 +24,19 @@ import StakingList from "components/staking/StakingList";
 import StakeList from "components/staking/StakeList";
 import ClaimList from "components/staking/ClaimList";
 
-import {useMounted, useStakingLP} from "hooks";
+import {useAPR, useMounted, useStakingLP} from "hooks";
 
 import {OFT_CHAINS} from "utils/chains";
 import {formatBN} from "utils/numbers";
 
 import ERC20Abi from 'artifact/ERC20Abi'
-import XNFTEAbi from 'artifact/XNFTEAbi'
+import xNFTEAbi from 'artifact/xNFTEAbi'
 
 const StakingPage = () => {
   const chain = OFT_CHAINS.find((chain) => chain.id === arbitrum.id)
   const isMounted = useMounted()
   const [activeTab, setActiveTab] = useState('stakes')
+  const { APR } = useAPR(undefined, chain || OFT_CHAINS[2])
   const { address } = useAccount()
   const { data: lp } = useStakingLP(chain?.LPNFTE, { refreshInterval: 5000 })
   const { data: nfteData } : { data: any } = useContractReads({
@@ -65,7 +66,7 @@ const StakingPage = () => {
       },
       // xNFTE Locked
       {
-        abi: XNFTEAbi,
+        abi: xNFTEAbi,
         address: chain?.xNFTE as `0x${string}`,
         functionName: 'locked',
         chainId: arbitrum.id,
@@ -419,7 +420,7 @@ const StakingPage = () => {
                     gap: 5
                   }}
                 >
-                  <Text style="body4">Global Average lock time</Text>
+                  <Text style="body4">APY</Text>
                 </Flex>
               </Flex>
               <Text
@@ -430,7 +431,7 @@ const StakingPage = () => {
                   width: '100%'
                 }}
               >
-                {`${(345)} days`}
+                {`${APR}%`}
               </Text>
             </Flex>
             <Flex css={{
