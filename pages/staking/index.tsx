@@ -418,7 +418,7 @@ const StakingPage = () => {
                     gap: 5
                   }}
                 >
-                  <Text style="body4">APY</Text>
+                  <Text style="body4">APR</Text>
                 </Flex>
               </Flex>
               <Text

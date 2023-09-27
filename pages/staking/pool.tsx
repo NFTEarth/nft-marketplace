@@ -204,10 +204,6 @@ const PoolPage = () => {
     }
   }
 
-  const handleSetMaxValue = () => {
-    handleSetValue(formatBN(wethBalance?.data?.value, 6, 18) || '0')
-  }
-
   const handleSetNFTEValue = (val: string) => {
     try {
       parseUnits(`${+val}`, 18);
@@ -218,9 +214,14 @@ const PoolPage = () => {
     }
   }
 
-  const handleSetMaxNFTEValue = () => {
+
+  const handleSetMaxValue = useCallback(() => {
+    handleSetValue(formatBN(wethBalance?.data?.value, 6, 18) || '0')
+  }, [wethBalance])
+
+  const handleSetMaxNFTEValue = useCallback(() => {
     handleSetNFTEValue(formatBN(nfteBalance?.data?.value, 6, 18) || '0')
-  }
+  }, [nfteBalance])
 
   const disableButton = isZeroValue || loading || (!!preparedError && !requireNFTEAllowance && !requireWethAllowance && !requireETHWrap) || isLoading || isLoadingWethApproval || isLoadingNFTEApproval || isLoadingWrapEth || isLoadingTransaction
 
