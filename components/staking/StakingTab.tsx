@@ -249,42 +249,42 @@ const StakingTab: FC<Props> = (props) => {
 
   return (
     <Box>
-      <Flex
-        justify="between"
-        css={{
-          p: '14px 16px',
-          backgroundColor: '$gray2',
-          borderRadius: 8
-        }}
-      >
-        <Text style="body2">APR</Text>
-        <Flex
-          align="center"
-          css={{
-            gap: 5
-          }}
-        >
-          <Text style="body2">{`${APR}%`}</Text>
-          <Tooltip
-            content={
-              <Text
-                style="body3"
-                as="p"
-                css={{
-                  background: '#fff',
-                  color: '#000',
-                  margin: '-$2',
-                  p: '$2',
-                  maxWidth: 150
-                }}>
-                The APR displayed is based on data from the last claim period. The displayed APR may not represent future yield.
-              </Text>
-            }
-          >
-            <FontAwesomeIcon icon={faCircleInfo} width={10} height={10}/>
-          </Tooltip>
-        </Flex>
-      </Flex>
+      {/*<Flex*/}
+      {/*  justify="between"*/}
+      {/*  css={{*/}
+      {/*    p: '14px 16px',*/}
+      {/*    backgroundColor: '$gray2',*/}
+      {/*    borderRadius: 8*/}
+      {/*  }}*/}
+      {/*>*/}
+      {/*  <Text style="body2">APR</Text>*/}
+      {/*  <Flex*/}
+      {/*    align="center"*/}
+      {/*    css={{*/}
+      {/*      gap: 5*/}
+      {/*    }}*/}
+      {/*  >*/}
+      {/*    <Text style="body2">{`${APR}%`}</Text>*/}
+      {/*    <Tooltip*/}
+      {/*      content={*/}
+      {/*        <Text*/}
+      {/*          style="body3"*/}
+      {/*          as="p"*/}
+      {/*          css={{*/}
+      {/*            background: '#fff',*/}
+      {/*            color: '#000',*/}
+      {/*            margin: '-$2',*/}
+      {/*            p: '$2',*/}
+      {/*            maxWidth: 150*/}
+      {/*          }}>*/}
+      {/*          The APR displayed is based on data from the last claim period. The displayed APR may not represent future yield.*/}
+      {/*        </Text>*/}
+      {/*      }*/}
+      {/*    >*/}
+      {/*      <FontAwesomeIcon icon={faCircleInfo} width={10} height={10}/>*/}
+      {/*    </Tooltip>*/}
+      {/*  </Flex>*/}
+      {/*</Flex>*/}
       <Flex
         justify="between"
         css={{

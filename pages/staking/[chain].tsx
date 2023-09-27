@@ -17,7 +17,7 @@ import NumericalInput from "components/bridge/NumericalInput";
 import StakingTab from "components/staking/StakingTab";
 import UnStakingTab from "components/staking/UnstakingTab";
 
-import {useMounted, useStakingDepositor} from "hooks";
+import {useAPR, useMounted, useStakingDepositor} from "hooks";
 
 import {OFT_CHAINS, OFTChain} from "utils/chains";
 import {formatBN} from "utils/numbers";
@@ -28,7 +28,6 @@ import xNFTEAbi from "artifact/xNFTEAbi";
 import AddressCollapsible from "../../components/staking/AddressCollapsible";
 
 const POOL_ADDRESS = '0x17ee09e7a2cc98b0b053b389a162fc86a67b9407'
-const APR = 986.03
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -40,6 +39,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
   const { address } = useAccount()
   const mounted = useMounted()
   const router = useRouter()
+  const { APR } = useAPR(undefined, OFT_CHAINS[2])
   const chain = ssr.chain
 
   const addresses: Record<string, string> = {
