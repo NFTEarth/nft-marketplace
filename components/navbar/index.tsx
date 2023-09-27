@@ -125,10 +125,13 @@ const Navbar = () => {
           </Flex>
         </Flex>
         <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
-          <Link href={`/${routePrefix}/collection-rankings`}>
-            <NavItem active={router.pathname.includes('collection-rankings')}>
-              xNFTE
-            </NavItem>
+            <Link href={`/${routePrefix}/collection-rankings`}>
+              <NavItem active={router.pathname.includes('collection-rankings')}>
+                Collections
+              </NavItem>
+            </Link>
+            <Link href="/staking">
+              <NavItem active={router.pathname == '/staking'}>xNFTE</NavItem>
             </Link>
           <Dropdown
             modal={false}
