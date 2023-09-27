@@ -81,8 +81,6 @@ const StakingPage = () => {
   const [nfteLPBalance, xNfteBalance, totalSupplyXNfte, locked] = nfteData || []
 
   const stakingTitle = useMemo(() => {
-    const APY = '78.45';
-
     if (BigInt(nfteLPBalance?.result || 0) === BigInt(0) && BigInt(locked?.result?.[0] || 0) === BigInt(0)) {
       return (
         <Flex
@@ -112,7 +110,7 @@ const StakingPage = () => {
           </Text>
           {` and `}
           <Text style="h4" color="primary">
-            {`${formatBN(nfteLPBalance?.result || 0n, 2, 18, {})} LP NFTE`}
+            {`${formatBN(nfteLPBalance?.result || 0n, 2, 18, {})} NFTE LP`}
           </Text>
           {` available to stake.`}
         </Text>
@@ -204,7 +202,7 @@ const StakingPage = () => {
                     setActiveTab('stakes')
                   }}
                 >
-                  Your Stakes
+                  Your xNFTE
                 </Button>
                 <Button
                   color="ghost"
@@ -216,7 +214,7 @@ const StakingPage = () => {
                     setActiveTab('staking')
                   }}
                 >
-                  Available To Stake
+                  Your NFTE LP To Stake
                 </Button>
                 <Button
                   color="ghost"
@@ -228,7 +226,7 @@ const StakingPage = () => {
                     setActiveTab('claim')
                   }}
                 >
-                  Claim Staking Fees
+                  Claim Staking Rewards
                 </Button>
               </Flex>
               <Box>
@@ -265,7 +263,7 @@ const StakingPage = () => {
             </Flex>
           </Flex>
           <Flex align="start" css={{ width: '100%' }}>
-            <Text style="subtitle1">Staking Overview</Text>
+            <Text style="subtitle1">xNFTE Staking Overview</Text>
           </Flex>
           <Flex css={{
             flexDirection: 'column',
@@ -459,7 +457,7 @@ const StakingPage = () => {
                     textDecoration: 'underline'
                   }
                 }}
-              >{`Learn more about xNFTE in the NFTEarth docs`}</Text>
+              >{`Learn more about xNFTE staking in the NFTEarth docs`}</Text>
               <Flex
                 css={{
                   flexWrap: 'wrap',
@@ -479,7 +477,7 @@ const StakingPage = () => {
                       mb: '0.5625rem',
                       display: 'inline-block'
                     }}
-                  >My NFTE LP Locked</Text>
+                  >My Locked NFTE LP</Text>
                   <FormatCryptoCurrency
                     amount={locked?.result?.[0] || 0n}
                     textStyle="h6"
@@ -503,15 +501,6 @@ const StakingPage = () => {
                     address={chain?.xNFTE || zeroAddress}
                     chainId={arbitrum.id}
                   />
-                </div>
-                <div>
-                  <Text
-                    style="body4"
-                    css={{
-                      mb: '0.5625rem',
-                      display: 'inline-block'
-                    }}
-                  >Average Lock Time</Text>
                 </div>
               </Flex>
             </Flex>

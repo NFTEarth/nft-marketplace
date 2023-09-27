@@ -28,7 +28,7 @@ import xNFTEAbi from "artifact/xNFTEAbi";
 import AddressCollapsible from "../../components/staking/AddressCollapsible";
 
 const POOL_ADDRESS = '0x17ee09e7a2cc98b0b053b389a162fc86a67b9407'
-const APY = 78.45
+const APR = 986.03
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -45,7 +45,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
   const addresses: Record<string, string> = {
     'NFTE': chain?.address as string,
     'xNFTE': chain?.xNFTE as string,
-    'NFTE-WETH (NFTE LP)': chain?.LPNFTE as string,
+    'NFTE-WETH (NFTE Gamma Vault)': chain?.LPNFTE as string,
   }
 
   const { data: nfteData } : { data: any } = useContractReads<
@@ -295,7 +295,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
                     gap: 5
                   }}
                 >
-                  <Text style="body3">{+maxDuration < 1 ? 'You have reached max Duration' : `Stake Duration (${+maxDuration > 1 ? `1 to ${maxDuration}` : '1'}) months`}</Text>
+                  <Text style="body3">{+maxDuration < 1 ? 'You have locked for max duration' : `Stake Duration (${+maxDuration > 1 ? `1 to ${maxDuration}` : '1'}) months`}</Text>
                   <Tooltip
                     content={
                       <Text
@@ -341,7 +341,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
               </Flex>
               {activeTab === "staking" && (
                 <StakingTab
-                  APY={APY}
+                  APR={APR}
                   value={valueEth}
                   duration={parseInt(duration)}
                   chain={chain}

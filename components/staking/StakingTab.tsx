@@ -35,7 +35,7 @@ import Link from "next/link";
 import { arbitrum } from "viem/chains";
 
 type Props = {
-  APY: number
+  APR: number
   value: string
   duration: number
   depositor: StakingDepositor | null
@@ -47,7 +47,7 @@ export const MAX_LOCK_PERIOD_IN_DAYS = 365; // 1y
 export const MIN_LOCK_PERIOD_IN_DAYS = 30;
 
 const StakingTab: FC<Props> = (props) => {
-  const { APY, value, duration, chain, onSuccess, depositor } = props
+  const { APR, value, duration, chain, onSuccess, depositor } = props
   const { address } = useAccount()
   const { chain: activeChain } = useNetwork()
   const { openConnectModal } = useConnectModal()
@@ -257,14 +257,14 @@ const StakingTab: FC<Props> = (props) => {
           borderRadius: 8
         }}
       >
-        <Text style="body2">APY</Text>
+        <Text style="body2">APR</Text>
         <Flex
           align="center"
           css={{
             gap: 5
           }}
         >
-          <Text style="body2">{`${APY}%`}</Text>
+          <Text style="body2">{`${APR}%`}</Text>
           <Tooltip
             content={
               <Text
@@ -277,7 +277,7 @@ const StakingTab: FC<Props> = (props) => {
                   p: '$2',
                   maxWidth: 150
                 }}>
-                The APY displayed is based on data from the last claim period. The displayed APY may not represent future yield.
+                The APR displayed is based on data from the last claim period. The displayed APR may not represent future yield.
               </Text>
             }
           >
