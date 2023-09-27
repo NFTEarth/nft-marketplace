@@ -58,7 +58,7 @@ const AddressCollapsible: FC<Props> = ({ addresses, chain }) => {
               transition: '.3s',
             }}
           >
-            <FontAwesomeIcon icon={faChevronDown} />
+            <FontAwesomeIcon icon={faChevronDown} width={16} height={16} />
           </Box>
         </Flex>
       </CollapsiblePrimitive.Trigger>

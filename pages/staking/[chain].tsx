@@ -45,7 +45,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
   const addresses: Record<string, string> = {
     'NFTE': chain?.address as string,
     'xNFTE': chain?.xNFTE as string,
-    'NFTE-WETH (NFTE Gamma Vault)': chain?.LPNFTE as string,
+    'NFTE-WETH Vault (NFTE LP)': chain?.LPNFTE as string,
   }
 
   const { data: nfteData } : { data: any } = useContractReads<
