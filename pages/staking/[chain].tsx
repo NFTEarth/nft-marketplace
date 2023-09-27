@@ -26,6 +26,7 @@ import {roundToWeek} from "utils/round";
 import NFTEOFTAbi from 'artifact/NFTEOFTAbi'
 import xNFTEAbi from "artifact/xNFTEAbi";
 import AddressCollapsible from "../../components/staking/AddressCollapsible";
+import AlertChainSwitch from "../../components/common/AlertChainSwitch";
 
 const POOL_ADDRESS = '0x17ee09e7a2cc98b0b053b389a162fc86a67b9407'
 
@@ -122,6 +123,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
 
   return (
     <Layout>
+      <AlertChainSwitch chainId={chain?.id}/>
       <Flex
         direction="column"
         css={{

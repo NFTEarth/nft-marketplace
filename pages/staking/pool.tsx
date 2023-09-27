@@ -45,6 +45,7 @@ import {
 import {truncateAddress} from "../../utils/truncate";
 import * as CollapsiblePrimitive from "@radix-ui/react-collapsible";
 import AddressCollapsible from "../../components/staking/AddressCollapsible";
+import AlertChainSwitch from "../../components/common/AlertChainSwitch";
 
 const WETH_ADDRESS = '0x82af49447d8a07e3bd95bd0d56f35241523fbab1'
 const POOL_ADDRESS = '0x17ee09e7a2cc98b0b053b389a162fc86a67b9407'
@@ -373,6 +374,7 @@ const PoolPage = () => {
 
   return (
     <Layout>
+      <AlertChainSwitch chainId={arbitrum.id}/>
       <Flex
         direction="column"
         css={{

@@ -49,11 +49,7 @@ export const MIN_LOCK_PERIOD_IN_DAYS = 30;
 const StakingTab: FC<Props> = (props) => {
   const { APR, value, duration, chain, onSuccess, depositor } = props
   const { address } = useAccount()
-  const { chain: activeChain } = useNetwork()
   const { openConnectModal } = useConnectModal()
-  const { switchNetworkAsync } = useSwitchNetwork({
-    chainId: chain?.id,
-  })
   const publicClient = getPublicClient()
   const {addToast} = useContext(ToastContext)
 
