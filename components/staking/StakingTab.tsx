@@ -3,7 +3,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleInfo, faExternalLink, faLock} from "@fortawesome/free-solid-svg-icons";
 import {
   parseEther,
-  formatEther
+  formatEther, parseUnits, formatUnits
 } from "viem";
 import dayjs, {} from "dayjs";
 import { MaxUint256 } from "ethers";
@@ -33,6 +33,7 @@ import {getPublicClient} from "@wagmi/core";
 import {roundToWeek} from "../../utils/round";
 import Link from "next/link";
 import { arbitrum } from "viem/chains";
+import Decimal from "decimal.js-light";
 
 type Props = {
   APR: number
@@ -53,10 +54,11 @@ const StakingTab: FC<Props> = (props) => {
   const publicClient = getPublicClient()
   const {addToast} = useContext(ToastContext)
 
+  const valueBn = parseEther((new Decimal(value)).toFixed() as `${number}`)
   const timeStamp = parseInt(`${depositor?.lockEndTimestamp || 0}`);
   const newTime = timeStamp > 0 && timeStamp > dayjs().startOf('day').unix() ? dayjs.unix(timeStamp).startOf('day') : dayjs().startOf('day')
   const timePlusDuration = roundToWeek(dayjs(newTime).add(duration * 30, 'days'))
-  const isZeroValue = parseEther(value as `${number}`) <= BigInt(0)
+  const isZeroValue = parseFloat(value) <= 0
   const isZeroDuration = duration < 1
   const hasLockedBalance = (BigInt(depositor?.lockedBalance || 0)) > BigInt(0)
 
@@ -68,7 +70,7 @@ const StakingTab: FC<Props> = (props) => {
     args: [address as `0x${string}`, chain?.xNFTE as `0x${string}`],
   })
 
-  const requireAllowance = BigInt(allowance || 0) < parseEther(value as `${number}`);
+  const requireAllowance = parseFloat(formatUnits(allowance  || BigInt(0), 18)) < parseFloat(value);
 
   const stakingArgs = useMemo(() => {
     if ((depositor?.lockedBalance || BigInt(0)) > BigInt(0)) {
@@ -76,7 +78,7 @@ const StakingTab: FC<Props> = (props) => {
         return {
           functionName: 'increase_amount_and_time',
           args:[
-            parseEther(value as `${number}`),
+            valueBn,
             timePlusDuration.unix()
           ]
         }
@@ -95,7 +97,7 @@ const StakingTab: FC<Props> = (props) => {
         return {
           functionName: 'increase_amount',
           args:[
-            parseEther(value  as `${number}`),
+            valueBn
           ]
         }
       }
@@ -104,7 +106,7 @@ const StakingTab: FC<Props> = (props) => {
     return {
       functionName: 'create_lock',
       args: [
-        parseEther(value as `${number}`),
+        valueBn,
         timePlusDuration.unix()
       ]
     }
@@ -118,7 +120,6 @@ const StakingTab: FC<Props> = (props) => {
   })
 
   const { writeAsync, error, data, isLoading } = useContractWrite(config)
-  const valueN = parseEther(value  as `${number}`)
   const { writeAsync: approveAsync, isLoading: isLoadingApproval } = useContractWrite({
     address: chain?.LPNFTE as `0x${string}`,
     abi: ERC20Abi,
@@ -131,7 +132,7 @@ const StakingTab: FC<Props> = (props) => {
     enabled: !!data?.hash
   })
 
-  const totalValue = depositor?.lockedBalance ? BigInt(depositor?.lockedBalance) + valueN : valueN
+  const totalValue = depositor?.lockedBalance ? BigInt(depositor?.lockedBalance) + valueBn : valueBn
   const totalDays = timePlusDuration.diff(dayjs(), 'days')
   const totalMonths = timePlusDuration.diff(dayjs(), 'months')
 

@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faCircleInfo} from "@fortawesome/free-solid-svg-icons";
 import {formatUnits, parseUnits} from "ethers";
 import {useAccount, useContractReads} from "wagmi";
-import {ContractFunctionConfig} from "viem";
+import {ContractFunctionConfig, formatEther} from "viem";
 import {arbitrum} from "viem/chains";
 import {useRouter} from "next/router";
 import {Abi} from "abitype";
@@ -27,6 +27,7 @@ import NFTEOFTAbi from 'artifact/NFTEOFTAbi'
 import xNFTEAbi from "artifact/xNFTEAbi";
 import AddressCollapsible from "../../components/staking/AddressCollapsible";
 import AlertChainSwitch from "../../components/common/AlertChainSwitch";
+import Decimal from "decimal.js-light";
 
 const POOL_ADDRESS = '0x17ee09e7a2cc98b0b053b389a162fc86a67b9407'
 
@@ -37,11 +38,12 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
   const [valueEth, setValueEth] = useState<string>('0')
   const [duration, setDuration] = useState<string>('0')
   const [maxDuration, setMaxDuration] = useState<string>('12')
-  const { address } = useAccount()
+  // const { address } = useAccount()
+  const address = '0x195832FeF3aAD07D882F1Ba71E2392F95D8B9CDe'
   const mounted = useMounted()
   const router = useRouter()
   const { APR } = useAPR(undefined, OFT_CHAINS[2])
-  const chain = ssr.chain
+  const chain = ssr.chain || OFT_CHAINS[2]
 
   const addresses: Record<string, string> = {
     'NFTE': chain?.address as string,
@@ -113,8 +115,8 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
   }
 
   const handleSetMaxValue = useCallback(() => {
-    const val = formatBN(BigInt(nfteLPBalance?.result || 0), 6, 18)
-    setValueEth(`${val}`)
+    const val = new Decimal(formatEther(BigInt(nfteLPBalance?.result || 0), 'wei'))
+    setValueEth(`${val.toFixed()}`)
   }, [nfteLPBalance])
 
   if (!mounted) {
@@ -344,7 +346,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
               {activeTab === "staking" && (
                 <StakingTab
                   APR={APR}
-                  value={valueEth}
+                  value={`${parseFloat(valueEth)}`}
                   duration={parseInt(duration)}
                   chain={chain}
                   depositor={{

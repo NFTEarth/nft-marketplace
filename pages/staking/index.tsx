@@ -195,32 +195,38 @@ const StakingPage = () => {
                 <Button
                   color="ghost"
                   css={{
+                    px: 10,
                     mr: '1rem',
-                    whiteSpace: 'nowrap'
+                    whiteSpace: 'nowrap',
+                    borderBottom: activeTab === 'stakes' ? '1px solid $primary9' : '1px solid transparent'
                   }}
                   onClick={() => {
                     setActiveTab('stakes')
                   }}
                 >
-                  Your xNFTE
+                  My Staking
                 </Button>
                 <Button
                   color="ghost"
                   css={{
+                    px: 10,
                     mr: '1rem',
-                    whiteSpace: 'nowrap'
+                    whiteSpace: 'nowrap',
+                    borderBottom: activeTab === 'staking' ? '1px solid $primary9' : '1px solid transparent'
                   }}
                   onClick={() => {
                     setActiveTab('staking')
                   }}
                 >
-                  Your NFTE LP To Stake
+                  Available to Stake
                 </Button>
                 <Button
                   color="ghost"
                   css={{
+                    px: 10,
                     mr: '1rem',
-                    whiteSpace: 'nowrap'
+                    whiteSpace: 'nowrap',
+                    borderBottom: activeTab === 'claim' ? '1px solid $primary9' : '1px solid transparent'
                   }}
                   onClick={() => {
                     setActiveTab('claim')

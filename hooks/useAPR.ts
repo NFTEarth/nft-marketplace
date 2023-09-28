@@ -19,7 +19,7 @@ const POOL_ADDRESS = '0x17ee09e7a2cc98b0b053b389a162fc86a67b9407'
 
 const useAPR = (timestamp: number = dayjs().startOf('day').toDate().getTime(), chain: OFTChain) => {
   const previousWeekUnix = getPreviousWeek(timestamp);
-  console.log(previousWeekUnix, dayjs(previousWeekUnix * 1000).format())
+
   const { data, isLoading } = useContractReads({
     contracts: [
       {
@@ -61,7 +61,6 @@ const useAPR = (timestamp: number = dayjs().startOf('day').toDate().getTime(), c
   })
 
   const [distributedWeth, distributedNFTE, totalSupplyXNfte, basePositionLP, liquidity] = data || []
-  console.log('data', data)
 
   const { data: wethPrice, isLoading: isLoadingWethPrice } = useUSDAndNativePrice({
     chainId: arbitrum.id,
