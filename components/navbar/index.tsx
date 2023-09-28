@@ -24,6 +24,7 @@ import {
   faBridge
 } from "@fortawesome/free-solid-svg-icons";
 import { link } from 'fs'
+import Badge from "../primitives/Badge";
 
 export const NAVBAR_HEIGHT = 81
 export const NAVBAR_HEIGHT_MOBILE = 77
@@ -125,32 +126,52 @@ const Navbar = () => {
           </Flex>
         </Flex>
         <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
-            
-            <Link href={`/${routePrefix}/collection-rankings`}>
-              <NavItem active={router.pathname.includes('collection-rankings')}>
-                Collections
-              </NavItem>
-            </Link>
-            <Link href="https://lowfeenft.nftearth.exchange/" target="_blank">
-              <NavItem>Mint LowFeeNFT!</NavItem>
-            </Link>
-            <Link href="/staking">
-              <NavItem active={router.pathname == '/staking'}>xNFTE</NavItem>
-            </Link>
+          <Link href={`/${routePrefix}/collection-rankings`}>
+            <NavItem active={router.pathname.includes('collection-rankings')}>
+              Collections
+            </NavItem>
+          </Link>
+          <Link href="https://lowfeenft.nftearth.exchange/" target="_blank">
+            <NavItem>
+              <Flex align="center">
+                <Badge
+                  color="secondary"
+                  corners="pill"
+                  css={{
+                    marginRight: 5
+                  }}
+                >
+                  New
+                </Badge>
+                {`Mint LowFeeNFT!`}
+              </Flex>
+            </NavItem>
+          </Link>
           <Dropdown
             modal={false}
             trigger={
               <NavItem>
-                {`Token`}
-                <FontAwesomeIcon
-                  icon={faChevronDown}
-                  width={16}
-                  height={16}
-                  style={{
-                    marginLeft: 5,
-                    display: 'inline-block'
-                  }}
-                />
+                <Flex align="center">
+                  <Badge
+                    color="secondary"
+                    corners="pill"
+                    css={{
+                      marginRight: 5
+                    }}
+                  >
+                    New
+                  </Badge>
+                  {`Token`}
+                  <FontAwesomeIcon
+                    icon={faChevronDown}
+                    width={16}
+                    height={16}
+                    style={{
+                      marginLeft: 5,
+                      display: 'inline-block'
+                    }}
+                  />
+                </Flex>
               </NavItem>
             }
             contentProps={{
@@ -200,7 +221,13 @@ const Navbar = () => {
               }}
             >
               <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faDroplet} width={20} height={20}/>
-              Get NFTE LP
+              {`Get NFTE LP`}
+              <Badge
+                color="secondary"
+                corners="pill"
+              >
+                New
+              </Badge>
             </DropdownMenuItem>
             <DropdownMenuItem
               as={Link}
@@ -215,22 +242,41 @@ const Navbar = () => {
             >
               <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faDollarSign} width={20} height={20}/>
               {`Staking Rewards`}
+              <Badge
+                color="secondary"
+                corners="pill"
+              >
+                New
+              </Badge>
             </DropdownMenuItem>
           </Dropdown>
           <Dropdown
             modal={false}
             trigger={
               <NavItem>
-                {`Products`}
-                <FontAwesomeIcon
-                  icon={faChevronDown}
-                  width={16}
-                  height={16}
-                  style={{
-                    marginLeft: 5,
-                    display: 'inline-block'
-                  }}
-                />
+                <Flex
+                  align="center"
+                >
+                  <Badge
+                    color="secondary"
+                    corners="pill"
+                    css={{
+                      marginRight: 5
+                    }}
+                  >
+                    New
+                  </Badge>
+                  {`Products`}
+                  <FontAwesomeIcon
+                    icon={faChevronDown}
+                    width={16}
+                    height={16}
+                    style={{
+                      marginLeft: 5,
+                      display: 'inline-block'
+                    }}
+                  />
+                </Flex>
               </NavItem>
             }
             contentProps={{
@@ -239,24 +285,8 @@ const Navbar = () => {
               sideOffset: 35
             }}
           >
-            <DropdownMenuItem
-              as={Link}
-              href="/collection-rankings"
-              css={{
-                display: 'flex',
-                py: '$3',
-                width: '100%',
-                alignItems: 'center',
-                gap: 10
-              }}
-            >
-              <Image src="/images/nftearth-icon.png" width={20} height={20} objectFit="contain" alt="Collections"/>
-              {`Collections`}
-            </DropdownMenuItem>
 
             <DropdownMenuItem
-              as={Link}
-              href="/collection-rankings"
               css={{
                 display: 'flex',
                 py: '$3',
@@ -267,6 +297,7 @@ const Navbar = () => {
             >
               <Image src="/images/earthchat-icon.png" width={20} height={20} objectFit="contain" alt="Collections"/>
               {`EarthChat`}
+              <Badge corners="pill">Soon</Badge>
             </DropdownMenuItem>
             
             <DropdownMenuItem
@@ -297,6 +328,15 @@ const Navbar = () => {
             >
               <Image src="/images/smartnft.png" width={20} height={20} objectFit="contain" alt="SmartNFT"/>
               {`SmartNFT`}
+              <Badge
+                color="secondary"
+                corners="pill"
+                css={{
+                  marginRight: 5
+                }}
+              >
+                New
+              </Badge>
             </DropdownMenuItem>
           </Dropdown>
         </Flex>

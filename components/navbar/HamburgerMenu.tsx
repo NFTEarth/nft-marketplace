@@ -18,6 +18,7 @@ import {useENSResolver, useMarketplaceChain, useProfile} from 'hooks'
 import Wallet from 'components/navbar/Wallet'
 import {Collapsible} from "../primitives/Collapsible";
 import {signOut} from "next-auth/react";
+import Badge from "../primitives/Badge";
 
 const HamburgerMenu = () => {
   const {
@@ -144,6 +145,30 @@ const HamburgerMenu = () => {
               Collections
             </Text>
           </Link>
+          <Link href={`https://lowfeenft.nftearth.exchange/`} legacyBehavior>
+            <Text
+              style="subtitle1"
+              css={{
+                borderBottom: '1px solid $gray4',
+                cursor: 'pointer',
+                pb: '$4',
+                pt: '24px',
+                display: 'flex',
+                alignItems: 'center'
+              }}
+            >
+              Mint LowFeeNFT!
+              <Badge
+                color="secondary"
+                corners="pill"
+                css={{
+                  marginLeft: 5
+                }}
+              >
+                New
+              </Badge>
+            </Text>
+          </Link>
           <Collapsible
             trigger={
               <Flex
@@ -158,8 +183,21 @@ const HamburgerMenu = () => {
               >
                 <Text
                   style="subtitle1"
+                  css={{
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}
                 >
-                  Token
+                  {`Token`}
+                  <Badge
+                    color="secondary"
+                    corners="pill"
+                    css={{
+                      marginLeft: 5
+                    }}
+                  >
+                    New
+                  </Badge>
                 </Text>
                 <FontAwesomeIcon icon={faChevronDown} width={20} height={20}/>
               </Flex>
@@ -205,9 +243,20 @@ const HamburgerMenu = () => {
                     cursor: 'pointer',
                     pb: '$4',
                     pt: '24px',
+                    alignItems: 'center',
+                    display: 'flex'
                   }}
                 >
-                  Get NFTE LP
+                  {`Get NFTE LP`}
+                  <Badge
+                    color="secondary"
+                    corners="pill"
+                    css={{
+                      marginLeft: 5
+                    }}
+                  >
+                    New
+                  </Badge>
                 </Text>
               </Link>
               <Link href="/staking" legacyBehavior>
@@ -218,9 +267,20 @@ const HamburgerMenu = () => {
                     cursor: 'pointer',
                     pb: '$4',
                     pt: '24px',
+                    alignItems: 'center',
+                    display: 'flex'
                   }}
                 >
                   {`Staking Rewards`}
+                  <Badge
+                    color="secondary"
+                    corners="pill"
+                    css={{
+                      marginLeft: 5
+                    }}
+                  >
+                    New
+                  </Badge>
                 </Text>
               </Link>
             </Flex>
