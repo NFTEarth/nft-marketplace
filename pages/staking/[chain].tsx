@@ -38,8 +38,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
   const [valueEth, setValueEth] = useState<string>('0')
   const [duration, setDuration] = useState<string>('0')
   const [maxDuration, setMaxDuration] = useState<string>('12')
-  // const { address } = useAccount()
-  const address = '0x195832FeF3aAD07D882F1Ba71E2392F95D8B9CDe'
+  const { address } = useAccount()
   const mounted = useMounted()
   const router = useRouter()
   const { APR } = useAPR(undefined, OFT_CHAINS[2])
