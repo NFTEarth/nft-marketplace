@@ -131,7 +131,7 @@ const Navbar = () => {
               Collections
             </NavItem>
           </Link>
-          <Link href="/lowfeenft" target="_blank">
+          <Link href="/lowfeenft">
             <NavItem>
               <Flex align="center">
                 <Badge
