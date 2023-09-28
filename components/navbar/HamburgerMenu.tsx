@@ -145,7 +145,7 @@ const HamburgerMenu = () => {
               Collections
             </Text>
           </Link>
-          <Link href={`https://lowfeenft.nftearth.exchange/`} legacyBehavior>
+          <Link href={`/lowfeenft`} legacyBehavior>
             <Text
               style="subtitle1"
               css={{

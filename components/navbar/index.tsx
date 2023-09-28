@@ -131,7 +131,7 @@ const Navbar = () => {
               Collections
             </NavItem>
           </Link>
-          <Link href="https://lowfeenft.nftearth.exchange/" target="_blank">
+          <Link href="/lowfeenft" target="_blank">
             <NavItem>
               <Flex align="center">
                 <Badge
