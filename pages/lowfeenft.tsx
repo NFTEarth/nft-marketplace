@@ -1,15 +1,21 @@
 import {Box} from "../components/primitives";
 import Layout from "../components/Layout";
 import {Footer} from "../components/Footer";
+import { styled } from 'stitches.config'
+
+export const Iframe = styled('iframe', {})
 
 const LowFeeNFTMint = () => {
   return (
     <Layout>
-      <iframe
+      <Iframe
         src="https://lowfeenft.nftearth.exchange/"
-        style={{
+        css={{
           width: '100%',
-          height: 1000
+          height: 670,
+          '@bp800': {
+            height: 1000,
+          },
         }}
       />
       <Box
@@ -19,6 +25,7 @@ const LowFeeNFTMint = () => {
           '@bp800': {
             p: '$6',
           },
+          pt: 0,
         }}
       >
         <Footer />
