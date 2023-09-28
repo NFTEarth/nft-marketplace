@@ -1,11 +1,15 @@
 <h3 align="center">NFTEarth</h3>
   <p align="center">
 
-<p align="center">Opensource NFT protocol.</p>
+# App 
 
-<p align="center">NFT Marketplace, SocialFi, GameFi, NFT Launchpad, and AI-infused NFTs - all on NFTEarth.</p>
+[NFTEarth](https://nftearth.exchange)
 
-![image](https://github.com/NFTEarth/nft-marketplace/assets/29180454/86fd809f-1a45-4158-bf56-b5a7ac466adc)
+<p align="center">Omnichain NFT protocol.</p>
+
+<p align="center">NFT Marketplace, NFTFi, SocialFi, GameFi, NFT Launchpad, and AI-infused NFTs - all part of the NFTEarth protocol.</p>
+
+![image](https://github.com/NFTEarth/nft-marketplace/assets/29180454/42662827-5a5e-4218-9854-ebdfc116fa13)
 
 
 ### Built With
