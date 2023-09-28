@@ -14,7 +14,7 @@ import {faExternalLink} from "@fortawesome/free-solid-svg-icons";
 
 const claimableTokens : `0x${string}`[] = [
   '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
-  '0x51B902f19a56F0c8E409a34a215AD2673EDF3284'
+  //'0x51B902f19a56F0c8E409a34a215AD2673EDF3284'
 ]
 
 const ClaimList = () => {
@@ -37,7 +37,7 @@ const ClaimList = () => {
 
   const loading = isLoading || isLoadingTransaction;
   const disableButton = isLoading || isLoadingTransaction || isSuccess
-  const totalClaimable = BigInt(preparedData?.result?.[0] || 0) + BigInt(preparedData?.result?.[1] || 0)
+  const totalClaimable = BigInt(preparedData?.result?.[0] || 0)// + BigInt(preparedData?.result?.[1] || 0)
 
   const handleClaimReward = async () => {
     try {
@@ -162,7 +162,12 @@ const ClaimList = () => {
                   direction="column"
                 >
                   <Text style="body3">Token</Text>
-                  <Text style="h6">WETH</Text>
+                  {BigInt(preparedData?.result?.[0] || 0) > 0 && (
+                    <Text style="h6">WETH</Text>
+                  )}
+                  {/*{BigInt(preparedData?.result?.[1] || 0) > 0 && (*/}
+                  {/*  <Text style="h6">NFTE</Text>*/}
+                  {/*)}*/}
                 </Flex>
               </Flex>
               <Flex
