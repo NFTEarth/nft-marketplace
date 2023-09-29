@@ -41,7 +41,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
   const { address } = useAccount()
   const mounted = useMounted()
   const router = useRouter()
-  const { APR } = useAPR(undefined, OFT_CHAINS[2])
+  const { APR } = useAPR(undefined, OFT_CHAINS[0])
   const chain = ssr.chain || OFT_CHAINS[2]
 
   const addresses: Record<string, string> = {
