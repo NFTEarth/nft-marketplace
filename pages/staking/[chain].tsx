@@ -42,7 +42,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
   const mounted = useMounted()
   const router = useRouter()
   const { APR } = useAPR(undefined, OFT_CHAINS[0])
-  const chain = ssr.chain || OFT_CHAINS[2]
+  const chain = ssr.chain || OFT_CHAINS[0]
 
   const addresses: Record<string, string> = {
     'NFTE': chain?.address as string,
