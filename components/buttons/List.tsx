@@ -22,7 +22,6 @@ import { zeroAddress } from 'viem'
 
 import { Button } from 'components/primitives'
 import { ToastContext } from 'context/ToastContextProvider'
-import {base} from "utils/chains";
 
 type ListingCurrencies = ComponentPropsWithoutRef<
   typeof ListModal
@@ -96,22 +95,6 @@ const List: FC<Props> = ({
         decimals: 18,
         coinGeckoId: 'arbitrum',
       }
-    ]
-  }
-
-  if (marketplaceChain.id === base.id) {
-    listingCurrencies = [
-      {
-        contract: zeroAddress,
-        symbol: 'ETH',
-        coinGeckoId: 'ethereum',
-      },
-      {
-        contract: '0xc2106ca72996e49bBADcB836eeC52B765977fd20',
-        symbol: 'NFTE',
-        decimals: 18,
-        coinGeckoId: 'nftearth',
-      },
     ]
   }
 

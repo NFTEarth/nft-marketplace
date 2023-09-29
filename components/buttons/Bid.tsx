@@ -20,8 +20,6 @@ import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 import {arbitrum} from "wagmi/chains";
-import {zeroAddress} from "viem";
-import {base} from "../../utils/chains";
 
 type Props = {
   tokenId?: string | undefined
@@ -103,17 +101,6 @@ const Bid: FC<Props> = ({
         decimals: 18,
         coinGeckoId: 'arbitrum',
       }
-    ]
-  }
-
-  if (marketplaceChain.id === base.id) {
-    bidCurrencies = [
-      {
-        contract: '0xc2106ca72996e49bBADcB836eeC52B765977fd20',
-        symbol: 'NFTE',
-        decimals: 18,
-        coinGeckoId: 'nftearth',
-      },
     ]
   }
 
