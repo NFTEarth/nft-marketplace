@@ -31,6 +31,7 @@ import {formatBN} from "utils/numbers";
 
 import ERC20Abi from 'artifact/ERC20Abi'
 import xNFTEAbi from 'artifact/xNFTEAbi'
+import Decimal from "decimal.js-light";
 
 const StakingPage = () => {
   const chain = OFT_CHAINS.find((chain) => chain.id === arbitrum.id)
@@ -86,7 +87,7 @@ const StakingPage = () => {
         <Flex
           direction="column"
         >
-          <Text style="h4">You don’t have any NFTE LP positions to stake in your wallet.</Text>
+          <Text style="h4">You don’t have any NFTE LP tokens to stake in your wallet.</Text>
           <Text css={{ maxWidth: '75%' }}>{`xNFTE holders control protocol governance and earn all revenue sharing from the DAO. NFTEarth is governed entirely by xNFTE holders.`}</Text>
           <Flex css={{ mt: 20}}>
             <Button
@@ -435,7 +436,7 @@ const StakingPage = () => {
                   width: '100%'
                 }}
               >
-                {`${APR}%`}
+                {`${APR * 52}%`}
               </Text>
             </Flex>
             <Flex css={{

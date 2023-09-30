@@ -78,13 +78,21 @@ const useAPR = (timestamp: number = dayjs().startOf('day').toDate().getTime(), c
   const lastWeekWethRevenue =  parseFloat(formatUnits(BigInt(wethPrice?.usdPrice || 0), 8) || '0')
   const lastWeekNFTERevenue =  parseFloat(formatUnits(BigInt(nftePrice?.usdPrice || 0), 8) || '0')
 
-  const dailyRevenue = (lastWeekWethRevenue + lastWeekNFTERevenue) / 7;
+  const lastWeekRevenue = (lastWeekWethRevenue + lastWeekNFTERevenue)
+  const dailyRevenue = lastWeekRevenue / 7;
   const nFTELPLiquidity = parseFloat(formatUnits((basePositionLP?.result?.[0] || BigInt(0)) + (liquidity?.result || BigInt(0)), 18))
 
   return {
     isLoading: isLoading || isLoadingWethPrice || isLoadingNFTEPrice,
     TVL: (basePositionLP?.result?.[0] || BigInt(0)),
     dailyRevenue,
+    lastWeekRevenue,
+    dailyAPR: Math.round(
+      (10000 * dailyRevenue) / (nFTELPLiquidity * xNfteSupply)
+    ),
+    weeklyAPR: Math.round(
+    (10000 * (7 * dailyRevenue)) / (nFTELPLiquidity * xNfteSupply)
+    ),
     APR: Math.round(
       (10000 * (365 * dailyRevenue)) / (nFTELPLiquidity * xNfteSupply)
     )
