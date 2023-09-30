@@ -296,8 +296,22 @@ const Navbar = () => {
                 gap: 10
               }}
             >
-              <Image src="/images/earthchat-icon.png" width={20} height={20} objectFit="contain" alt="Collections"/>
-              {`EarthChat`}
+              <Image src="/images/web3chat-icon.png" width={20} height={20} objectFit="contain" alt="Web3Chat"/>
+              {`Web3Chat`}
+              <Badge corners="pill">Soon</Badge>
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              css={{
+                display: 'flex',
+                py: '$3',
+                width: '100%',
+                alignItems: 'center',
+                gap: 10
+              }}
+            >
+              <Image src="/images/raffle-icon.png" width={20} height={20} objectFit="contain" alt="Raffle"/>
+              {`Raffle`}
               <Badge corners="pill">Soon</Badge>
             </DropdownMenuItem>
             
