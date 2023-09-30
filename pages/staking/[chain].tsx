@@ -17,7 +17,7 @@ import NumericalInput from "components/bridge/NumericalInput";
 import StakingTab from "components/staking/StakingTab";
 import UnStakingTab from "components/staking/UnstakingTab";
 
-import {useAPR, useMounted, useStakingDepositor} from "hooks";
+import {useMounted} from "hooks";
 
 import {OFT_CHAINS, OFTChain} from "utils/chains";
 import {formatBN} from "utils/numbers";
@@ -41,7 +41,6 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
   const { address } = useAccount()
   const mounted = useMounted()
   const router = useRouter()
-  const { APR } = useAPR(undefined, OFT_CHAINS[0])
   const chain = ssr.chain || OFT_CHAINS[0]
 
   const addresses: Record<string, string> = {
@@ -344,7 +343,6 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
               </Flex>
               {activeTab === "staking" && (
                 <StakingTab
-                  APR={APR}
                   value={`${parseFloat(valueEth)}`}
                   duration={parseInt(duration)}
                   chain={chain}

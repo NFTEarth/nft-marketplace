@@ -425,7 +425,7 @@ const StakingPage = () => {
                     gap: 5
                   }}
                 >
-                  <Text style="body4">APY</Text>
+                  <Text style="body4">APR</Text>
                 </Flex>
               </Flex>
               <Text
@@ -436,7 +436,7 @@ const StakingPage = () => {
                   width: '100%'
                 }}
               >
-                {`${APR * 52}%`}
+                {`${APR}%`}
               </Text>
             </Flex>
             <Flex css={{

@@ -206,7 +206,7 @@ const BridgePage = () => {
     >
       <Select.Value asChild>
         <Flex align="center" justify="center" css={{ gap: 10 }}>
-          <img style={{ height: 17, width: 17 }} src={chain?.darkIconUrl} />
+          <img style={{ height: 17 }} src={chain?.darkIconUrl} />
         </Flex>
       </Select.Value>
     </Select.Trigger>
@@ -222,7 +222,7 @@ const BridgePage = () => {
     >
       <Select.Value asChild>
         <Flex align="center" justify="center" css={{ gap: 10 }} title={toChain.name}>
-          <img style={{ height: 17, width: 17 }} src={toChain?.darkIconUrl} />
+          <img style={{ height: 17 }} src={toChain?.darkIconUrl} />
         </Flex>
       </Select.Value>
     </Select.Trigger>
@@ -308,7 +308,7 @@ const BridgePage = () => {
                         <Select.Item key={`chain-from-${option.id}`} value={`${option.id}`}>
                           <Select.ItemText css={{ whiteSpace: 'nowrap' }}>
                             <Flex css={{ gap: 10 }}>
-                              <img style={{ width: 17, height: 17 }} src={option?.darkIconUrl} />
+                              <img style={{ width: 17 }} src={option?.darkIconUrl} />
                               <Text style="body1" css={{ ml: '$2' }}>
                                 {option.name}
                               </Text>
@@ -317,7 +317,7 @@ const BridgePage = () => {
                         </Select.Item>
                       ))}
                     </Select>
-                    <FontAwesomeIcon icon={faArrowRight} />
+                    <FontAwesomeIcon icon={faArrowRight} width={20} height={20}/>
                     <Select
                       value={`${toChainId}`}
                       onValueChange={handleSetToChain}
@@ -327,7 +327,7 @@ const BridgePage = () => {
                         <Select.Item key={`chain-to-${option.id}`} value={`${option.id}`}>
                           <Select.ItemText css={{ whiteSpace: 'nowrap' }}>
                             <Flex css={{ gap: 10 }}>
-                              <img style={{ width: 17, height: 17 }} src={option?.darkIconUrl} />
+                              <img style={{ width: 17 }} src={option?.darkIconUrl} />
                               <Text style="body1" css={{ ml: '$2' }}>
                                 {option.name}
                               </Text>

@@ -24,7 +24,7 @@ import {ToastContext} from "context/ToastContextProvider";
 import {StakingDepositor} from "hooks/useStakingDepositor";
 
 import {formatBN, formatNumber} from "utils/numbers";
-import {OFTChain} from "utils/chains";
+import {OFT_CHAINS, OFTChain} from "utils/chains";
 import {parseError} from "utils/error";
 
 import ERC20Abi from "artifact/ERC20Abi";
@@ -34,9 +34,9 @@ import {roundToWeek} from "../../utils/round";
 import Link from "next/link";
 import { arbitrum } from "viem/chains";
 import Decimal from "decimal.js-light";
+import {useAPR} from "../../hooks";
 
 type Props = {
-  APR: number
   value: string
   duration: number
   depositor: StakingDepositor | null
@@ -48,11 +48,12 @@ export const MAX_LOCK_PERIOD_IN_DAYS = 365; // 1y
 export const MIN_LOCK_PERIOD_IN_DAYS = 30;
 
 const StakingTab: FC<Props> = (props) => {
-  const { APR, value, duration, chain, onSuccess, depositor } = props
+  const { value, duration, chain, onSuccess, depositor } = props
   const { address } = useAccount()
   const { openConnectModal } = useConnectModal()
   const publicClient = getPublicClient()
   const {addToast} = useContext(ToastContext)
+  const { APR } = useAPR(undefined, OFT_CHAINS[0])
 
   const valueBn = parseEther((new Decimal(value)).toFixed() as `${number}`)
   const timeStamp = parseInt(`${depositor?.lockEndTimestamp || 0}`);
@@ -246,42 +247,42 @@ const StakingTab: FC<Props> = (props) => {
 
   return (
     <Box>
-      {/*<Flex*/}
-      {/*  justify="between"*/}
-      {/*  css={{*/}
-      {/*    p: '14px 16px',*/}
-      {/*    backgroundColor: '$gray2',*/}
-      {/*    borderRadius: 8*/}
-      {/*  }}*/}
-      {/*>*/}
-      {/*  <Text style="body2">APR</Text>*/}
-      {/*  <Flex*/}
-      {/*    align="center"*/}
-      {/*    css={{*/}
-      {/*      gap: 5*/}
-      {/*    }}*/}
-      {/*  >*/}
-      {/*    <Text style="body2">{`${APR}%`}</Text>*/}
-      {/*    <Tooltip*/}
-      {/*      content={*/}
-      {/*        <Text*/}
-      {/*          style="body3"*/}
-      {/*          as="p"*/}
-      {/*          css={{*/}
-      {/*            background: '#fff',*/}
-      {/*            color: '#000',*/}
-      {/*            margin: '-$2',*/}
-      {/*            p: '$2',*/}
-      {/*            maxWidth: 150*/}
-      {/*          }}>*/}
-      {/*          The APR displayed is based on data from the last claim period. The displayed APR may not represent future yield.*/}
-      {/*        </Text>*/}
-      {/*      }*/}
-      {/*    >*/}
-      {/*      <FontAwesomeIcon icon={faCircleInfo} width={10} height={10}/>*/}
-      {/*    </Tooltip>*/}
-      {/*  </Flex>*/}
-      {/*</Flex>*/}
+      <Flex
+        justify="between"
+        css={{
+          p: '14px 16px',
+          backgroundColor: '$gray2',
+          borderRadius: 8
+        }}
+      >
+        <Text style="body2">APR</Text>
+        <Flex
+          align="center"
+          css={{
+            gap: 5
+          }}
+        >
+          <Text style="body2">{`${APR}%`}</Text>
+          <Tooltip
+            content={
+              <Text
+                style="body3"
+                as="p"
+                css={{
+                  background: '#fff',
+                  color: '#000',
+                  margin: '-$2',
+                  p: '$2',
+                  maxWidth: 150
+                }}>
+                The APR displayed is based on data from the last claim period. The displayed APR may not represent future yield.
+              </Text>
+            }
+          >
+            <FontAwesomeIcon icon={faCircleInfo} width={10} height={10}/>
+          </Tooltip>
+        </Flex>
+      </Flex>
       <Flex
         justify="between"
         css={{

@@ -133,7 +133,7 @@ const Navbar = () => {
           </Link>
           <Link href="/lowfeenft">
             <NavItem>
-              <Flex align="center">
+              <Flex as="span" align="center">
                 <Badge
                   color="secondary"
                   corners="pill"
@@ -151,7 +151,7 @@ const Navbar = () => {
             modal={false}
             trigger={
               <NavItem>
-                <Flex align="center">
+                <Flex as="span" align="center">
                   <Badge
                     color="secondary"
                     corners="pill"
@@ -255,6 +255,7 @@ const Navbar = () => {
             trigger={
               <NavItem>
                 <Flex
+                  as="span"
                   align="center"
                 >
                   <Badge
