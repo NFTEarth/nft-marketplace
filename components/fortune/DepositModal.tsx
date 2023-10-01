@@ -17,7 +17,7 @@ import {
 } from "viem";
 import {FC, SyntheticEvent, useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import {useAccount, useContractRead, useContractWrite, useWaitForTransaction} from "wagmi";
-import TransferManagerAbi from "../../artifact/TransferManagerAbi.json";
+import TransferManagerAbi from "../../artifact/TransferManagerAbi";
 import FortuneAbi from "../../artifact/FortuneAbi.json";
 import {AddressZero} from "@ethersproject/constants";
 import ERC20Abi from "../../artifact/ERC20Abi";
@@ -76,7 +76,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
   const [ isSuccess, setIsSuccess] = useState(false)
   const marketplaceChain = useMarketplaceChain()
   const { data: { round, selections, valueEth }, } = useFortune<FortuneData>(q => q )
-  const fortuneChain = FORTUNE_CHAINS.find(c => c.id === marketplaceChain.id);
+  const fortuneChain = FORTUNE_CHAINS[0];
   const [openModal, setOpenModal] = useState(false)
   const { addToast } = useContext(ToastContext)
   const publicClient = createPublicClient({
@@ -101,14 +101,14 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
     abi: TransferManagerAbi,
     address: fortuneChain?.transferManager as `0x${string}`,
     functionName: 'hasUserApprovedOperator',
-    args: [address, fortuneChain?.address],
+    args: [address as `0x${string}`, fortuneChain?.address as `0x${string}`],
   })
 
   const { writeAsync: grantApproval, isLoading: isApprovalLoading, error: approvalError } = useContractWrite({
     abi: TransferManagerAbi,
     address: fortuneChain?.transferManager as `0x${string}`,
     functionName: 'grantApprovals',
-    args: [[fortuneChain?.address]]
+    args: [[fortuneChain?.address as `0x${string}`]]
   })
 
   const args = useMemo(() => {
