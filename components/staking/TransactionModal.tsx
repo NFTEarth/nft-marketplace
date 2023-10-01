@@ -73,7 +73,7 @@ const TransactionModal: FC<Props> = (props) => {
         )}
         {step === 3 && (
           <Flex direction="column" css={{ gap: 20, my: '$4' }}>
-            <Text style="h6" css={{ color: 'green' }}>Staking Success!</Text>
+            <Text style="h6" css={{ color: 'green' }}>Claiming Successful</Text>
           </Flex>
         )}
       </Flex>

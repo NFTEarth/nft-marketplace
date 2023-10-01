@@ -158,7 +158,7 @@ const Transfer = ({ token, mutate } : TransferProps) => {
               <FontAwesomeIcon icon={faCheckCircle} size="2xl" color="#79FFA8" style={{ marginBottom: 20 }}/>
               <Box css={{ wordBreak: 'break-word', mb: '$5' }}>
                 <Text style="h6">
-                  {`Your NFT has successfully transferred to ${transferAddress}`}
+                  {`Your NFT has successfully been transferred to ${transferAddress}`}
                 </Text>
               </Box>
               <Close>

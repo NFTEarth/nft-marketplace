@@ -246,7 +246,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
           <Flex
             direction="column"
           >
-            <Text css={{ fontSize: 'inherit' }}>{`Successfully Added a Fortune Entry`}</Text>
+            <Text css={{ fontSize: 'inherit' }}>{`Fortune Entry Successful`}</Text>
             <Link
               href={`${arbitrum.blockExplorers.etherscan.url}/tx/${hash}`}
               target="_blank"
