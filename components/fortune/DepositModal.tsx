@@ -162,7 +162,6 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
         setStep(2);
         await grantApproval?.()
         await refetchApproval?.()
-        return;
       }
 
       setStep(3);
@@ -201,7 +200,11 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
           account
         })
 
-        await walletClient.writeContract(request)
+        const approvalTx = await walletClient.writeContract(request)
+        await publicClient.waitForTransactionReceipt({
+          hash: approvalTx,
+          confirmations: 5
+        })
         requireApprovals -= 1
       }
 
@@ -251,7 +254,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
       setStep(0)
     }
     // setLoading(false)
-  }, [selections, valueEth])
+  }, [selections, valueEth, isApproved])
 
   const trigger = (
     <Flex
