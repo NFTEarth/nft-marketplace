@@ -161,8 +161,8 @@ const PoolPage = () => {
           functionName: 'getDepositAmount',
           args: [chain?.LPNFTE as `0x${string}`, isWethChange ? WETH_ADDRESS : chain?.address as `0x${string}`, value]
         }).then(async (res) => {
-          const otherVal = ((BigInt(res[1]) - BigInt(res[0])) / BigInt(2)) + BigInt(res[0])
-          const val = formatEther(otherVal, 'wei')
+          const otherVal = BigInt(res[0])
+          const val = parseFloat(formatEther(otherVal, 'wei')).toFixed(8)
           if (isWethChange) {
             setValueNFTE(val)
           } else {
