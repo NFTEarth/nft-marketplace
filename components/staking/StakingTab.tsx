@@ -44,9 +44,6 @@ type Props = {
   onSuccess: () => void
 }
 
-export const MAX_LOCK_PERIOD_IN_DAYS = 365; // 1y
-export const MIN_LOCK_PERIOD_IN_DAYS = 30;
-
 const StakingTab: FC<Props> = (props) => {
   const { value, duration, chain, onSuccess, depositor } = props
   const { address } = useAccount()
@@ -58,7 +55,8 @@ const StakingTab: FC<Props> = (props) => {
   const valueBn = parseEther((new Decimal(value)).toFixed() as `${number}`)
   const timeStamp = parseInt(`${depositor?.lockEndTimestamp || 0}`);
   const newTime = timeStamp > 0 && timeStamp > dayjs().startOf('day').unix() ? dayjs.unix(timeStamp).startOf('day') : dayjs().startOf('day')
-  const timePlusDuration = roundToWeek(dayjs(newTime).add(duration * 30, 'days'))
+  let timePlusDuration = roundToWeek(dayjs(newTime).add(duration, 'months'))
+  timePlusDuration = timePlusDuration.diff(dayjs().startOf('day'), 'days') > 365 ? dayjs().startOf('day').add(365, 'days') : timePlusDuration
   const isZeroValue = parseFloat(value) <= 0
   const isZeroDuration = duration < 1
   const hasLockedBalance = (BigInt(depositor?.lockedBalance || 0)) > BigInt(0)

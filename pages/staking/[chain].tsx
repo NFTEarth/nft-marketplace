@@ -30,6 +30,8 @@ import AlertChainSwitch from "../../components/common/AlertChainSwitch";
 import Decimal from "decimal.js-light";
 
 const POOL_ADDRESS = '0x17ee09e7a2cc98b0b053b389a162fc86a67b9407'
+export const MAX_LOCK_PERIOD_IN_DAYS = 365; // 1y
+export const MIN_LOCK_PERIOD_IN_DAYS = 28;
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -83,10 +85,10 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
   useEffect(() => {
     if (new Date((parseInt(`${locked?.result?.[1]}`) || 0) * 1000) > new Date()) {
       const timeStamp =  new Date(parseInt(`${locked?.result?.[1] || 0}`) * 1000);
-      const roundedTime = dayjs(timeStamp)
-      const oneYear = roundToWeek(dayjs().add(1, 'year'))
-      const monthLeft = oneYear.diff(roundedTime, 'months')
-      setMaxDuration(`${monthLeft}`)
+      const roundedTime = dayjs(timeStamp).startOf('day')
+      const oneYear = roundToWeek(dayjs().startOf('day').add(MAX_LOCK_PERIOD_IN_DAYS, 'days'))
+      const daysLeft = oneYear.diff(roundedTime, 'days')
+      setMaxDuration(`${Math.ceil(daysLeft / MIN_LOCK_PERIOD_IN_DAYS)}`)
     }
   }, [locked])
 
