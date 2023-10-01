@@ -48,6 +48,8 @@ import {FortuneStatus} from "hooks/useFortuneStatus";
 import {styled} from 'stitches.config'
 import supportedChains, {FORTUNE_CHAINS} from "utils/chains";
 import {basicFetcher} from "utils/fetcher";
+import {arbitrum} from "viem/chains";
+import AlertChainSwitch from "../../components/common/AlertChainSwitch";
 
 type FortuneData = {
   enableAudio: boolean
@@ -344,6 +346,7 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
 
   return (
     <Layout>
+      <AlertChainSwitch chainId={arbitrum.id}/>
       {enableAudio && (
         <audio autoPlay playsInline loop hidden>
           <source src="/audio/bgm-low.webm" />

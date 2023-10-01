@@ -1,8 +1,10 @@
 import {Button, Flex} from "../primitives";
 import {useNetwork, useSwitchNetwork} from "wagmi";
 import supportedChains from 'utils/chains'
+import {useMounted} from "../../hooks";
 
 const AlertChainSwitch = ({ chainId } : { chainId?: number }) => {
+  const mounted = useMounted()
   const { chain: activeChain } = useNetwork()
   const { switchNetworkAsync } = useSwitchNetwork({
     chainId: chainId,
@@ -10,7 +12,7 @@ const AlertChainSwitch = ({ chainId } : { chainId?: number }) => {
 
   const chain = supportedChains.find(c => c.id === chainId)
 
-  if (!chain || activeChain?.id === chainId) {
+  if (!mounted || !chain || activeChain?.id === chainId) {
     return null;
   }
 

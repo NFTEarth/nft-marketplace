@@ -16,7 +16,14 @@ import {
   parseEther
 } from "viem";
 import {FC, SyntheticEvent, useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
-import {useAccount, useContractRead, useContractWrite, useWaitForTransaction} from "wagmi";
+import {
+  useAccount,
+  useContractRead,
+  useContractWrite,
+  useNetwork,
+  useSwitchNetwork,
+  useWaitForTransaction
+} from "wagmi";
 import TransferManagerAbi from "../../artifact/TransferManagerAbi";
 import FortuneAbi from "../../artifact/FortuneAbi.json";
 import {AddressZero} from "@ethersproject/constants";
@@ -28,6 +35,9 @@ import {ToastContext} from "../../context/ToastContextProvider";
 import {SelectionData} from "./NFTEntry";
 import {Round, RoundStatus} from "../../hooks/useFortuneRound";
 import useCountdown from "../../hooks/useCountdown";
+import Link from "next/link";
+import {arbitrum} from "viem/chains";
+import {faExternalLink} from "@fortawesome/free-solid-svg-icons";
 
 type FortuneDepositProps = {
   roundId: number
@@ -229,6 +239,34 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
           hash
         }
       )
+      addToast?.({
+        title: 'Success',
+        status: 'success',
+        description: (
+          <Flex
+            direction="column"
+          >
+            <Text css={{ fontSize: 'inherit' }}>{`Successfully Added a Fortune Entry`}</Text>
+            <Link
+              href={`${arbitrum.blockExplorers.etherscan.url}/tx/${hash}`}
+              target="_blank"
+              style={{
+                marginTop: 20
+              }}
+            >
+              {`See Tx Receipt`}
+              <FontAwesomeIcon
+                icon={faExternalLink}
+                width={15}
+                height={15}
+                style={{
+                  marginLeft: 10
+                }}
+              />
+            </Link>
+          </Flex>
+        )
+      })
       setIsSuccess(true)
       setStep(0);
     } catch (err: any) {
@@ -347,7 +385,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
               href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(`https://app.nftearth.exchange/fortune`)}&hashtags=&via=&related=&original_referer=${encodeURIComponent('https://app.nftearth.exchange')}`}
             >
               {`Share your entry on X!`}
-              <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faTwitter}/>
+              <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faTwitter} width={20} height={20}/>
             </Button>
           </Flex>
         )}
