@@ -221,7 +221,7 @@ const Navbar = () => {
               }}
             >
               <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faDroplet} width={20} height={20}/>
-              {`Get NFTE LP`}
+              {`Get xNFTE`}
               <Badge
                 color="secondary"
                 corners="pill"

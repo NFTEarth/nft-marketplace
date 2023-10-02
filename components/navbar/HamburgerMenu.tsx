@@ -247,7 +247,7 @@ const HamburgerMenu = () => {
                     display: 'flex'
                   }}
                 >
-                  {`Get NFTE LP`}
+                  {`Get xNFTE`}
                   <Badge
                     color="secondary"
                     corners="pill"
