@@ -21,7 +21,7 @@ import {useMarketplaceChain, useFortuneToWithdraw} from "hooks";
 import {Deposit} from "hooks/useFortuneRound";
 import {FORTUNE_CHAINS} from "utils/chains";
 import {ToastContext} from "context/ToastContextProvider";
-import FortuneAbi from "artifact/FortuneAbi.json";
+import FortuneAbi from "artifact/FortuneAbi";
 
 type ClaimModalProps = {
   open?: boolean
@@ -49,7 +49,7 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
   const {data: wallet} = useWalletClient()
   const {openConnectModal} = useConnectModal()
   const {chain: activeChain} = useNetwork()
-  const [roundId, setRoundId] = useState<number>()
+  const [roundId, setRoundId] = useState<bigint>()
   const marketplaceChain = useMarketplaceChain()
   const {switchNetworkAsync} = useSwitchNetwork({
     chainId: marketplaceChain.id,
@@ -85,7 +85,7 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
     address: fortuneChain?.address as `0x${string}`,
     abi: FortuneAbi,
     functionName: 'withdrawDeposits',
-    args: [roundId, cancelledDeposits[roundId || 0]?.indices],
+    args: [roundId as bigint, cancelledDeposits[`${roundId || 0}`]?.indices.map(BigInt)],
     account: address
   })
 
@@ -144,7 +144,7 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
   }
 
   const handleSetRound = (value: string) => {
-    setRoundId(+value)
+    setRoundId(BigInt(value))
   }
   if (isInTheWrongNetwork) {
     return (

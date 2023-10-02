@@ -1,10 +1,18 @@
 import {
   BaseError,
   ContractFunctionExecutionError,
-  ContractFunctionRevertedError,
+  ContractFunctionRevertedError, decodeErrorResult,
   InsufficientFundsError,
   UserRejectedRequestError
 } from "viem";
+
+
+
+const getGeneralError = (err:any) => {
+
+
+  return err.message;
+}
 
 export const parseError = (error: any) => {
   let name = 'Error'
@@ -16,28 +24,38 @@ export const parseError = (error: any) => {
     const execError = error.walk(e => e instanceof ContractFunctionExecutionError)
     name = error.name
     if (insufficientFundsError instanceof InsufficientFundsError) {
-      console.log('insufficientFundsError', insufficientFundsError)
       message = 'Insufficient Fund'
     } else if (userRejectedRequestError instanceof UserRejectedRequestError) {
-      console.log('userRejectedRequestError', userRejectedRequestError)
       message = userRejectedRequestError.shortMessage
     } else if (revertError instanceof ContractFunctionRevertedError) {
-      console.log('revertError', revertError)
       message = revertError.reason || revertError.shortMessage || revertError.message
     } else if (execError instanceof ContractFunctionExecutionError) {
-      console.log('execError', execError)
       message = execError.cause.shortMessage ?? ''
     } else {
-      console.log('BaseError', execError)
       message = (error as any)?.cause?.shortMessage || (error as any).cause?.message || (error as any).message || ''
     }
   } else {
-    console.log('CommonError', error)
     message = error?.cause?.reason || error.message
   }
 
   if (message === 'Voting lock can be 3 years max') {
     message = 'Voting lock can not exceed 1 year'
+  }
+
+  if (/exceeds the balance/.test(message)) {
+    message = 'Insufficient balance'
+  }
+
+  if (/User rejected/.test(message)) {
+    message = 'User rejected the request'
+  }
+
+  if (name === 'ZeroDeposits') {
+    message = 'You must deposit ETH/ARB/NFTE or an eligible NFT to enter'
+  }
+
+  if (name === 'OLD') {
+    message = 'Price Oracle Couldn\'t get token price right now, Token Usage temporary Disabled.'
   }
 
   return {

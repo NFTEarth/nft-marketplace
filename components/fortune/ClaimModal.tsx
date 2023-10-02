@@ -12,7 +12,7 @@ import {useConnectModal} from "@rainbow-me/rainbowkit";
 import {useMarketplaceChain} from "../../hooks";
 import ErrorWell from "../primitives/ErrorWell";
 import LoadingSpinner from "../common/LoadingSpinner";
-import FortuneAbi from "../../artifact/FortuneAbi.json";
+import FortuneAbi from "../../artifact/FortuneAbi";
 import {FORTUNE_CHAINS} from "../../utils/chains";
 import TransactionProgress from "../common/TransactionProgress";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -27,10 +27,15 @@ import {
 } from "viem";
 import {ToastContext} from "../../context/ToastContextProvider";
 
+export type RewardInputType =  {
+  roundId: bigint;
+  prizeIndices: readonly bigint[];
+}
+
 type ClaimModalProps = {
   open?: boolean
   disabled?: boolean
-  rewards: (number | number[])[][]
+  rewards: RewardInputType[]
   onClose?: () => void
 }
 

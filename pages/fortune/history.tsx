@@ -21,7 +21,7 @@ import {Head} from "components/Head";
 import Layout from "components/Layout";
 import ChainToggle from "components/common/ChainToggle";
 import HistoryTable from "components/fortune/HistoryTable";
-import ClaimModal from "components/fortune/ClaimModal";
+import ClaimModal, {RewardInputType} from "components/fortune/ClaimModal";
 import WithdrawModal from "components/fortune/WithdrawModal";
 import BetaLogo from "components/fortune/BetaLogo";
 import {useFortuneHistory, useFortuneUserWon, useMounted} from "hooks";
@@ -56,7 +56,7 @@ const FortuneHistory = () => {
     }
   })
 
-  const rewards:  (number | number[])[][] = useMemo(() => {
+  const rewards: RewardInputType[] = useMemo(() => {
     const claimList: Record<string, number[]> = {};
     let total = 0n;
     (userWinningRounds || []).forEach((r: Round) => {
@@ -72,7 +72,10 @@ const FortuneHistory = () => {
 
     setTotalUnclaimed(total);
 
-    return Object.keys(claimList).map((k:string) => [+k, claimList[k]])
+    return Object.keys(claimList).map((k:string) => ({
+      roundId: BigInt(k),
+      prizeIndices: claimList[k].map(BigInt)
+    }))
   }, [userWinningRounds])
 
   return (

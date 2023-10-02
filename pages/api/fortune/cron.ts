@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { ethers, AlchemyProvider, Contract} from 'ethers'
 
 import { FORTUNE_CHAINS } from 'utils/chains'
-import FortuneAbi from 'artifact/FortuneAbi.json'
+import FortuneAbi from 'artifact/FortuneAbi'
 
 const chain = FORTUNE_CHAINS[0]
 const provider = new AlchemyProvider(42161, process.env.NEXT_PUBLIC_ALCHEMY_ID);

@@ -7,7 +7,7 @@ const FortuneEnterButton: FC<any> = (props) => {
       disabled={props.disabled}
       css={{
         zIndex: 1,
-        justifyContent: 'center'
+        justifyContent: 'center',
       }}
       {...props}
     >{props.disabled ? 'Round Closed' : 'Enter Now'}</Button>

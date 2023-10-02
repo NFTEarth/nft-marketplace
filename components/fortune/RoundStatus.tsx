@@ -3,7 +3,7 @@ import {Avatar} from "../primitives/Avatar";
 import Jazzicon from "react-jazzicon/dist/Jazzicon";
 import {jsNumberForAddress} from "react-jazzicon";
 import {truncateAddress} from "../../utils/truncate";
-import {FC, useEffect, useMemo, useRef} from "react";
+import {FC, useMemo, useRef} from "react";
 import {PlayerType} from "./Player";
 import {useFortune, useMounted} from "../../hooks";
 import {Round, RoundStatus} from "../../hooks/useFortuneRound";
@@ -51,13 +51,13 @@ const FortuneRoundStatus: FC<RoundStatusProps> = (props) => {
         <FormatCurrency amount={totalPrizeUsd} />
       )}
       {(round?.status === RoundStatus.Open && isEnded && !loadingNewRound) && (
-        <Text style="subtitle1" css={{ color: '$primary10', textAlign: 'center' }}>Validating round: this process takes about 1 minute to complete.</Text>
+        <Text style="subtitle1" css={{ color: '$primary10', textAlign: 'center' }}>Validating round: process takes about 1 minute.</Text>
       )}
       {[RoundStatus.Drawing].includes(round?.status) && (
         <Text style="subtitle1" css={{ color: '$primary10', textAlign: 'center' }}>Drawing Winner!</Text>
       )}
       {round?.status === RoundStatus.Cancelled && (
-        <Text style="h5" css={{ color: '$primary10', mt: 20 }}>Round Cancelled</Text>
+        <Text style="h5" css={{ color: '$primary10', mt: 20, textAlign: 'center' }}>Round Cancelled</Text>
       )}
       {loadingNewRound && (
         <Text style="subtitle1" css={{ color: '$primary10', textAlign: 'center' }}>Loading A New Round</Text>

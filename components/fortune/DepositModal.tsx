@@ -7,11 +7,9 @@ import {faTwitter} from "@fortawesome/free-brands-svg-icons";
 import {Modal} from "../common/Modal";
 import {
   BaseError,
-  ContractFunctionRevertedError,
   createPublicClient,
   createWalletClient,
   custom,
-  formatEther,
   http,
   parseEther
 } from "viem";
@@ -22,23 +20,22 @@ import {
   useContractWrite,
   useNetwork,
   useSwitchNetwork,
-  useWaitForTransaction
 } from "wagmi";
-import TransferManagerAbi from "../../artifact/TransferManagerAbi";
-import FortuneAbi from "../../artifact/FortuneAbi.json";
-import {AddressZero} from "@ethersproject/constants";
-import ERC20Abi from "../../artifact/ERC20Abi";
-import ERC721Abi from "../../artifact/ERC721Abi";
-import {useFortune, useMarketplaceChain} from "../../hooks";
-import {FORTUNE_CHAINS} from "../../utils/chains";
-import {ToastContext} from "../../context/ToastContextProvider";
-import {SelectionData} from "./NFTEntry";
-import {Round, RoundStatus} from "../../hooks/useFortuneRound";
-import useCountdown from "../../hooks/useCountdown";
-import Link from "next/link";
-import {arbitrum} from "viem/chains";
 import {faExternalLink} from "@fortawesome/free-solid-svg-icons";
-import {parseError} from "../../utils/error";
+import {arbitrum} from "viem/chains";
+import Link from "next/link";
+import {AddressZero} from "@ethersproject/constants";
+
+import TransferManagerAbi from "artifact/TransferManagerAbi";
+import FortuneAbi from "artifact/FortuneAbi";
+import ERC20Abi from "artifact/ERC20Abi";
+import ERC721Abi from "artifact/ERC721Abi";
+import {ToastContext} from "context/ToastContextProvider";
+import {useFortune, useMarketplaceChain, useCountdown} from "hooks";
+import {Round, RoundStatus} from "hooks/useFortuneRound";
+import {SelectionData} from "./NFTEntry";
+import {FORTUNE_CHAINS} from "utils/chains";
+import {parseError} from "utils/error";
 
 type FortuneDepositProps = {
   roundId: number
@@ -53,37 +50,14 @@ type FortuneData = {
   valueEth: string
 }
 
-const getGeneralError = (err:any) => {
-  if (/exceeds the balance/.test(err.message)) {
-    return 'Insufficient balance'
-  }
-
-  if (/User rejected/.test(err.message)) {
-    return 'User rejected the request'
-  }
-
-  return err.message;
-}
-
-const getErrorText = ((errorName: string, error: any) => {
-  if (errorName === 'ZeroDeposits') {
-    return 'You must deposit ETH/NFTE or an eligible NFT to enter'
-  }
-
-  if (errorName === 'OLD') {
-    return 'Price Oracle Couldn\'t get NFTE price right now, Usage temporary Disabled.'
-  }
-
-  console.error(error);
-
-  return error.message
-})
+type DepositAbiInput = [bigint, readonly { tokenType: number; tokenAddress: `0x${string}`; tokenIdsOrAmounts: readonly bigint[]; reservoirOracleFloorPrice: { id: `0x${string}`; payload: `0x${string}`; timestamp: bigint; signature: `0x${string}`; }; }[]]
 
 const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
   const { roundId, disabled } = props;
   const { address } = useAccount()
   const [ step, setStep] = useState(0)
   const [ error, setError] = useState<any>()
+  const [ isSuccess, setIsSuccess] = useState(false)
   const marketplaceChain = useMarketplaceChain()
   const { data: { round, selections, valueEth }, } = useFortune<FortuneData>(q => q )
   const fortuneChain = FORTUNE_CHAINS[0];
@@ -93,16 +67,17 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
     chainId: marketplaceChain.id,
   })
   const { chain: activeChain } = useNetwork()
-  const publicClient = createPublicClient({
-    chain: marketplaceChain,
-    transport: http()
-  })
   const cutOffTime = useMemo(() => round?.cutoffTime || 0, [round])
   const [_hours, minutes, seconds] = useCountdown(cutOffTime * 1000)
   const lessThan30Seconds = _hours === 0 && minutes === 0 && seconds < 30
 
+  const publicClient = createPublicClient({
+    chain: arbitrum,
+    // @ts-ignore
+    transport: custom(window?.ethereum)
+  })
   const walletClient = createWalletClient({
-    chain: marketplaceChain,
+    chain: arbitrum,
     // @ts-ignore
     transport: custom(window?.ethereum)
   })
@@ -127,42 +102,41 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
     args: [[fortuneChain?.address as `0x${string}`]]
   })
 
-  const args = useMemo(() => {
-    return [roundId, (Object.keys(selections)).map(s => {
+  const args: DepositAbiInput = useMemo(() => {
+    return [BigInt(roundId), (Object.keys(selections)).map(s => {
       const selection = selections[s];
       const isErc20 = selection.type === 'erc20'
       const isEth = (isErc20 && selection.contract === AddressZero) || selection.type === 'eth'
 
-      return [
-        isEth ? 0 : isErc20 ? 1 : 2,
-        selection.contract,
-        (isErc20 || isEth) ? selection?.values || [BigInt(0)] :
-          selection?.tokenIds || [BigInt(0)],
-        [
-          selection?.reservoirOracleFloor?.id || '0x0000000000000000000000000000000000000000000000000000000000000000' as string,
-          selection?.reservoirOracleFloor?.payload || '0x0000000000000000000000000000000000000000000000000000000000000000' as string,
-          selection?.reservoirOracleFloor?.timestamp || 0 as number,
-          selection?.reservoirOracleFloor?.signature || '0x0000000000000000000000000000000000000000000000000000000000000000' as string
-        ]
-      ]
+      return {
+        tokenType: isEth ? 0 : isErc20 ? 1 : 2,
+        tokenAddress: selection.contract as `0x${string}`,
+        tokenIdsOrAmounts: (isErc20 || isEth) ? selection?.values || [BigInt(0)] : selection?.tokenIds || [BigInt(0)],
+        reservoirOracleFloorPrice: {
+          id: selection?.reservoirOracleFloor?.id || '0x0000000000000000000000000000000000000000000000000000000000000000' as `0x${string}`,
+          payload: selection?.reservoirOracleFloor?.payload || '0x0000000000000000000000000000000000000000000000000000000000000000' as `0x${string}`,
+          timestamp: BigInt(selection?.reservoirOracleFloor?.timestamp || 0),
+          signature: selection?.reservoirOracleFloor?.signature || '0x0000000000000000000000000000000000000000000000000000000000000000' as `0x${string}`
+        }
+      }
     })]
   }, [roundId, selections])
 
-  const { writeAsync: depositAsync, data: sendData, isLoading, error: depositError } = useContractWrite({
-    abi: FortuneAbi,
-    address: fortuneChain?.address as `0x${string}`,
-    functionName: 'deposit',
-    args: args,
-    value: BigInt(parseEther(`${valueEth === '' ? 0 : +valueEth}`).toString()),
-    chainId: marketplaceChain.id
-  })
+  // const { writeAsync, data: sendData, isLoading, error: error } = useContractWrite({
+  //   abi: FortuneAbi,
+  //   address: fortuneChain?.address as `0x${string}`,
+  //   functionName: 'deposit',
+  //   args: args,
+  //   value: BigInt(parseEther(`${valueEth === '' ? 0 : +valueEth}`).toString()),
+  //   chainId: marketplaceChain.id
+  // })
+  //
+  // const { isLoading: isLoadingTransaction = true, isSuccess = true, data: txData } = useWaitForTransaction({
+  //   hash: sendData?.hash,
+  //   enabled: !!sendData
+  // })
 
-  const { isLoading: isLoadingTransaction = true, isSuccess = true, data: txData } = useWaitForTransaction({
-    hash: sendData?.hash,
-    enabled: !!sendData
-  })
-
-  const showModal = !!error || !!approvalError || !!depositError || isLoading || isApprovalLoading || isLoadingTransaction || isSuccess || !!requireApprovals || step > 0
+  const showModal = !!error || !!approvalError || isApprovalLoading || isSuccess || !!requireApprovals || step > 0
 
   useEffect(() => {
     setOpenModal(showModal);
@@ -171,7 +145,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
   const handleDeposit = useCallback(async (e?: SyntheticEvent) => {
     e?.preventDefault();
     setStep(1);
-
+    setIsSuccess(false)
     try {
       if (switchNetworkAsync && activeChain && marketplaceChain && activeChain.id !== marketplaceChain.id) {
         const chain = await switchNetworkAsync(marketplaceChain.id)
@@ -232,8 +206,25 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
 
       setStep(4);
 
-      const { hash } = await depositAsync()
+      const { request } = await publicClient.simulateContract({
+        address: fortuneChain?.address as `0x${string}`,
+        abi: FortuneAbi,
+        functionName: 'deposit',
+        args,
+        value: BigInt(parseEther(`${valueEth === '' ? 0 : +valueEth}`).toString()),
+        account: address,
+      })
 
+      const hash = await walletClient.writeContract(request)
+
+      setStep(5)
+
+      await publicClient.waitForTransactionReceipt(
+        {
+          confirmations: 5,
+          hash
+        }
+      )
       addToast?.({
         title: 'Success',
         status: 'success',
@@ -262,7 +253,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
           </Flex>
         )
       })
-
+      setIsSuccess(true)
       setStep(0);
     } catch (err: any) {
       const { name, message } = parseError(err)
@@ -278,7 +269,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
       setStep(0)
     }
     // setLoading(false)
-  }, [selections, valueEth, isApproved, publicClient, depositAsync, walletClient, switchNetworkAsync, activeChain, marketplaceChain])
+  }, [selections, valueEth, isApproved, publicClient, walletClient, switchNetworkAsync, activeChain, marketplaceChain])
 
   const buttonText = useMemo(() => {
     if (activeChain && activeChain.id !== marketplaceChain.id) {
@@ -337,9 +328,9 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
           gap: '$4'
         }}
       >
-        {(!!error || !!approvalError || !!depositError) && (
+        {(!!error || !!approvalError) && (
           <ErrorWell
-            message={(error || approvalError || depositError as any)?.reason || (error || approvalError || depositError)?.message}
+            error={error || approvalError}
             css={{
               textAlign: 'left',
               maxWidth: '100%',
