@@ -23,4 +23,8 @@ export { default as useStakingLP } from './useStakingLP'
 export { default as useAPR } from './useAPR'
 export { default as useCountdown } from './useCountdown'
 export { default as useDebounce } from './useDebounce'
+export { default as useRaffle } from './useRaffle'
+export { default as useRaffleEntries } from './useRaffleEntries'
+export { default as useRaffleHistory } from './useRaffleHistory'
+export { default as useRaffleStats } from './useRaffleStats'
 

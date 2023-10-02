@@ -208,13 +208,6 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               </Dropdown>
             </Flex>
           </Flex>
-          <Text
-            style="body1"
-            color="subtle"
-            css={{ mb: 48, textAlign: 'left' }}
-          >
-            Omnichain NFT Hub | Powered by NFTEarth
-          </Text>
         </Flex>
         {!isSmallDevice ? <ChainStats /> : null}
         <Flex

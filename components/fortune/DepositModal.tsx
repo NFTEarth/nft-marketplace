@@ -38,6 +38,7 @@ import useCountdown from "../../hooks/useCountdown";
 import Link from "next/link";
 import {arbitrum} from "viem/chains";
 import {faExternalLink} from "@fortawesome/free-solid-svg-icons";
+import {parseError} from "../../utils/error";
 
 type FortuneDepositProps = {
   roundId: number
@@ -83,12 +84,15 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
   const { address } = useAccount()
   const [ step, setStep] = useState(0)
   const [ error, setError] = useState<any>()
-  const [ isSuccess, setIsSuccess] = useState(false)
   const marketplaceChain = useMarketplaceChain()
   const { data: { round, selections, valueEth }, } = useFortune<FortuneData>(q => q )
   const fortuneChain = FORTUNE_CHAINS[0];
   const [openModal, setOpenModal] = useState(false)
   const { addToast } = useContext(ToastContext)
+  const { switchNetworkAsync } = useSwitchNetwork({
+    chainId: marketplaceChain.id,
+  })
+  const { chain: activeChain } = useNetwork()
   const publicClient = createPublicClient({
     chain: marketplaceChain,
     transport: http()
@@ -111,6 +115,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
     abi: TransferManagerAbi,
     address: fortuneChain?.transferManager as `0x${string}`,
     functionName: 'hasUserApprovedOperator',
+    chainId: fortuneChain.id,
     args: [address as `0x${string}`, fortuneChain?.address as `0x${string}`],
   })
 
@@ -118,6 +123,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
     abi: TransferManagerAbi,
     address: fortuneChain?.transferManager as `0x${string}`,
     functionName: 'grantApprovals',
+    chainId: fortuneChain.id,
     args: [[fortuneChain?.address as `0x${string}`]]
   })
 
@@ -142,32 +148,38 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
     })]
   }, [roundId, selections])
 
-  // const { writeAsync, data: sendData, isLoading, error: error } = useContractWrite({
-  //   abi: FortuneAbi,
-  //   address: fortuneChain?.address as `0x${string}`,
-  //   functionName: 'deposit',
-  //   args: args,
-  //   value: BigInt(parseEther(`${valueEth === '' ? 0 : +valueEth}`).toString()),
-  //   chainId: marketplaceChain.id
-  // })
-  //
-  // const { isLoading: isLoadingTransaction = true, isSuccess = true, data: txData } = useWaitForTransaction({
-  //   hash: sendData?.hash,
-  //   enabled: !!sendData
-  // })
+  const { writeAsync: depositAsync, data: sendData, isLoading, error: depositError } = useContractWrite({
+    abi: FortuneAbi,
+    address: fortuneChain?.address as `0x${string}`,
+    functionName: 'deposit',
+    args: args,
+    value: BigInt(parseEther(`${valueEth === '' ? 0 : +valueEth}`).toString()),
+    chainId: marketplaceChain.id
+  })
 
-  const showModal = !!error || !!approvalError || isApprovalLoading || isSuccess || !!requireApprovals || step > 0
+  const { isLoading: isLoadingTransaction = true, isSuccess = true, data: txData } = useWaitForTransaction({
+    hash: sendData?.hash,
+    enabled: !!sendData
+  })
+
+  const showModal = !!error || !!approvalError || !!depositError || isLoading || isApprovalLoading || isLoadingTransaction || isSuccess || !!requireApprovals || step > 0
 
   useEffect(() => {
     setOpenModal(showModal);
   }, [showModal])
 
-
   const handleDeposit = useCallback(async (e?: SyntheticEvent) => {
     e?.preventDefault();
     setStep(1);
-    setIsSuccess(false)
+
     try {
+      if (switchNetworkAsync && activeChain && marketplaceChain && activeChain.id !== marketplaceChain.id) {
+        const chain = await switchNetworkAsync(marketplaceChain.id)
+        if (chain.id !== marketplaceChain.id) {
+          return false
+        }
+      }
+
       if (!isApproved) {
         setStep(2);
         await grantApproval?.()
@@ -220,25 +232,8 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
 
       setStep(4);
 
-      const { request } = await publicClient.simulateContract({
-        address: fortuneChain?.address as `0x${string}`,
-        abi: FortuneAbi,
-        functionName: 'deposit',
-        args: args,
-        account: address,
-        value: BigInt(parseEther(`${valueEth === '' ? 0 : +valueEth}`).toString()),
-      })
+      const { hash } = await depositAsync()
 
-      const hash = await walletClient.writeContract(request)
-
-      setStep(5)
-
-      await publicClient.waitForTransactionReceipt(
-        {
-          confirmations: 5,
-          hash
-        }
-      )
       addToast?.({
         title: 'Success',
         status: 'success',
@@ -267,32 +262,35 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
           </Flex>
         )
       })
-      setIsSuccess(true)
+
       setStep(0);
     } catch (err: any) {
+      const { name, message } = parseError(err)
       if (err instanceof BaseError) {
-        const revertError = err.walk(err => err instanceof ContractFunctionRevertedError)
-        if (revertError instanceof ContractFunctionRevertedError) {
-          const errorName = revertError.data?.errorName ?? ''
-          addToast?.({
-            title: errorName,
-            status: 'error',
-            description: getErrorText(errorName, err)
-          })
-        } else {
-          addToast?.({
-            title: 'Error',
-            status: 'error',
-            description: getGeneralError(err)
-          })
-        }
+        addToast?.({
+          title: name,
+          status: 'error',
+          description: message
+        })
       } else {
         setError(err)
       }
       setStep(0)
     }
     // setLoading(false)
-  }, [selections, valueEth, isApproved])
+  }, [selections, valueEth, isApproved, publicClient, depositAsync, walletClient, switchNetworkAsync, activeChain, marketplaceChain])
+
+  const buttonText = useMemo(() => {
+    if (activeChain && activeChain.id !== marketplaceChain.id) {
+      return 'Switch Chain'
+    }
+
+    if (!isApproved) {
+      return 'Set Approval'
+    }
+
+    return 'Enter Round'
+  }, [isApproved, activeChain, marketplaceChain])
 
   const trigger = (
     <Flex
@@ -315,7 +313,7 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
           justifyContent: 'center'
         }}
         onClick={handleDeposit}
-      >{isApproved ? (round?.status !== RoundStatus.Open ? 'Round Closed' : `Enter Round`) : 'Set Approval'}</Button>
+      >{buttonText}</Button>
     </Flex>
   )
 
@@ -339,9 +337,9 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
           gap: '$4'
         }}
       >
-        {(!!error || !!approvalError) && (
+        {(!!error || !!approvalError || !!depositError) && (
           <ErrorWell
-            message={(error || approvalError as any)?.reason || (error || approvalError)?.message}
+            message={(error || approvalError || depositError as any)?.reason || (error || approvalError || depositError)?.message}
             css={{
               textAlign: 'left',
               maxWidth: '100%',

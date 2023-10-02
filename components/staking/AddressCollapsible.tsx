@@ -89,7 +89,7 @@ const AddressCollapsible: FC<Props> = ({ addresses, chain }) => {
               justify="between"
               css={{
                 px: 15,
-                py: 10,
+                py: 10
               }}
             >
               <Text>{k}</Text>
@@ -99,7 +99,7 @@ const AddressCollapsible: FC<Props> = ({ addresses, chain }) => {
                 target="_blank"
                 css={{
                   '&:hover': {
-                    color: '$primary11'
+                    color: '$primary11',
                   }
                 }}
               >
@@ -109,7 +109,8 @@ const AddressCollapsible: FC<Props> = ({ addresses, chain }) => {
                   width={15}
                   height={15}
                   style={{
-                    marginLeft: 10
+                    marginLeft: 10,
+                    display: 'inline-block'
                   }}
                 />
               </Box>

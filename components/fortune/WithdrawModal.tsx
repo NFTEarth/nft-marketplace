@@ -231,14 +231,6 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
               <LoadingSpinner/>
             </Flex>
           )}
-          {isLoadingTransaction && (
-            <TransactionProgress
-              justify="center"
-              css={{mb: '$3'}}
-              fromImgs={['/images/fortune.png']}
-              toImgs={['/icons/arbitrum-icon-light.svg']}
-            />
-          )}
           {isLoading && (
             <Text style="h6">Please confirm in your wallet</Text>
           )}

@@ -1,7 +1,7 @@
 {
     "name": "NFTEarth",
     "short_name": "NFTEarth",
-    "description": "Omnichain NFT Hub",
+    "description": "L2 NFT Hub",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#202425",
