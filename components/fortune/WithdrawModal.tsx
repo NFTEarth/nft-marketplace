@@ -244,7 +244,7 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
           )}
           {isSuccess && (
             <Flex direction="column" css={{gap: 20, my: '$4'}}>
-              <Text style="h6" css={{color: 'green'}}>Withdraw Success !</Text>
+              <Text style="h6" css={{color: 'green'}}>Successful Withdrawal</Text>
             </Flex>
           )}
         </Flex>

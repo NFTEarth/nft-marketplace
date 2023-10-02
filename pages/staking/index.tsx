@@ -464,7 +464,7 @@ const StakingPage = () => {
                     textDecoration: 'underline'
                   }
                 }}
-              >{`Learn more about xNFTE staking in the NFTEarth docs`}</Text>
+              >{`Learn more about xNFTE staking in the docs`}</Text>
               <Flex
                 css={{
                   flexWrap: 'wrap',

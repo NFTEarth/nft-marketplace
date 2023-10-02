@@ -598,7 +598,7 @@ const PoolPage = () => {
                 borderRadius: 8
               }}
             >
-              <Text style="body2">Your Current Balance</Text>
+              <Text style="body2">Your Current NFTE Balance</Text>
               <Flex
                 align="center"
                 css={{
@@ -613,7 +613,7 @@ const PoolPage = () => {
                     height: 20
                   }}
                 />
-                <Text style="body2">{`${formatBN(BigInt(nfteLPBalance?.result || 0), 6, 18)} NFTE LP`}</Text>
+                <Text style="body2">{`${formatBN(BigInt(nfteLPBalance?.result || 0), 6, 18)}`}</Text>
               </Flex>
             </Flex>
             <Flex
@@ -693,7 +693,7 @@ const PoolPage = () => {
             }
           }}
         >
-          <Text style="body3"><h2> Add liquidity to the NFTE-WETH pool. </h2>Lock up the resulting LP Vault token of NFTE-WETH (NFTE LP). The longer you lock you NFTE LP Vault token (1 year max), the more xNFTE you get and higher rewards and voting power. <Text style="body3" as={Link} css={{ fontWeight: 'bold', '&:hover': { textDecoration: 'underline' } }} href="https://docs.nftearth.exchange/nfte-token/xnfte-and-nfte-staking" target="_blank"><h1>Learn More about xNFTE Staking in the docs.</h1></Text></Text>
+          <Text style="body3"><h2> Add liquidity to the NFTE-WETH pool. </h2>Lock up the resulting Vault token received (NFTE LP). The longer you lock your NFTE LP Vault token (1 year max), the more xNFTE you get and the greater your rewards and voting power. <Text style="body3" as={Link} css={{ fontWeight: 'bold', '&:hover': { textDecoration: 'underline' } }} href="https://docs.nftearth.exchange/nfte-token/xnfte-and-nfte-staking" target="_blank"><h1>Learn More about xNFTE staking in the docs.</h1></Text></Text>
         </Flex>
       </Flex>
     </Layout>
