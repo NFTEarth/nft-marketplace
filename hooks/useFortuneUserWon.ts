@@ -10,7 +10,7 @@ type WinningRoundResult = {
 }
 
 const useFortuneUserWon = (user?: `0x${string}`, options?: SWRConfiguration) => {
-  const { data, isLoading } = useSWR<WinningRoundResult>(
+  const { data, isLoading, mutate } = useSWR<WinningRoundResult>(
     user ? [
     `query GetUserWonRounds($user: String!) {
         winningRounds:rounds(orderBy: roundId, orderDirection: desc, first: 1000, where: { winner: $user }) {
@@ -53,6 +53,7 @@ const useFortuneUserWon = (user?: `0x${string}`, options?: SWRConfiguration) => 
 
   return {
     data: data?.winningRounds as Round[],
+    refetch: mutate,
     isLoading
   };
 }

@@ -40,7 +40,7 @@ const FortuneHistory = () => {
   const { address } = useAccount()
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
-  const { data: userWinningRounds } = useFortuneUserWon(address , {
+  const { data: userWinningRounds, refetch: refetchReward } = useFortuneUserWon(address , {
     refreshInterval: 5000
   })
   const data = useFortuneHistory({
@@ -218,7 +218,7 @@ const FortuneHistory = () => {
                     textStyle={'h6'}
                   />
                 </Flex>
-                <ClaimModal rewards={rewards} disabled={!(totalUnclaimed > BigInt(0))} />
+                <ClaimModal rewards={rewards} disabled={!(totalUnclaimed > BigInt(0))} onClose={refetchReward} />
               </Flex>
             </Flex>
           </Flex>

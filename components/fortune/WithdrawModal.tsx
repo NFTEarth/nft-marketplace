@@ -22,6 +22,7 @@ import {Deposit} from "hooks/useFortuneRound";
 import {FORTUNE_CHAINS} from "utils/chains";
 import {ToastContext} from "context/ToastContextProvider";
 import FortuneAbi from "artifact/FortuneAbi";
+import {parseError} from "../../utils/error";
 
 type ClaimModalProps = {
   open?: boolean
@@ -41,7 +42,7 @@ type WithdrawDeposit = {
   value: bigint
 }
 
-const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
+const WithdrawModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
   const [open, setOpen] = useState(!!defaultOpen)
   const [error, setError] = useState<any | undefined>()
   const {addToast} = useContext(ToastContext)
@@ -55,7 +56,7 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
     chainId: marketplaceChain.id,
   })
 
-  const {data: deposits} = useFortuneToWithdraw(address, {
+  const {data: deposits, refetch: refetchDeposits } = useFortuneToWithdraw(address, {
     refreshInterval: 5000
   })
   const disabled = 0 >= (deposits?.length || 0)
@@ -113,23 +114,15 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
 
     try {
       withdrawDeposit?.()
+      refetchDeposits()
     } catch (err: any) {
       if (err instanceof BaseError) {
-        const revertError = err.walk(err => err instanceof ContractFunctionRevertedError)
-        if (revertError instanceof ContractFunctionRevertedError) {
-          const errorName = revertError.data?.errorName ?? ''
-          addToast?.({
-            title: errorName,
-            status: 'error',
-            description: errorName
-          })
-        } else {
-          addToast?.({
-            title: 'Error',
-            status: 'error',
-            description: (revertError as any).message
-          })
-        }
+        const { name, message } = parseError(err)
+        addToast?.({
+          title: name,
+          status: 'error',
+          description: message
+        })
         setOpen(false)
       } else {
         console.log(err.stack)
@@ -217,7 +210,7 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
         >
           {(!!error || !!withdrawError) && (
             <ErrorWell
-              message={(error || withdrawError as any)?.reason || (error || withdrawError)?.message}
+              error={(error || withdrawError)}
               css={{
                 textAlign: 'left',
                 maxWidth: '100%',
@@ -253,4 +246,4 @@ const ClaimModal: FC<ClaimModalProps> = ({open: defaultOpen, onClose}) => {
   )
 }
 
-export default ClaimModal
+export default WithdrawModal

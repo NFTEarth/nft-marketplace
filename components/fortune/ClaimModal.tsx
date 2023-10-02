@@ -26,6 +26,7 @@ import {
   http
 } from "viem";
 import {ToastContext} from "../../context/ToastContextProvider";
+import {parseError} from "../../utils/error";
 
 export type RewardInputType =  {
   roundId: bigint;
@@ -72,10 +73,10 @@ const ClaimModal: FC<ClaimModalProps> = ({ open: defaultOpen, rewards, disabled,
   const handleClaimReward = async () => {
     setError(undefined)
     try {
-      setStep(1)
       const publicClient = createPublicClient({
         chain: marketplaceChain,
-        transport: http()
+        // @ts-ignore
+        transport: custom(window?.ethereum)
       })
 
       const walletClient = createWalletClient({
@@ -84,6 +85,7 @@ const ClaimModal: FC<ClaimModalProps> = ({ open: defaultOpen, rewards, disabled,
         transport: custom(window?.ethereum)
       })
 
+      setStep(1)
       const [account] = await walletClient.getAddresses()
 
       if (rewards.length > 0) {
@@ -122,21 +124,12 @@ const ClaimModal: FC<ClaimModalProps> = ({ open: defaultOpen, rewards, disabled,
       setStep(3)
     } catch (err: any) {
       if (err instanceof BaseError) {
-        const revertError = err.walk(err => err instanceof ContractFunctionRevertedError)
-        if (revertError instanceof ContractFunctionRevertedError) {
-          const errorName = revertError.data?.errorName ?? ''
-          addToast?.({
-            title: errorName,
-            status: 'error',
-            description: errorName
-          })
-        } else {
-          addToast?.({
-            title: 'Error',
-            status: 'error',
-            description: /ABI encoding params/.test((revertError as any).message) ? 'Failed to Claim' : (revertError as any).message
-          })
-        }
+        const { name, message } = parseError(err)
+        addToast?.({
+          title: name,
+          status: 'error',
+          description: /ABI encoding params/.test(message) ? 'Failed to Claim' : message
+        })
         setStep(0)
         setOpen(false)
       } else {
@@ -202,7 +195,7 @@ const ClaimModal: FC<ClaimModalProps> = ({ open: defaultOpen, rewards, disabled,
       >
         {(!!error) && (
           <ErrorWell
-            message={(error as any)?.reason || error?.message}
+            error={error}
             css={{
               textAlign: 'left',
               maxWidth: '100%',
