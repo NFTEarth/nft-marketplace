@@ -497,7 +497,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           buttonChildren={
                             <>
                               <FontAwesomeIcon icon={faSeedling} />
-                              {isSmallDevice ? 'Mint' : `Mint for ${mintPrice}`}
+                              {`Mint`}
                             </>
                           }
                           buttonCss={{
