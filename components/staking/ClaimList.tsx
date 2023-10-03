@@ -11,10 +11,12 @@ import LoadingSpinner from "../common/LoadingSpinner";
 import Link from "next/link";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faExternalLink} from "@fortawesome/free-solid-svg-icons";
+import useUSDAndNativePrice from "../../hooks/useUSDAndNativePrice";
 
 const claimableTokens : `0x${string}`[] = [
   '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
-  //'0x51B902f19a56F0c8E409a34a215AD2673EDF3284'
+  '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
+  // '0x912CE59144191C1204E64559FE8253a0e49E6548'
 ]
 
 const ClaimList = () => {
@@ -35,8 +37,29 @@ const ClaimList = () => {
     enabled: !!data?.hash,
   })
 
+  const { data: wethPrice, isLoading: isLoadingWethPrice } = useUSDAndNativePrice({
+    enabled: !!preparedData?.result?.[0],
+    chainId: arbitrum.id,
+    contract: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
+    price: preparedData?.result?.[0] || BigInt(0)
+  })
+
+  const { data: nftePrice, isLoading: isLoadingNFTEPrice } = useUSDAndNativePrice({
+    enabled: !!preparedData?.result?.[1],
+    chainId: arbitrum.id,
+    contract: '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
+    price: preparedData?.result?.[1] || BigInt(0)
+  })
+
+  const { data: arbPrice, isLoading: isLoadingARBPrice } = useUSDAndNativePrice({
+    enabled: !!preparedData?.result?.[2],
+    chainId: arbitrum.id,
+    contract: '0x912CE59144191C1204E64559FE8253a0e49E6548',
+    price: preparedData?.result?.[2] || BigInt(0)
+  })
+
   const loading = isLoading || isLoadingTransaction;
-  const disableButton = isLoading || isLoadingTransaction || isSuccess
+  const disableButton = isLoading || isLoadingTransaction || isSuccess || !!preparedError
   const totalClaimable = BigInt(preparedData?.result?.[0] || 0)// + BigInt(preparedData?.result?.[1] || 0)
 
   const handleClaimReward = async () => {
@@ -159,15 +182,29 @@ const ClaimList = () => {
                 }}
               >
                 <Flex
-                  direction="column"
+                  justify="between"
+                  style={{
+                    width: '100%'
+                  }}
                 >
-                  <Text style="body3">Token</Text>
                   {BigInt(preparedData?.result?.[0] || 0) > 0 && (
-                    <Text style="h6">WETH</Text>
+                    <Flex direction="column" css={{ gap: 5 }}>
+                      <Text style="h6">WETH</Text>
+                      <Text>{formatBN(preparedData?.result?.[0], 2, 18)}</Text>
+                    </Flex>
                   )}
-                  {/*{BigInt(preparedData?.result?.[1] || 0) > 0 && (*/}
-                  {/*  <Text style="h6">NFTE</Text>*/}
-                  {/*)}*/}
+                  {BigInt(preparedData?.result?.[1] || 0) > 0 && (
+                    <Flex direction="column" css={{ gap: 5 }}>
+                      <Text style="h6">NFTE</Text>
+                      <Text>{formatBN(preparedData?.result?.[1], 2, 18)}</Text>
+                    </Flex>
+                  )}
+                  {BigInt(preparedData?.result?.[2] || 0) > 0 && (
+                    <Flex direction="column" css={{ gap: 5 }}>
+                      <Text style="h6">ARB</Text>
+                      <Text>{formatBN(preparedData?.result?.[2], 2, 18)}</Text>
+                    </Flex>
+                  )}
                 </Flex>
               </Flex>
               <Flex
@@ -179,8 +216,14 @@ const ClaimList = () => {
                 <Flex
                   direction="column"
                 >
-                  <Text style="body3">Claim Reward</Text>
-                  <Text style="subtitle1">{formatBN( BigInt(preparedData?.result?.[0] || 0), 8, 18, { notation: "standard" })}</Text>
+                  <Text style="body3">Total Reward</Text>
+                  <Text style="subtitle1">{formatBN( BigInt(wethPrice?.nativePrice || 0) + BigInt(nftePrice?.nativePrice || 0) + BigInt(arbPrice?.nativePrice || 0), 2, 18, { notation: "standard" })}</Text>
+                </Flex>
+                <Flex
+                  direction="column"
+                >
+                  <Text style="body3">(USD)</Text>
+                  <Text style="subtitle1">{formatBN( BigInt(wethPrice?.usdPrice || 0) + BigInt(nftePrice?.usdPrice || 0) + BigInt(arbPrice?.usdPrice || 0), 2, 6, { notation: "standard" })}</Text>
                 </Flex>
               </Flex>
             </>
