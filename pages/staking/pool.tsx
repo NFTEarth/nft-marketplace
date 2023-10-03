@@ -693,7 +693,7 @@ const PoolPage = () => {
             }
           }}
         >
-          <Text style="body3"><h2> Add liquidity to the NFTE-WETH pool. </h2>Lock up the resulting Vault token received (NFTE LP). The longer you lock your NFTE LP Vault token (1 year max), the more xNFTE you get and the greater your rewards and voting power. <Text style="body3" as={Link} css={{ fontWeight: 'bold', '&:hover': { textDecoration: 'underline' } }} href="https://docs.nftearth.exchange/nfte-token/xnfte-and-nfte-staking" target="_blank"><h1>Learn More about xNFTE staking in the docs.</h1></Text></Text>
+          <Text style="body3"><h2> 1. Add liquidity to the NFTE-WETH pool. </h2>2. Lock up the resulting Vault token received (NFTE LP). <br></br> 3. The longer you lock your NFTE LP Vault token (1 year max), the more xNFTE you get and the greater your rewards and voting power. <Text style="body3" as={Link} css={{ fontWeight: 'bold', '&:hover': { textDecoration: 'underline' } }} href="https://docs.nftearth.exchange/nfte-token/xnfte-and-nfte-staking" target="_blank"><h1>Learn more about xNFTE staking in the docs.</h1></Text></Text>
         </Flex>
       </Flex>
     </Layout>
