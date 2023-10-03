@@ -85,7 +85,7 @@ const LogTableRow: FC<LogTableRowProps> = ({ log }) => {
       <TableCell css={{ pl: '$2', py: '$3' }}>
         <Flex align="center" justify="end">
           <Link href={`${chain?.blockExplorers?.default.url}/tx/${log.transactionHash}`} target="_blank">
-            <Text style="subtitle2" color="success">View</Text>
+            <Text style="subtitle2" color="primary">View</Text>
           </Link>
         </Flex>
       </TableCell>
