@@ -16,7 +16,7 @@ import useUSDAndNativePrice from "../../hooks/useUSDAndNativePrice";
 const claimableTokens : `0x${string}`[] = [
   '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
   '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
-  // '0x912CE59144191C1204E64559FE8253a0e49E6548'
+  '0x912CE59144191C1204E64559FE8253a0e49E6548'
 ]
 
 const ClaimList = () => {
