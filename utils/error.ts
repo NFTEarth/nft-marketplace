@@ -46,6 +46,10 @@ export const parseError = (error: any) => {
     message = 'Stake'
   }
 
+  if (message === 'ERC20: transfer amount exceeds balance') {
+    message = 'Insufficient balance'
+  }
+
   if (/exceeds the balance/.test(message)) {
     message = 'Insufficient balance'
   }
