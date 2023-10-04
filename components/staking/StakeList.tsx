@@ -75,7 +75,7 @@ const StakeList : FC<Props> = (props) => {
               direction="column"
             >
               <Text style="body3">Token</Text>
-              <Text style="h6">NFTE LP</Text>
+              <Text style="h6">NFTE/WETH LP</Text>
             </Flex>
           </Flex>
           <Flex

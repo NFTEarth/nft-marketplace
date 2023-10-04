@@ -48,7 +48,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
   const addresses: Record<string, string> = {
     'NFTE': chain?.address as string,
     'xNFTE': chain?.xNFTE as string,
-    'NFTE-WETH Vault (NFTE LP)': chain?.LPNFTE as string,
+    'NFTE/WETH LP Token': chain?.LPNFTE as string,
   }
 
   const { data: nfteData } : { data: any } = useContractReads<
@@ -249,7 +249,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
                   justify="between"
                 >
                   <Text style="body3">Select Amount</Text>
-                  <Text style="body3">{`Balance: ${formatBN(BigInt(nfteLPBalance?.result || 0), 4, 18 || 10)}`}</Text>
+                  <Text style="body3">{`NFTE/WETH LP Token Balance: ${formatBN(BigInt(nfteLPBalance?.result || 0), 4, 18 || 10)}`}</Text>
                 </Flex>
                 <Box
                   css={{
