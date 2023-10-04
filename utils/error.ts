@@ -24,7 +24,7 @@ export const parseError = (error: any) => {
     const execError = error.walk(e => e instanceof ContractFunctionExecutionError)
     name = error.name
     if (insufficientFundsError instanceof InsufficientFundsError) {
-      message = 'Insufficient Fund'
+      message = 'Insufficient Funds'
     } else if (userRejectedRequestError instanceof UserRejectedRequestError) {
       message = userRejectedRequestError.shortMessage
     } else if (revertError instanceof ContractFunctionRevertedError) {
@@ -39,7 +39,11 @@ export const parseError = (error: any) => {
   }
 
   if (message === 'Voting lock can be 3 years max') {
-    message = 'Voting lock can not exceed 1 year'
+    message = 'Max lock time is 1 year'
+  }
+
+  if (message === 'Execution reverted for an unknown reason.') {
+    message = 'Stake'
   }
 
   if (/exceeds the balance/.test(message)) {
@@ -55,7 +59,7 @@ export const parseError = (error: any) => {
   }
 
   if (name === 'OLD') {
-    message = 'Price Oracle Couldn\'t get token price right now, Token Usage temporary Disabled.'
+    message = 'Price oracle unable to retrieve token price, try again shortly.'
   }
 
   return {
