@@ -598,7 +598,7 @@ const PoolPage = () => {
                 borderRadius: 8
               }}
             >
-              <Text style="body2">Your Current NFTE Balance</Text>
+              <Text style="body2">Your Current NFTE LP Balance</Text>
               <Flex
                 align="center"
                 css={{
