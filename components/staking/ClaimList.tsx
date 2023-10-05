@@ -216,13 +216,13 @@ const ClaimList = () => {
                 <Flex
                   direction="column"
                 >
-                  <Text style="body3">Rewards Value in Ξ</Text>
+                  <Text style="body3">Rewards Value in ETH</Text>
                   <Text style="subtitle1">{formatBN( BigInt(wethPrice?.nativePrice || 0) + BigInt(nftePrice?.nativePrice || 0) + BigInt(arbPrice?.nativePrice || 0), 2, 18, { notation: "standard" })}</Text>
                 </Flex>
                 <Flex
                   direction="column"
                 >
-                  <Text style="body3">Rewards Value in $USD</Text>
+                  <Text style="body3">Rewards Value in USD</Text>
                   <Text style="subtitle1">{formatBN( BigInt(wethPrice?.usdPrice || 0) + BigInt(nftePrice?.usdPrice || 0) + BigInt(arbPrice?.usdPrice || 0), 2, 6, { notation: "standard" })}</Text>
                 </Flex>
               </Flex>

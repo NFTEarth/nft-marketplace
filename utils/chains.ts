@@ -326,19 +326,6 @@ export const getAlchemyNetworkName = (chainId: number) => {
 export default [
   DefaultChain,
   {
-    ...arbitrum,
-    name: 'Arbitrum',
-    lightIconUrl: '/icons/arbitrum-icon-dark.svg',
-    darkIconUrl: '/icons/arbitrum-icon-light.svg',
-    reservoirBaseUrl: 'https://api-arbitrum.reservoir.tools',
-    proxyApi: '/api/reservoir/arbitrum',
-    routePrefix: 'arbitrum',
-    apiKey: process.env.RESERVOIR_API_KEY,
-    coingeckoId: 'arbitrum',
-    collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_COLLECTION_SET_ID,
-    community: process.env.NEXT_PUBLIC_ARBITRUM_COMMUNITY,
-  },
-  {
     ...arbitrumNova,
     lightIconUrl: '/icons/arbitrum-nova-icon-dark.svg',
     darkIconUrl: '/icons/arbitrum-nova-icon-light.svg',
