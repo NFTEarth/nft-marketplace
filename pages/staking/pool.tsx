@@ -53,7 +53,7 @@ const PoolPage = () => {
   const addresses: Record<string, string> = {
     'NFTE': chain?.address as string,
     'WETH': WETH_ADDRESS as string,
-    'NFTE-WETH Vault (NFTE LP)': chain?.LPNFTE as string,
+    'NFTE/WETH LP Token': chain?.LPNFTE as string,
     'UniProxy': chain?.uniProxy as string,
     'Pool': POOL_ADDRESS as string
   }
@@ -317,7 +317,7 @@ const PoolPage = () => {
               <Flex
                 direction="column"
               >
-                <Text css={{ fontSize: 'inherit' }}>{`Successfully Added Liquidity`}</Text>
+                <Text css={{ fontSize: 'inherit' }}>{`Add Liquidity Successful`}</Text>
                 <Link
                   href={`${arbitrum.blockExplorers.etherscan.url}/tx/${tx?.hash}`}
                   target="_blank"
@@ -390,7 +390,7 @@ const PoolPage = () => {
               color: '$gray10'
             }}
           >{`>`}</Text>
-          <Text style="subtitle1">{`Add To NFTE/WETH LP Vault`}</Text>
+          <Text style="subtitle1">{`Get NFTE/WETH LP Token`}</Text>
         </Flex>
         <Flex
           direction="column"
@@ -659,7 +659,7 @@ const PoolPage = () => {
                     height: 20
                   }}
                 />
-                <Text style="body2">{`${formatBN(expectedNFTELP, 8, 18)} NFTE LP`}</Text>
+                <Text style="body2">{`${formatBN(expectedNFTELP, 8, 18)} NFTE/WETH LP Tokens`}</Text>
               </Flex>
             </Flex>
           </Flex>
@@ -693,7 +693,7 @@ const PoolPage = () => {
             }
           }}
         >
-          <Text style="body3"><h2> 1. Add liquidity to the NFTE-WETH pool. </h2>2. Lock up the resulting Vault token received (NFTE LP). <br></br> 3. The longer you lock your NFTE LP Vault token (1 year max), the more xNFTE you get and the greater your rewards and voting power. <Text style="body3" as={Link} css={{ fontWeight: 'bold', '&:hover': { textDecoration: 'underline' } }} href="https://docs.nftearth.exchange/nfte-token/xnfte-and-nfte-staking" target="_blank"><h1>Learn more about xNFTE staking in the docs.</h1></Text></Text>
+          <Text style="body3"><h2> 1. Add liquidity to the NFTE-WETH pool on Uniswap. </h2>2. Lock up the resulting NFTE/WETH LP token received (NFTE/WETH LP). <br></br> 3. The longer you lock your NFTE/WETH LP token (1 year max), the more xNFTE you get, and the greater your rewards and voting power. <Text style="body3" as={Link} css={{ fontWeight: 'bold', '&:hover': { textDecoration: 'underline' } }} href="https://docs.nftearth.exchange/nfte-token/xnfte-and-nfte-staking" target="_blank"><h1>Learn more about xNFTE staking in the docs.</h1></Text></Text>
         </Flex>
       </Flex>
     </Layout>

@@ -209,7 +209,7 @@ const StakingTab: FC<Props> = (props) => {
               <Flex
                 direction="column"
               >
-                <Text css={{ fontSize: 'inherit' }}>{`Successfully Staked`}</Text>
+                <Text css={{ fontSize: 'inherit' }}>{`Staking Successful`}</Text>
                 <Link
                   href={`${arbitrum.blockExplorers.etherscan.url}/tx/${tx?.hash}`}
                   target="_blank"

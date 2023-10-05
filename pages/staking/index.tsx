@@ -86,7 +86,7 @@ const StakingPage = () => {
         <Flex
           direction="column"
         >
-          <Text style="h4">You don’t have any NFTE LP tokens to stake in your wallet.</Text>
+          <Text style="h4">You don’t have any NFTE/WETH LP tokens to stake in your wallet.</Text>
           <Text css={{ maxWidth: '75%' }}>{`xNFTE holders control protocol governance and earn all revenue sharing from the DAO. NFTEarth is governed entirely by xNFTE holders.`}</Text>
           <Flex css={{ mt: 20}}>
             <Button
@@ -110,7 +110,7 @@ const StakingPage = () => {
           </Text>
           {` and `}
           <Text style="h4" color="primary">
-            {`${formatBN(nfteLPBalance?.result || 0n, 2, 18, {})} NFTE LP`}
+            {`${formatBN(nfteLPBalance?.result || 0n, 2, 18, {})} NFTE/WETH LP tokens`}
           </Text>
           {` available to stake.`}
         </Text>
@@ -305,7 +305,7 @@ const StakingPage = () => {
                       height: 20
                     }}
                   />
-                  <Text style="body4">Total NFTE LP Locked</Text>
+                  <Text style="body4">Total NFTE/WETH LP Tokens Locked</Text>
                 </Flex>
                 <FontAwesomeIcon icon={faLock} width={12} height={12}/>
               </Flex>
@@ -350,7 +350,7 @@ const StakingPage = () => {
                       height: 20
                     }}
                   />
-                  <Text style="body4">Percent of NFTE LP Locked</Text>
+                  <Text style="body4">Percent of NFTE/WETH LP Tokens Locked</Text>
                 </Flex>
               </Flex>
               <Text
@@ -483,7 +483,7 @@ const StakingPage = () => {
                       mb: '0.5625rem',
                       display: 'inline-block'
                     }}
-                  >My Locked NFTE LP</Text>
+                  >My Locked NFTE/WETH LP Tokens</Text>
                   <FormatCryptoCurrency
                     amount={locked?.result?.[0] || 0n}
                     textStyle="h6"
