@@ -335,7 +335,7 @@ const PoolPage = () => {
               <Flex
                 direction="column"
               >
-                <Text css={{ fontSize: 'inherit' }}>{`Successfully Added Liquidity`}</Text>
+                <Text css={{ fontSize: 'inherit' }}>{`Add Liquidity Successful`}</Text>
                 <Link
                   href={`${arbitrum.blockExplorers.etherscan.url}/tx/${tx?.hash}`}
                   target="_blank"

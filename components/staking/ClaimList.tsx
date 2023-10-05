@@ -74,7 +74,7 @@ const ClaimList = () => {
               <Flex
                 direction="column"
               >
-                <Text css={{ fontSize: 'inherit' }}>{`Claim Reward Success!`}</Text>
+                <Text css={{ fontSize: 'inherit' }}>{`Claiming Successful`}</Text>
                 <Link
                   href={`${arbitrum.blockExplorers.etherscan.url}/tx/${tx?.hash}`}
                   target="_blank"
