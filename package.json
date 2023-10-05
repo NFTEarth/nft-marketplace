@@ -16,6 +16,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@google-cloud/storage": "^7.1.0",
     "@next/font": "^13.1.6",
+    "@nftearth/uniswap-widgets": "^1.0.1",
     "@radix-ui/colors": "^0.1.8",
     "@radix-ui/popper": "^0.1.0",
     "@radix-ui/react-avatar": "^1.0.1",
@@ -37,7 +38,7 @@
     "@sentry/nextjs": "^7.53.1",
     "@types/howler": "2.1.2",
     "@types/uuid": "^9.0.1",
-    "@uniswap/v3-sdk": "^3.10.0",
+    "@uniswap/conedison": "^1.8.0",
     "@upstash/redis": "^1.22.0",
     "@vercel/analytics": "^1.0.2",
     "canvas-confetti": "^1.6.0",
@@ -87,6 +88,7 @@
     "@types/react": "^18.0",
     "@types/react-dom": "^18.0",
     "next-themes": "^0.2.0",
+    "node-gyp": "^9.4.0",
     "ts-import": "^5.0.0-beta.0",
     "typescript": "^4.9.4"
   }

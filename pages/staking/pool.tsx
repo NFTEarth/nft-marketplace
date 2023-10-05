@@ -1,7 +1,6 @@
-import {useCallback, useContext, useEffect, useMemo, useState} from "react";
+import {useCallback, useContext, useMemo, useState} from "react";
 import {
-  useAccount,
-  useBalance,
+  useAccount, useBalance,
   useContractReads,
   useContractWrite,
   usePrepareContractWrite,
@@ -9,7 +8,7 @@ import {
 } from "wagmi";
 import {formatEther, parseEther, parseUnits, zeroAddress} from "viem";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faChevronDown, faExternalLink, faSquarePlus} from "@fortawesome/free-solid-svg-icons";
+import {faExternalLink, faSquarePlus} from "@fortawesome/free-solid-svg-icons";
 import {useConnectModal} from "@rainbow-me/rainbowkit";
 import {useDebouncedEffect} from "@react-hookz/web";
 import {getPublicClient} from "@wagmi/core";
@@ -31,19 +30,8 @@ import {formatBN} from "utils/numbers";
 import ERC20Abi from 'artifact/ERC20Abi'
 import ERC20WethAbi from 'artifact/ERC20WethAbi'
 import UniProxyAbi from 'artifact/UniProxyAbi'
-import ERC20OracleAbi from 'artifact/ERC20OracleAbi'
 import useUSDAndNativePrice from "../../hooks/useUSDAndNativePrice";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
-import useMerklReward from "../../hooks/useMerklReward";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleRoot,
-  slideDown,
-  slideUp
-} from "../../components/primitives/Collapsible";
-import {truncateAddress} from "../../utils/truncate";
-import * as CollapsiblePrimitive from "@radix-ui/react-collapsible";
 import AddressCollapsible from "../../components/staking/AddressCollapsible";
 import AlertChainSwitch from "../../components/common/AlertChainSwitch";
 
@@ -70,23 +58,17 @@ const PoolPage = () => {
     'Pool': POOL_ADDRESS as string
   }
 
+  const { data: ethBalance } = useBalance({
+    address
+
+  })
+
+  console.log('ethBalance', ethBalance)
   const { data: balanceData, refetch: refetchBalance } = useContractReads({
     contracts: [
       {
         abi:  ERC20Abi,
-        address: zeroAddress as `0x${string}`,
-        functionName:  'balanceOf',
-        args: [address as `0x${string}`],
-      },
-      {
-        abi:  ERC20Abi,
         address: WETH_ADDRESS as `0x${string}`,
-        functionName:  'balanceOf',
-        args: [address as `0x${string}`],
-      },
-      {
-        abi:  ERC20Abi,
-        address: chain?.address as `0x${string}`,
         functionName:  'balanceOf',
         args: [address as `0x${string}`],
       },
@@ -103,7 +85,7 @@ const PoolPage = () => {
         args: [address as `0x${string}`],
       }
     ],
-    watch: false,
+    watch: true,
     allowFailure: true,
     enabled: !!address,
   })
@@ -136,13 +118,13 @@ const PoolPage = () => {
     enabled: !!address,
   })
 
-  const [ethBalance, wethBalance, nfteBalance, nfteLPBalance ] = balanceData || [] as any
+  const [wethBalance, nfteBalance, nfteLPBalance ] = balanceData || [] as any
   const [wethAllowance, nfteAllowance] = allowanceData || [] as any
   const wethValue = useMemo(() => parseEther(valueWEth as `${number}`), [valueWEth])
   const nfteValue = useMemo(() => parseEther(valueNFTE as `${number}`), [valueNFTE])
   const requireWethAllowance = BigInt(wethAllowance?.result || 0) < wethValue
   const requireNFTEAllowance = BigInt(nfteAllowance?.result || 0) < nfteValue;
-  const requireETHWrap = BigInt(wethBalance?.result || 0) < wethValue && BigInt(ethBalance?.result || 0) >= wethValue
+  const requireETHWrap = BigInt(wethBalance?.result || 0) < wethValue && (BigInt(ethBalance?.value || 0) + BigInt(wethBalance?.result || 0)) >= wethValue
 
   useDebouncedEffect(() => {
     if (changedValue === '') {
@@ -161,7 +143,7 @@ const PoolPage = () => {
           functionName: 'getDepositAmount',
           args: [chain?.LPNFTE as `0x${string}`, isWethChange ? WETH_ADDRESS : chain?.address as `0x${string}`, value]
         }).then(async (res) => {
-          const otherVal = BigInt(res[0])
+          const otherVal = isWethChange ? BigInt(res[1]) : BigInt(res[0])
           const val = parseFloat(formatEther(otherVal, 'wei')).toFixed(8)
           if (isWethChange) {
             setValueNFTE(val)
@@ -207,7 +189,7 @@ const PoolPage = () => {
     address: WETH_ADDRESS as `0x${string}`,
     abi: ERC20WethAbi,
     functionName: 'deposit',
-    value: wethValue
+    value: wethValue - BigInt(wethBalance?.result || 0)
   })
 
   const { isLoading: isLoadingTransaction, isSuccess = true } = useWaitForTransaction({
@@ -237,11 +219,11 @@ const PoolPage = () => {
 
 
   const handleSetMaxValue = useCallback(() => {
-    handleSetValue(formatBN(BigInt(wethBalance?.result || 0), 6, 18) || '0')
+    handleSetValue(formatEther(BigInt(wethBalance?.result || 0) + BigInt(ethBalance?.value || 0), 'wei') || '0')
   }, [wethBalance])
 
   const handleSetMaxNFTEValue = useCallback(() => {
-    handleSetNFTEValue(formatBN(BigInt(nfteBalance?.result || 0), 6, 18) || '0')
+    handleSetNFTEValue(formatEther(BigInt(nfteBalance?.result || 0), 'wei') || '0')
   }, [nfteBalance])
 
   const disableButton = isZeroValue || loading || (!!preparedError && !requireNFTEAllowance && !requireWethAllowance && !requireETHWrap) || isLoading || isLoadingWethApproval || isLoadingNFTEApproval || isLoadingWrapEth || isLoadingTransaction
@@ -460,7 +442,25 @@ const PoolPage = () => {
                 justify="between"
               >
                 <Text style="body3">WETH Amount</Text>
-                <Text style="body3">{`Balance: ${formatBN(BigInt(wethBalance?.result || 0), 6, 18)}`}</Text>
+                <Tooltip
+                  align="right"
+                  side="top"
+                  content={
+                    <Flex
+                      direction="column"
+                      css={{
+                        gap: 5
+                      }}
+                    >
+                      <Text style="body3">{`Balance: ${formatBN(BigInt(wethBalance?.result || 0), 6, 18)} WETH`}</Text>
+                      <Text style="body3">{`Balance: ${formatBN(BigInt(ethBalance?.value || 0), 6, 18)} ETH`}</Text>
+                    </Flex>
+                  }
+                >
+                  <Text css={{
+                    fontSize: 12
+                  }}>{`Combined Balance: ${formatBN(BigInt(wethBalance?.result || 0) + BigInt(ethBalance?.value || 0), 6, 18)}`}</Text>
+                </Tooltip>
               </Flex>
               <Box
                 css={{

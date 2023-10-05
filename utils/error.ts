@@ -42,7 +42,7 @@ export const parseError = (error: any) => {
     message = 'Voting lock can not exceed 1 year'
   }
 
-  if (/exceeds the balance/.test(message)) {
+  if (/exceeds(.*)balance/.test(message)) {
     message = 'Insufficient balance'
   }
 

@@ -31,7 +31,6 @@ import {formatBN} from "utils/numbers";
 
 import ERC20Abi from 'artifact/ERC20Abi'
 import xNFTEAbi from 'artifact/xNFTEAbi'
-import Decimal from "decimal.js-light";
 
 const StakingPage = () => {
   const chain = OFT_CHAINS.find((chain) => chain.id === arbitrum.id)
