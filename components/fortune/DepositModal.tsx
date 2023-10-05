@@ -34,7 +34,7 @@ import {ToastContext} from "context/ToastContextProvider";
 import {useFortune, useMarketplaceChain, useCountdown} from "hooks";
 import {Round, RoundStatus} from "hooks/useFortuneRound";
 import {SelectionData} from "./NFTEntry";
-import {FORTUNE_CHAINS} from "utils/chains";
+import {FORTUNE_CHAINS, getAlchemyNetworkName} from "utils/chains";
 import {parseError} from "utils/error";
 
 type FortuneDepositProps = {
@@ -71,15 +71,15 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
   const [_hours, minutes, seconds] = useCountdown(cutOffTime * 1000)
   const lessThan30Seconds = _hours === 0 && minutes === 0 && seconds < 30
 
+  const alchemyNetworkName = getAlchemyNetworkName(marketplaceChain.id)
+  const alchemyAPIUrl = alchemyNetworkName ?? `https://${alchemyNetworkName}.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`
   const publicClient = createPublicClient({
     chain: arbitrum,
-    // @ts-ignore
-    transport: custom(window?.ethereum)
+    transport: http(alchemyAPIUrl)
   })
   const walletClient = createWalletClient({
     chain: arbitrum,
-    // @ts-ignore
-    transport: custom(window?.ethereum)
+    transport: http(alchemyAPIUrl)
   })
   let requireApprovals = useRef(0).current
 

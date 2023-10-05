@@ -43,15 +43,11 @@ export const parseError = (error: any) => {
   }
 
   if (message === 'Execution reverted for an unknown reason.') {
-    message = 'Stake'
+    message = '-'
   }
 
   if (message === 'Improper ratio') {
     message = 'Deposit'
-  }
-
-  if (message === 'ERC20: transfer amount exceeds balance') {
-    message = 'Insufficient balance'
   }
 
   if (/exceeds(.*)balance/.test(message)) {

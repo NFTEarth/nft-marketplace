@@ -249,7 +249,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
                   justify="between"
                 >
                   <Text style="body3">Select Amount</Text>
-                  <Text style="body3">{`NFTE/WETH LP Token Balance: ${formatBN(BigInt(nfteLPBalance?.result || 0), 4, 18 || 10)}`}</Text>
+                  <Text style="body3">{`NFTE/WETH LP Balance: ${formatBN(BigInt(nfteLPBalance?.result || 0), 4, 18 || 10)}`}</Text>
                 </Flex>
                 <Box
                   css={{

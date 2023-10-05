@@ -13,7 +13,7 @@ import {useMarketplaceChain} from "../../hooks";
 import ErrorWell from "../primitives/ErrorWell";
 import LoadingSpinner from "../common/LoadingSpinner";
 import FortuneAbi from "../../artifact/FortuneAbi";
-import {FORTUNE_CHAINS} from "../../utils/chains";
+import {FORTUNE_CHAINS, getAlchemyNetworkName} from "../../utils/chains";
 import TransactionProgress from "../common/TransactionProgress";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTwitter} from "@fortawesome/free-brands-svg-icons";
@@ -27,6 +27,7 @@ import {
 } from "viem";
 import {ToastContext} from "../../context/ToastContextProvider";
 import {parseError} from "../../utils/error";
+import {arbitrum} from "viem/chains";
 
 export type RewardInputType =  {
   roundId: bigint;
@@ -73,16 +74,16 @@ const ClaimModal: FC<ClaimModalProps> = ({ open: defaultOpen, rewards, disabled,
   const handleClaimReward = async () => {
     setError(undefined)
     try {
+      const alchemyNetworkName = getAlchemyNetworkName(marketplaceChain.id)
+      const alchemyAPIUrl = alchemyNetworkName ?? `https://${alchemyNetworkName}.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`
       const publicClient = createPublicClient({
         chain: marketplaceChain,
-        // @ts-ignore
-        transport: custom(window?.ethereum)
+        transport: http(alchemyAPIUrl)
       })
 
       const walletClient = createWalletClient({
         chain: marketplaceChain,
-        // @ts-ignore
-        transport: custom(window?.ethereum)
+        transport: http(alchemyAPIUrl)
       })
 
       setStep(1)

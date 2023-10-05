@@ -1,6 +1,7 @@
 import { formatBN } from '../../utils/numbers'
 import React, { FC } from 'react'
-import { Flex, Text } from './index'
+import Flex from './Flex'
+import Text from './Text'
 import {CSS} from "@stitches/react";
 
 type Props = {

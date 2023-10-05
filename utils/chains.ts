@@ -214,6 +214,15 @@ export const DefaultOFTChain: OFTChain = {
 export const OFT_CHAINS : OFTChain[] = [
   DefaultOFTChain,
   {
+    id: arbitrumNova.id,
+    lzId: 175,
+    name: arbitrumNova.name,
+    address: '0x90aec282ed4cdcaab0934519de08b56f1f2ab4d7',
+    lightIconUrl: '/icons/arbitrum-nova-icon-dark.svg',
+    darkIconUrl: '/icons/arbitrum-nova-icon-light.svg',
+    coingeckoNetworkId: 'arbitrum-nova'
+  },
+  {
     id: mainnet.id,
     lzId: 101,
     name: mainnet.name,
@@ -295,6 +304,24 @@ export const RAFFLE_CHAINS = [
     transferManager: '0xf502c99ebdffd2f5fb92c162ea12d741b98402c2'
   }
 ]
+export const getAlchemyNetworkName = (chainId: number) => {
+  let network;
+  if (chainId === 1) {
+    network = "eth-mainnet";
+  } else if (chainId === 10) {
+    network = "opt-mainnet";
+  } else if (chainId === 137) {
+    network = "polygon-mainnet";
+  } else if (chainId === 1101) {
+    network = "polygonzkevm-mainnet";
+  } else if (chainId === 42161) {
+    network = "arb-mainnet";
+  } else {
+    return null;
+  }
+
+  return network;
+};
 
 export default [
   DefaultChain,

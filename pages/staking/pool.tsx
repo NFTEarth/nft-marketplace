@@ -53,7 +53,7 @@ const PoolPage = () => {
   const addresses: Record<string, string> = {
     'NFTE': chain?.address as string,
     'WETH': WETH_ADDRESS as string,
-    'NFTE/WETH LP Token': chain?.LPNFTE as string,
+    'NFTE/WETH LP': chain?.LPNFTE as string,
     'UniProxy': chain?.uniProxy as string,
     'Pool': POOL_ADDRESS as string
   }

@@ -20,7 +20,9 @@ const nextConfig = {
   //   hideSourceMaps: false,
   // },
   experimental: {
-    transpilePackages: ['@reservoir0x/reservoir-kit-ui', '@nftearth/uniswap-widgets', '@uniswap/conedison'],
+    transpilePackages: [
+      '@reservoir0x/reservoir-kit-ui'
+    ],
   },
   images: {
     remotePatterns: [
