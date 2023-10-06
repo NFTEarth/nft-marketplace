@@ -142,14 +142,42 @@ const ClaimList = () => {
               width: '100%'
             }}
           >
-            <CryptoCurrencyIcon
-              address="0x82496243c0a1a39c5c6250bf0115c134Ba76698c"
-              chainId={arbitrum.id}
+            <Flex
               css={{
-                width: 20,
-                height: 20
+                gap: 5
               }}
-            />
+            >
+              {BigInt(preparedData?.result?.[0] || 0) > 0 && (
+                <CryptoCurrencyIcon
+                  address={claimableTokens[0]}
+                  chainId={arbitrum.id}
+                  css={{
+                    width: 20,
+                    height: 20
+                  }}
+                />
+              )}
+              {BigInt(preparedData?.result?.[1] || 0) > 0 && (
+                <CryptoCurrencyIcon
+                  address={claimableTokens[1]}
+                  chainId={arbitrum.id}
+                  css={{
+                    width: 20,
+                    height: 20
+                  }}
+                />
+              )}
+              {BigInt(preparedData?.result?.[2] || 0) > 0 && (
+                <CryptoCurrencyIcon
+                  address={claimableTokens[2]}
+                  chainId={arbitrum.id}
+                  css={{
+                    width: 20,
+                    height: 20
+                  }}
+                />
+              )}
+            </Flex>
             <Flex
               align="center"
               css={{

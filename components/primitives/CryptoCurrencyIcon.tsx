@@ -29,6 +29,7 @@ const CryptoCurrencyIcon: FC<Props> = ({
     const isNFTE = address.toLowerCase() === tokenChain?.address.toLowerCase()
     const isXNFTE = address.toLowerCase() === tokenChain?.xNFTE?.toLowerCase()
     const isNFTELP = address.toLowerCase() === tokenChain?.LPNFTE?.toLowerCase()
+    const isARB = address.toLowerCase() === '0x912CE59144191C1204E64559FE8253a0e49E6548'.toLowerCase()
 
     if (isNFTE) {
       return '/icons/currency/nfte.png'
@@ -40,6 +41,10 @@ const CryptoCurrencyIcon: FC<Props> = ({
 
     if (isNFTELP) {
       return '/icons/currency/nftelp.svg'
+    }
+
+    if (isARB) {
+      return '/icons/currency/arb.png'
     }
 
     return `${chain?.baseApiUrl}/redirect/currency/${address}/icon/v1`;
