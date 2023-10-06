@@ -144,7 +144,7 @@ const PoolPage = () => {
           args: [chain?.LPNFTE as `0x${string}`, isWethChange ? WETH_ADDRESS : chain?.address as `0x${string}`, value]
         }).then(async (res) => {
           const otherVal = isWethChange ? BigInt(res[1]) : BigInt(res[0])
-          const val = parseFloat(formatEther(otherVal, 'wei')).toFixed(8)
+          const val = formatEther(otherVal, 'wei')
           if (isWethChange) {
             setValueNFTE(val)
           } else {
@@ -390,7 +390,7 @@ const PoolPage = () => {
               color: '$gray10'
             }}
           >{`>`}</Text>
-          <Text style="subtitle1">{`Get NFTE/WETH LP Token`}</Text>
+          <Text style="subtitle1">{`Get NFTE/WETH LP`}</Text>
         </Flex>
         <Flex
           direction="column"
@@ -659,7 +659,7 @@ const PoolPage = () => {
                     height: 20
                   }}
                 />
-                <Text style="body2">{`${formatBN(expectedNFTELP, 8, 18)} NFTE/WETH LP Tokens`}</Text>
+                <Text style="body2">{`${formatBN(expectedNFTELP, 6, 18)}`}</Text>
               </Flex>
             </Flex>
           </Flex>

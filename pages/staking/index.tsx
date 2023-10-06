@@ -298,14 +298,14 @@ const StakingPage = () => {
                   }}
                 >
                   <CryptoCurrencyIcon
-                    address={chain?.address || zeroAddress}
+                    address={chain?.LPNFTE || zeroAddress}
                     chainId={arbitrum.id}
                     css={{
                       width: 20,
                       height: 20
                     }}
                   />
-                  <Text style="body4">Total NFTE/WETH LP Tokens Locked</Text>
+                  <Text style="body4">Total NFTE/WETH LP Locked</Text>
                 </Flex>
                 <FontAwesomeIcon icon={faLock} width={12} height={12}/>
               </Flex>
@@ -343,14 +343,14 @@ const StakingPage = () => {
                   }}
                 >
                   <CryptoCurrencyIcon
-                    address={chain?.address || zeroAddress}
+                    address={chain?.LPNFTE || zeroAddress}
                     chainId={arbitrum.id}
                     css={{
                       width: 20,
                       height: 20
                     }}
                   />
-                  <Text style="body4">Percent of NFTE/WETH LP Tokens Locked</Text>
+                  <Text style="body4">% of NFTE/WETH LP Locked</Text>
                 </Flex>
               </Flex>
               <Text
@@ -483,12 +483,12 @@ const StakingPage = () => {
                       mb: '0.5625rem',
                       display: 'inline-block'
                     }}
-                  >My Locked NFTE/WETH LP Tokens</Text>
+                  >My Locked NFTE/WETH LP</Text>
                   <FormatCryptoCurrency
                     amount={locked?.result?.[0] || 0n}
                     textStyle="h6"
                     logoHeight={20}
-                    address={chain?.address || zeroAddress}
+                    address={chain?.LPNFTE || zeroAddress}
                     chainId={arbitrum.id}
                   />
                 </div>

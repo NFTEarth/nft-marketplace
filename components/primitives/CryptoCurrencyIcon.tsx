@@ -26,8 +26,9 @@ const CryptoCurrencyIcon: FC<Props> = ({
   const tokenChain = OFT_CHAINS.find(c => c.id === chain?.id)
 
   const imageSrc = useMemo(() => {
-    const isNFTE = address.toLowerCase() === tokenChain?.address.toLowerCase() || address.toLowerCase() === tokenChain?.LPNFTE?.toLowerCase()
+    const isNFTE = address.toLowerCase() === tokenChain?.address.toLowerCase()
     const isXNFTE = address.toLowerCase() === tokenChain?.xNFTE?.toLowerCase()
+    const isNFTELP = address.toLowerCase() === tokenChain?.LPNFTE?.toLowerCase()
 
     if (isNFTE) {
       return '/icons/currency/nfte.png'
@@ -35,6 +36,10 @@ const CryptoCurrencyIcon: FC<Props> = ({
 
     if (isXNFTE) {
       return '/icons/currency/xnfte.svg'
+    }
+
+    if (isNFTELP) {
+      return '/icons/currency/nftelp.svg'
     }
 
     return `${chain?.baseApiUrl}/redirect/currency/${address}/icon/v1`;

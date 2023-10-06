@@ -1,0 +1,23 @@
+<svg width="1000" height="1000" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" version="1.1">
+ <desc>Created with Fabric.js 3.5.0</desc>
+
+ <g>
+  <title>Layer 1</title>
+  <g id="surface1" transform="matrix(11.3633 0 0 11.3633 500 500)">
+   <path id="svg_2" fill-rule=" nonzero" fill="#d4bdff" stroke-miterlimit="4" stroke-linejoin=" miter" stroke-dashoffset="0" stroke-dasharray=" none" stroke=" none" stroke-linecap=" butt" d="m-12.44549,35.70439c-34.95313,-12.19141 -32.69532,-63.04688 3.13672,-71.88672c30.96875,-7.64063 56.71093,23.70312 42.98437,52.625c-5.55469,11.70312 -17.94531,21.09375 -31.75391,20.90234c-5,-0.07031 -9.04687,0.21485 -14.36718,-1.64062zm0,0"/>
+  </g>
+  <g id="surface1" transform="matrix(11.3633 0 0 11.3633 499.133 502.302)">
+   <path id="svg_3" fill-rule=" nonzero" fill="#33254c" stroke-miterlimit="4" stroke-linejoin=" miter" stroke-dashoffset="0" stroke-dasharray=" none" stroke=" none" stroke-linecap=" butt" d="m31.27934,-0.00192c0,8.19141 -3.37109,16.32813 -9.16015,22.11719c-5.79297,5.79297 -13.92969,9.16406 -22.1211,9.16406c-8.1875,0 -16.32812,-3.37109 -22.11718,-9.16406c-5.78907,-5.78906 -9.16016,-13.92578 -9.16016,-22.11719c0,-8.1875 3.37109,-16.32812 9.16016,-22.11719c5.78906,-5.78906 13.92968,-9.16015 22.11718,-9.16015c8.19141,0 16.32813,3.37109 22.1211,9.16015c5.78906,5.78907 9.16015,13.92969 9.16015,22.11719zm0,0"/>
+  </g>
+  <path stroke="null" id="svg_8" d="m499.83335,221.50008c27.41667,123.375 164.5,233.04167 164.5,342.70834c0,109.66666 -95.95833,178.20834 -164.5,178.20834c-68.54167,0 -164.5,-68.54167 -164.5,-178.20834c0,-109.66666 137.08333,-219.33334 164.5,-342.70834zm82.25,219.33334c0,0 41.125,68.54167 20.5625,215.90625c89.10416,-106.23958 -20.5625,-215.90625 -20.5625,-215.90625z" stroke-linejoin="round" stroke-width="0.2" fill="#8762cc"/>
+  <g id="surface1" transform="matrix(11.3633 0 0 11.3633 499.23 494.943)">
+   <path id="svg_6" fill-rule=" nonzero" fill="#33254c" stroke-miterlimit="4" stroke-linejoin=" miter" stroke-dashoffset="0" stroke-dasharray=" none" stroke=" none" stroke-linecap=" butt" d="m-4.05267,-1.01367l8.11328,0.02734c0.46484,0 0.83593,0.37891 0.83593,0.84375l0,0.32031c-0.0039,0.46485 -0.3789,0.83594 -0.84375,0.83594l-8.11328,-0.02734c-0.46484,-0.00391 -0.83984,-0.37891 -0.83593,-0.84375l0,-0.32032c0,-0.46484 0.3789,-0.83984 0.84375,-0.83593zm0,0"/>
+  </g>
+  <g id="surface1" transform="matrix(11.3633 0 0 11.3633 499.585 593.553)">
+   <path id="svg_7" fill-rule=" nonzero" fill="#33254c" stroke-miterlimit="4" stroke-linejoin=" miter" stroke-dashoffset="0" stroke-dasharray=" none" stroke=" none" stroke-linecap=" butt" d="m-5.38085,-1.10544l10.76563,0.01953c0.375,0 0.67187,0.30079 0.67187,0.67579l0,0.84765c-0.00391,0.3711 -0.30078,0.67188 -0.67578,0.66797l-10.76563,-0.01562c-0.375,-0.00391 -0.67187,-0.30079 -0.67187,-0.67579l0,-0.84765c0,-0.3711 0.30078,-0.67188 0.67578,-0.67188zm0,0"/>
+  </g>
+  <g id="surface1" transform="matrix(11.3633 0 0 11.3633 499.23 403.834)">
+   <path id="svg_5" fill-rule=" nonzero" fill="#33254c" stroke-miterlimit="4" stroke-linejoin=" miter" stroke-dashoffset="0" stroke-dasharray=" none" stroke=" none" stroke-linecap=" butt" d="m-5.53715,-0.99998l11.07031,0c0.19532,0 0.35547,0.15625 0.35547,0.35156l0,1.29688c0,0.19531 -0.16015,0.35156 -0.35547,0.35156l-11.07031,0c-0.19531,0 -0.35156,-0.15625 -0.35156,-0.35156l0,-1.29688c0,-0.19531 0.15625,-0.35156 0.35156,-0.35156zm0,0"/>
+  </g>
+ </g>
+</svg>
