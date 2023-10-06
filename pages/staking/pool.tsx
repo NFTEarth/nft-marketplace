@@ -143,7 +143,9 @@ const PoolPage = () => {
           functionName: 'getDepositAmount',
           args: [chain?.LPNFTE as `0x${string}`, isWethChange ? WETH_ADDRESS : chain?.address as `0x${string}`, value]
         }).then(async (res) => {
-          const otherVal = isWethChange ? BigInt(res[1]) : BigInt(res[0])
+          const minVal = BigInt(res[0] || 0)
+          const maxVal = BigInt(res[1] || 0)
+          const otherVal = maxVal - ((maxVal - minVal) / BigInt(2))
           const val = formatEther(otherVal, 'wei')
           if (isWethChange) {
             setValueNFTE(val)

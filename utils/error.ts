@@ -14,7 +14,7 @@ const getGeneralError = (err:any) => {
   return err.message;
 }
 
-export const parseError = (error: any) => {
+export const parseError = (error: any, defaultMessage?: string) => {
   let name = 'Error'
   let message = ''
   if (error instanceof BaseError) {
@@ -42,12 +42,12 @@ export const parseError = (error: any) => {
     message = 'Max lock time is 1 year'
   }
 
-  if (message === 'Execution reverted for an unknown reason.') {
-    message = '-'
+  if (message === 'Improper ratio') {
+    message = 'NFTE/WETH amount improper ratio'
   }
 
-  if (message === 'Improper ratio') {
-    message = 'Deposit'
+  if (message === 'Execution reverted for an unknown reason.') {
+    message = defaultMessage || 'Execution reverted'
   }
 
   if (/exceeds(.*)balance/.test(message)) {
