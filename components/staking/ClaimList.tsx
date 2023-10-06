@@ -114,6 +114,7 @@ const ClaimList = () => {
           onClick={handleClaimReward}
           css={{
             p: '1rem',
+            minHeight: '9.875rem',
             minWidth: '16.125rem',
             flexDirection: 'column',
             alignItems: 'flex-start',
@@ -188,19 +189,19 @@ const ClaimList = () => {
                   }}
                 >
                   {BigInt(preparedData?.result?.[0] || 0) > 0 && (
-                    <Flex direction="column" css={{ gap: 5 }}>
+                    <Flex direction="column">
                       <Text style="h6">WETH</Text>
                       <Text>{formatBN(preparedData?.result?.[0], 2, 18)}</Text>
                     </Flex>
                   )}
                   {BigInt(preparedData?.result?.[1] || 0) > 0 && (
-                    <Flex direction="column" css={{ gap: 5 }}>
+                    <Flex direction="column">
                       <Text style="h6">NFTE</Text>
                       <Text>{formatBN(preparedData?.result?.[1], 2, 18)}</Text>
                     </Flex>
                   )}
                   {BigInt(preparedData?.result?.[2] || 0) > 0 && (
-                    <Flex direction="column" css={{ gap: 5 }}>
+                    <Flex direction="column">
                       <Text style="h6">ARB</Text>
                       <Text>{formatBN(preparedData?.result?.[2], 2, 18)}</Text>
                     </Flex>
@@ -208,23 +209,24 @@ const ClaimList = () => {
                 </Flex>
               </Flex>
               <Flex
-                justify="between"
+                direction="column"
                 css={{
                   width: '100%'
                 }}
               >
-                <Flex
-                  direction="column"
-                >
-                  <Text style="body3">Rewards Value in ETH</Text>
-                  <Text style="subtitle1">{formatBN( BigInt(wethPrice?.nativePrice || 0) + BigInt(nftePrice?.nativePrice || 0) + BigInt(arbPrice?.nativePrice || 0), 2, 18, { notation: "standard" })}</Text>
-                </Flex>
-                <Flex
-                  direction="column"
-                >
-                  <Text style="body3">Rewards Value in USD</Text>
-                  <Text style="subtitle1">{formatBN( BigInt(wethPrice?.usdPrice || 0) + BigInt(nftePrice?.usdPrice || 0) + BigInt(arbPrice?.usdPrice || 0), 2, 6, { notation: "standard" })}</Text>
-                </Flex>
+                <Text style="body3">Total Rewards</Text>
+                <Text style="subtitle1" css={{ fontWeight: 'bold' }}>{`${
+                  formatBN(
+                    BigInt(wethPrice?.nativePrice || 0) +
+                    BigInt(nftePrice?.nativePrice || 0) +
+                    BigInt(arbPrice?.nativePrice || 0)
+                    , 2, 18, { notation: "standard" }
+                  )} ($${formatBN(
+                  BigInt(wethPrice?.usdPrice || 0) +
+                  BigInt(nftePrice?.usdPrice || 0) +
+                  BigInt(arbPrice?.usdPrice || 0),
+                  2, 6, { notation: "standard" }
+                )})`}</Text>
               </Flex>
             </>
           )}

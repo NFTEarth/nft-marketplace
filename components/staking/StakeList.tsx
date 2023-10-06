@@ -23,6 +23,7 @@ const StakeList : FC<Props> = (props) => {
           href="/staking/arbitrum"
           css={{
             p: '1rem',
+            minHeight: '9.875rem',
             minWidth: '16.125rem',
             flexDirection: 'column',
             alignItems: 'flex-start',
