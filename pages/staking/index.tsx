@@ -93,7 +93,7 @@ const StakingPage = () => {
               color="primary"
               as={Link}
               href="/staking/pool"
-            >Get xNFTE</Button>
+            >Get NFTE/WETH LP</Button>
           </Flex>
         </Flex>
       )
@@ -120,7 +120,7 @@ const StakingPage = () => {
             color="primary"
             as={Link}
             href="/staking/pool"
-          >Get xNFTE</Button>
+          >Get NFTE/WETH LP</Button>
         </Flex>
       </Flex>
     );
