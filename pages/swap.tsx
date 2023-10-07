@@ -81,7 +81,7 @@ const SwapPage = () => {
   const tokenList = [...uniswapToken.tokens, ...nfteTokens]
     .filter((token) => token.chainId === (marketplaceChain?.id || 42161) && allowedTokenSymbols.includes(token.symbol))
   const [provider, setProvider] = useState<Web3Provider | undefined>()
-  const { connector } = useAccount()
+  const { connector, isConnected } = useAccount()
   useEffect(() => {
     if (!connector) {
       return () => setProvider(undefined)
@@ -123,6 +123,7 @@ const SwapPage = () => {
           {mounted && (
             <SwapWidget
               permit2
+              hideConnectionUI={isConnected}
               tokenList={tokenList}
               brandedFooter={false}
               onSwitchChain={(params: AddEthereumChainParameter) => {
