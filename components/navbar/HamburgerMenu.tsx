@@ -222,7 +222,7 @@ const HamburgerMenu = () => {
                   Bridge
                 </Text>
               </Link>
-              <Link href="https://app.uniswap.org/swap?outputCurrency=0x51b902f19a56f0c8e409a34a215ad2673edf3284&chain=arbitrum" target="_blank" legacyBehavior>
+              <Link href="/swap" legacyBehavior>
                 <Text
                   style="subtitle1"
                   css={{

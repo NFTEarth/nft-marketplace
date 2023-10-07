@@ -4,7 +4,7 @@ import {useContext, useMemo, useState} from "react";
 import {Button, Flex, FormatCryptoCurrency, Text} from "../primitives";
 import {
   useAccount,
-  useNetwork,
+  useNetwork, usePublicClient,
   useSwitchNetwork,
   useWalletClient
 } from "wagmi";
@@ -55,16 +55,22 @@ const ClaimModal: FC<ClaimModalProps> = ({ open: defaultOpen, rewards, disabled,
   const [fee, setFee] = useState(BigInt(0))
   const [error, setError] = useState<any | undefined>()
   const { addToast } = useContext(ToastContext)
-  const { data: wallet } = useWalletClient()
+  const { address } = useAccount()
   const { openConnectModal } = useConnectModal()
   const { chain: activeChain } = useNetwork()
   const marketplaceChain = useMarketplaceChain()
   const { switchNetworkAsync } = useSwitchNetwork({
     chainId: marketplaceChain.id,
   })
+  const { data: walletClient } = useWalletClient({
+    chainId: marketplaceChain.id,
+  })
+  const publicClient = usePublicClient({
+    chainId: marketplaceChain.id,
+  })
 
   const isInTheWrongNetwork = Boolean(
-    wallet && activeChain?.id !== marketplaceChain.id
+    walletClient && activeChain?.id !== marketplaceChain.id
   )
 
   const fortuneChain = FORTUNE_CHAINS.find(c => c.id === marketplaceChain.id);
@@ -74,20 +80,8 @@ const ClaimModal: FC<ClaimModalProps> = ({ open: defaultOpen, rewards, disabled,
   const handleClaimReward = async () => {
     setError(undefined)
     try {
-      const alchemyNetworkName = getAlchemyNetworkName(marketplaceChain.id)
-      const alchemyAPIUrl = alchemyNetworkName ?? `https://${alchemyNetworkName}.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`
-      const publicClient = createPublicClient({
-        chain: marketplaceChain,
-        transport: http(alchemyAPIUrl)
-      })
-
-      const walletClient = createWalletClient({
-        chain: marketplaceChain,
-        transport: http(alchemyAPIUrl)
-      })
 
       setStep(1)
-      const [account] = await walletClient.getAddresses()
 
       if (rewards.length > 0) {
         const protocolFeeOwed = await publicClient.readContract({
@@ -107,19 +101,21 @@ const ClaimModal: FC<ClaimModalProps> = ({ open: defaultOpen, rewards, disabled,
           functionName: 'claimPrizes',
           args: [rewards],
           value: BigInt(`${protocolFeeOwed}` || 0n),
-          account
+          account: address
         })
 
-        const hash = await walletClient.writeContract(request)
+        const hash = await walletClient?.writeContract(request)
 
         setStep(2)
 
-        await publicClient.waitForTransactionReceipt(
-          {
-            confirmations: 5,
-            hash
-          }
-        )
+        if (hash) {
+          await publicClient.waitForTransactionReceipt(
+            {
+              confirmations: 5,
+              hash
+            }
+          )
+        }
       }
 
       setStep(3)
@@ -162,7 +158,7 @@ const ClaimModal: FC<ClaimModalProps> = ({ open: defaultOpen, rewards, disabled,
             }
           }
 
-          if (!wallet) {
+          if (!walletClient) {
             openConnectModal?.()
           }
         }}

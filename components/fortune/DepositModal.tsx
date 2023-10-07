@@ -18,8 +18,8 @@ import {
   useAccount,
   useContractRead,
   useContractWrite,
-  useNetwork,
-  useSwitchNetwork,
+  useNetwork, usePublicClient,
+  useSwitchNetwork, useWalletClient,
 } from "wagmi";
 import {faExternalLink} from "@fortawesome/free-solid-svg-icons";
 import {arbitrum} from "viem/chains";
@@ -67,20 +67,16 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
     chainId: marketplaceChain.id,
   })
   const { chain: activeChain } = useNetwork()
+  const { data: walletClient } = useWalletClient({
+    chainId: marketplaceChain.id,
+  })
+  const publicClient = usePublicClient({
+    chainId: marketplaceChain.id,
+  })
   const cutOffTime = useMemo(() => round?.cutoffTime || 0, [round])
   const [_hours, minutes, seconds] = useCountdown(cutOffTime * 1000)
   const lessThan30Seconds = _hours === 0 && minutes === 0 && seconds < 30
 
-  const alchemyNetworkName = getAlchemyNetworkName(marketplaceChain.id)
-  const alchemyAPIUrl = alchemyNetworkName ?? `https://${alchemyNetworkName}.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`
-  const publicClient = createPublicClient({
-    chain: arbitrum,
-    transport: http(alchemyAPIUrl)
-  })
-  const walletClient = createWalletClient({
-    chain: arbitrum,
-    transport: http(alchemyAPIUrl)
-  })
   let requireApprovals = useRef(0).current
 
   const tweetText = `I just entered the current round of #Fortune on @NFTEarth_L2\n\n🎉 #Winner takes all 🎉\n\nJoin the fun now at this link!`
@@ -184,7 +180,6 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
           continue
         }
 
-        const [account] = await walletClient.getAddresses()
         const selectionApprovalFunc = selection.type === 'erc20' ? 'approve' : 'setApprovalForAll'
         const { request } = await publicClient.simulateContract<typeof selectionAbi, typeof selectionApprovalFunc>({
           address: selection.contract as `0x${string}`,
@@ -193,14 +188,16 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
           args: (selection.type === 'erc20' ?
             [fortuneChain?.transferManager as `0x${string}`, selection.values?.[0]] :
             [fortuneChain?.transferManager as `0x${string}`, true]) as any,
-          account
+          account: address
         })
 
-        const approvalTx = await walletClient.writeContract(request)
-        await publicClient.waitForTransactionReceipt({
-          hash: approvalTx,
-          confirmations: 5
-        })
+        const approvalTx = await walletClient?.writeContract(request)
+        if (approvalTx) {
+          await publicClient.waitForTransactionReceipt({
+            hash: approvalTx,
+            confirmations: 5
+          })
+        }
         requireApprovals -= 1
       }
 
@@ -215,16 +212,18 @@ const FortuneDepositModal: FC<FortuneDepositProps> = (props) => {
         account: address,
       })
 
-      const hash = await walletClient.writeContract(request)
+      const hash = await walletClient?.writeContract(request)
 
       setStep(5)
 
-      await publicClient.waitForTransactionReceipt(
-        {
-          confirmations: 5,
-          hash
-        }
-      )
+      if (hash) {
+        await publicClient.waitForTransactionReceipt(
+          {
+            confirmations: 5,
+            hash
+          }
+        )
+      }
       addToast?.({
         title: 'Success',
         status: 'success',

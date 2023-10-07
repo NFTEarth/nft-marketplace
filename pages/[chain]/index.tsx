@@ -274,13 +274,14 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                 height={80}
                 style={{
                   borderRadius: '60%',
-                  overflow: 'hidden'
+                  overflow: 'hidden',
+                  marginBottom: 10
                 }}
                 alt="Weston"
               />
-              <Text style="h4" color="primary">Weston Nelson</Text>
+              <Text style="h5" color="primary">Weston Nelson</Text>
               <Text>aka WΞston</Text>
-              <Text style="h5">Project Lead</Text>
+              <Text style="h6">Project Lead</Text>
               <Flex
                 css={{
                   gap: 10
@@ -312,9 +313,9 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                 }}
                 alt="Weston"
               />
-              <Text style="h4" color="primary">Ihsan Rahman</Text>
+              <Text style="h5" color="primary">Ihsan Rahman</Text>
               <Text>aka Ryuzaki01</Text>
-              <Text style="h5">Lead Developer</Text>
+              <Text style="h6">Lead Developer</Text>
               <Flex
                 css={{
                   gap: 10
@@ -349,9 +350,9 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                 }}
                 alt="Weston"
               />
-              <Text style="h4" color="primary">Elias Pederiva</Text>
+              <Text style="h5" color="primary">Elias Pederiva</Text>
               <Text>aka Maestro</Text>
-              <Text style="h5">Head of Marketing</Text>
+              <Text style="h6">Head of Marketing</Text>
               <Flex
                 css={{
                   gap: 10
@@ -380,9 +381,9 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                 }}
                 alt="Weston"
               />
-              <Text style="h4" color="primary">SirJoey</Text>
+              <Text style="h5" color="primary">SirJoey</Text>
               <Text>aka SirEthALot</Text>
-              <Text style="h5">Head of Business Dev</Text>
+              <Text style="h6" css={{ textAlign: 'center' }}>Head of Business Dev</Text>
               <Flex
                 css={{
                   gap: 10

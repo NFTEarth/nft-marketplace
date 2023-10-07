@@ -1,17 +1,22 @@
 import uniswapToken from '@uniswap/default-token-list'
-import { JsonRpcProvider } from 'ethers'
-import {useNetwork} from "wagmi";
+import {useAccount, useNetwork, useSwitchNetwork} from "wagmi";
 import '@nftearth/uniswap-widgets/fonts.css'
 const { SwapWidget, darkTheme } = require('@nftearth/uniswap-widgets')
 
 import { Footer } from "components/Footer";
 import Layout from "../components/Layout";
 import {Box, Flex} from "../components/primitives";
-import {getAlchemyNetworkName, OFT_CHAINS} from "../utils/chains";
-import {useMounted} from "../hooks";
-import {useContext} from "react";
+import {OFT_CHAINS} from "../utils/chains";
+import {useMarketplaceChain, useMounted} from "../hooks";
+import {useContext, useEffect, useState} from "react";
 import {ToastContext} from "../context/ToastContextProvider";
 import {parseError} from "../utils/error";
+import {Web3Provider} from "@ethersproject/providers";
+import {useConnectModal} from "@rainbow-me/rainbowkit";
+import {AddEthereumChainParameter} from "@nftearth/uniswap-widgets";
+import {arbitrum} from "viem/chains";
+import ChainToggle from "../components/common/ChainToggle";
+import AlertChainSwitch from "../components/common/AlertChainSwitch";
 
 
 const nfteTokens = [
@@ -24,11 +29,8 @@ const nfteTokens = [
     logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/25305.png',
     extensions: {
       bridgeInfo: {
-        '10': {
-          tokenAddress: '0x8637725aDa78db0674a679CeA2A5e0A0869EF4A1',
-        },
-        '137': {
-          tokenAddress: '0x492Fa53b88614923937B7197C87E0F7F8EEb7B20',
+        '42170': {
+          tokenAddress: '0x90aec282ed4cdcaab0934519de08b56f1f2ab4d7',
         },
         '42161': {
           tokenAddress: '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
@@ -37,8 +39,8 @@ const nfteTokens = [
     },
   },
   {
-    chainId: 10,
-    address: '0x8637725aDa78db0674a679CeA2A5e0A0869EF4A1',
+    chainId: 42170,
+    address: '0x90aec282ed4cdcaab0934519de08b56f1f2ab4d7',
     name: 'NFTEarthOFT',
     symbol: 'NFTE',
     decimals: 18,
@@ -68,20 +70,37 @@ const nfteTokens = [
   },
 ]
 
-const allowedTokenSymbols = ['WETH', 'ETH', 'USDC', 'DAI', 'NFTE', 'ARB']
-
 const SwapPage = () => {
-  const { chain: activeChain } = useNetwork()
   const mounted = useMounted()
+  const { openConnectModal } = useConnectModal()
   const { addToast } = useContext(ToastContext)
-  const chain = OFT_CHAINS.find(c => c.id === activeChain?.id)
+  const { chain: activeChain } = useNetwork()
+  const marketplaceChain = useMarketplaceChain()
+  const { switchNetworkAsync } = useSwitchNetwork({
+    chainId: marketplaceChain.id,
+  })
+  const chain = OFT_CHAINS.find(c => c.id === marketplaceChain?.id)
+  const allowedTokenSymbols = marketplaceChain?.id === arbitrum.id ? [ 'ETH', 'NFTE', 'ARB'] : [ 'ETH', 'NFTE']
   const tokenList = [...uniswapToken.tokens, ...nfteTokens]
-    .filter((token) => token.chainId === (activeChain?.id || 42161) && allowedTokenSymbols.includes(token.symbol))
-  const alchemyAPIUrl = `https://${getAlchemyNetworkName(activeChain?.id || 42161)}.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`
-  const provider = new JsonRpcProvider(alchemyAPIUrl)
+    .filter((token) => token.chainId === (marketplaceChain?.id || 42161) && allowedTokenSymbols.includes(token.symbol))
+  const [provider, setProvider] = useState<Web3Provider | undefined>()
+  const { connector } = useAccount()
+  useEffect(() => {
+    if (!connector) {
+      return () => setProvider(undefined)
+    }
+
+    connector.getProvider({
+      chainId: marketplaceChain.id,
+    }).then((provider) => {
+      setProvider(new Web3Provider(provider, marketplaceChain.id))
+    })
+  }, [connector, marketplaceChain.id])
+
 
   return (
     <Layout>
+      <AlertChainSwitch chainId={marketplaceChain.id}/>
       <Box
         css={{
           p: 24,
@@ -95,28 +114,24 @@ const SwapPage = () => {
           direction="column"
           css={{
             mx: 20,
-            pb: 150,
-            pt: 100,
+            pb: 100,
+            pt: 50,
+            gap: 40,
             '@md': {
               alignItems: 'center'
             }
           }}
         >
+          <ChainToggle />
           {mounted && (
             <SwapWidget
               permit2
-              theme={{
-                ...darkTheme,
-                container: '#1d1d1d',
-                module: '#222222',
-                accent: '#a97aff'
-              }}
               tokenList={tokenList}
-              settings={{
-                slippage: {
-                  auto: true
-                }
-              }}
+              brandedFooter={false}
+              onSwitchChain={(params: AddEthereumChainParameter) => switchNetworkAsync?.(+params.chainId)}
+              defaultOutputTokenAddress={chain?.address}
+              onConnectWalletClick={() => openConnectModal?.()}
+              provider={provider}
               onError={(error: any) => {
                 const { name, message } = parseError(error)
                 addToast?.({
@@ -125,11 +140,27 @@ const SwapPage = () => {
                   description: message
                 })
               }}
-              brandedFooter={false}
-              hideConnectionUI
-              convenienceFee={100}
-              convenienceFeeRecipient="0xd55c6b0a208362b18beb178e1785cf91c4ce937a"
-              defaultOutputTokenAddress={chain?.address}
+              theme={{
+                ...darkTheme,
+                container: 'hsl(240,2%,11%)',
+                module: 'hsl(220,4%,16%)',
+                accent: '#a97aff',
+                accentSoft: '#8eff7a',
+                interactive: 'hsl(263,29%,22%)',
+                outline: 'hsl(264,33%,16%)',
+                dialog: '#000',
+                scrim: 'hsla(224, 33%, 16%, 0.5)',
+
+                // text
+                onAccent: '#fff',
+                primary: '#fff',
+                secondary: 'hsl(227, 21%, 67%)',
+                hint: 'hsl(92,18%,44%)',
+                onInteractive: '#fff',
+
+                deepShadow: 'hsla(0, 0%, 0%, 0.32), hsla(0, 0%, 0%, 0.24), hsla(0, 0%, 0%, 0.24)',
+                networkDefaultShadow: 'hsla(270,96%,64%, 0.16)',
+              }}
             />
           )}
         </Flex>
