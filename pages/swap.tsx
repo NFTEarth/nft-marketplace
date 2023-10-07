@@ -110,12 +110,12 @@ const SwapPage = () => {
         <Flex
           direction="column"
           css={{
-            mx: 20,
             pb: 200,
             pt: 50,
             gap: 40,
+            alignItems: 'center',
             '@md': {
-              alignItems: 'center'
+              mx: 20,
             }
           }}
         >
