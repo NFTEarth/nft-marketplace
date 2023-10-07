@@ -25,20 +25,20 @@ const Layout: FC<Props> = ({ children }) => {
           <main>{children}</main>
         </Box>
       </Box>
-      <Script
-        src="https://cdn.jsdelivr.net/npm/@widgetbot/crate@3"
-        async
-        defer
-      >
-        {`new Crate({
-          server: '1062256160264171520',
-          channel: '1146477051033956544',
-          color: 'transparent',
-          notifications: true,
-          glyph: ['https://nftearth.exchange/images/chat-discord.svg', '60px'],
-          css: '&:not(.open) .button { bottom: 60px; } @media only screen and (max-width: 600px) { &:not(.open) .button { bottom: 100px; } }'
-        })`}
-      </Script>
+      {/*<Script*/}
+      {/*  src="https://cdn.jsdelivr.net/npm/@widgetbot/crate@3"*/}
+      {/*  async*/}
+      {/*  defer*/}
+      {/*>*/}
+      {/*  {`new Crate({*/}
+      {/*    server: '1062256160264171520',*/}
+      {/*    channel: '1146477051033956544',*/}
+      {/*    color: 'transparent',*/}
+      {/*    notifications: true,*/}
+      {/*    glyph: ['https://nftearth.exchange/images/chat-discord.svg', '60px'],*/}
+      {/*    css: '&:not(.open) .button { bottom: 60px; } @media only screen and (max-width: 600px) { &:not(.open) .button { bottom: 100px; } }'*/}
+      {/*  })`}*/}
+      {/*</Script>*/}
     </>
   )
 }
