@@ -1,23 +1,21 @@
-import uniswapToken from '@uniswap/default-token-list'
+import {useContext, useEffect, useState} from "react";
 import {useAccount, useNetwork, useSwitchNetwork} from "wagmi";
+import {Web3Provider} from "@ethersproject/providers";
+import uniswapToken from '@uniswap/default-token-list'
+import {useConnectModal} from "@rainbow-me/rainbowkit";
+import { SwapWidget, darkTheme, AddEthereumChainParameter } from '@nftearth/uniswap-widgets'
 import '@nftearth/uniswap-widgets/fonts.css'
-const { SwapWidget, darkTheme } = require('@nftearth/uniswap-widgets')
 
 import { Footer } from "components/Footer";
 import Layout from "../components/Layout";
 import {Box, Flex} from "../components/primitives";
 import {OFT_CHAINS} from "../utils/chains";
 import {useMarketplaceChain, useMounted} from "../hooks";
-import {useContext, useEffect, useState} from "react";
 import {ToastContext} from "../context/ToastContextProvider";
 import {parseError} from "../utils/error";
-import {Web3Provider} from "@ethersproject/providers";
-import {useConnectModal} from "@rainbow-me/rainbowkit";
-import {AddEthereumChainParameter} from "@nftearth/uniswap-widgets";
 import {arbitrum} from "viem/chains";
 import ChainToggle from "../components/common/ChainToggle";
 import AlertChainSwitch from "../components/common/AlertChainSwitch";
-
 
 const nfteTokens = [
   {
@@ -74,7 +72,6 @@ const SwapPage = () => {
   const mounted = useMounted()
   const { openConnectModal } = useConnectModal()
   const { addToast } = useContext(ToastContext)
-  const { chain: activeChain } = useNetwork()
   const marketplaceChain = useMarketplaceChain()
   const { switchNetworkAsync } = useSwitchNetwork({
     chainId: marketplaceChain.id,
@@ -114,7 +111,7 @@ const SwapPage = () => {
           direction="column"
           css={{
             mx: 20,
-            pb: 100,
+            pb: 200,
             pt: 50,
             gap: 40,
             '@md': {
@@ -128,7 +125,9 @@ const SwapPage = () => {
               permit2
               tokenList={tokenList}
               brandedFooter={false}
-              onSwitchChain={(params: AddEthereumChainParameter) => switchNetworkAsync?.(+params.chainId)}
+              onSwitchChain={(params: AddEthereumChainParameter) => {
+                switchNetworkAsync?.(+params.chainId)
+              }}
               defaultOutputTokenAddress={chain?.address}
               onConnectWalletClick={() => openConnectModal?.()}
               provider={provider}
