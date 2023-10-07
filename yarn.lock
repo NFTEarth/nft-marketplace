@@ -2543,10 +2543,10 @@
   resolved "https://registry.yarnpkg.com/@nftearth/uniswap-multicall/-/uniswap-multicall-1.2.2.tgz#af258c1e52265c40a5552d09c16ab9038618d89a"
   integrity sha512-6+kaV938wxc4RFq5B5InaSGieiUFsWXxLLEi+ea15+nPR33rnQnsVUjwxnHGgiDP6d7gH6i36hz3bZGZ/WFuqQ==
 
-"@nftearth/uniswap-widgets@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@nftearth/uniswap-widgets/-/uniswap-widgets-1.0.7.tgz#37d11af5e581c9860d659ac1d46ba0d63b94268b"
-  integrity sha512-g9dRt01GEcTwOEqHpfwm7vpgPB7pNoMPW8ALcxtHfFUwAc9ln3h2cXWARERdJoPKmpcj+XkkpacNicA3IrbFag==
+"@nftearth/uniswap-widgets@^1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@nftearth/uniswap-widgets/-/uniswap-widgets-1.0.8.tgz#38715a39ca498d9d48d4987ed65b9fc70e3ca852"
+  integrity sha512-cebs+za9YlFTbFgf9uZ402SG35eHNmkXhjxm3YLe6ROScR7RTft7t2AkumrxkDKn6ltLxabh0U4IOhMvhE9Lzg==
   dependencies:
     "@babel/runtime" ">=7.17.0"
     "@fontsource/ibm-plex-mono" "^4.5.1"

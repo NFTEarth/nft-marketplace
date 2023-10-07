@@ -16,7 +16,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@google-cloud/storage": "^7.1.0",
     "@next/font": "^13.1.6",
-    "@nftearth/uniswap-widgets": "^1.0.7",
+    "@nftearth/uniswap-widgets": "^1.0.8",
     "@radix-ui/colors": "^0.1.8",
     "@radix-ui/popper": "^0.1.0",
     "@radix-ui/react-avatar": "^1.0.1",
