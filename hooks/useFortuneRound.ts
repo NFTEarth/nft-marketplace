@@ -50,7 +50,7 @@ export type Round = {
 }
 
 const subgraphFetcher = <T>([query, variables]: [RequestDocument, Variables]) =>
-  request<T>('https://api.thegraph.com/subgraphs/name/ryuzaki01/fortune', query, variables)
+  request<T>(`${process.env.NEXT_PUBLIC_HOST_URL}/api/subgraph/nftearth/fortune/api`, query, variables)
 
 type RoundResult = {
   round: Round

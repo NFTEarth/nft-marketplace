@@ -259,6 +259,9 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
 
   useEffect(() => {
     setPlayerWinner(undefined)
+  }, [roundData?.roundId])
+
+  useEffect(() => {
     setRound?.(roundData)
 
     return () => {
@@ -267,7 +270,7 @@ const FortunePage : NextPage<Props> = ({ id, ssr }) => {
   }, [roundData])
 
   useEffect(() => {
-    if (roundData?.status === RoundStatus.Cancelled && !router.query.round) {
+    if ([RoundStatus.Cancelled, RoundStatus.Drawn].includes(roundData?.status) && !router.query.round) {
       setTimeout(() => {
         setActiveRound(undefined)
       }, 3 * 1000)
@@ -820,7 +823,7 @@ export const getStaticProps: GetStaticProps<{
 }> = async ({ params }) => {
   const id = params?.round?.toString() || null
 
-  const response = await basicFetcher('https://api.thegraph.com/subgraphs/name/ryuzaki01/fortune',
+  const response = await basicFetcher(`${process.env.NEXT_PUBLIC_HOST_URL}/api/subgraph/nftearth/fortune/api`,
     {
       method: 'POST',
       body: JSON.stringify({

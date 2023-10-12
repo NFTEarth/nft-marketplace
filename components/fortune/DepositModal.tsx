@@ -5,14 +5,7 @@ import TransactionProgress from "../common/TransactionProgress";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTwitter} from "@fortawesome/free-brands-svg-icons";
 import {Modal} from "../common/Modal";
-import {
-  BaseError,
-  createPublicClient,
-  createWalletClient,
-  custom,
-  http,
-  parseEther
-} from "viem";
+import {BaseError, parseEther} from "viem";
 import {FC, SyntheticEvent, useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import {
   useAccount,

@@ -4,7 +4,7 @@ import {Round} from "./useFortuneRound";
 import fa from "@walletconnect/legacy-modal/dist/cjs/browser/languages/fa";
 
 const subgraphFetcher = <T>(query: RequestDocument) =>
-  request<T>('https://api.thegraph.com/subgraphs/name/ryuzaki01/fortune', query)
+  request<T>(`${process.env.NEXT_PUBLIC_HOST_URL}/api/subgraph/nftearth/fortune/api`, query)
 
 type RoundResult = {
   rounds: Round[]
