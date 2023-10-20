@@ -231,15 +231,15 @@ export const OFT_CHAINS : OFTChain[] = [
     darkIconUrl: '/icons/eth-icon-light.svg',
     coingeckoNetworkId: 'ethereum'
   },
-  // {
-  //   id: polygon.id,
-  //   lzId: 109,
-  //   name: polygon.name,
-  //   address: '0x492Fa53b88614923937B7197C87E0F7F8EEb7B20',
-  //   lightIconUrl: '/icons/polygon-icon-dark.svg',
-  //   darkIconUrl: '/icons/polygon-icon-light.svg',
-  //   coingeckoNetworkId: 'polygon-pos'
-  // },
+  {
+     id: polygon.id,
+     lzId: 109,
+     name: polygon.name,
+     address: '0x492Fa53b88614923937B7197C87E0F7F8EEb7B20',
+     lightIconUrl: '/icons/polygon-icon-dark.svg',
+     darkIconUrl: '/icons/polygon-icon-light.svg',
+     coingeckoNetworkId: 'polygon-pos'
+  },
   {
     id: optimism.id,
     lzId: 111,
@@ -267,15 +267,15 @@ export const OFT_CHAINS : OFTChain[] = [
     darkIconUrl: '/icons/base-icon-light.svg',
     coingeckoNetworkId: 'base'
   },
-  // {
-  //   id: linea.id,
-  //   lzId: 183,
-  //   name: linea.name,
-  //   address: '0x2140Ea50bc3B6Ac3971F9e9Ea93A1442665670e4',
-  //   lightIconUrl: '/icons/linea-icon-dark.svg',
-  //   darkIconUrl: '/icons/linea-icon-light.svg',
-  //   coingeckoNetworkId: 'linea'
-  // },
+  {
+     id: linea.id,
+     lzId: 183,
+     name: linea.name,
+     address: '0x2140Ea50bc3B6Ac3971F9e9Ea93A1442665670e4',
+     lightIconUrl: '/icons/linea-icon-dark.svg',
+     darkIconUrl: '/icons/linea-icon-light.svg',
+     coingeckoNetworkId: 'linea'
+  },
 
   // {
   //   id: 5000,
