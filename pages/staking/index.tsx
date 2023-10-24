@@ -87,7 +87,7 @@ const StakingPage = () => {
           direction="column"
         >
           <Text style="h4">You don’t have any NFTE/WETH LP tokens to stake in your wallet.</Text>
-          <Text css={{ maxWidth: '75%' }}>{`xNFTE holders control protocol governance and earn all revenue sharing from the DAO. NFTEarth is governed entirely by xNFTE holders.`}</Text>
+          <Text css={{ maxWidth: '75%' }}>{`xNFTE holders earn all revenue that is shared from the NFTEarth DAO. Governance is controlled entirely by xNFTE holders.`}</Text>
           <Flex css={{ mt: 20}}>
             <Button
               color="primary"
@@ -114,7 +114,7 @@ const StakingPage = () => {
           </Text>
           {` available to stake.`}
         </Text>
-        <Text css={{ maxWidth: '75%' }}>{`xNFTE holders control protocol governance and earn all revenue sharing from the DAO. NFTEarth is governed entirely by xNFTE holders.`}</Text>
+        <Text css={{ maxWidth: '75%' }}>{`xNFTE holders earn all revenue that is shared from the NFTEarth DAO. Governance is controlled entirely by xNFTE holders.`}</Text>
         <Flex css={{ mt: 20}}>
           <Button
             color="primary"
@@ -463,7 +463,7 @@ const StakingPage = () => {
                     textDecoration: 'underline'
                   }
                 }}
-              >{`Learn more about xNFTE staking in the docs`}</Text>
+              >{`Learn more about xNFTE in our docs`}</Text>
               <Flex
                 css={{
                   flexWrap: 'wrap',
