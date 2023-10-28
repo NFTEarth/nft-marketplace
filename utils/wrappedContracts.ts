@@ -16,6 +16,7 @@ const wrappedContracts: Record<number, string> = {
   7777777: '0x4200000000000000000000000000000000000006', //zora
   43114: '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7', //avalanche
   11155111: '0x7b79995e5f793a07bc00c21412e50ecae098e7f9', //sepolia
+  534352: '0x5300000000000000000000000000000000000004', //scroll
 }
 
 export default wrappedContracts
