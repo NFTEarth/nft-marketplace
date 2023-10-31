@@ -4,10 +4,44 @@ import {
   mainnet,
   polygon,
   optimism,
+  polygonZkEvm,
   bsc
 } from 'wagmi/chains'
 
 //Chains that are missing from wagmi:
+export const scroll = {
+  id: 534352,
+  name: 'Scroll',
+  network: 'scroll',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://rpc.scroll.io'],
+      webSocket: ['wss://wss-rpc.scroll.io/ws'],
+    },
+    public: {
+      http: ['https://rpc.scroll.io'],
+      webSocket: ['wss://wss-rpc.scroll.io/ws'],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: 'Scrollscan',
+      url: 'https://scrollscan.com',
+    },
+    blockscout: {
+      name: 'Blockscout',
+      url: 'https://blockscout.scroll.io',
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: '0xca11bde05977b3631167028862be2a173976ca11',
+      blockCreated: 14,
+    },
+  },
+} as const satisfies Chain
+
 export const zora = {
   id: 7777777,
   name: 'ZORA',
@@ -276,6 +310,15 @@ export const OFT_CHAINS : OFTChain[] = [
      darkIconUrl: '/icons/linea-icon-light.svg',
      coingeckoNetworkId: 'linea'
   },
+  {
+    id: polygonZkEvm.id,
+    lzId: 158,
+    name: polygonZkEvm.name,
+    address: '0xf1B8982eC774AE84e936Bd63f372280bd534E797',
+    lightIconUrl: '/icons/polygon-zkevm-icon-light.svg',
+    darkIconUrl: '/icons/polygon-zkevm-icon-dark.svg',
+    coingeckoNetworkId: 'zkevm'
+  }
 
   // {
   //   id: 5000,
@@ -422,4 +465,16 @@ export default [
      collectionSetId: process.env.NEXT_PUBLIC_LINEA_COLLECTION_SET_ID,
      community: process.env.NEXT_PUBLIC_LINEA_COMMUNITY,
    },
+    {
+      ...polygonZkEvm,
+      lightIconUrl: '/icons/polygon-zkevm-icon-dark.svg',
+      darkIconUrl: '/icons/polygon-zkevm-icon-light.svg',
+      reservoirBaseUrl: 'https://api-polygon-zkevm.reservoir.tools',
+      proxyApi: '/api/reservoir/polygon-zkevm',
+      routePrefix: 'polygon-zkevm',
+      apiKey: process.env.RESERVOIR_API_KEY,
+      coingeckoId: 'ethereum',
+      collectionSetId: process.env.NEXT_PUBLIC_POLYGON_ZKEVM_COLLECTION_SET_ID,
+      community: process.env.NEXT_PUBLIC_POLYGON_ZKEVM_COMMUNITY,
+    },
 ] as ReservoirChain[]
