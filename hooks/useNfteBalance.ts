@@ -1,7 +1,7 @@
 import { useAccount, useBalance, useNetwork } from "wagmi";
 import { useEffect } from "react";
 
-import useStore from "hooks/useStore";
+import useStore from "../hooks/useStore";
 import { nfteContractAddresses } from "../utils/constants";
 
 const useNfteBalance = () => {

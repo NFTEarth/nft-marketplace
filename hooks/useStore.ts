@@ -1,31 +1,31 @@
-import { BigNumberish } from "ethers";
+import { toBigInt } from "ethers";
+import produce from "immer";
 import { create } from 'zustand'
 import { devtools } from "zustand/middleware";
-
 
 
 interface AppState {
   autoConnecting: boolean;
   setAutoConnecting: (autoConnecting: boolean) => void;
 
-  NfteBalance: BigNumberish | undefined;
-  setNfteBalance: (balance: BigNumberish | undefined) => void;
+
+
+  NfteBalance: BigInt | undefined;
+  setNfteBalance: (balance: BigInt | undefined) => void;
 }
-
 const useStore = create<AppState>()(
-  devtools((set) => ({
-    autoConnecting: false,
-    setAutoConnecting: (autoConnecting) => {
-      set(() => ({ autoConnecting: autoConnecting }));
-
-    },
-    NfteBalance: undefined,
-    setNfteBalance: (balance: any) => {
-      set(() => ({ NfteBalance: balance }));
-    },
+    devtools((set) => ({
+      autoConnecting: false,
+      setAutoConnecting: (autoConnecting) => {
+        set(() => ({ autoConnecting: autoConnecting }));
+      },
+      
     
-
-  }))
-);
+      NfteBalance: undefined,
+      setNfteBalance: (balance: any) => {
+        set(() => ({ NfteBalance: balance }));
+      },
+    }))
+      );
 
 export default useStore;
