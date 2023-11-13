@@ -37,9 +37,14 @@ const resourcesSectionLinks = [
     href: 'https://medium.com/@nftearth',
   },
   {
-    name: 'Analytics',
-    href: 'https://dune.com/nftearth/nftearth-analytics',
+    name: 'CoinGecko',
+    href: 'https://www.coingecko.com/en/coins/nftearth',
   },
+  {
+    name: 'CoinMarketCap',
+    href: 'https://coinmarketcap.com/currencies/nftearth',
+  },
+  
   {
     name: 'Brand Assets',
     href: 'https://docs.nftearth.exchange/resources/brand-assets',
@@ -56,14 +61,9 @@ const developerSectionLinks = [
     href: 'https://github.com/NFTEarth',
   },
   {
-    name: 'CoinGecko',
-    href: 'https://www.coingecko.com/en/coins/nftearth',
+    name: 'Analytics',
+    href: 'https://dune.com/nftearth/nftearth-analytics',
   },
-  {
-    name: 'CoinMarketCap',
-    href: 'https://coinmarketcap.com/currencies/nftearth',
-  },
-  
 
 ]
 

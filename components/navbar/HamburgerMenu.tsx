@@ -145,30 +145,7 @@ const HamburgerMenu = () => {
               Collections
             </Text>
           </Link>
-          <Link href={`/lowfeenft`} legacyBehavior>
-            <Text
-              style="subtitle1"
-              css={{
-                borderBottom: '1px solid $gray4',
-                cursor: 'pointer',
-                pb: '$4',
-                pt: '24px',
-                display: 'flex',
-                alignItems: 'center'
-              }}
-            >
-              Mint LowFeeNFT!
-              <Badge
-                color="secondary"
-                corners="pill"
-                css={{
-                  marginLeft: 5
-                }}
-              >
-                New
-              </Badge>
-            </Text>
-          </Link>
+        
           <Collapsible
             trigger={
               <Flex

@@ -131,36 +131,11 @@ const Navbar = () => {
               Collections
             </NavItem>
           </Link>
-          <Link href="/lowfeenft">
-            <NavItem>
-              <Flex as="span" align="center">
-                <Badge
-                  color="secondary"
-                  corners="pill"
-                  css={{
-                    marginRight: 5
-                  }}
-                >
-                  New
-                </Badge>
-                {`Mint LowFeeNFT!`}
-              </Flex>
-            </NavItem>
-          </Link>
           <Dropdown
             modal={false}
             trigger={
               <NavItem>
                 <Flex as="span" align="center">
-                  <Badge
-                    color="secondary"
-                    corners="pill"
-                    css={{
-                      marginRight: 5
-                    }}
-                  >
-                    New
-                  </Badge>
                   {`Token`}
                   <FontAwesomeIcon
                     icon={faChevronDown}
@@ -192,7 +167,7 @@ const Navbar = () => {
               }}
             >
               <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faBridge} width={20} height={20}/>
-              Bridge
+              Bridge NFTE
             </DropdownMenuItem>
             <DropdownMenuItem
               as={Link}
@@ -221,12 +196,7 @@ const Navbar = () => {
             >
               <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faDroplet} width={20} height={20}/>
               {`Get xNFTE`}
-              <Badge
-                color="secondary"
-                corners="pill"
-              >
-                New
-              </Badge>
+        
             </DropdownMenuItem>
             <DropdownMenuItem
               as={Link}
@@ -241,12 +211,6 @@ const Navbar = () => {
             >
               <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faDollarSign} width={20} height={20}/>
               {`Staking Rewards`}
-              <Badge
-                color="secondary"
-                corners="pill"
-              >
-                New
-              </Badge>
             </DropdownMenuItem>
           </Dropdown>
           <Dropdown
@@ -257,15 +221,7 @@ const Navbar = () => {
                   as="span"
                   align="center"
                 >
-                  <Badge
-                    color="secondary"
-                    corners="pill"
-                    css={{
-                      marginRight: 5
-                    }}
-                  >
-                    New
-                  </Badge>
+              
                   {`Products`}
                   <FontAwesomeIcon
                     icon={faChevronDown}
@@ -342,15 +298,7 @@ const Navbar = () => {
             >
               <Image src="/images/smartnft.png" width={20} height={20} objectFit="contain" alt="SmartNFT"/>
               {`SmartNFT`}
-              <Badge
-                color="secondary"
-                corners="pill"
-                css={{
-                  marginRight: 5
-                }}
-              >
-                New
-              </Badge>
+
             </DropdownMenuItem>
           </Dropdown>
         </Flex>
