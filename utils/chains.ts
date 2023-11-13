@@ -283,15 +283,15 @@ export const OFT_CHAINS : OFTChain[] = [
     darkIconUrl: '/icons/optimism-icon-light.svg',
     coingeckoNetworkId: 'optimistic-ethereum'
   },
-  // {
-  //   id: bsc.id,
-  //   lzId: 102,
-  //   name: bsc.name,
-  //   address: '0x1912A3504E59d1C1B060bf2d371DEB00b70E8796',
-  //   lightIconUrl: '/icons/bsc-icon-dark.svg',
-  //   darkIconUrl: '/icons/bsc-icon-light.svg',
-  //   coingeckoNetworkId: 'binance-smart-chain'
-  // },
+   {
+     id: bsc.id,
+     lzId: 102,
+     name: bsc.name,
+     address: '0x1912A3504E59d1C1B060bf2d371DEB00b70E8796',
+     lightIconUrl: '/icons/bsc-icon-dark.svg',
+     darkIconUrl: '/icons/bsc-icon-light.svg',
+     coingeckoNetworkId: 'binance-smart-chain'
+   },
   {
     id: base.id,
     lzId: 184,
@@ -429,18 +429,18 @@ export default [
   //   apiKey: process.env.RESERVOIR_API_KEY,
   //   coingeckoId: 'ethereum',
   // },
-  // {
-  //   ...bsc,
-  //   lightIconUrl: '/icons/bsc-icon-dark.svg',
-  //   darkIconUrl: '/icons/bsc-icon-light.svg',
-  //   reservoirBaseUrl: 'https://api-bsc.reservoir.tools',
-  //   proxyApi: '/api/reservoir/bsc',
-  //   routePrefix: 'bsc',
-  //   apiKey: process.env.RESERVOIR_API_KEY,
-  //   coingeckoId: 'binancecoin',
-  //   collectionSetId: process.env.NEXT_PUBLIC_BSC_COLLECTION_SET_ID,
-  //   community: process.env.NEXT_PUBLIC_BSC_COMMUNITY,
-  // },
+   {
+     ...bsc,
+     lightIconUrl: '/icons/bsc-icon-dark.svg',
+     darkIconUrl: '/icons/bsc-icon-light.svg',
+     reservoirBaseUrl: 'https://api-bsc.reservoir.tools',
+     proxyApi: '/api/reservoir/bsc',
+     routePrefix: 'bsc',
+     apiKey: process.env.RESERVOIR_API_KEY,
+     coingeckoId: 'binancecoin',
+     collectionSetId: process.env.NEXT_PUBLIC_BSC_COLLECTION_SET_ID,
+     community: process.env.NEXT_PUBLIC_BSC_COMMUNITY,
+   },
    {
      ...base,
      lightIconUrl: '/icons/base-icon-dark.svg',
