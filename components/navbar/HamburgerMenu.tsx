@@ -166,15 +166,6 @@ const HamburgerMenu = () => {
                   }}
                 >
                   {`Token`}
-                  <Badge
-                    color="secondary"
-                    corners="pill"
-                    css={{
-                      marginLeft: 5
-                    }}
-                  >
-                    New
-                  </Badge>
                 </Text>
                 <FontAwesomeIcon icon={faChevronDown} width={20} height={20}/>
               </Flex>
@@ -196,7 +187,7 @@ const HamburgerMenu = () => {
                     pt: '24px',
                   }}
                 >
-                  Bridge
+                  Bridge NFTE
                 </Text>
               </Link>
               <Link href="/swap" legacyBehavior>
@@ -225,15 +216,6 @@ const HamburgerMenu = () => {
                   }}
                 >
                   {`Get xNFTE`}
-                  <Badge
-                    color="secondary"
-                    corners="pill"
-                    css={{
-                      marginLeft: 5
-                    }}
-                  >
-                    New
-                  </Badge>
                 </Text>
               </Link>
               <Link href="/staking" legacyBehavior>
@@ -249,15 +231,6 @@ const HamburgerMenu = () => {
                   }}
                 >
                   {`Staking Rewards`}
-                  <Badge
-                    color="secondary"
-                    corners="pill"
-                    css={{
-                      marginLeft: 5
-                    }}
-                  >
-                    New
-                  </Badge>
                 </Text>
               </Link>
             </Flex>
