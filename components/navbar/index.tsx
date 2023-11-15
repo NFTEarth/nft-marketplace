@@ -136,7 +136,7 @@ const Navbar = () => {
             trigger={
               <NavItem>
                 <Flex as="span" align="center">
-                  {`Token`}
+                  {`NFTE Token`}
                   <FontAwesomeIcon
                     icon={faChevronDown}
                     width={16}
@@ -181,7 +181,7 @@ const Navbar = () => {
               }}
             >
               <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faArrowsLeftRight} width={20} height={20}/>
-              Buy NFTE
+              Swap NFTE
             </DropdownMenuItem>
             <DropdownMenuItem
               as={Link}
@@ -195,7 +195,7 @@ const Navbar = () => {
               }}
             >
               <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faDroplet} width={20} height={20}/>
-              {`Get xNFTE`}
+              {`Get NFTE/WETH LP`}
         
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -210,7 +210,7 @@ const Navbar = () => {
               }}
             >
               <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faDollarSign} width={20} height={20}/>
-              {`Staking Rewards`}
+              {`xNFTE Rewards`}
             </DropdownMenuItem>
           </Dropdown>
           <Dropdown

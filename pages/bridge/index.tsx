@@ -266,7 +266,7 @@ const BridgePage = () => {
               justify="center"
             >
               <Text style="h4" as="h2">
-                NFTE Omnichain Bridge
+                NFTE Token Omnichain Bridge
               </Text>
             </Flex>
             <Flex

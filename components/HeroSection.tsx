@@ -80,7 +80,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
             '@lg': { width: '50%' },
           }}
         >
-          {`Trade and Create NFTs, Earn Rewards.`}
+          {`Omnichain NFT Marketplace`}
         </Text>
         {hideLink ?? (
           <Flex css={{ gap: 10 }}>
@@ -90,18 +90,10 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
                 color="tertiary"
                 size="large"
               >
-                Trade
+                Trade NFTs Now
               </Button>
             </Link>
-            <Link href="/quests" passHref legacyBehavior>
-              <Button
-                as="a"
-                color="tertiary"
-                size="large"
-              >
-                Quests
-              </Button>
-            </Link>
+            
           </Flex>
         )}
       </Grid>

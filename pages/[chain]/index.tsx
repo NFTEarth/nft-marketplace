@@ -127,14 +127,14 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               '@initial': 'h4',
               '@md': 'h3'
             }} css={{ flexShrink: 0 }}>
-              Explore NFTs
+              Digital Collectibles
             </Text>{' '}
             <Flex css={{ gap: '$3', maxWidth: '100%' }}>
               <Text style={{
                 '@initial': 'h4',
                 '@md': 'h3'
               }} color="subtle">
-                on
+              on
               </Text>
               <Dropdown
                 contentProps={{

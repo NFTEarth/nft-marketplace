@@ -165,7 +165,7 @@ const HamburgerMenu = () => {
                     alignItems: 'center'
                   }}
                 >
-                  {`Token`}
+                  {`NFTE Token`}
                 </Text>
                 <FontAwesomeIcon icon={faChevronDown} width={20} height={20}/>
               </Flex>
@@ -200,7 +200,7 @@ const HamburgerMenu = () => {
                     pt: '24px',
                   }}
                 >
-                  Buy NFTE
+                  Swap NFTE
                 </Text>
               </Link>
               <Link href="/staking/pool" legacyBehavior>
@@ -215,7 +215,7 @@ const HamburgerMenu = () => {
                     display: 'flex'
                   }}
                 >
-                  {`Get xNFTE`}
+                  {`Get NFTE/WETH LP`}
                 </Text>
               </Link>
               <Link href="/staking" legacyBehavior>
@@ -230,7 +230,7 @@ const HamburgerMenu = () => {
                     display: 'flex'
                   }}
                 >
-                  {`Staking Rewards`}
+                  {`xNFTE Rewards`}
                 </Text>
               </Link>
             </Flex>

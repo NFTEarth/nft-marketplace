@@ -9,7 +9,7 @@
 
 <p align="center">NFT Marketplace, NFTFi, SocialFi, GameFi, NFT Launchpad, and AI-infused NFTs - all part of the NFTEarth protocol.</p>
 
-![image](https://github.com/NFTEarth/nft-marketplace/assets/29180454/42662827-5a5e-4218-9854-ebdfc116fa13)
+![NFTEarth](image.png)
 
 
 ### Built With
