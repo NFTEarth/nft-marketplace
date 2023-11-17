@@ -1,7 +1,7 @@
 import {FC, useMemo, useState} from 'react'
 import { useAccount, useContractReads, erc20ABI, useBalance } from 'wagmi'
 import { zeroAddress, formatUnits } from 'viem'
-import { mainnet, polygon, optimism, arbitrum } from 'wagmi/chains'
+import { mainnet, polygon, optimism, arbitrum, bsc } from 'wagmi/chains'
 import { useCoinConversion } from '@reservoir0x/reservoir-kit-ui'
 import CryptoCurrencyIcon from 'components/primitives/CryptoCurrencyIcon'
 import {
@@ -36,6 +36,16 @@ const currencies = [
       name: arbitrum.name,
     },
     coinGeckoId: 'ethereum',
+  },
+  {
+    address: zeroAddress,
+    symbol: 'ETH',
+    decimals: optimism.nativeCurrency.decimals,
+    chain: {
+      id: optimism.id,
+      name: optimism.name,
+    },
+    coinGeckoId: 'matic-network',
   },
   /*{
     address: zeroAddress,
@@ -77,7 +87,17 @@ const currencies = [
     },
     coinGeckoId: 'matic-network',
   },
-  {
+ /*{
+    address: zeroAddress,
+    symbol: 'BNB',
+    decimals: bsc.nativeCurrency.decimals,
+    chain: {
+      id: bsc.id,
+      name: bsc.name,
+    },
+    coinGeckoId: 'binancecoin',
+  },
+  /*{
     address: '0x492Fa53b88614923937B7197C87E0F7F8EEb7B20',
     symbol: 'NFTE',
     decimals: polygon.nativeCurrency.decimals,
@@ -86,7 +106,7 @@ const currencies = [
       name: polygon.name,
     },
     coinGeckoId: 'nftearth',
-  },
+  },*/
   {
     address: '0x912CE59144191C1204E64559FE8253a0e49E6548',
     symbol: 'ARB',
@@ -94,6 +114,16 @@ const currencies = [
     chain: {
       id: arbitrum.id,
       name: arbitrum.name,
+    },
+    coinGeckoId: 'arbitrum',
+  },
+  {
+    address: '0x912CE59144191C1204E64559FE8253a0e49E6548',
+    symbol: 'OP',
+    decimals: optimism.nativeCurrency.decimals,
+    chain: {
+      id: optimism.id,
+      name: optimism.name,
     },
     coinGeckoId: 'arbitrum',
   },
@@ -147,6 +177,11 @@ const Wallet : FC<WalletProps> = ({ exp }) => {
       address,
       chainId: arbitrum.id,  
   })
+  const optimismBalance = useBalance({
+    address,
+    chainId: optimism.id,  
+})
+
   /*const baseBalance = useBalance({
     address,
     chainId: base.id,  
@@ -181,6 +216,12 @@ const Wallet : FC<WalletProps> = ({ exp }) => {
           case arbitrum.id: {
             balance = arbitrumBalance.data?.value || 0n
             break
+          }
+          case optimism.id: {
+            balance = optimismBalance.data?.value || 0n
+            break
+          
+      
           }
           /*case base.id: { 
             balance = baseBalance.data?.value || 0n
