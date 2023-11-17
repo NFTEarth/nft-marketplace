@@ -67,7 +67,7 @@ const currencies = [
     },
     coinGeckoId: 'nftearth',
   },
-  /*{
+  */{
     address: zeroAddress,
     symbol: 'MATIC',
     decimals: polygon.nativeCurrency.decimals,
@@ -76,14 +76,14 @@ const currencies = [
       name: polygon.name,
     },
     coinGeckoId: 'matic-network',
-  }, */
+  },
   {
-    address: '0x51b902f19a56f0c8e409a34a215ad2673edf3284',
+    address: '0x492Fa53b88614923937B7197C87E0F7F8EEb7B20',
     symbol: 'NFTE',
-    decimals: arbitrum.nativeCurrency.decimals,
+    decimals: polygon.nativeCurrency.decimals,
     chain: {
-      id: arbitrum.id,
-      name: arbitrum.name,
+      id: polygon.id,
+      name: polygon.name,
     },
     coinGeckoId: 'nftearth',
   },
@@ -170,10 +170,10 @@ const Wallet : FC<WalletProps> = ({ exp }) => {
       if (currency.address === zeroAddress) {
         //CONFIGURABLE: Configure these to show the fetched balance results configured above in the useBalance hooks
         switch (currency.chain.id) {
-          // case polygon.id: {
-          //   balance = maticBalance.data?.value || 0n
-          //   break
-          // }
+           case polygon.id: {
+             balance = maticBalance.data?.value || 0n
+             break
+           }
           case mainnet.id: {
             balance = ethBalance.data?.value || 0n
             break

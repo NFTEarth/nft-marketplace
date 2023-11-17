@@ -17,7 +17,7 @@ import {
 } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { useMarketplaceChain } from 'hooks'
-import { mainnet, arbitrum } from "wagmi/chains";
+import { mainnet, arbitrum, optimism, polygon, bsc } from "wagmi/chains";
 import { zeroAddress } from 'viem'
 
 import { Button } from 'components/primitives'
@@ -97,6 +97,65 @@ const List: FC<Props> = ({
       }
     ]
   }
+
+  if (marketplaceChain.id === optimism.id) {
+    listingCurrencies = [
+      {
+        contract: zeroAddress,
+        symbol: 'ETH',
+        coinGeckoId: 'ethereum',
+      },
+      {
+        contract: '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
+        symbol: 'NFTE',
+        decimals: 18,
+        coinGeckoId: 'nftearth',
+      },
+      {
+        contract: '0x4200000000000000000000000000000000000042',
+        symbol: 'OP',
+        decimals: 18,
+        coinGeckoId: 'optimism',
+      }
+    ]
+  }
+
+
+  if (marketplaceChain.id === polygon.id) {
+    listingCurrencies = [
+      {
+        contract: zeroAddress,
+        symbol: 'MATIC',
+        coinGeckoId: 'matic-network',
+      },
+      {
+        contract: '0x492Fa53b88614923937B7197C87E0F7F8EEb7B20',
+        symbol: 'NFTE',
+        decimals: 18,
+        coinGeckoId: 'nftearth',
+      },
+     
+    ]
+  }
+
+  if (marketplaceChain.id === bsc.id) {
+    listingCurrencies = [
+      {
+        contract: zeroAddress,
+        symbol: 'BNB',
+        coinGeckoId: 'binancecoin',
+      },
+      {
+        contract: '0x1912A3504E59d1C1B060bf2d371DEB00b70E8796',
+        symbol: 'NFTE',
+        decimals: 18,
+        coinGeckoId: 'nftearth',
+      },
+    ]
+  }
+
+
+
 
   const tokenId = token?.token?.tokenId
   const contract = token?.token?.contract
