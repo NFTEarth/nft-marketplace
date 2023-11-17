@@ -186,7 +186,7 @@ export const AccountSidebar: FC = () => {
                         }}
                       >
                         <FontAwesomeIcon icon={faStore} width={16} height={16} />
-                        <Text style="body1">My Items</Text>
+                        <Text style="body1">My Assets</Text>
                       </Flex>
                     </Link>
                     <Link href="/portfolio?tab=listings" replace={true}>

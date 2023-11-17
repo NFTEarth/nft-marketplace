@@ -118,14 +118,14 @@ const currencies = [
     coinGeckoId: 'arbitrum',
   },
   {
-    address: '0x912CE59144191C1204E64559FE8253a0e49E6548',
+    address: '0x4200000000000000000000000000000000000042',
     symbol: 'OP',
     decimals: optimism.nativeCurrency.decimals,
     chain: {
       id: optimism.id,
       name: optimism.name,
     },
-    coinGeckoId: 'arbitrum',
+    coinGeckoId: 'optimism',
   },
 ]
 

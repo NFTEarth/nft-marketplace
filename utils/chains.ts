@@ -315,8 +315,8 @@ export const OFT_CHAINS : OFTChain[] = [
     lzId: 158,
     name: polygonZkEvm.name,
     address: '0xf1B8982eC774AE84e936Bd63f372280bd534E797',
-    lightIconUrl: '/icons/polygon-zkevm-icon-light.svg',
-    darkIconUrl: '/icons/polygon-zkevm-icon-dark.svg',
+    lightIconUrl: '/icons/polygon-zkevm-icon-dark.svg',
+    darkIconUrl: '/icons/polygon-zkevm-icon-light.svg',
     coingeckoNetworkId: 'zkevm'
   }
 
