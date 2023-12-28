@@ -172,31 +172,31 @@ export type ReservoirChain = Chain & {
 }
 
 export const DefaultChain: ReservoirChain = {
-  ...arbitrum,
+  ...optimism,
   // Any url to display the logo of the chain in light mode
-  lightIconUrl: '/icons/arbitrum-icon-dark.svg',
+  lightIconUrl: '/icons/optimism-icon-dark.svg',
   // Any url to display the logo of the chain in dark mode
-  darkIconUrl: '/icons/arbitrum-icon-light.svg',
+  darkIconUrl: '/icons/optimism-icon-light.svg',
   // The base url of the reservoir api, this is used in the app when
   // directly interacting with the reservoir indexer servers (in the api proxy for example)
   // or when prefetching server side rendered data
-  reservoirBaseUrl: 'https://api-arbitrum.reservoir.tools',
+  reservoirBaseUrl: 'https://api-optimism.reservoir.tools',
   // Used on the client side portions of the marketplace that need an api key added
   // Prevents the api key from being leaked in the clientside requests
   // If you'd like to disable proxying you can just change the proxyApi to the reservoirBaseUrl
   // Doing so will omit the api key unless further changes are made
-  proxyApi: '/api/reservoir/arbitrum',
+  proxyApi: '/api/reservoir/optimism',
   // A prefix used in the asset specific routes on the app (tokens/collections)
-  routePrefix: 'arbitrum',
+  routePrefix: 'optimism',
   // Reservoir API key which you can generate at https://reservoir.tools/
   // This is a protected key and displays as 'undefined' on the browser
   // DO NOT add NEXT_PUBLIC to the key or you'll risk leaking it on the browser
   apiKey: process.env.RESERVOIR_API_KEY,
   // Coingecko id, used to convert the chain's native prices to usd. Can be found here:
   // https://www.coingecko.com/en/api/documentation#operations-coins-get_coins_list
-  coingeckoId: 'arbitrum',
-  collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_COLLECTION_SET_ID,
-  community: process.env.NEXT_PUBLIC_ARBITRUM_COMMUNITY,
+  coingeckoId: 'optimism',
+  collectionSetId: process.env.NEXT_PUBLIC_OPTIMISM_COLLECTION_SET_ID,
+  community: process.env.NEXT_PUBLIC_OPTIMISM_COMMUNITY,
 }
 
 type NFTBridge = {
@@ -247,7 +247,7 @@ export const DefaultOFTChain: OFTChain = {
 
 export const OFT_CHAINS : OFTChain[] = [
   DefaultOFTChain,
-  {
+  /*{
     id: arbitrumNova.id,
     lzId: 175,
     name: arbitrumNova.name,
@@ -255,7 +255,7 @@ export const OFT_CHAINS : OFTChain[] = [
     lightIconUrl: '/icons/arbitrum-nova-icon-dark.svg',
     darkIconUrl: '/icons/arbitrum-nova-icon-light.svg',
     coingeckoNetworkId: 'arbitrum-nova'
-  },
+  },*/
   {
     id: mainnet.id,
     lzId: 101,
@@ -283,7 +283,7 @@ export const OFT_CHAINS : OFTChain[] = [
     darkIconUrl: '/icons/optimism-icon-light.svg',
     coingeckoNetworkId: 'optimistic-ethereum'
   },
-   {
+  /* {
      id: bsc.id,
      lzId: 102,
      name: bsc.name,
@@ -291,7 +291,7 @@ export const OFT_CHAINS : OFTChain[] = [
      lightIconUrl: '/icons/bsc-icon-dark.svg',
      darkIconUrl: '/icons/bsc-icon-light.svg',
      coingeckoNetworkId: 'binance-smart-chain'
-   },
+   },*/
   {
     id: base.id,
     lzId: 184,
@@ -301,7 +301,7 @@ export const OFT_CHAINS : OFTChain[] = [
     darkIconUrl: '/icons/base-icon-light.svg',
     coingeckoNetworkId: 'base'
   },
-  {
+ /* {
      id: linea.id,
      lzId: 183,
      name: linea.name,
@@ -318,7 +318,7 @@ export const OFT_CHAINS : OFTChain[] = [
     lightIconUrl: '/icons/polygon-zkevm-icon-dark.svg',
     darkIconUrl: '/icons/polygon-zkevm-icon-light.svg',
     coingeckoNetworkId: 'zkevm'
-  }
+  }*/
 
   // {
   //   id: 5000,
@@ -369,6 +369,18 @@ export const getAlchemyNetworkName = (chainId: number) => {
 export default [
   DefaultChain,
   {
+    ...arbitrum,
+    lightIconUrl: '/icons/arbitrum-icon-light.svg',
+    darkIconUrl: '/icons/arbitrum-icon-dark.svg',
+    reservoirBaseUrl: 'https://api-arbitrum.reservoir.tools',
+    proxyApi: '/api/reservoir/arbitrum',
+    routePrefix: 'arbitrum',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_ARBITRUM_COMMUNITY,
+  },
+  /*{
     ...arbitrumNova,
     lightIconUrl: '/icons/arbitrum-nova-icon-dark.svg',
     darkIconUrl: '/icons/arbitrum-nova-icon-light.svg',
@@ -379,7 +391,7 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_NOVA_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_ARBITRUM_NOVA_COMMUNITY,
-  },
+  },*/
   {
     ...mainnet,
     name: 'Ethereum',
@@ -405,7 +417,7 @@ export default [
      collectionSetId: process.env.NEXT_PUBLIC_POLYGON_COLLECTION_SET_ID,
      community: process.env.NEXT_PUBLIC_POLYGON_COMMUNITY,
    },
-  {
+  /*{
     ...optimism,
     name: 'Optimism',
     lightIconUrl: '/icons/optimism-icon-dark.svg',
@@ -429,7 +441,7 @@ export default [
   //   apiKey: process.env.RESERVOIR_API_KEY,
   //   coingeckoId: 'ethereum',
   // },
-   {
+  /* {
      ...bsc,
      lightIconUrl: '/icons/bsc-icon-dark.svg',
      darkIconUrl: '/icons/bsc-icon-light.svg',
@@ -441,7 +453,7 @@ export default [
      collectionSetId: process.env.NEXT_PUBLIC_BSC_COLLECTION_SET_ID,
      community: process.env.NEXT_PUBLIC_BSC_COMMUNITY,
    },
-   {
+  */{
      ...base,
      lightIconUrl: '/icons/base-icon-dark.svg',
      darkIconUrl: '/icons/base-icon-light.svg',
@@ -452,8 +464,8 @@ export default [
      coingeckoId: 'base',
      collectionSetId: process.env.NEXT_PUBLIC_BASE_COLLECTION_SET_ID,
      community: process.env.NEXT_PUBLIC_BASE_COMMUNITY,
-   },
-    {
+   }
+    /*{
      ...linea,
      lightIconUrl: '/icons/linea-icon-dark.svg',
      darkIconUrl: '/icons/linea-icon-light.svg',
@@ -476,5 +488,5 @@ export default [
       coingeckoId: 'ethereum',
       collectionSetId: process.env.NEXT_PUBLIC_POLYGON_ZKEVM_COLLECTION_SET_ID,
       community: process.env.NEXT_PUBLIC_POLYGON_ZKEVM_COMMUNITY,
-    },
+    },*/
 ] as ReservoirChain[]
