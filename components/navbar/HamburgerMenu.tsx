@@ -190,7 +190,7 @@ const HamburgerMenu = () => {
                   Bridge NFTE
                 </Text>
               </Link>
-              <Link href="/swap" legacyBehavior>
+              <Link href="https://app.uniswap.org/swap?outputCurrency=0x51B902f19a56F0c8E409a34a215AD2673EDF3284&chain=arbitrum" legacyBehavior>
                 <Text
                   style="subtitle1"
                   css={{
@@ -200,39 +200,10 @@ const HamburgerMenu = () => {
                     pt: '24px',
                   }}
                 >
-                  Swap NFTE
+                  Get NFTE
                 </Text>
               </Link>
-              <Link href="/staking/pool" legacyBehavior>
-                <Text
-                  style="subtitle1"
-                  css={{
-                    borderBottom: '1px solid $gray4',
-                    cursor: 'pointer',
-                    pb: '$4',
-                    pt: '24px',
-                    alignItems: 'center',
-                    display: 'flex'
-                  }}
-                >
-                  {`Get NFTE/WETH LP`}
-                </Text>
-              </Link>
-              <Link href="/staking" legacyBehavior>
-                <Text
-                  style="subtitle1"
-                  css={{
-                    borderBottom: '1px solid $gray4',
-                    cursor: 'pointer',
-                    pb: '$4',
-                    pt: '24px',
-                    alignItems: 'center',
-                    display: 'flex'
-                  }}
-                >
-                  {`xNFTE Rewards`}
-                </Text>
-              </Link>
+              
             </Flex>
           </Collapsible>
           <Collapsible

@@ -39,7 +39,7 @@ class MyDocument extends Document {
         />
 
         {/* NFTEarth meta tags */}
-        <meta property="nftearth:title" content="NFTEarth NFT Hub" />
+        <meta property="nftearth:title" content="Omnichain NFT Protocol" />
         <meta property="reservoir:icon" content="/reservoir-source-icon.png" />
         <meta
           property="reservoir:token-url-mainnet"

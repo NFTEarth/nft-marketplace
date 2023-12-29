@@ -257,6 +257,15 @@ export const OFT_CHAINS : OFTChain[] = [
     coingeckoNetworkId: 'arbitrum-nova'
   },*/
   {
+    id: polygon.id,
+    lzId: 109,
+    name: polygon.name,
+    address: '0x492Fa53b88614923937B7197C87E0F7F8EEb7B20',
+    lightIconUrl: '/icons/polygon-icon-dark.svg',
+    darkIconUrl: '/icons/polygon-icon-light.svg',
+    coingeckoNetworkId: 'polygon-pos'
+ },
+  {
     id: mainnet.id,
     lzId: 101,
     name: mainnet.name,
@@ -264,15 +273,6 @@ export const OFT_CHAINS : OFTChain[] = [
     lightIconUrl: '/icons/eth-icon-dark.svg',
     darkIconUrl: '/icons/eth-icon-light.svg',
     coingeckoNetworkId: 'ethereum'
-  },
-  {
-     id: polygon.id,
-     lzId: 109,
-     name: polygon.name,
-     address: '0x492Fa53b88614923937B7197C87E0F7F8EEb7B20',
-     lightIconUrl: '/icons/polygon-icon-dark.svg',
-     darkIconUrl: '/icons/polygon-icon-light.svg',
-     coingeckoNetworkId: 'polygon-pos'
   },
   {
     id: optimism.id,

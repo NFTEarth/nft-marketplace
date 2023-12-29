@@ -266,7 +266,7 @@ const BridgePage = () => {
               justify="center"
             >
               <Text style="h4" as="h2">
-                NFTE Token Omnichain Bridge
+                NFTE Omnichain Bridge
               </Text>
             </Flex>
             <Flex
@@ -376,10 +376,10 @@ const BridgePage = () => {
                       <Button onClick={handleBridge} disabled={isLoading || isLoadingTransaction}>Bridge</Button>
                     </Box>
                     {isLoadingTransaction && (
-                      <Text as="h4">Bridging...</Text>
+                      <Text as="h4">Sending cross-chain...</Text>
                     )}
                     {isSuccess && (
-                      <Text css={{ color: '$secondary8'}}>NFTE bridging complete. Check your address on the destination chain or LayerZero Scan to view the Tx details.</Text>
+                      <Text css={{ color: '$secondary8'}}>NFTE bridging by LayerZero complete. Check the Txn hash on LayerZero Scan to view the details.</Text>
                     )}
                   </Flex>
                 </Flex>

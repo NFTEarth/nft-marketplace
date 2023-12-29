@@ -171,7 +171,7 @@ const Navbar = () => {
             </DropdownMenuItem>
             <DropdownMenuItem
               as={Link}
-              href="/swap"
+              href="https://app.uniswap.org/swap?outputCurrency=0x51B902f19a56F0c8E409a34a215AD2673EDF3284&chain=arbitrum"
               css={{
                 display: 'flex',
                 py: '$3',
@@ -181,36 +181,7 @@ const Navbar = () => {
               }}
             >
               <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faArrowsLeftRight} width={20} height={20}/>
-              Swap NFTE
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              as={Link}
-              href="/staking/pool"
-              css={{
-                display: 'flex',
-                py: '$3',
-                width: '100%',
-                alignItems: 'center',
-                gap: 10
-              }}
-            >
-              <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faDroplet} width={20} height={20}/>
-              {`Get NFTE/WETH LP`}
-        
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              as={Link}
-              href="/staking"
-              css={{
-                display: 'flex',
-                py: '$3',
-                width: '100%',
-                alignItems: 'center',
-                gap: 10
-              }}
-            >
-              <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faDollarSign} width={20} height={20}/>
-              {`xNFTE Rewards`}
+              Get NFTE
             </DropdownMenuItem>
           </Dropdown>
           <Dropdown
