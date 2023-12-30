@@ -5,6 +5,7 @@ import Navbar from './navbar'
 import {useMounted} from 'hooks'
 import {useMediaQuery} from "react-responsive";
 
+
 type Props = {
   children: ReactNode
 }

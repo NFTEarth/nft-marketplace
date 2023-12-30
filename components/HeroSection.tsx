@@ -90,7 +90,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
                 color="tertiary"
                 size="large"
               >
-                Trade NFTs Now
+                Trade Collectibles Now
               </Button>
             </Link>
             

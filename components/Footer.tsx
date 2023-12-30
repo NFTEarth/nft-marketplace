@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faDiscord, faTelegram, faTelegramPlane, faTwitter} from '@fortawesome/free-brands-svg-icons'
 import {IconProp} from "@fortawesome/fontawesome-svg-core";
 
+
 type SectionTitleProps = {
   title: string
 }
@@ -44,10 +45,9 @@ const resourcesSectionLinks = [
     name: 'CoinMarketCap',
     href: 'https://coinmarketcap.com/currencies/nftearth',
   },
-  
   {
-    name: 'Brand Assets',
-    href: 'https://docs.nftearth.exchange/resources/brand-assets',
+    name: 'Contact: team@nftearth.exchange',
+    href: 'mailto:team@nftearth.exchange',
   },
 ]
 
@@ -60,11 +60,11 @@ const developerSectionLinks = [
     name: 'GitHub',
     href: 'https://github.com/NFTEarth',
   },
-  {
-    name: 'Analytics',
-    href: 'https://dune.com/nftearth/nftearth-analytics',
-  },
 
+  {
+    name: 'Brand Assets',
+    href: 'https://docs.nftearth.exchange/resources/brand-assets',
+  },
 ]
 
 const companySectionLinks = [
@@ -75,10 +75,6 @@ const companySectionLinks = [
   {
     name: 'Governance Discussion',
     href: 'https://discord.com/channels/1062256160264171520/1063532288866005043',
-  },
-  {
-    name: 'Contact: team@nftearth.exchange',
-    href: 'mailto:team@nftearth.exchange',
   },
   {
     name: 'Terms',
@@ -138,7 +134,7 @@ export const Footer = () => {
           <a
             target="_blank"
             rel="noopener noreferrer"
-            href="https://twitter.com/NFTEarth_L2"
+            href="https://X.com/NFTEarth_L2"
             aria-label="Twitter"
           >
             <Button
@@ -149,7 +145,7 @@ export const Footer = () => {
                   background: '$gray8',
                 },
               }}
-              aria-label="Twitter"
+              aria-label="X"
             >
               <FontAwesomeIcon icon={faTwitter} width={14} height={14} />
             </Button>
