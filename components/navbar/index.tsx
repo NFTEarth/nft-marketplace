@@ -21,7 +21,8 @@ import {
   faChevronDown,
   faDroplet,
   faArrowsLeftRight,
-  faBridge
+  faBridge,
+  faLock
 } from "@fortawesome/free-solid-svg-icons";
 import { link } from 'fs'
 import Badge from "../primitives/Badge";
@@ -171,6 +172,20 @@ const Navbar = () => {
             </DropdownMenuItem>
             <DropdownMenuItem
               as={Link}
+              href="/staking"
+              css={{
+                display: 'flex',
+                py: '$3',
+                width: '100%',
+                alignItems: 'center',
+                gap: 10
+              }}
+            >
+              <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faLock} width={20} height={20}/>
+              Get veNFTE
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              as={Link}
               href="https://app.uniswap.org/#/swap?outputCurrency=0xc2106ca72996e49bBADcB836eeC52B765977fd20&chain=base"
               css={{
                 display: 'flex',
@@ -181,7 +196,7 @@ const Navbar = () => {
               }}
             >
               <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faArrowsLeftRight} width={20} height={20}/>
-              Get NFTE
+              Swap NFTE
             </DropdownMenuItem>
           </Dropdown>
           <Dropdown

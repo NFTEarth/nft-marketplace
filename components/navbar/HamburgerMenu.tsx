@@ -190,6 +190,19 @@ const HamburgerMenu = () => {
                   Bridge NFTE
                 </Text>
               </Link>
+              <Link href="/staking" legacyBehavior>
+                <Text
+                  style="subtitle1"
+                  css={{
+                    borderBottom: '1px solid $gray4',
+                    cursor: 'pointer',
+                    pb: '$4',
+                    pt: '24px',
+                  }}
+                >
+                  Get veNFTE
+                </Text>
+              </Link>
               <Link href="https://app.uniswap.org/#/swap?outputCurrency=0xc2106ca72996e49bBADcB836eeC52B765977fd20&chain=base" legacyBehavior>
                 <Text
                   style="subtitle1"
