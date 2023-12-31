@@ -172,7 +172,7 @@ const Navbar = () => {
             </DropdownMenuItem>
             <DropdownMenuItem
               as={Link}
-              href="/staking"
+              href="https://www.sushi.com/pool/add/v2/8453"
               css={{
                 display: 'flex',
                 py: '$3',
@@ -186,7 +186,7 @@ const Navbar = () => {
             </DropdownMenuItem>
             <DropdownMenuItem
               as={Link}
-              href="https://app.uniswap.org/#/swap?outputCurrency=0xc2106ca72996e49bBADcB836eeC52B765977fd20&chain=base"
+              href="https://www.sushi.com/swap?chainId=8453&token1=0xc2106ca72996e49bBADcB836eeC52B765977fd20"
               css={{
                 display: 'flex',
                 py: '$3',

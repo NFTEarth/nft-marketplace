@@ -190,7 +190,7 @@ const HamburgerMenu = () => {
                   Bridge NFTE
                 </Text>
               </Link>
-              <Link href="/staking" legacyBehavior>
+              <Link href="https://www.sushi.com/pool/add/v2/8453" legacyBehavior>
                 <Text
                   style="subtitle1"
                   css={{
@@ -203,7 +203,7 @@ const HamburgerMenu = () => {
                   Get veNFTE
                 </Text>
               </Link>
-              <Link href="https://app.uniswap.org/#/swap?outputCurrency=0xc2106ca72996e49bBADcB836eeC52B765977fd20&chain=base" legacyBehavior>
+              <Link href="https://www.sushi.com/swap?chainId=8453&token1=0xc2106ca72996e49bBADcB836eeC52B765977fd20" legacyBehavior>
                 <Text
                   style="subtitle1"
                   css={{
