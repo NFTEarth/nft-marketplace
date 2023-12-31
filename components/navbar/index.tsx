@@ -171,7 +171,7 @@ const Navbar = () => {
             </DropdownMenuItem>
             <DropdownMenuItem
               as={Link}
-              href="https://app.uniswap.org/swap?outputCurrency=0x51B902f19a56F0c8E409a34a215AD2673EDF3284&chain=arbitrum"
+              href="https://app.uniswap.org/#/swap?outputCurrency=0xc2106ca72996e49bBADcB836eeC52B765977fd20&chain=base"
               css={{
                 display: 'flex',
                 py: '$3',

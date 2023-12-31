@@ -54,7 +54,7 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
 
         //Secondary
         secondary1: '#0e190c',
-        secondary2: '#20FF04',
+        secondary2: '#0420ff',
         secondary3: '#2b4c25',
         secondary4: '#396631',
         secondary5: '#47803d',
@@ -80,7 +80,7 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         gray11: '$slate11',
         gray12: '$slate12',
 
-        accent: '#79ffa8',
+        accent: '#0420ff',
 
         neutralBgSubtle: '$gray3',
         neutralBg: '$gray1',

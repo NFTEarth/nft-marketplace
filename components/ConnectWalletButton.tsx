@@ -27,7 +27,7 @@ export const ConnectWalletButton: FC<Props> = () => {
                     onClick={openConnectModal}
                     type="button"
                   >
-                    Connect Wallet
+                    Login
                   </Button>
                 )
               }

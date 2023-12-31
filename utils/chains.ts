@@ -301,7 +301,7 @@ export const OFT_CHAINS : OFTChain[] = [
     darkIconUrl: '/icons/base-icon-light.svg',
     coingeckoNetworkId: 'base'
   },
- /* {
+  {
      id: linea.id,
      lzId: 183,
      name: linea.name,
@@ -310,7 +310,7 @@ export const OFT_CHAINS : OFTChain[] = [
      darkIconUrl: '/icons/linea-icon-light.svg',
      coingeckoNetworkId: 'linea'
   },
-  {
+  /*{
     id: polygonZkEvm.id,
     lzId: 158,
     name: polygonZkEvm.name,
@@ -318,7 +318,7 @@ export const OFT_CHAINS : OFTChain[] = [
     lightIconUrl: '/icons/polygon-zkevm-icon-dark.svg',
     darkIconUrl: '/icons/polygon-zkevm-icon-light.svg',
     coingeckoNetworkId: 'zkevm'
-  }*/
+  }
 
   // {
   //   id: 5000,
@@ -327,7 +327,7 @@ export const OFT_CHAINS : OFTChain[] = [
   //   address: '0x3E173b825ADEeF9661920B91A8d50B075Ad51bA5',
   //   lightIconUrl: '/icons/mantle-icon-dark.svg',
   //   darkIconUrl: '/icons/mantle-icon-light.svg'
-  // }
+  // }*/
 ]
 
 export const FORTUNE_CHAINS = [
@@ -370,8 +370,8 @@ export default [
   DefaultChain,
   {
     ...arbitrum,
-    lightIconUrl: '/icons/arbitrum-icon-light.svg',
-    darkIconUrl: '/icons/arbitrum-icon-dark.svg',
+    lightIconUrl: '/icons/arbitrum-icon-dark.svg',
+    darkIconUrl: '/icons/arbitrum-icon-light.svg',
     reservoirBaseUrl: 'https://api-arbitrum.reservoir.tools',
     proxyApi: '/api/reservoir/arbitrum',
     routePrefix: 'arbitrum',
@@ -464,8 +464,8 @@ export default [
      coingeckoId: 'base',
      collectionSetId: process.env.NEXT_PUBLIC_BASE_COLLECTION_SET_ID,
      community: process.env.NEXT_PUBLIC_BASE_COMMUNITY,
-   }
-    /*{
+   },
+   {
      ...linea,
      lightIconUrl: '/icons/linea-icon-dark.svg',
      darkIconUrl: '/icons/linea-icon-light.svg',
@@ -477,7 +477,7 @@ export default [
      collectionSetId: process.env.NEXT_PUBLIC_LINEA_COLLECTION_SET_ID,
      community: process.env.NEXT_PUBLIC_LINEA_COMMUNITY,
    },
-    {
+    /*{
       ...polygonZkEvm,
       lightIconUrl: '/icons/polygon-zkevm-icon-dark.svg',
       darkIconUrl: '/icons/polygon-zkevm-icon-light.svg',

@@ -1,7 +1,7 @@
 import {FC, useMemo, useState} from 'react'
 import { useAccount, useContractReads, erc20ABI, useBalance } from 'wagmi'
 import { zeroAddress, formatUnits } from 'viem'
-import { mainnet, polygon, optimism, arbitrum, bsc } from 'wagmi/chains'
+import { mainnet, polygon, optimism, arbitrum } from 'wagmi/chains'
 import { useCoinConversion } from '@reservoir0x/reservoir-kit-ui'
 import CryptoCurrencyIcon from 'components/primitives/CryptoCurrencyIcon'
 import {
@@ -13,6 +13,7 @@ import {
 } from 'components/primitives'
 import {useProfile} from "hooks";
 import {formatNumber} from "utils/numbers";
+import { base } from 'utils/chains'
 
 //CONFIGURABLE: Here you may configure currencies that you want to display in the wallet menu. Native currencies,
 //like ETH/MATIC etc need to be fetched in a different way. Configure them below
@@ -47,7 +48,7 @@ const currencies = [
     },
     coinGeckoId: 'matic-network',
   },
-  /*{
+  {
     address: zeroAddress,
     symbol: 'ETH',
     decimals: base.nativeCurrency.decimals,
@@ -107,7 +108,7 @@ const currencies = [
     },
     coinGeckoId: 'nftearth',
   },*/
-  {
+  /*{
     address: '0x912CE59144191C1204E64559FE8253a0e49E6548',
     symbol: 'ARB',
     decimals: arbitrum.nativeCurrency.decimals,
@@ -116,7 +117,7 @@ const currencies = [
       name: arbitrum.name,
     },
     coinGeckoId: 'arbitrum',
-  },
+  },*/
   {
     address: '0x4200000000000000000000000000000000000042',
     symbol: 'OP',
@@ -180,12 +181,11 @@ const Wallet : FC<WalletProps> = ({ exp }) => {
   const optimismBalance = useBalance({
     address,
     chainId: optimism.id,  
-})
-
-  /*const baseBalance = useBalance({
+  })
+  const baseBalance = useBalance({
     address,
-    chainId: base.id,  
-  })*/
+    chainId: base.id, 
+})
 
   const usdConversions = useCoinConversion(
     'USD',
@@ -220,13 +220,11 @@ const Wallet : FC<WalletProps> = ({ exp }) => {
           case optimism.id: {
             balance = optimismBalance.data?.value || 0n
             break
-          
-      
           }
-          /*case base.id: { 
+          case base.id: { 
             balance = baseBalance.data?.value || 0n
             break 
-          }*/
+          }
         }
       } else {
         const index = nonNativeCurrencies.findIndex(
@@ -310,7 +308,7 @@ const Wallet : FC<WalletProps> = ({ exp }) => {
             window.open('https://app.uniswap.org/', '_blank')
           }}
         >
-          Add Funds
+          Swap Crypto
         </Button>
         {visibleCurrencies.map((currency, i) => {
           return (
