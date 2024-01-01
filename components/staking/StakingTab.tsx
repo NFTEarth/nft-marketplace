@@ -28,7 +28,7 @@ import {OFT_CHAINS, OFTChain} from "utils/chains";
 import {parseError} from "utils/error";
 
 import ERC20Abi from "artifact/ERC20Abi";
-import xNFTEAbi from 'artifact/veNFTEAbi'
+import veNFTEAbi from 'artifact/veNFTEAbi'
 import {getPublicClient} from "@wagmi/core";
 import {roundToWeek} from "../../utils/round";
 import Link from "next/link";
@@ -62,11 +62,11 @@ const StakingTab: FC<Props> = (props) => {
   const hasLockedBalance = (BigInt(depositor?.lockedBalance || 0)) > BigInt(0)
 
   const { data: allowance, refetch: refetchAllowance } = useContractRead({
-    enabled: !!address && !!chain?.xNFTE,
+    enabled: !!address && !!chain?.veNFTE,
     abi:  ERC20Abi,
     address: chain?.LPNFTE as `0x${string}`,
     functionName:  'allowance',
-    args: [address as `0x${string}`, chain?.xNFTE as `0x${string}`],
+    args: [address as `0x${string}`, chain?.veNFTE as `0x${string}`],
   })
 
   const requireAllowance = parseFloat(formatUnits(allowance  || BigInt(0), 18)) < parseFloat(value);
@@ -112,9 +112,9 @@ const StakingTab: FC<Props> = (props) => {
   }, [depositor, duration, value, newTime, isZeroValue, isZeroDuration])
 
   const { config, error: preparedError, refetch: refetchPrepareContract } = usePrepareContractWrite({
-    enabled: !!address && !!chain?.xNFTE && hasLockedBalance || (!isZeroValue && !isZeroDuration),
-    address: chain?.xNFTE as `0x${string}`,
-    abi: xNFTEAbi,
+    enabled: !!address && !!chain?.veNFTE && hasLockedBalance || (!isZeroValue && !isZeroDuration),
+    address: chain?.veNFTE as `0x${string}`,
+    abi: veNFTEAbi,
     ...stakingArgs as any
   })
 
@@ -123,7 +123,7 @@ const StakingTab: FC<Props> = (props) => {
     address: chain?.LPNFTE as `0x${string}`,
     abi: ERC20Abi,
     functionName: 'approve',
-    args:  [chain?.xNFTE as `0x${string}`, MaxUint256],
+    args:  [chain?.veNFTE as `0x${string}`, MaxUint256],
   })
 
   const { isLoading: isLoadingTransaction, isSuccess = true } = useWaitForTransaction({
@@ -321,14 +321,14 @@ const StakingTab: FC<Props> = (props) => {
           }}
         >
           <CryptoCurrencyIcon
-            address={chain?.xNFTE as `0x${string}`}
+            address={chain?.veNFTE as `0x${string}`}
             chainId={chain?.id}
             css={{
               width: 20,
               height: 20
             }}
           />
-          <Text style="body2">{`${formatBN(votingPower, 2, 18)} xNFTE`}</Text>
+          <Text style="body2">{`${formatBN(votingPower, 2, 18)} veNFTE`}</Text>
         </Flex>
       </Flex>
       <Flex
