@@ -4,7 +4,7 @@ import {parseError} from "../../utils/error";
 import {useAccount, useContractRead, useContractWrite, usePrepareContractWrite, useWaitForTransaction} from "wagmi";
 import {useConnectModal} from "@rainbow-me/rainbowkit";
 import dayjs from "dayjs";
-import xNFTEAbi from "../../artifact/xNFTEAbi";
+import veNFTEAbi from "../../artifact/veNFTEAbi";
 import {Box, Button, CryptoCurrencyIcon, Flex, Text} from "../primitives";
 import Link from "next/link";
 import {arbitrum} from "viem/chains";
@@ -24,8 +24,8 @@ const UnStakingTab: FC<UnStakingTabProps> = (props) => {
   const {openConnectModal} = useConnectModal()
 
   const {data: lockedData} = useContractRead({
-    abi: xNFTEAbi,
-    address: chain?.xNFTE as `0x${string}`,
+    abi: veNFTEAbi,
+    address: chain?.veNFTE as `0x${string}`,
     functionName: 'locked',
     args: [address as `0x${string}`],
     watch: true,
@@ -39,9 +39,9 @@ const UnStakingTab: FC<UnStakingTabProps> = (props) => {
   const hasLockedBalance = totalValue > BigInt(0)
 
   const {config, error: preparedError, refetch: refetchPrepareContract} = usePrepareContractWrite({
-    enabled: !!address && !!chain?.xNFTE && hasLockedBalance,
-    address: chain?.xNFTE as `0x${string}`,
-    abi: xNFTEAbi,
+    enabled: !!address && !!chain?.veNFTE && hasLockedBalance,
+    address: chain?.veNFTE as `0x${string}`,
+    abi: veNFTEAbi,
     functionName: 'withdraw'
   })
 

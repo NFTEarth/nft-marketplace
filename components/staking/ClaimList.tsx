@@ -1,7 +1,7 @@
 import {Box, Button, CryptoCurrencyIcon, Flex, Text} from "../primitives";
 import {useAccount, useContractWrite, usePrepareContractWrite, useWaitForTransaction} from "wagmi";
 import FeeDistributorAbi from "../../artifact/FeeDistributorAbi";
-import {OFT_CHAINS} from "../../utils/chains";
+import {OFT_CHAINS, base} from "../../utils/chains";
 import {arbitrum} from "viem/chains";
 import {formatBN} from "../../utils/numbers";
 import {parseError} from "../../utils/error";
@@ -14,9 +14,8 @@ import {faExternalLink} from "@fortawesome/free-solid-svg-icons";
 import useUSDAndNativePrice from "../../hooks/useUSDAndNativePrice";
 
 const claimableTokens : `0x${string}`[] = [
-  '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
-  '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
-  '0x912CE59144191C1204E64559FE8253a0e49E6548'
+  '0xc2106ca72996e49bBADcB836eeC52B765977fd20',
+  '0x4200000000000000000000000000000000000006'
 ]
 
 const ClaimList = () => {
@@ -40,22 +39,15 @@ const ClaimList = () => {
   const { data: wethPrice, isLoading: isLoadingWethPrice } = useUSDAndNativePrice({
     enabled: !!preparedData?.result?.[0],
     chainId: arbitrum.id,
-    contract: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
+    contract: '0x4200000000000000000000000000000000000006',
     price: preparedData?.result?.[0] || BigInt(0)
   })
 
   const { data: nftePrice, isLoading: isLoadingNFTEPrice } = useUSDAndNativePrice({
     enabled: !!preparedData?.result?.[1],
     chainId: arbitrum.id,
-    contract: '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
+    contract: '0xc2106ca72996e49bBADcB836eeC52B765977fd20',
     price: preparedData?.result?.[1] || BigInt(0)
-  })
-
-  const { data: arbPrice, isLoading: isLoadingARBPrice } = useUSDAndNativePrice({
-    enabled: !!preparedData?.result?.[2],
-    chainId: arbitrum.id,
-    contract: '0x912CE59144191C1204E64559FE8253a0e49E6548',
-    price: preparedData?.result?.[2] || BigInt(0)
   })
 
   const loading = isLoading || isLoadingTransaction;
@@ -76,13 +68,13 @@ const ClaimList = () => {
               >
                 <Text css={{ fontSize: 'inherit' }}>{`Claiming Successful`}</Text>
                 <Link
-                  href={`${arbitrum.blockExplorers.etherscan.url}/tx/${tx?.hash}`}
+                  href={`${base.blockExplorers.etherscan.url}/tx/${tx?.hash}`}
                   target="_blank"
                   style={{
                     marginTop: 20
                   }}
                 >
-                  {`See Receipt`}
+                  {`View Txn Receipt`}
                   <FontAwesomeIcon
                     icon={faExternalLink}
                     width={15}
@@ -228,12 +220,6 @@ const ClaimList = () => {
                       <Text>{formatBN(preparedData?.result?.[1], 2, 18)}</Text>
                     </Flex>
                   )}
-                  {BigInt(preparedData?.result?.[2] || 0) > 0 && (
-                    <Flex direction="column">
-                      <Text style="h6">ARB</Text>
-                      <Text>{formatBN(preparedData?.result?.[2], 2, 18)}</Text>
-                    </Flex>
-                  )}
                 </Flex>
               </Flex>
               <Flex
@@ -246,13 +232,11 @@ const ClaimList = () => {
                 <Text style="subtitle1" css={{ fontWeight: 'bold' }}>{`${
                   formatBN(
                     BigInt(wethPrice?.nativePrice || 0) +
-                    BigInt(nftePrice?.nativePrice || 0) +
-                    BigInt(arbPrice?.nativePrice || 0)
+                    BigInt(nftePrice?.nativePrice || 0)
                     , 2, 18, { notation: "standard" }
                   )} ($${formatBN(
                   BigInt(wethPrice?.usdPrice || 0) +
-                  BigInt(nftePrice?.usdPrice || 0) +
-                  BigInt(arbPrice?.usdPrice || 0),
+                  BigInt(nftePrice?.usdPrice || 0),
                   2, 6, { notation: "standard" }
                 )})`}</Text>
               </Flex>

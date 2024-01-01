@@ -24,7 +24,7 @@ import {formatBN} from "utils/numbers";
 import {roundToWeek} from "utils/round";
 
 import NFTEOFTAbi from 'artifact/NFTEOFTAbi'
-import xNFTEAbi from "artifact/xNFTEAbi";
+import xNFTEAbi from "artifact/veNFTEAbi";
 import AddressCollapsible from "../../components/staking/AddressCollapsible";
 import AlertChainSwitch from "../../components/common/AlertChainSwitch";
 import Decimal from "decimal.js-light";

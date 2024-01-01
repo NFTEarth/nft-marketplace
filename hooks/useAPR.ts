@@ -5,7 +5,7 @@ import {arbitrum} from "viem/chains";
 import useUSDAndNativePrice from "./useUSDAndNativePrice";
 
 import FeeDistributorAbi from "../artifact/FeeDistributorAbi";
-import xNFTEAbi from "../artifact/xNFTEAbi";
+import xNFTEAbi from "../artifact/veNFTEAbi";
 import NFTELPAbi from "../artifact/NFTELPAbi";
 import UniswapV3Abi from "../artifact/UniswapV3Abi";
 

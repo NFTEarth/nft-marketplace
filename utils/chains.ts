@@ -222,7 +222,7 @@ export type OFTChain = {
   routePrefix?: string
   address: `0x${string}`
   LPNFTE?: `0x${string}`
-  xNFTE?: `0x${string}`
+  veNFTE?: `0x${string}`
   uniProxy?: `0x${string}`
   feeDistributor?: `0x${string}`
   lightIconUrl: string
@@ -231,18 +231,18 @@ export type OFTChain = {
 }
 
 export const DefaultOFTChain: OFTChain = {
-  id: arbitrum.id,
-  lzId: 110,
-  name: arbitrum.name,
-  routePrefix: 'arbitrum',
-  address: '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
-  LPNFTE: '0x82496243c0a1a39c5c6250bf0115c134Ba76698c',
-  xNFTE: '0xE57bd15448C3b2D1dBAD598775DD2F36F93EBf90',
-  feeDistributor: '0x9138A2e628f92a42397B3B600E86047AE49aCa98',
-  uniProxy: '0x82FcEB07a4D01051519663f6c1c919aF21C27845',
-  lightIconUrl: '/icons/arbitrum-icon-dark.svg',
-  darkIconUrl: '/icons/arbitrum-icon-light.svg',
-  coingeckoNetworkId: 'arbitrum-one'
+  id: base.id,
+  lzId: 184,
+  name: base.name,
+  routePrefix: 'base',
+  address: '0xc2106ca72996e49bBADcB836eeC52B765977fd20',
+  LPNFTE: '0xd00CD4363bCF7DC19E84fDB836ce28D24F00716c',
+  veNFTE: '0xc526C83849Fb4424e4563A3b609a4eBf916cf6d0',
+  feeDistributor: '0x99032fD0727dEd2a579dcB447e85359ddE9223B6',
+  /*uniProxy: '0x82FcEB07a4D01051519663f6c1c919aF21C27845',*/
+  lightIconUrl: '/icons/base-icon-dark.svg',
+  darkIconUrl: '/icons/base-icon-light.svg',
+  coingeckoNetworkId: 'base'
 }
 
 export const OFT_CHAINS : OFTChain[] = [
@@ -309,6 +309,19 @@ export const OFT_CHAINS : OFTChain[] = [
      lightIconUrl: '/icons/linea-icon-dark.svg',
      darkIconUrl: '/icons/linea-icon-light.svg',
      coingeckoNetworkId: 'linea'
+  },
+  { id: arbitrum.id,
+  lzId: 110,
+  name: arbitrum.name,
+  routePrefix: 'arbitrum',
+  address: '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
+  LPNFTE: '0x82496243c0a1a39c5c6250bf0115c134Ba76698c',
+  veNFTE: '0xE57bd15448C3b2D1dBAD598775DD2F36F93EBf90',
+  feeDistributor: '0x9138A2e628f92a42397B3B600E86047AE49aCa98',
+  /*uniProxy: '0x82FcEB07a4D01051519663f6c1c919aF21C27845',*/
+  lightIconUrl: '/icons/arbitrum-icon-dark.svg',
+  darkIconUrl: '/icons/arbitrum-icon-light.svg',
+  coingeckoNetworkId: 'arbitrum-one'
   },
   /*{
     id: polygonZkEvm.id,
@@ -453,7 +466,7 @@ export default [
      collectionSetId: process.env.NEXT_PUBLIC_BSC_COLLECTION_SET_ID,
      community: process.env.NEXT_PUBLIC_BSC_COMMUNITY,
    },
-  */{
+  {
      ...base,
      lightIconUrl: '/icons/base-icon-dark.svg',
      darkIconUrl: '/icons/base-icon-light.svg',
@@ -464,7 +477,7 @@ export default [
      coingeckoId: 'base',
      collectionSetId: process.env.NEXT_PUBLIC_BASE_COLLECTION_SET_ID,
      community: process.env.NEXT_PUBLIC_BASE_COMMUNITY,
-   },
+   },*/
    {
      ...linea,
      lightIconUrl: '/icons/linea-icon-dark.svg',

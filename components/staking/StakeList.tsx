@@ -6,6 +6,7 @@ import {Box, Button, CryptoCurrencyIcon, Flex, Text} from "../primitives";
 
 import {formatBN} from "utils/numbers";
 import dayjs from "dayjs";
+import { base } from "utils/chains";
 
 type Props = {
   lockedBalance: bigint
@@ -46,8 +47,8 @@ const StakeList : FC<Props> = (props) => {
             }}
           >
             <CryptoCurrencyIcon
-              address="0x82496243c0a1a39c5c6250bf0115c134Ba76698c"
-              chainId={arbitrum.id}
+              address="0xd00CD4363bCF7DC19E84fDB836ce28D24F00716c"
+              chainId={base.id}
               css={{
                 width: 20,
                 height: 20
@@ -62,8 +63,8 @@ const StakeList : FC<Props> = (props) => {
                 borderRadius: 8
               }}
             >
-              <img src="/icons/arbitrum-icon-dark.svg" width={14} height={14}  alt="Arbitrum"/>
-              <Text style="body3" color="dark">Arbitrum</Text>
+              <img src="/icons/base-icon-dark.svg" width={14} height={14}  alt="Base"/>
+              <Text style="body3" color="dark">Base</Text>
             </Flex>
           </Flex>
           <Flex

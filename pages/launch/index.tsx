@@ -26,14 +26,14 @@ import ClaimList from "components/staking/ClaimList";
 
 import {useAPR, useMounted, useStakingLP} from "hooks";
 
-import {OFT_CHAINS} from "utils/chains";
+import {OFT_CHAINS, base} from "utils/chains";
 import {formatBN} from "utils/numbers";
 
 import ERC20Abi from 'artifact/ERC20Abi'
-import xNFTEAbi from 'artifact/xNFTEAbi'
+import veNFTEAbi from 'artifact/veNFTEAbi'
 
 const LaunchPage = () => {
-  const chain = OFT_CHAINS.find((chain) => chain.id === arbitrum.id)
+  const chain = OFT_CHAINS.find((chain) => chain.id === base.id)
   const isMounted = useMounted()
   const [activeTab, setActiveTab] = useState('stakes')
   const { APR } = useAPR(undefined, chain || OFT_CHAINS[0])
@@ -45,29 +45,29 @@ const LaunchPage = () => {
       {
         abi: ERC20Abi,
         address: chain?.LPNFTE as `0x${string}`,
-        chainId: arbitrum.id,
+        chainId: base.id,
         functionName: 'balanceOf',
         args: [address as `0x${string}`]
       },
-      // xNFTE Balance
+      // veNFTE Balance
       {
         abi: ERC20Abi,
-        address: chain?.xNFTE as `0x${string}`,
-        chainId: arbitrum.id,
+        address: chain?.veNFTE as `0x${string}`,
+        chainId: base.id,
         functionName: 'balanceOf',
         args: [address as `0x${string}`],
       },
-      // xNFTE TotalSupply
+      // veNFTE TotalSupply
       {
         abi: ERC20Abi,
-        address: chain?.xNFTE as `0x${string}`,
+        address: chain?.veNFTE as `0x${string}`,
         functionName: 'totalSupply',
         chainId: arbitrum.id,
       },
-      // xNFTE Locked
+      // veNFTE Locked
       {
-        abi: xNFTEAbi,
-        address: chain?.xNFTE as `0x${string}`,
+        abi: veNFTEAbi,
+        address: chain?.veNFTE as `0x${string}`,
         functionName: 'locked',
         chainId: arbitrum.id,
         args: [address as `0x${string}`],
@@ -78,7 +78,7 @@ const LaunchPage = () => {
     enabled: !!address,
   })
 
-  const [nfteLPBalance, xNfteBalance, totalSupplyXNfte, locked] = nfteData || []
+  const [nfteLPBalance, veNfteBalance, totalSupplyVeNfte, locked] = nfteData || []
 
   const stakingTitle = useMemo(() => {
     if (BigInt(nfteLPBalance?.result || 0) === BigInt(0) && BigInt(locked?.result?.[0] || 0) === BigInt(0)) {
@@ -87,7 +87,7 @@ const LaunchPage = () => {
           direction="column"
         >
           <Text style="h4">You don’t have any NFTE/WETH LP tokens to stake in your wallet.</Text>
-          <Text css={{ maxWidth: '75%' }}>{`xNFTE holders earn all revenue that is shared from the NFTEarth DAO. Governance is controlled entirely by xNFTE holders.`}</Text>
+          <Text css={{ maxWidth: '75%' }}>{`veNFTE holders earn all revenue that is shared from the NFTEarth DAO. Governance is controlled entirely by veNFTE holders.`}</Text>
           <Flex css={{ mt: 20}}>
             <Button
               color="primary"
@@ -106,7 +106,7 @@ const LaunchPage = () => {
         <Text style="h4">
           {`You have `}
           <Text style="h4" color="primary">
-            {`${formatBN(xNfteBalance?.result || 0n, 2, 18, {})} xNFTE`}
+            {`${formatBN(veNfteBalance?.result || 0n, 2, 18, {})} veNFTE`}
           </Text>
           {` and `}
           <Text style="h4" color="primary">
@@ -114,7 +114,7 @@ const LaunchPage = () => {
           </Text>
           {` available to stake.`}
         </Text>
-        <Text css={{ maxWidth: '75%' }}>{`xNFTE holders earn all revenue that is shared from the NFTEarth DAO. Governance is controlled entirely by xNFTE holders.`}</Text>
+        <Text css={{ maxWidth: '75%' }}>{`veNFTE holders earn all revenue that is shared from the NFTEarth DAO. Governance is controlled entirely by veNFTE holders.`}</Text>
         <Flex css={{ mt: 20}}>
           <Button
             color="primary"
@@ -125,7 +125,7 @@ const LaunchPage = () => {
       </Flex>
     );
 
-  }, [nfteLPBalance, xNfteBalance, totalSupplyXNfte])
+  }, [nfteLPBalance, veNfteBalance, totalSupplyVeNfte])
 
   const stakedPercent = useMemo(() => {
     return (+formatEther(lp?.totalStaked || 0n) / +formatEther(lp?.totalSupply || 1n)) * 100
@@ -269,7 +269,7 @@ const LaunchPage = () => {
             </Flex>
           </Flex>
           <Flex align="start" css={{ width: '100%' }}>
-            <Text style="subtitle1">xNFTE Staking Overview</Text>
+            <Text style="subtitle1">veNFTE Staking Overview</Text>
           </Flex>
           <Flex css={{
             flexDirection: 'column',
@@ -299,7 +299,7 @@ const LaunchPage = () => {
                 >
                   <CryptoCurrencyIcon
                     address={chain?.LPNFTE || zeroAddress}
-                    chainId={arbitrum.id}
+                    chainId={base.id}
                     css={{
                       width: 20,
                       height: 20
@@ -344,7 +344,7 @@ const LaunchPage = () => {
                 >
                   <CryptoCurrencyIcon
                     address={chain?.LPNFTE || zeroAddress}
-                    chainId={arbitrum.id}
+                    chainId={base.id}
                     css={{
                       width: 20,
                       height: 20
@@ -381,14 +381,14 @@ const LaunchPage = () => {
                   }}
                 >
                   <CryptoCurrencyIcon
-                    address={chain?.xNFTE || zeroAddress}
-                    chainId={arbitrum.id}
+                    address={chain?.veNFTE || zeroAddress}
+                    chainId={base.id}
                     css={{
                       width: 20,
                       height: 20
                     }}
                   />
-                  <Text style="body4">Total xNFTE</Text>
+                  <Text style="body4">Total veNFTE</Text>
                 </Flex>
               </Flex>
               <FormatCrypto
@@ -405,7 +405,7 @@ const LaunchPage = () => {
                   textAlign: 'right',
                   width: '100%'
                 }}
-                amount={totalSupplyXNfte?.result || 0n}
+                amount={totalSupplyVeNfte?.result || 0n}
               />
             </Flex>
             <Flex css={{
@@ -463,7 +463,7 @@ const LaunchPage = () => {
                     textDecoration: 'underline'
                   }
                 }}
-              >{`Learn more about xNFTE in our docs`}</Text>
+              >{`Learn more about veNFTE in our docs`}</Text>
               <Flex
                 css={{
                   flexWrap: 'wrap',
@@ -489,7 +489,7 @@ const LaunchPage = () => {
                     textStyle="h6"
                     logoHeight={20}
                     address={chain?.LPNFTE || zeroAddress}
-                    chainId={arbitrum.id}
+                    chainId={base.id}
                   />
                 </div>
                 <div>
@@ -499,12 +499,12 @@ const LaunchPage = () => {
                       mb: '0.5625rem',
                       display: 'inline-block'
                     }}
-                  >My xNFTE Balance</Text>
+                  >My veNFTE Balance</Text>
                   <FormatCryptoCurrency
-                    amount={xNfteBalance?.result || 0n}
+                    amount={veNfteBalance?.result || 0n}
                     textStyle="h6"
                     logoHeight={20}
-                    address={chain?.xNFTE || zeroAddress}
+                    address={chain?.veNFTE || zeroAddress}
                     chainId={arbitrum.id}
                   />
                 </div>

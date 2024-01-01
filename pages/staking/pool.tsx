@@ -35,8 +35,8 @@ import LoadingSpinner from "../../components/common/LoadingSpinner";
 import AddressCollapsible from "../../components/staking/AddressCollapsible";
 import AlertChainSwitch from "../../components/common/AlertChainSwitch";
 
-const WETH_ADDRESS = '0x82af49447d8a07e3bd95bd0d56f35241523fbab1'
-const POOL_ADDRESS = '0x17ee09e7a2cc98b0b053b389a162fc86a67b9407'
+const WETH_ADDRESS = '0x4200000000000000000000000000000000000006'
+const POOL_ADDRESS = '0xd00CD4363bCF7DC19E84fDB836ce28D24F00716c'
 
 const PoolPage = () => {
   const mounted = useMounted()
@@ -164,7 +164,7 @@ const PoolPage = () => {
   }, [changedValue, wethValue, nfteValue], 1000)
 
   const { config, error: preparedError, refetch: refetchPrepareContract } = usePrepareContractWrite({
-    enabled: !!address && !!chain?.xNFTE && !isZeroValue,
+    enabled: !!address && !!chain?.veNFTE && !isZeroValue,
     address: chain?.uniProxy as `0x${string}`,
     abi: UniProxyAbi,
     functionName: 'deposit',

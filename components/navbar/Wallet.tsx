@@ -31,10 +31,10 @@ const currencies = [
   {
     address: zeroAddress,
     symbol: 'ETH',
-    decimals: arbitrum.nativeCurrency.decimals,
+    decimals: base.nativeCurrency.decimals,
     chain: {
-      id: arbitrum.id,
-      name: arbitrum.name,
+      id: base.id,
+      name: base.name,
     },
     coinGeckoId: 'ethereum',
   },
@@ -48,7 +48,7 @@ const currencies = [
     },
     coinGeckoId: 'matic-network',
   },
-  {
+ /* {
     address: zeroAddress,
     symbol: 'ETH',
     decimals: base.nativeCurrency.decimals,
@@ -56,8 +56,8 @@ const currencies = [
       id: base.id,
       name: base.name,
     },
-    coinGeckoId: 'ethereum',
-  },
+    coinGeckoId: 'ethereum',*/
+  
   /*{
     address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
     symbol: 'WETH',
@@ -213,10 +213,6 @@ const Wallet : FC<WalletProps> = ({ exp }) => {
             balance = ethBalance.data?.value || 0n
             break
            }
-          case arbitrum.id: {
-            balance = arbitrumBalance.data?.value || 0n
-            break
-          }
           case optimism.id: {
             balance = optimismBalance.data?.value || 0n
             break
