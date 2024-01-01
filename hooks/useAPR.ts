@@ -1,11 +1,10 @@
 import {useContractReads} from "wagmi";
 import {formatUnits} from "viem";
-import {arbitrum} from "viem/chains";
-
+import { base } from "../utils/chains";
 import useUSDAndNativePrice from "./useUSDAndNativePrice";
 
 import FeeDistributorAbi from "../artifact/FeeDistributorAbi";
-import xNFTEAbi from "../artifact/veNFTEAbi";
+import veNFTEAbi from "../artifact/veNFTEAbi";
 import NFTELPAbi from "../artifact/NFTELPAbi";
 import UniswapV3Abi from "../artifact/UniswapV3Abi";
 
@@ -37,8 +36,8 @@ const useAPR = (timestamp: number = dayjs().startOf('day').toDate().getTime(), c
         args: [chain?.address as `0x${string}`, BigInt(`${previousWeekUnix}`)],
       },
       {
-        abi: xNFTEAbi,
-        address: chain?.xNFTE as `0x${string}`,
+        abi: veNFTEAbi,
+        address: chain?.veNFTE as `0x${string}`,
         functionName: 'totalSupply',
         chainId: chain?.id,
       },
@@ -63,18 +62,18 @@ const useAPR = (timestamp: number = dayjs().startOf('day').toDate().getTime(), c
   const [distributedWeth, distributedNFTE, totalSupplyXNfte, basePositionLP, liquidity] = data || []
 
   const { data: wethPrice, isLoading: isLoadingWethPrice } = useUSDAndNativePrice({
-    chainId: arbitrum.id,
+    chainId: base.id,
     contract: WETH_ADDRESS,
     price: distributedWeth?.result || BigInt(0)
   })
 
   const { data: nftePrice, isLoading: isLoadingNFTEPrice } = useUSDAndNativePrice({
-    chainId: arbitrum.id,
+    chainId: base.id,
     contract: chain.address,
     price: distributedNFTE?.result || BigInt(0)
   })
 
-  const xNfteSupply = parseFloat(formatUnits(totalSupplyXNfte?.result || BigInt(0), 18))
+  const veNfteSupply = parseFloat(formatUnits(totalSupplyXNfte?.result || BigInt(0), 18))
   const lastWeekWethRevenue =  parseFloat(formatUnits(BigInt(wethPrice?.usdPrice || 0), 8) || '0')
   const lastWeekNFTERevenue =  parseFloat(formatUnits(BigInt(nftePrice?.usdPrice || 0), 8) || '0')
 
@@ -82,7 +81,7 @@ const useAPR = (timestamp: number = dayjs().startOf('day').toDate().getTime(), c
   const dailyRevenue = lastWeekRevenue / 7;
   const nFTELPLiquidity = parseFloat(formatUnits((basePositionLP?.result?.[0] || BigInt(0)) + (liquidity?.result || BigInt(0)), 18))
   const APR = Math.round(
-    (10000 * (365 * dailyRevenue)) / (nFTELPLiquidity * xNfteSupply)
+    (10000 * (365 * dailyRevenue)) / (nFTELPLiquidity * veNfteSupply)
   ) * 52
 
   return {

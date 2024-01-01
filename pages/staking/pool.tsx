@@ -23,7 +23,7 @@ import NumericalInput from "components/bridge/NumericalInput";
 import {ToastContext} from "context/ToastContextProvider";
 import {useMarketplaceChain, useMounted} from "hooks";
 
-import {OFT_CHAINS} from "utils/chains";
+import {OFT_CHAINS, base} from "utils/chains";
 import {parseError} from "utils/error";
 import {formatBN} from "utils/numbers";
 
@@ -54,7 +54,6 @@ const PoolPage = () => {
     'NFTE': chain?.address as string,
     'WETH': WETH_ADDRESS as string,
     'NFTE/WETH LP': chain?.LPNFTE as string,
-    'UniProxy': chain?.uniProxy as string,
     'Pool': POOL_ADDRESS as string
   }
 
@@ -91,7 +90,7 @@ const PoolPage = () => {
   })
 
   const { data: usdPrice, isLoading: isLoadingUSDPrice } = useUSDAndNativePrice({
-    chainId: arbitrum.id,
+    chainId: base.id,
     contract: WETH_ADDRESS,
     price: expectedNFTELP
   })
@@ -321,13 +320,13 @@ const PoolPage = () => {
               >
                 <Text css={{ fontSize: 'inherit' }}>{`Add Liquidity Successful`}</Text>
                 <Link
-                  href={`${arbitrum.blockExplorers.etherscan.url}/tx/${tx?.hash}`}
+                  href={`${base.blockExplorers.etherscan.url}/tx/${tx?.hash}`}
                   target="_blank"
                   style={{
                     marginTop: 20
                   }}
                 >
-                  {`See Tx Receipt`}
+                  {`View Tx Receipt`}
                   <FontAwesomeIcon
                     icon={faExternalLink}
                     width={15}
@@ -358,7 +357,7 @@ const PoolPage = () => {
 
   return (
     <Layout>
-      <AlertChainSwitch chainId={arbitrum.id}/>
+      <AlertChainSwitch chainId={base.id}/>
       <Flex
         direction="column"
         css={{
@@ -423,8 +422,8 @@ const PoolPage = () => {
                 borderRadius: 8
               }}
             >
-              <img src="/icons/arbitrum-icon-dark.svg" width={14} height={14}  alt="Arbitrum"/>
-              <Text style="body3" color="dark">Arbitrum</Text>
+              <img src="/icons/base-icon-dark.svg" width={14} height={14}  alt="Base"/>
+              <Text style="body3" color="dark">Base</Text>
             </Flex>
           </Flex>
           <Flex
@@ -509,7 +508,7 @@ const PoolPage = () => {
                   <Text
                     as={Link}
                     style="body3"
-                    href="https://swap.defillama.com/?chain=arbitrum&to=0x82af49447d8a07e3bd95bd0d56f35241523fbab1"
+                    href="https://www.sushi.com/swap?chainId=8453&token1=0x4200000000000000000000000000000000000006"
                     target="_blank"
                     css={{
                       backgroundColor: '$gray8',
@@ -529,7 +528,7 @@ const PoolPage = () => {
                   <Text
                     as={Link}
                     style="body3"
-                    href="https://swap.defillama.com/?chain=arbitrum&to=0x51b902f19a56f0c8e409a34a215ad2673edf3284"
+                    href="https://www.sushi.com/swap?chainId=8453&token1=0xc2106ca72996e49bBADcB836eeC52B765977fd20"
                     target="_blank"
                     css={{
                       backgroundColor: '$gray8',
@@ -695,7 +694,7 @@ const PoolPage = () => {
             }
           }}
         >
-          <Text style="body3"><h2> 1. Add liquidity to the NFTE-WETH pool on Uniswap. </h2>2. Lock up the resulting NFTE/WETH LP token received (NFTE/WETH LP). <br></br> 3. The longer you lock your NFTE/WETH LP token (1 year max), the more xNFTE you get, and the greater your rewards and voting power. <Text style="body3" as={Link} css={{ fontWeight: 'bold', '&:hover': { textDecoration: 'underline' } }} href="https://docs.nftearth.exchange/nfte-token/xnfte-and-nfte-staking" target="_blank"><h1>Learn more about xNFTE staking in the docs.</h1></Text></Text>
+          <Text style="body3"><h2> 1. Add liquidity to the NFTE-WETH pool on SushiSwap. </h2>2. Lock up the resulting NFTE/WETH LP token received (NFTE/WETH LP). <br></br> 3. The longer you lock your NFTE/WETH LP token (1 year max), the more veNFTE you get, and the greater your rewards and voting power. <Text style="body3" as={Link} css={{ fontWeight: 'bold', '&:hover': { textDecoration: 'underline' } }} href="https://docs.nftearth.exchange/nfte-token/xnfte-and-nfte-staking" target="_blank"><h1>Learn more about veNFTE staking in the docs.</h1></Text></Text>
         </Flex>
       </Flex>
     </Layout>
