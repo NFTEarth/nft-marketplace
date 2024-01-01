@@ -19,19 +19,19 @@ import UnStakingTab from "components/staking/UnstakingTab";
 
 import {useMounted} from "hooks";
 
-import {OFT_CHAINS, OFTChain} from "utils/chains";
+import {base, OFT_CHAINS, OFTChain} from "utils/chains";
 import {formatBN} from "utils/numbers";
 import {roundToWeek} from "utils/round";
 
-import NFTEOFTAbi from 'artifact/NFTEOFTAbi'
-import xNFTEAbi from "artifact/veNFTEAbi";
+import NFTEOFTAbi from 'artifact/NFTEOFTAbi';
 import AddressCollapsible from "../../components/staking/AddressCollapsible";
 import AlertChainSwitch from "../../components/common/AlertChainSwitch";
 import Decimal from "decimal.js-light";
+import veNFTEAbi from "artifact/veNFTEAbi"
 
-const POOL_ADDRESS = '0x17ee09e7a2cc98b0b053b389a162fc86a67b9407'
+const POOL_ADDRESS = '0xd00CD4363bCF7DC19E84fDB836ce28D24F00716c'
 export const MAX_LOCK_PERIOD_IN_DAYS = 365; // 1y
-export const MIN_LOCK_PERIOD_IN_DAYS = 28;
+export const MIN_LOCK_PERIOD_IN_DAYS = 7;
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -48,14 +48,14 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
 
   const addresses: Record<string, string> = {
     'NFTE': chain?.address as string,
-    'xNFTE': chain?.xNFTE as string,
+    'veNFTE': chain?.veNFTE as string,
     'NFTE/WETH LP Token': chain?.LPNFTE as string,
   }
 
   const { data: nfteData } : { data: any } = useContractReads<
     [
       ContractFunctionConfig<typeof NFTEOFTAbi, 'balanceOf', 'view'>,
-      ContractFunctionConfig<typeof xNFTEAbi, 'locked', 'view'>,
+      ContractFunctionConfig<typeof veNFTEAbi, 'locked', 'view'>,
     ]
     >({
     contracts: [
@@ -67,10 +67,10 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
         functionName: 'balanceOf',
         args: [address as `0x${string}`]
       },
-      // xNFTE Locked
+      // veNFTE Locked
       {
-        abi: xNFTEAbi,
-        address: chain?.xNFTE as `0x${string}`,
+        abi: veNFTEAbi,
+        address: chain?.veNFTE as `0x${string}`,
         functionName: 'locked',
         chainId: arbitrum.id,
         args: [address as `0x${string}`],
@@ -378,7 +378,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
         </Flex>
         <AddressCollapsible
           addresses={addresses}
-          chain={arbitrum}
+          chain={base}
         />
       </Flex>
     </Layout>
