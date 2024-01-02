@@ -91,7 +91,7 @@ const LaunchPage = () => {
             <Button
               color="primary"
               as={Link}
-              href="/staking/pool"
+              href="https://www.sushi.com/pool/add/v2/8453"
             >Get NFTE/WETH LP</Button>
           </Flex>
         </Flex>
@@ -118,7 +118,7 @@ const LaunchPage = () => {
           <Button
             color="primary"
             as={Link}
-            href="/staking/pool"
+            href="https://www.sushi.com/pool/add/v2/8453"
           >Get NFTE/WETH LP</Button>
         </Flex>
       </Flex>

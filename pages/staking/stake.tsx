@@ -22,7 +22,7 @@ import veNFTEAbi from "artifact/veNFTEAbi";
 import AddressCollapsible from "../../components/staking/AddressCollapsible";
 import AlertChainSwitch from "../../components/common/AlertChainSwitch";
 import Decimal from "decimal.js-light";
-import {NFTEOFT, NFTE_LP, VE_NFTE} from "../../utils/contracts";
+import {NFTEOFT, NFTE_LP, VE_NFTE } from "../../utils/contracts";
 import { base } from "utils/chains";
 import { parseUnits } from "viem";
 
