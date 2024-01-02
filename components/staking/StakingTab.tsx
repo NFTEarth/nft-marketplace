@@ -29,9 +29,7 @@ import veNFTEAbi from 'artifact/veNFTEAbi'
 import {getPublicClient} from "@wagmi/core";
 import {roundToWeek} from "../../utils/round";
 import Link from "next/link";
-import { mainnet } from "viem/chains";
 import Decimal from "decimal.js-light";
-import {useAPR} from "../../hooks";
 import {NFTE_LP, VE_NFTE} from "../../utils/contracts";
 import {MaxUint256} from "@ethersproject/constants";
 
