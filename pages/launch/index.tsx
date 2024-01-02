@@ -258,8 +258,7 @@ const LaunchPage = () => {
                   )}
                   {activeTab === 'staking' && (
                     <StakingList
-                      nfteLPBalance={nfteLPBalance?.result || BigInt(0)}
-                    />
+                      nfteLPBalance={nfteLPBalance?.result || BigInt(0)} APR={0}                    />
                   )}
                   {activeTab === 'claim' && (
                     <ClaimList />

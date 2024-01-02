@@ -36,7 +36,6 @@ const StakingPage = () => {
   const chain = OFT_CHAINS.find((chain) => chain.id === base.id)
   const isMounted = useMounted()
   const [activeTab, setActiveTab] = useState('stakes')
-  const { APR } = useAPR(undefined, chain || OFT_CHAINS[0])
   const { address } = useAccount()
   const { data: lp } = useStakingLP(chain?.LPNFTE, { refreshInterval: 5000 })
   const { data: nfteData } : { data: any } = useContractReads({

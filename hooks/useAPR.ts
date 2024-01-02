@@ -1,4 +1,4 @@
-import {useContractReads} from "wagmi";
+/*import {useContractReads} from "wagmi";
 import {formatUnits} from "viem";
 import { base } from "../utils/chains";
 import useUSDAndNativePrice from "./useUSDAndNativePrice";
@@ -6,7 +6,7 @@ import useUSDAndNativePrice from "./useUSDAndNativePrice";
 import FeeDistributorAbi from "../artifact/FeeDistributorAbi";
 import veNFTEAbi from "../artifact/veNFTEAbi";
 import NFTELPAbi from "../artifact/NFTELPAbi";
-import UniswapV3Abi from "../artifact/UniswapV3Abi";
+import NFTEOFTAbi from "artifact/NFTEOFTAbi";
 import UniswapV2RouterAbi from "artifact/UniswapV2RouterAbi";
 
 import {OFTChain} from "../utils/chains";
@@ -42,25 +42,13 @@ const useAPR = (timestamp: number = dayjs().startOf('day').toDate().getTime(), c
         functionName: 'totalSupply',
         chainId: chain?.id,
       },
-      {
-        abi: UniswapV2RouterAbi,
-        address: chain?.LPNFTE as `0x${string}`,
-        functionName: 'addLiquidityETH',
-        chainId: chain?.id,
-      },
-      {
-        abi: UniswapV3Abi,
-        address: POOL_ADDRESS as `0x${string}`,
-        functionName: 'liquidity',
-        chainId: chain?.id,
-      }
     ],
     allowFailure: true,
     watch: false,
     keepPreviousData: true
   })
 
-  const [distributedWeth, distributedNFTE, totalSupplyXNfte, basePositionLP, liquidity] = data || []
+  const [distributedWeth, distributedNFTE, totalSupplyXNfte,] = data || []
 
   const { data: wethPrice, isLoading: isLoadingWethPrice } = useUSDAndNativePrice({
     chainId: base.id,
@@ -96,4 +84,4 @@ const useAPR = (timestamp: number = dayjs().startOf('day').toDate().getTime(), c
   }
 }
 
-export default useAPR;
+export default useAPR;*/

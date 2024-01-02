@@ -52,7 +52,6 @@ const StakingTab: FC<Props> = (props) => {
   const { openConnectModal } = useConnectModal()
   const publicClient = getPublicClient()
   const {addToast} = useContext(ToastContext)
-  const { APR } = useAPR(undefined, base)
 
   const valueBn = parseEther((new Decimal(value)).toFixed() as `${number}`)
   const timeStamp = parseInt(`${depositor?.lockEndTimestamp || 0}`);
