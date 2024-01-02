@@ -172,7 +172,7 @@ const Navbar = () => {
             </DropdownMenuItem>
             <DropdownMenuItem
               as={Link}
-              href="/staking"
+              href="https://www.sushi.com/pool/add/v2/8453"
               css={{
                 display: 'flex',
                 py: '$3',

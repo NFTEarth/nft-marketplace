@@ -257,6 +257,15 @@ export const OFT_CHAINS : OFTChain[] = [
     coingeckoNetworkId: 'arbitrum-nova'
   },*/
   {
+    id: optimism.id,
+    lzId: 111,
+    name: optimism.name,
+    address: '0x8637725aDa78db0674a679CeA2A5e0A0869EF4A1',
+    lightIconUrl: '/icons/optimism-icon-dark.svg',
+    darkIconUrl: '/icons/optimism-icon-light.svg',
+    coingeckoNetworkId: 'optimistic-ethereum'
+  },
+  {
     id: polygon.id,
     lzId: 109,
     name: polygon.name,
@@ -264,7 +273,29 @@ export const OFT_CHAINS : OFTChain[] = [
     lightIconUrl: '/icons/polygon-icon-dark.svg',
     darkIconUrl: '/icons/polygon-icon-light.svg',
     coingeckoNetworkId: 'polygon-pos'
- },
+  },
+  { id: arbitrum.id,
+    lzId: 110,
+    name: arbitrum.name,
+    routePrefix: 'arbitrum',
+    address: '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
+    LPNFTE: '0x82496243c0a1a39c5c6250bf0115c134Ba76698c',
+    veNFTE: '0xE57bd15448C3b2D1dBAD598775DD2F36F93EBf90',
+    feeDistributor: '0x9138A2e628f92a42397B3B600E86047AE49aCa98',
+    /*uniProxy: '0x82FcEB07a4D01051519663f6c1c919aF21C27845',*/
+    lightIconUrl: '/icons/arbitrum-icon-dark.svg',
+    darkIconUrl: '/icons/arbitrum-icon-light.svg',
+    coingeckoNetworkId: 'arbitrum-one'
+  },
+  {
+  id: linea.id,
+  lzId: 183,
+  name: linea.name,
+  address: '0x2140Ea50bc3B6Ac3971F9e9Ea93A1442665670e4',
+  lightIconUrl: '/icons/linea-icon-dark.svg',
+  darkIconUrl: '/icons/linea-icon-light.svg',
+  coingeckoNetworkId: 'linea'
+  },
   {
     id: mainnet.id,
     lzId: 101,
@@ -273,15 +304,6 @@ export const OFT_CHAINS : OFTChain[] = [
     lightIconUrl: '/icons/eth-icon-dark.svg',
     darkIconUrl: '/icons/eth-icon-light.svg',
     coingeckoNetworkId: 'ethereum'
-  },
-  {
-    id: optimism.id,
-    lzId: 111,
-    name: optimism.name,
-    address: '0x8637725aDa78db0674a679CeA2A5e0A0869EF4A1',
-    lightIconUrl: '/icons/optimism-icon-dark.svg',
-    darkIconUrl: '/icons/optimism-icon-light.svg',
-    coingeckoNetworkId: 'optimistic-ethereum'
   },
   /* {
      id: bsc.id,
@@ -300,30 +322,8 @@ export const OFT_CHAINS : OFTChain[] = [
     lightIconUrl: '/icons/base-icon-dark.svg',
     darkIconUrl: '/icons/base-icon-light.svg',
     coingeckoNetworkId: 'base'
-  },*/
+  },
   {
-     id: linea.id,
-     lzId: 183,
-     name: linea.name,
-     address: '0x2140Ea50bc3B6Ac3971F9e9Ea93A1442665670e4',
-     lightIconUrl: '/icons/linea-icon-dark.svg',
-     darkIconUrl: '/icons/linea-icon-light.svg',
-     coingeckoNetworkId: 'linea'
-  },
-  { id: arbitrum.id,
-  lzId: 110,
-  name: arbitrum.name,
-  routePrefix: 'arbitrum',
-  address: '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
-  LPNFTE: '0x82496243c0a1a39c5c6250bf0115c134Ba76698c',
-  veNFTE: '0xE57bd15448C3b2D1dBAD598775DD2F36F93EBf90',
-  feeDistributor: '0x9138A2e628f92a42397B3B600E86047AE49aCa98',
-  /*uniProxy: '0x82FcEB07a4D01051519663f6c1c919aF21C27845',*/
-  lightIconUrl: '/icons/arbitrum-icon-dark.svg',
-  darkIconUrl: '/icons/arbitrum-icon-light.svg',
-  coingeckoNetworkId: 'arbitrum-one'
-  },
-  /*{
     id: polygonZkEvm.id,
     lzId: 158,
     name: polygonZkEvm.name,
@@ -381,18 +381,7 @@ export const getAlchemyNetworkName = (chainId: number) => {
 
 export default [
   DefaultChain,
-  {
-    ...arbitrum,
-    lightIconUrl: '/icons/arbitrum-icon-dark.svg',
-    darkIconUrl: '/icons/arbitrum-icon-light.svg',
-    reservoirBaseUrl: 'https://api-arbitrum.reservoir.tools',
-    proxyApi: '/api/reservoir/arbitrum',
-    routePrefix: 'arbitrum',
-    apiKey: process.env.RESERVOIR_API_KEY,
-    coingeckoId: 'ethereum',
-    collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_COLLECTION_SET_ID,
-    community: process.env.NEXT_PUBLIC_ARBITRUM_COMMUNITY,
-  },
+
   /*{
     ...arbitrumNova,
     lightIconUrl: '/icons/arbitrum-nova-icon-dark.svg',
@@ -406,31 +395,6 @@ export default [
     community: process.env.NEXT_PUBLIC_ARBITRUM_NOVA_COMMUNITY,
   },*/
   {
-    ...mainnet,
-    name: 'Ethereum',
-    lightIconUrl: '/icons/eth-icon-dark.svg',
-    darkIconUrl: '/icons/eth-icon-light.svg',
-    reservoirBaseUrl: 'https://api.reservoir.tools',
-    proxyApi: '/api/reservoir/ethereum',
-    routePrefix: 'ethereum',
-    apiKey: process.env.RESERVOIR_API_KEY,
-    coingeckoId: 'ethereum',
-    collectionSetId: process.env.NEXT_PUBLIC_ETH_COLLECTION_SET_ID,
-    community: process.env.NEXT_PUBLIC_ETH_COMMUNITY,
-  },
-   {
-     ...polygon,
-     lightIconUrl: '/icons/polygon-icon-dark.svg',
-     darkIconUrl: '/icons/polygon-icon-light.svg',
-     reservoirBaseUrl: 'https://api-polygon.reservoir.tools',
-     proxyApi: '/api/reservoir/polygon',
-     routePrefix: 'polygon',
-     apiKey: process.env.RESERVOIR_API_KEY,
-     coingeckoId: 'matic-network',
-     collectionSetId: process.env.NEXT_PUBLIC_POLYGON_COLLECTION_SET_ID,
-     community: process.env.NEXT_PUBLIC_POLYGON_COMMUNITY,
-   },
-  /*{
     ...optimism,
     name: 'Optimism',
     lightIconUrl: '/icons/optimism-icon-dark.svg',
@@ -443,6 +407,57 @@ export default [
     collectionSetId: process.env.NEXT_PUBLIC_OPTIMISM_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_OPTIMISM_COMMUNITY,
   },
+  {
+    ...polygon,
+    lightIconUrl: '/icons/polygon-icon-dark.svg',
+    darkIconUrl: '/icons/polygon-icon-light.svg',
+    reservoirBaseUrl: 'https://api-polygon.reservoir.tools',
+    proxyApi: '/api/reservoir/polygon',
+    routePrefix: 'polygon',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'matic-network',
+    collectionSetId: process.env.NEXT_PUBLIC_POLYGON_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_POLYGON_COMMUNITY,
+  },
+  {
+    ...arbitrum,
+    lightIconUrl: '/icons/arbitrum-icon-dark.svg',
+    darkIconUrl: '/icons/arbitrum-icon-light.svg',
+    reservoirBaseUrl: 'https://api-arbitrum.reservoir.tools',
+    proxyApi: '/api/reservoir/arbitrum',
+    routePrefix: 'arbitrum',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_ARBITRUM_COMMUNITY,
+  },
+  {
+    ...linea,
+    lightIconUrl: '/icons/linea-icon-dark.svg',
+    darkIconUrl: '/icons/linea-icon-light.svg',
+    reservoirBaseUrl: 'https://api-linea.reservoir.tools',
+    proxyApi: '/api/reservoir/linea',
+    routePrefix: 'linea',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_LINEA_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_LINEA_COMMUNITY,
+  },
+  {
+    ...mainnet,
+    name: 'Ethereum',
+    lightIconUrl: '/icons/eth-icon-dark.svg',
+    darkIconUrl: '/icons/eth-icon-light.svg',
+    reservoirBaseUrl: 'https://api.reservoir.tools',
+    proxyApi: '/api/reservoir/ethereum',
+    routePrefix: 'ethereum',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_ETH_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_ETH_COMMUNITY,
+  },
+  
+
   // {
   //   ...zora,
   //   name: 'Zora',
@@ -477,18 +492,6 @@ export default [
      coingeckoId: 'base',
      collectionSetId: process.env.NEXT_PUBLIC_BASE_COLLECTION_SET_ID,
      community: process.env.NEXT_PUBLIC_BASE_COMMUNITY,
-   },*/
-   {
-     ...linea,
-     lightIconUrl: '/icons/linea-icon-dark.svg',
-     darkIconUrl: '/icons/linea-icon-light.svg',
-     reservoirBaseUrl: 'https://api-linea.reservoir.tools',
-     proxyApi: '/api/reservoir/linea',
-     routePrefix: 'linea',
-     apiKey: process.env.RESERVOIR_API_KEY,
-     coingeckoId: 'ethereum',
-     collectionSetId: process.env.NEXT_PUBLIC_LINEA_COLLECTION_SET_ID,
-     community: process.env.NEXT_PUBLIC_LINEA_COMMUNITY,
    },
     /*{
       ...polygonZkEvm,

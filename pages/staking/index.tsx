@@ -23,7 +23,7 @@ import StakingList from "components/staking/StakingList";
 import StakeList from "components/staking/StakeList";
 import ClaimList from "components/staking/ClaimList";
 
-import {useAPR, useMounted, useStakingLP} from "hooks";
+import { useMounted, useStakingLP} from "hooks";
 
 import {OFT_CHAINS} from "utils/chains";
 import {formatBN} from "utils/numbers";
@@ -422,7 +422,7 @@ const StakingPage = () => {
                     gap: 5
                   }}
                 >
-                  <Text style="body4">APR</Text>
+                  <Text style="body4"></Text>
                 </Flex>
               </Flex>
               <Text

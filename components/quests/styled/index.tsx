@@ -25,7 +25,7 @@ export const QuestGridheaderText = styled(Text, {
 
 export const QuestXPButton = styled(Box, {
     background: '$gray6',
-    border: '2px solid #6BE481',
+    border: '2px solid #0420FF',
     borderRadius: '10px',
     padding: '10px 30px',
 })

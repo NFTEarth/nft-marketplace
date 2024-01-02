@@ -24,7 +24,7 @@ import StakingList from "components/staking/StakingList";
 import StakeList from "components/staking/StakeList";
 import ClaimList from "components/staking/ClaimList";
 
-import {useAPR, useMounted, useStakingLP} from "hooks";
+import {useMounted, useStakingLP} from "hooks";
 
 import {OFT_CHAINS, base} from "utils/chains";
 import {formatBN} from "utils/numbers";
@@ -36,7 +36,6 @@ const LaunchPage = () => {
   const chain = OFT_CHAINS.find((chain) => chain.id === base.id)
   const isMounted = useMounted()
   const [activeTab, setActiveTab] = useState('stakes')
-  const { APR } = useAPR(undefined, chain || OFT_CHAINS[0])
   const { address } = useAccount()
   const { data: lp } = useStakingLP(chain?.LPNFTE, { refreshInterval: 5000 })
   const { data: nfteData } : { data: any } = useContractReads({
@@ -434,7 +433,7 @@ const LaunchPage = () => {
                   width: '100%'
                 }}
               >
-                {`${APR}%`}
+             
               </Text>
             </Flex>
             <Flex css={{

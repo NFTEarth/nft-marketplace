@@ -316,7 +316,7 @@ const PoolPage = () => {
               <Flex
                 direction="column"
               >
-                <Text css={{ fontSize: 'inherit' }}>{`Add Liquidity Successful`}</Text>
+                <Text css={{ fontSize: 'inherit' }}>{`Successfully Added Liquidity`}</Text>
                 <Link
                   href={`${base.blockExplorers.etherscan.url}/tx/${tx?.hash}`}
                   target="_blank"
@@ -692,7 +692,7 @@ const PoolPage = () => {
             }
           }}
         >
-          <Text style="body3"><h2> 1. Add liquidity to the NFTE-WETH pool on SushiSwap. </h2>2. Lock up the resulting NFTE/WETH LP token received (NFTE/WETH LP). <br></br> 3. The longer you lock your NFTE/WETH LP token (1 year max), the more veNFTE you get, and the greater your rewards and voting power. <Text style="body3" as={Link} css={{ fontWeight: 'bold', '&:hover': { textDecoration: 'underline' } }} href="https://docs.nftearth.exchange/nfte-token/xnfte-and-nfte-staking" target="_blank"><h1>Learn more about veNFTE staking in the docs.</h1></Text></Text>
+          <Text style="body3"><h2> 1. Add liquidity to the NFTE-WETH pool on SushiSwap to get NFTE LP Tokens. </h2>2. Lock your NFTE/WETH LP tokens received (NFTE/WETH LP). <br></br> 3. The longer you lock your NFTE/WETH LP tokens (1 year max), and the total amount locked determines the veNFTE you get. veNFTE is the key to greater rewards and voting power. <Text style="body3" as={Link} css={{ fontWeight: 'bold', '&:hover': { textDecoration: 'underline' } }} href="https://docs.nftearth.exchange/nfte-token/xnfte-and-nfte-staking" target="_blank"><h1>Learn more about veNFTE staking in the docs.</h1></Text></Text>
         </Flex>
       </Flex>
     </Layout>

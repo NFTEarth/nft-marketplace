@@ -190,7 +190,7 @@ const HamburgerMenu = () => {
                   Bridge NFTE
                 </Text>
               </Link>
-              <Link href="/staking" legacyBehavior>
+              <Link href="https://www.sushi.com/pool/add/v2/8453" legacyBehavior>
                 <Text
                   style="subtitle1"
                   css={{

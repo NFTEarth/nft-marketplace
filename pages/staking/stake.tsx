@@ -2,7 +2,7 @@ import {FC, useCallback, useEffect, useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faCircleInfo} from "@fortawesome/free-solid-svg-icons";
 import {useAccount, useContractReads} from "wagmi";
-import {ContractFunctionConfig, formatEther, parseUnits} from "viem";
+import {ContractFunctionConfig, formatEther} from "viem";
 import {useRouter} from "next/router";
 import Link from "next/link";
 import dayjs from "dayjs";
@@ -24,6 +24,7 @@ import AlertChainSwitch from "../../components/common/AlertChainSwitch";
 import Decimal from "decimal.js-light";
 import {NFTEOFT, NFTE_LP, VE_NFTE} from "../../utils/contracts";
 import { base } from "utils/chains";
+import { parseUnits } from "viem";
 
 export const MAX_LOCK_PERIOD_IN_DAYS = 365; // 1y
 export const MIN_LOCK_PERIOD_IN_DAYS = 7; // 1w
@@ -33,16 +34,16 @@ const StakingChainPage: FC = () => {
   const [activeTab, setActiveTab] = useState('staking')
   const [valueEth, setValueEth] = useState<string>('0')
   const [duration, setDuration] = useState<string>('0')
-  const [maxDuration, setMaxDuration] = useState<string>('52')
+  const [maxDuration, setMaxDuration] = useState<string>('365')
   const [enableUnStake, setEnableUnStake] = useState<boolean>(false)
   const { address } = useAccount()
   const mounted = useMounted()
   const router = useRouter()
 
   const addresses: Record<string, string> = {
-    'NFTEOFT': NFTEOFT,
-    'veNFTE': VE_NFTE,
+    'NFTE': NFTEOFT,
     'NFTE/WETH LP Token': NFTE_LP,
+    'veNFTE': VE_NFTE,
   }
 
   const { data: nfteData } : { data: any } = useContractReads<
@@ -96,18 +97,18 @@ const StakingChainPage: FC = () => {
     }
   }
 
-  const handleSetDuration = (val: string) => {
-    let newVal = parseInt(val)
-    if (newVal < 0) {
-      newVal = 0
-    }
+  function handleSetDuration(val: string) {
+        let newVal = parseInt(val);
+        if (newVal < 0) {
+            newVal = 0
+        }
 
-    if (newVal > +maxDuration) {
-      newVal = +maxDuration
-    }
+        if (newVal > +maxDuration) {
+            newVal = +maxDuration;
+        }
 
-    setDuration(`${newVal}`)
-  }
+        setDuration(`${newVal}`);
+    }
 
   const handleSetMaxValue = useCallback(() => {
     const val = new Decimal(formatEther(BigInt(nfteLPBalance?.result || 0), 'wei'))
