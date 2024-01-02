@@ -90,12 +90,14 @@ const StakingChainPage: FC = () => {
 
   const handleSetValue = (val: string) => {
     try {
-      parseUnits(val, 18);
+      const numVal = Number(val);
+      parseUnits(`${numVal}`, 18);
       setValueEth(val);
     } catch (e) {
       setValueEth('0');
     }
-  }
+  };
+  
 
   function handleSetDuration(val: string) {
         let newVal = parseInt(val);
