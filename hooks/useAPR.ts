@@ -1,4 +1,4 @@
-/*import {useContractReads} from "wagmi";
+import {useContractReads} from "wagmi";
 import {formatUnits} from "viem";
 import { base } from "../utils/chains";
 import useUSDAndNativePrice from "./useUSDAndNativePrice";
@@ -60,28 +60,6 @@ const useAPR = (timestamp: number = dayjs().startOf('day').toDate().getTime(), c
     chainId: base.id,
     contract: chain.address,
     price: distributedNFTE?.result || BigInt(0)
-  })
+  })}
 
-  const veNfteSupply = parseFloat(formatUnits(totalSupplyXNfte?.result || BigInt(0), 18))
-  const lastWeekWethRevenue =  parseFloat(formatUnits(BigInt(wethPrice?.usdPrice || 0), 8) || '0')
-  const lastWeekNFTERevenue =  parseFloat(formatUnits(BigInt(nftePrice?.usdPrice || 0), 8) || '0')
-
-  const lastWeekRevenue = (lastWeekWethRevenue + lastWeekNFTERevenue)
-  const dailyRevenue = lastWeekRevenue / 7;
-  const nFTELPLiquidity = parseFloat(formatUnits((basePositionLP?.result?.[0] || BigInt(0)) + (liquidity?.result || BigInt(0)), 18))
-  const APR = Math.round(
-    (10000 * (365 * dailyRevenue)) / (nFTELPLiquidity * veNfteSupply)
-  ) * 52
-
-  return {
-    isLoading: isLoading || isLoadingWethPrice || isLoadingNFTEPrice,
-    TVL: (basePositionLP?.result?.[0] || BigInt(0)),
-    dailyRevenue,
-    lastWeekRevenue,
-    dailyAPR: APR / 365,
-    weeklyAPR: (APR / 365) * 7,
-    APR
-  }
-}
-
-export default useAPR;*/
+export {}
