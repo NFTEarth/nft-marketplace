@@ -11,6 +11,8 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faExternalLink, faLock} from "@fortawesome/free-solid-svg-icons";
 import {ToastContext} from "../../context/ToastContextProvider";
 import {formatBN} from "../../utils/numbers";
+import NFTELPAbi from "artifact/NFTELPAbi";
+import UniswapV2RouterAbi from "artifact/UniswapV2RouterAbi";
 
 type UnStakingTabProps = {
   chain: OFTChain | null

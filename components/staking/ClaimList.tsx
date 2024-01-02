@@ -11,6 +11,8 @@ import Link from "next/link";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faExternalLink} from "@fortawesome/free-solid-svg-icons";
 import useUSDAndNativePrice from "../../hooks/useUSDAndNativePrice";
+import UniswapV2RouterAbi from "artifact/UniswapV2RouterAbi";
+import veNFTEAbi from "artifact/veNFTEAbi";
 
 const claimableTokens : `0x${string}`[] = [
   '0xc2106ca72996e49bBADcB836eeC52B765977fd20',
@@ -117,7 +119,7 @@ const ClaimList = () => {
             transition: 'border-color 0.3s',
             '&:hover': {
               backgroundColor: 'rgba(255,255,255,0.1)',
-              borderColor: '#79ffa8',
+              borderColor: '#0420FF',
             },
             '&:disabled': {
               backgroundColor: 'rgba(255,255,255,0.1)',
@@ -168,8 +170,8 @@ const ClaimList = () => {
                 borderRadius: 8
               }}
             >
-              <img src="/icons/base-icon-dark.svg" width={14} height={14}  alt="base"/>
-              <Text style="body3" color="dark">base</Text>
+              <img src="/icons/nfte-icon-dark.svg" width={14} height={14}  alt="NFTE"/>
+              <Text style="body3" color="dark">NFTE</Text>
             </Flex>
           </Flex>
           {loading ? (
@@ -235,7 +237,7 @@ const ClaimList = () => {
         ) : (
         <Box
             css={{
-            border: '1px dashed #79ffa8',
+            border: '1px dashed #0420FF',
             opacity: 0.2,
             minWidth: '16.125rem',
             background: '#323232',
@@ -249,7 +251,7 @@ const ClaimList = () => {
       {/*  <Box*/}
       {/*    key={`box-${i}`}*/}
       {/*    css={{*/}
-      {/*      border: '1px dashed #79ffa8',*/}
+      {/*      border: '1px dashed #0420FF',*/}
       {/*      opacity: 0.2,*/}
       {/*      minWidth: '16.125rem',*/}
       {/*      background: '#323232',*/}

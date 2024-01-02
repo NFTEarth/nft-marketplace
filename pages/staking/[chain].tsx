@@ -5,7 +5,6 @@ import {faCircleInfo} from "@fortawesome/free-solid-svg-icons";
 import {formatUnits, parseUnits} from "ethers";
 import {useAccount, useContractReads} from "wagmi";
 import {ContractFunctionConfig, formatEther} from "viem";
-import {arbitrum} from "viem/chains";
 import {useRouter} from "next/router";
 import {Abi} from "abitype";
 import Link from "next/link";
@@ -24,12 +23,13 @@ import {formatBN} from "utils/numbers";
 import {roundToWeek} from "utils/round";
 
 import NFTEOFTAbi from 'artifact/NFTEOFTAbi';
+import NFTELPAbi from "artifact/NFTELPAbi";
 import AddressCollapsible from "../../components/staking/AddressCollapsible";
 import AlertChainSwitch from "../../components/common/AlertChainSwitch";
 import Decimal from "decimal.js-light";
 import veNFTEAbi from "artifact/veNFTEAbi"
 
-const LPNFTE = '0xd00CD4363bCF7DC19E84fDB836ce28D24F00716c'
+const LP_NFTE = '0xd00CD4363bCF7DC19E84fDB836ce28D24F00716c'
 export const MAX_LOCK_PERIOD_IN_DAYS = 365; // 1y
 export const MIN_LOCK_PERIOD_IN_DAYS = 7;
 
@@ -54,14 +54,14 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
 
   const { data: nfteData } : { data: any } = useContractReads<
     [
-      ContractFunctionConfig<typeof NFTEOFTAbi, 'balanceOf', 'view'>,
+      ContractFunctionConfig<typeof NFTELPAbi, 'balanceOf', 'view'>,
       ContractFunctionConfig<typeof veNFTEAbi, 'locked', 'view'>,
     ]
     >({
     contracts: [
       // LPNFTE Balance
       {
-        abi: NFTEOFTAbi,
+        abi: NFTELPAbi,
         address: chain?.LPNFTE as `0x${string}`,
         chainId: base.id,
         functionName: 'balanceOf',

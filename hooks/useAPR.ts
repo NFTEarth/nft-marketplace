@@ -7,13 +7,14 @@ import FeeDistributorAbi from "../artifact/FeeDistributorAbi";
 import veNFTEAbi from "../artifact/veNFTEAbi";
 import NFTELPAbi from "../artifact/NFTELPAbi";
 import UniswapV3Abi from "../artifact/UniswapV3Abi";
+import UniswapV2RouterAbi from "artifact/UniswapV2RouterAbi";
 
 import {OFTChain} from "../utils/chains";
 import {getPreviousWeek} from "../utils/date";
 import dayjs from "dayjs";
 
-const WETH_ADDRESS = '0x82af49447d8a07e3bd95bd0d56f35241523fbab1'
-const POOL_ADDRESS = '0x17ee09e7a2cc98b0b053b389a162fc86a67b9407'
+const WETH_ADDRESS = '0x4200000000000000000000000000000000000006'
+const POOL_ADDRESS = '0xd00CD4363bCF7DC19E84fDB836ce28D24F00716c'
 
 
 const useAPR = (timestamp: number = dayjs().startOf('day').toDate().getTime(), chain: OFTChain) => {
@@ -42,9 +43,9 @@ const useAPR = (timestamp: number = dayjs().startOf('day').toDate().getTime(), c
         chainId: chain?.id,
       },
       {
-        abi: NFTELPAbi,
+        abi: UniswapV2RouterAbi,
         address: chain?.LPNFTE as `0x${string}`,
-        functionName: 'getBasePosition',
+        functionName: 'addLiquidityETH',
         chainId: chain?.id,
       },
       {

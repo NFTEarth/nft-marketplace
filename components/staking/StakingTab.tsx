@@ -28,7 +28,8 @@ import {OFT_CHAINS, OFTChain, base } from "utils/chains";
 import {parseError} from "utils/error";
 
 import ERC20Abi from "artifact/ERC20Abi";
-import veNFTEAbi from 'artifact/veNFTEAbi'
+import veNFTEAbi from 'artifact/veNFTEAbi';
+import UniswapV2RouterAbi from "artifact/UniswapV2RouterAbi";
 import {getPublicClient} from "@wagmi/core";
 import {roundToWeek} from "../../utils/round";
 import Link from "next/link";

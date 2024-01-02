@@ -100,7 +100,7 @@ const StakeList : FC<Props> = (props) => {
       ) : (
         <Box
           css={{
-            border: '1px dashed #79ffa8',
+            border: '1px dashed #0420FF',
             opacity: 0.2,
             minWidth: '16.125rem',
             background: '#323232',
@@ -114,7 +114,7 @@ const StakeList : FC<Props> = (props) => {
       {/*  <Box*/}
       {/*    key={`box-${i}`}*/}
       {/*    css={{*/}
-      {/*      border: '1px dashed #79ffa8',*/}
+      {/*      border: '1px dashed #0420FF',*/}
       {/*      opacity: 0.2,*/}
       {/*      minWidth: '16.125rem',*/}
       {/*      background: '#323232',*/}

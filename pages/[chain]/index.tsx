@@ -321,9 +321,8 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                   gap: 10
                 }}
               >
-                <Link href="https://www.linkedin.com/in/ihsan-fauzi-rahman/" target="_blank">
-                  <FontAwesomeIcon icon={faLinkedin} width={16} height={16} color="#fff" />
-                </Link>
+                
+                
                 <Link href="https://github.com/ryuzaki01" target="_blank">
                   <FontAwesomeIcon icon={faGithub} width={16} height={16} color="#fff" />
                 </Link>
