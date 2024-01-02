@@ -1,6 +1,5 @@
 import {FC} from "react";
 import Link from "next/link";
-import { arbitrum } from "viem/chains";
 
 import {Box, Button, CryptoCurrencyIcon, Flex, Text} from "../primitives";
 
@@ -61,8 +60,8 @@ const StakingList: FC<Props> = (props) => {
                 borderRadius: 8
               }}
             >
-              <img src="/icons/arbitrum-icon-dark.svg" width={14} height={14}  alt="Arbitrum"/>
-              <Text style="body3" color="dark">Arbitrum</Text>
+              <img src="/icons/base-icon-dark.svg" width={14} height={14}  alt="Base"/>
+              <Text style="body3" color="dark">Base</Text>
             </Flex>
           </Flex>
           <Flex

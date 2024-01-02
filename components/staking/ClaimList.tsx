@@ -2,7 +2,6 @@ import {Box, Button, CryptoCurrencyIcon, Flex, Text} from "../primitives";
 import {useAccount, useContractWrite, usePrepareContractWrite, useWaitForTransaction} from "wagmi";
 import FeeDistributorAbi from "../../artifact/FeeDistributorAbi";
 import {OFT_CHAINS, base} from "../../utils/chains";
-import {arbitrum} from "viem/chains";
 import {formatBN} from "../../utils/numbers";
 import {parseError} from "../../utils/error";
 import {useContext} from "react";
@@ -21,7 +20,7 @@ const claimableTokens : `0x${string}`[] = [
 const ClaimList = () => {
   const { address } = useAccount()
   const {addToast} = useContext(ToastContext)
-  const chain = OFT_CHAINS.find(p => p.id === arbitrum.id)
+  const chain = OFT_CHAINS.find(p => p.id === base.id)
   const { config, error: preparedError, data: preparedData, refetch: refetchPrepareContract } = usePrepareContractWrite({
     enabled: !!address && !!chain?.feeDistributor,
     address: chain?.feeDistributor as `0x${string}`,
@@ -38,14 +37,14 @@ const ClaimList = () => {
 
   const { data: wethPrice, isLoading: isLoadingWethPrice } = useUSDAndNativePrice({
     enabled: !!preparedData?.result?.[0],
-    chainId: arbitrum.id,
+    chainId: base.id,
     contract: '0x4200000000000000000000000000000000000006',
     price: preparedData?.result?.[0] || BigInt(0)
   })
 
   const { data: nftePrice, isLoading: isLoadingNFTEPrice } = useUSDAndNativePrice({
     enabled: !!preparedData?.result?.[1],
-    chainId: arbitrum.id,
+    chainId: base.id,
     contract: '0xc2106ca72996e49bBADcB836eeC52B765977fd20',
     price: preparedData?.result?.[1] || BigInt(0)
   })
@@ -142,7 +141,7 @@ const ClaimList = () => {
               {BigInt(preparedData?.result?.[0] || 0) > 0 && (
                 <CryptoCurrencyIcon
                   address={claimableTokens[0]}
-                  chainId={arbitrum.id}
+                  chainId={base.id}
                   css={{
                     width: 20,
                     height: 20
@@ -152,17 +151,7 @@ const ClaimList = () => {
               {BigInt(preparedData?.result?.[1] || 0) > 0 && (
                 <CryptoCurrencyIcon
                   address={claimableTokens[1]}
-                  chainId={arbitrum.id}
-                  css={{
-                    width: 20,
-                    height: 20
-                  }}
-                />
-              )}
-              {BigInt(preparedData?.result?.[2] || 0) > 0 && (
-                <CryptoCurrencyIcon
-                  address={claimableTokens[2]}
-                  chainId={arbitrum.id}
+                  chainId={base.id}
                   css={{
                     width: 20,
                     height: 20
@@ -179,8 +168,8 @@ const ClaimList = () => {
                 borderRadius: 8
               }}
             >
-              <img src="/icons/arbitrum-icon-dark.svg" width={14} height={14}  alt="Arbitrum"/>
-              <Text style="body3" color="dark">Arbitrum</Text>
+              <img src="/icons/base-icon-dark.svg" width={14} height={14}  alt="base"/>
+              <Text style="body3" color="dark">base</Text>
             </Flex>
           </Flex>
           {loading ? (

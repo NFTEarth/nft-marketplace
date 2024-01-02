@@ -24,7 +24,7 @@ import {ToastContext} from "context/ToastContextProvider";
 import {StakingDepositor} from "hooks/useStakingDepositor";
 
 import {formatBN, formatNumber} from "utils/numbers";
-import {OFT_CHAINS, OFTChain} from "utils/chains";
+import {OFT_CHAINS, OFTChain, base } from "utils/chains";
 import {parseError} from "utils/error";
 
 import ERC20Abi from "artifact/ERC20Abi";
@@ -32,7 +32,6 @@ import veNFTEAbi from 'artifact/veNFTEAbi'
 import {getPublicClient} from "@wagmi/core";
 import {roundToWeek} from "../../utils/round";
 import Link from "next/link";
-import { arbitrum } from "viem/chains";
 import Decimal from "decimal.js-light";
 import {useAPR} from "../../hooks";
 
@@ -211,7 +210,7 @@ const StakingTab: FC<Props> = (props) => {
               >
                 <Text css={{ fontSize: 'inherit' }}>{`Staking Successful`}</Text>
                 <Link
-                  href={`${arbitrum.blockExplorers.etherscan.url}/tx/${tx?.hash}`}
+                  href={`${base.blockExplorers.etherscan.url}/tx/${tx?.hash}`}
                   target="_blank"
                   style={{
                     marginTop: 20

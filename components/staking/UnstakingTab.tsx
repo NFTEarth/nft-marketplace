@@ -1,4 +1,4 @@
-import {OFTChain} from "../../utils/chains";
+import {OFTChain, base} from "../../utils/chains";
 import {FC, useCallback, useContext, useMemo} from "react";
 import {parseError} from "../../utils/error";
 import {useAccount, useContractRead, useContractWrite, usePrepareContractWrite, useWaitForTransaction} from "wagmi";
@@ -7,7 +7,6 @@ import dayjs from "dayjs";
 import veNFTEAbi from "../../artifact/veNFTEAbi";
 import {Box, Button, CryptoCurrencyIcon, Flex, Text} from "../primitives";
 import Link from "next/link";
-import {arbitrum} from "viem/chains";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faExternalLink, faLock} from "@fortawesome/free-solid-svg-icons";
 import {ToastContext} from "../../context/ToastContextProvider";
@@ -90,13 +89,13 @@ const UnStakingTab: FC<UnStakingTabProps> = (props) => {
               >
                 <Text css={{fontSize: 'inherit'}}>{`UnStaking Successful`}</Text>
                 <Link
-                  href={`${arbitrum.blockExplorers.etherscan.url}/tx/${tx?.hash}`}
+                  href={`${base.blockExplorers.etherscan.url}/tx/${tx?.hash}`}
                   target="_blank"
                   style={{
                     marginTop: 20
                   }}
                 >
-                  {`See Tx Receipt`}
+                  {`View Tx Receipt`}
                   <FontAwesomeIcon
                     icon={faExternalLink}
                     width={15}

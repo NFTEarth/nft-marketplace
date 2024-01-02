@@ -1,9 +1,6 @@
 import {FC} from "react";
 import Link from "next/link";
-import {arbitrum} from "viem/chains";
-
 import {Box, Button, CryptoCurrencyIcon, Flex, Text} from "../primitives";
-
 import {formatBN} from "utils/numbers";
 import dayjs from "dayjs";
 import { base } from "utils/chains";
@@ -21,7 +18,7 @@ const StakeList : FC<Props> = (props) => {
       {parseInt(lockedBalance?.toString() || '0') > 0 ? (
         <Button
           as={Link}
-          href="/staking/arbitrum"
+          href="/staking/base"
           css={{
             p: '1rem',
             minHeight: '9.875rem',

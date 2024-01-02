@@ -6,7 +6,6 @@ import {
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faLock} from "@fortawesome/free-solid-svg-icons";
 import {formatEther, zeroAddress} from "viem";
-import {arbitrum} from "viem/chains";
 import Link from "next/link";
 
 import Layout from "components/Layout";
@@ -490,7 +489,7 @@ const StakingPage = () => {
                     textStyle="h6"
                     logoHeight={20}
                     address={chain?.LPNFTE || zeroAddress}
-                    chainId={arbitrum.id}
+                    chainId={base.id}
                   />
                 </div>
                 <div>

@@ -291,7 +291,7 @@ export const OFT_CHAINS : OFTChain[] = [
      lightIconUrl: '/icons/bsc-icon-dark.svg',
      darkIconUrl: '/icons/bsc-icon-light.svg',
      coingeckoNetworkId: 'binance-smart-chain'
-   },*/
+   },
   {
     id: base.id,
     lzId: 184,
@@ -300,7 +300,7 @@ export const OFT_CHAINS : OFTChain[] = [
     lightIconUrl: '/icons/base-icon-dark.svg',
     darkIconUrl: '/icons/base-icon-light.svg',
     coingeckoNetworkId: 'base'
-  },
+  },*/
   {
      id: linea.id,
      lzId: 183,

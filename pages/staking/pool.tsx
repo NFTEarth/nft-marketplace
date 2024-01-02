@@ -12,7 +12,6 @@ import {faExternalLink, faSquarePlus} from "@fortawesome/free-solid-svg-icons";
 import {useConnectModal} from "@rainbow-me/rainbowkit";
 import {useDebouncedEffect} from "@react-hookz/web";
 import {getPublicClient} from "@wagmi/core";
-import {arbitrum} from "viem/chains";
 import {MaxUint256} from "ethers";
 import Link from "next/link";
 
@@ -26,7 +25,6 @@ import {useMarketplaceChain, useMounted} from "hooks";
 import {OFT_CHAINS, base} from "utils/chains";
 import {parseError} from "utils/error";
 import {formatBN} from "utils/numbers";
-
 import ERC20Abi from 'artifact/ERC20Abi'
 import ERC20WethAbi from 'artifact/ERC20WethAbi'
 import UniProxyAbi from 'artifact/UniProxyAbi'
@@ -49,7 +47,7 @@ const PoolPage = () => {
   const [loading, setLoading] = useState(false)
   const publicClient = getPublicClient()
   const {addToast} = useContext(ToastContext)
-  const chain = OFT_CHAINS.find(p => p.id === arbitrum.id)
+  const chain = OFT_CHAINS.find(p => p.id === base.id)
   const addresses: Record<string, string> = {
     'NFTE': chain?.address as string,
     'WETH': WETH_ADDRESS as string,
@@ -488,7 +486,7 @@ const PoolPage = () => {
                 />
                 <CryptoCurrencyIcon
                   address={WETH_ADDRESS as `0x${string}`}
-                  chainId={arbitrum.id}
+                  chainId={base.id}
                   css={{
                     position: 'absolute',
                     width: 25,
@@ -574,7 +572,7 @@ const PoolPage = () => {
                 />
                 <CryptoCurrencyIcon
                   address={chain?.address || `0x0`}
-                  chainId={arbitrum.id}
+                  chainId={base.id}
                   css={{
                     position: 'absolute',
                     width: 25,
@@ -680,7 +678,7 @@ const PoolPage = () => {
         </Flex>
         <AddressCollapsible
           addresses={addresses}
-          chain={arbitrum}
+          chain={base}
         />
         <Flex
           direction="column"

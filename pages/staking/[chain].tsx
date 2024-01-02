@@ -29,7 +29,7 @@ import AlertChainSwitch from "../../components/common/AlertChainSwitch";
 import Decimal from "decimal.js-light";
 import veNFTEAbi from "artifact/veNFTEAbi"
 
-const POOL_ADDRESS = '0xd00CD4363bCF7DC19E84fDB836ce28D24F00716c'
+const LPNFTE = '0xd00CD4363bCF7DC19E84fDB836ce28D24F00716c'
 export const MAX_LOCK_PERIOD_IN_DAYS = 365; // 1y
 export const MIN_LOCK_PERIOD_IN_DAYS = 7;
 
@@ -63,7 +63,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
       {
         abi: NFTEOFTAbi,
         address: chain?.LPNFTE as `0x${string}`,
-        chainId: arbitrum.id,
+        chainId: base.id,
         functionName: 'balanceOf',
         args: [address as `0x${string}`]
       },
@@ -72,7 +72,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
         abi: veNFTEAbi,
         address: chain?.veNFTE as `0x${string}`,
         functionName: 'locked',
-        chainId: arbitrum.id,
+        chainId: base.id,
         args: [address as `0x${string}`],
       }
     ],
@@ -161,7 +161,7 @@ const StakingChainPage: FC<Props> = ({ ssr }) => {
               color: '$gray10'
             }}
           >{`>`}</Text>
-          <Text style="subtitle1">{`xNFTE ${ssr.chain?.name}`}</Text>
+          <Text style="subtitle1">{`veNFTE ${ssr.chain?.name}`}</Text>
         </Flex>
         <Flex
           direction="column"
