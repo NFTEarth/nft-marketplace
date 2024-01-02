@@ -212,7 +212,7 @@ const StakingTab: FC<Props> = (props) => {
               >
                 <Text css={{ fontSize: 'inherit' }}>{`Staking Successful`}</Text>
                 <Link
-                  href={`${mainnet.blockExplorers.etherscan.url}/tx/${tx?.hash}`}
+                  href={`${base.blockExplorers.etherscan.url}/tx/${tx?.hash}`}
                   target="_blank"
                   style={{
                     marginTop: 20
@@ -261,7 +261,6 @@ const StakingTab: FC<Props> = (props) => {
             gap: 5
           }}
         >
-          <Text style="body2">{`${APR}%`}</Text>
           <Tooltip
             content={
               <Text
@@ -303,7 +302,7 @@ const StakingTab: FC<Props> = (props) => {
               height: 20
             }}
           />
-          <Text style="body2">{`${formatBN(totalValue, 2, 18)} LP NFTE`}</Text>
+          <Text style="body2">{`${formatBN(totalValue, 2, 18)} NFTE LP`}</Text>
         </Flex>
       </Flex>
       <Flex
