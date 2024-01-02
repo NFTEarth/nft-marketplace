@@ -3,70 +3,72 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleInfo, faExternalLink, faLock} from "@fortawesome/free-solid-svg-icons";
 import {
   parseEther,
-  formatEther, parseUnits, formatUnits
+  formatUnits,
+  Chain
 } from "viem";
-import dayjs, {} from "dayjs";
-import { MaxUint256 } from "ethers";
+import dayjs from "dayjs";
 import {
   useAccount,
   useContractRead,
   useContractWrite,
-  useNetwork,
   usePrepareContractWrite,
-  useSwitchNetwork,
   useWaitForTransaction,
 } from "wagmi";
 import {useConnectModal} from "@rainbow-me/rainbowkit";
-
+import { base } from "utils/chains";
 import {Box, Button, CryptoCurrencyIcon, Flex, Text, Tooltip} from "../primitives";
 
 import {ToastContext} from "context/ToastContextProvider";
 import {StakingDepositor} from "hooks/useStakingDepositor";
 
-import {formatBN, formatNumber} from "utils/numbers";
-import {OFT_CHAINS, OFTChain, base } from "utils/chains";
+import {formatBN} from "utils/numbers";
 import {parseError} from "utils/error";
 
 import ERC20Abi from "artifact/ERC20Abi";
-import veNFTEAbi from 'artifact/veNFTEAbi';
-import UniswapV2RouterAbi from "artifact/UniswapV2RouterAbi";
+import veNFTEAbi from 'artifact/veNFTEAbi'
 import {getPublicClient} from "@wagmi/core";
 import {roundToWeek} from "../../utils/round";
 import Link from "next/link";
+import { mainnet } from "viem/chains";
 import Decimal from "decimal.js-light";
 import {useAPR} from "../../hooks";
+import {NFTE_LP, VE_NFTE} from "../../utils/contracts";
+import {MaxUint256} from "@ethersproject/constants";
+
+
 
 type Props = {
   value: string
   duration: number
   depositor: StakingDepositor | null
-  chain: OFTChain | null
+  chain: Chain | null
   onSuccess: () => void
 }
 
 const StakingTab: FC<Props> = (props) => {
   const { value, duration, chain, onSuccess, depositor } = props
+
   const { address } = useAccount()
   const { openConnectModal } = useConnectModal()
   const publicClient = getPublicClient()
   const {addToast} = useContext(ToastContext)
-  const { APR } = useAPR(undefined, OFT_CHAINS[0])
+  const { APR } = useAPR(undefined, base)
 
   const valueBn = parseEther((new Decimal(value)).toFixed() as `${number}`)
   const timeStamp = parseInt(`${depositor?.lockEndTimestamp || 0}`);
   const newTime = timeStamp > 0 && timeStamp > dayjs().startOf('day').unix() ? dayjs.unix(timeStamp).startOf('day') : dayjs().startOf('day')
-  let timePlusDuration = roundToWeek(dayjs(newTime).add(duration, 'months'))
+  let timePlusDuration = dayjs(newTime).add(duration * 7, 'days')
   timePlusDuration = timePlusDuration.diff(dayjs().startOf('day'), 'days') > 365 ? dayjs().startOf('day').add(365, 'days') : timePlusDuration
   const isZeroValue = parseFloat(value) <= 0
   const isZeroDuration = duration < 1
   const hasLockedBalance = (BigInt(depositor?.lockedBalance || 0)) > BigInt(0)
 
   const { data: allowance, refetch: refetchAllowance } = useContractRead({
-    enabled: !!address && !!chain?.veNFTE,
-    abi:  ERC20Abi,
-    address: chain?.LPNFTE as `0x${string}`,
+    enabled: !!address,
+    abi: ERC20Abi,
+    address: NFTE_LP,
     functionName:  'allowance',
-    args: [address as `0x${string}`, chain?.veNFTE as `0x${string}`],
+    args: [address as `0x${string}`, VE_NFTE],
   })
 
   const requireAllowance = parseFloat(formatUnits(allowance  || BigInt(0), 18)) < parseFloat(value);
@@ -112,18 +114,18 @@ const StakingTab: FC<Props> = (props) => {
   }, [depositor, duration, value, newTime, isZeroValue, isZeroDuration])
 
   const { config, error: preparedError, refetch: refetchPrepareContract } = usePrepareContractWrite({
-    enabled: !!address && !!chain?.veNFTE && hasLockedBalance || (!isZeroValue && !isZeroDuration),
-    address: chain?.veNFTE as `0x${string}`,
+    enabled: !!address && hasLockedBalance || (!isZeroValue && !isZeroDuration),
+    address: VE_NFTE,
     abi: veNFTEAbi,
     ...stakingArgs as any
   })
 
   const { writeAsync, error, data, isLoading } = useContractWrite(config)
   const { writeAsync: approveAsync, isLoading: isLoadingApproval } = useContractWrite({
-    address: chain?.LPNFTE as `0x${string}`,
+    address: NFTE_LP,
     abi: ERC20Abi,
     functionName: 'approve',
-    args:  [chain?.veNFTE as `0x${string}`, MaxUint256],
+    args:  [VE_NFTE, BigInt(MaxUint256.toString())],
   })
 
   const { isLoading: isLoadingTransaction, isSuccess = true } = useWaitForTransaction({
@@ -133,7 +135,7 @@ const StakingTab: FC<Props> = (props) => {
 
   const totalValue = depositor?.lockedBalance ? BigInt(depositor?.lockedBalance) + valueBn : valueBn
   const totalDays = timePlusDuration.diff(dayjs(), 'days')
-  const totalMonths = timePlusDuration.diff(dayjs(), 'months')
+  const totalWeeks = timePlusDuration.diff(dayjs(), 'weeks')
 
   const buttonText = useMemo(() => {
     if (isSuccess) {
@@ -141,7 +143,7 @@ const StakingTab: FC<Props> = (props) => {
     }
 
     if (!address) {
-      return 'Connect Wallet'
+      return 'Login'
     }
 
     if (isZeroValue && totalValue <= BigInt(0)) {
@@ -174,8 +176,8 @@ const StakingTab: FC<Props> = (props) => {
   }, [address, isZeroValue, isZeroDuration, totalDays, totalValue, preparedError, requireAllowance]);
 
   const votingPower = useMemo(() => {
-    return (totalValue / BigInt(12)) * BigInt(totalMonths)
-  }, [totalValue, totalMonths])
+    return (totalValue / BigInt(52)) * BigInt(totalWeeks)
+  }, [totalValue, totalWeeks])
 
   const disableButton = ((isZeroValue || isZeroDuration) && !depositor?.lockedBalance) || (!!preparedError && !requireAllowance) || isLoading || isLoadingApproval || isLoadingTransaction || isSuccess
 
@@ -211,13 +213,13 @@ const StakingTab: FC<Props> = (props) => {
               >
                 <Text css={{ fontSize: 'inherit' }}>{`Staking Successful`}</Text>
                 <Link
-                  href={`${base.blockExplorers.etherscan.url}/tx/${tx?.hash}`}
+                  href={`${mainnet.blockExplorers.etherscan.url}/tx/${tx?.hash}`}
                   target="_blank"
                   style={{
                     marginTop: 20
                   }}
                 >
-                  {`See Tx Receipt`}
+                  {`View Txn Receipt`}
                   <FontAwesomeIcon
                     icon={faExternalLink}
                     width={15}
@@ -295,8 +297,8 @@ const StakingTab: FC<Props> = (props) => {
           }}
         >
           <CryptoCurrencyIcon
-            address={chain?.LPNFTE as `0x${string}`}
-            chainId={chain?.id}
+            address={NFTE_LP}
+            chainId={base.id}
             css={{
               width: 20,
               height: 20
@@ -321,7 +323,7 @@ const StakingTab: FC<Props> = (props) => {
           }}
         >
           <CryptoCurrencyIcon
-            address={chain?.veNFTE as `0x${string}`}
+            address={VE_NFTE}
             chainId={chain?.id}
             css={{
               width: 20,

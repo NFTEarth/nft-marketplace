@@ -1,37 +1,34 @@
-import {OFTChain, base} from "../../utils/chains";
 import {FC, useCallback, useContext, useMemo} from "react";
 import {parseError} from "../../utils/error";
 import {useAccount, useContractRead, useContractWrite, usePrepareContractWrite, useWaitForTransaction} from "wagmi";
 import {useConnectModal} from "@rainbow-me/rainbowkit";
-import dayjs from "dayjs";
-import veNFTEAbi from "../../artifact/veNFTEAbi";
 import {Box, Button, CryptoCurrencyIcon, Flex, Text} from "../primitives";
 import Link from "next/link";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faExternalLink, faLock} from "@fortawesome/free-solid-svg-icons";
 import {ToastContext} from "../../context/ToastContextProvider";
 import {formatBN} from "../../utils/numbers";
-import NFTELPAbi from "artifact/NFTELPAbi";
-import UniswapV2RouterAbi from "artifact/UniswapV2RouterAbi";
+import {VE_NFTE} from "../../utils/contracts";
+import veNFTEAbi from "artifact/veNFTEAbi";
+import { base } from "utils/chains";
 
 type UnStakingTabProps = {
-  chain: OFTChain | null
   onSuccess: () => void
 }
 const UnStakingTab: FC<UnStakingTabProps> = (props) => {
-  const {chain, onSuccess} = props;
+  const {onSuccess} = props;
   const {addToast} = useContext(ToastContext)
   const {address} = useAccount()
   const {openConnectModal} = useConnectModal()
 
   const {data: lockedData} = useContractRead({
     abi: veNFTEAbi,
-    address: chain?.veNFTE as `0x${string}`,
+    address: VE_NFTE,
     functionName: 'locked',
     args: [address as `0x${string}`],
     watch: true,
-    chainId: chain?.id,
-    enabled: !!chain && !!address,
+    chainId: base.id,
+    enabled: !!address,
   })
 
   const [lockedBalance, endTimeStamp] = lockedData || []
@@ -40,8 +37,8 @@ const UnStakingTab: FC<UnStakingTabProps> = (props) => {
   const hasLockedBalance = totalValue > BigInt(0)
 
   const {config, error: preparedError, refetch: refetchPrepareContract} = usePrepareContractWrite({
-    enabled: !!address && !!chain?.veNFTE && hasLockedBalance,
-    address: chain?.veNFTE as `0x${string}`,
+    enabled: !!address && hasLockedBalance,
+    address: VE_NFTE,
     abi: veNFTEAbi,
     functionName: 'withdraw'
   })
@@ -58,7 +55,7 @@ const UnStakingTab: FC<UnStakingTabProps> = (props) => {
     }
 
     if (!address) {
-      return 'Connect Wallet'
+      return 'Login'
     }
 
     if (totalValue <= BigInt(0)) {
@@ -97,7 +94,7 @@ const UnStakingTab: FC<UnStakingTabProps> = (props) => {
                     marginTop: 20
                   }}
                 >
-                  {`View Tx Receipt`}
+                  {`See Tx Receipt`}
                   <FontAwesomeIcon
                     icon={faExternalLink}
                     width={15}
@@ -148,8 +145,8 @@ const UnStakingTab: FC<UnStakingTabProps> = (props) => {
             }}
           >
             <CryptoCurrencyIcon
-              address={chain?.LPNFTE as `0x${string}`}
-              chainId={chain?.id}
+              address={VE_NFTE}
+              chainId={base.id}
               css={{
                 width: 20,
                 height: 20

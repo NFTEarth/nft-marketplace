@@ -1,24 +1,26 @@
 import {FC} from "react";
 import Link from "next/link";
+import { base } from "utils/chains";
 
 import {Box, Button, CryptoCurrencyIcon, Flex, Text} from "../primitives";
 
 import {formatBN} from "utils/numbers";
-import { base } from "utils/chains";
+import {NFTEOFT, VE_NFTE, NFTE_LP} from "../../utils/contracts";
 
 type Props = {
+  APR: number
   nfteLPBalance: bigint
 }
 
 const StakingList: FC<Props> = (props) => {
-  const { nfteLPBalance } = props
+  const { nfteLPBalance, APR } = props
 
   return (
     <>
       {BigInt(nfteLPBalance) > BigInt(0) ? (
         <Button
           as={Link}
-          href="/staking/base"
+          href="/staking/stake"
           css={{
             p: '1rem',
             minHeight: '9.875rem',
@@ -33,7 +35,7 @@ const StakingList: FC<Props> = (props) => {
             transition: 'border-color 0.3s',
             '&:hover': {
               backgroundColor: 'rgba(255,255,255,0.1)',
-              borderColor: '#79ffa8',
+              borderColor: '#0420FF',
             }
           }}
         >
@@ -44,7 +46,7 @@ const StakingList: FC<Props> = (props) => {
             }}
           >
             <CryptoCurrencyIcon
-              address="0xd00CD4363bCF7DC19E84fDB836ce28D24F00716c"
+              address={NFTE_LP}
               chainId={base.id}
               css={{
                 width: 20,
@@ -79,8 +81,6 @@ const StakingList: FC<Props> = (props) => {
             <Flex
               direction="column"
             >
-              <Text style="body3" css={{ textAlign: 'right' }}>APR</Text>
-              <Text style="h6">986.03%</Text>
             </Flex>
           </Flex>
           <Flex

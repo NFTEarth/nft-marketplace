@@ -258,8 +258,7 @@ const StakingPage = () => {
                   )}
                   {activeTab === 'staking' && (
                     <StakingList
-                      nfteLPBalance={nfteLPBalance?.result || BigInt(0)}
-                    />
+                      nfteLPBalance={nfteLPBalance?.result || BigInt(0)} APR={0}                    />
                   )}
                   {activeTab === 'claim' && (
                     <ClaimList />
@@ -435,7 +434,6 @@ const StakingPage = () => {
                   width: '100%'
                 }}
               >
-                {`${APR}%`}
               </Text>
             </Flex>
             <Flex css={{

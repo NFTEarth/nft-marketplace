@@ -174,10 +174,6 @@ const Wallet : FC<WalletProps> = ({ exp }) => {
     address,
     chainId: polygon.id,
   })  
-  const arbitrumBalance = useBalance({
-      address,
-      chainId: arbitrum.id,  
-  })
   const optimismBalance = useBalance({
     address,
     chainId: optimism.id,  

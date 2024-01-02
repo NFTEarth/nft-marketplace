@@ -1,9 +1,12 @@
 import {FC} from "react";
 import Link from "next/link";
+import { base } from "utils/chains";
+
 import {Box, Button, CryptoCurrencyIcon, Flex, Text} from "../primitives";
+
 import {formatBN} from "utils/numbers";
 import dayjs from "dayjs";
-import { base } from "utils/chains";
+import {NFTEOFT, NFTE_LP} from "../../utils/contracts";
 
 type Props = {
   lockedBalance: bigint
@@ -18,7 +21,7 @@ const StakeList : FC<Props> = (props) => {
       {parseInt(lockedBalance?.toString() || '0') > 0 ? (
         <Button
           as={Link}
-          href="/staking/base"
+          href="/staking"
           css={{
             p: '1rem',
             minHeight: '9.875rem',
@@ -33,7 +36,7 @@ const StakeList : FC<Props> = (props) => {
             transition: 'border-color 0.3s',
             '&:hover': {
               backgroundColor: 'rgba(255,255,255,0.1)',
-              borderColor: '#79ffa8',
+              borderColor: '#0420FF',
             }
           }}
         >
@@ -44,7 +47,7 @@ const StakeList : FC<Props> = (props) => {
             }}
           >
             <CryptoCurrencyIcon
-              address="0xd00CD4363bCF7DC19E84fDB836ce28D24F00716c"
+              address={NFTE_LP}
               chainId={base.id}
               css={{
                 width: 20,

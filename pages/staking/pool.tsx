@@ -421,7 +421,7 @@ const PoolPage = () => {
               }}
             >
               <img src="/icons/base-icon-dark.svg" width={14} height={14}  alt="Base"/>
-              <Text style="body3" color="dark">Base</Text>
+              <Text style="body3" color="dark">base</Text>
             </Flex>
           </Flex>
           <Flex

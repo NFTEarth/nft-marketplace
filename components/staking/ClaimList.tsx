@@ -1,7 +1,7 @@
 import {Box, Button, CryptoCurrencyIcon, Flex, Text} from "../primitives";
 import {useAccount, useContractWrite, usePrepareContractWrite, useWaitForTransaction} from "wagmi";
 import FeeDistributorAbi from "../../artifact/FeeDistributorAbi";
-import {OFT_CHAINS, base} from "../../utils/chains";
+import { base } from "utils/chains";
 import {formatBN} from "../../utils/numbers";
 import {parseError} from "../../utils/error";
 import {useContext} from "react";
@@ -11,21 +11,19 @@ import Link from "next/link";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faExternalLink} from "@fortawesome/free-solid-svg-icons";
 import useUSDAndNativePrice from "../../hooks/useUSDAndNativePrice";
-import UniswapV2RouterAbi from "artifact/UniswapV2RouterAbi";
-import veNFTEAbi from "artifact/veNFTEAbi";
+import { NFTEOFT, STAKING_FEE_DISTRIBUTOR, WETH_ADDRESS} from "../../utils/contracts";
 
 const claimableTokens : `0x${string}`[] = [
-  '0xc2106ca72996e49bBADcB836eeC52B765977fd20',
-  '0x4200000000000000000000000000000000000006'
+  WETH_ADDRESS,
+  NFTEOFT
 ]
 
 const ClaimList = () => {
   const { address } = useAccount()
   const {addToast} = useContext(ToastContext)
-  const chain = OFT_CHAINS.find(p => p.id === base.id)
   const { config, error: preparedError, data: preparedData, refetch: refetchPrepareContract } = usePrepareContractWrite({
-    enabled: !!address && !!chain?.feeDistributor,
-    address: chain?.feeDistributor as `0x${string}`,
+    enabled: !!address,
+    address: STAKING_FEE_DISTRIBUTOR,
     abi: FeeDistributorAbi,
     functionName: 'claimTokens',
     args: [address as `0x${string}`, claimableTokens]
@@ -40,14 +38,14 @@ const ClaimList = () => {
   const { data: wethPrice, isLoading: isLoadingWethPrice } = useUSDAndNativePrice({
     enabled: !!preparedData?.result?.[0],
     chainId: base.id,
-    contract: '0x4200000000000000000000000000000000000006',
+    contract: WETH_ADDRESS,
     price: preparedData?.result?.[0] || BigInt(0)
   })
 
   const { data: nftePrice, isLoading: isLoadingNFTEPrice } = useUSDAndNativePrice({
     enabled: !!preparedData?.result?.[1],
     chainId: base.id,
-    contract: '0xc2106ca72996e49bBADcB836eeC52B765977fd20',
+    contract: NFTEOFT,
     price: preparedData?.result?.[1] || BigInt(0)
   })
 
@@ -160,6 +158,16 @@ const ClaimList = () => {
                   }}
                 />
               )}
+              {BigInt(preparedData?.result?.[2] || 0) > 0 && (
+                <CryptoCurrencyIcon
+                  address={claimableTokens[2]}
+                  chainId={base.id}
+                  css={{
+                    width: 20,
+                    height: 20
+                  }}
+                />
+              )}
             </Flex>
             <Flex
               align="center"
@@ -170,8 +178,8 @@ const ClaimList = () => {
                 borderRadius: 8
               }}
             >
-              <img src="/icons/nfte-icon-dark.svg" width={14} height={14}  alt="NFTE"/>
-              <Text style="body3" color="dark">NFTE</Text>
+              <img src="/icons/eth-icon-dark.svg" width={14} height={14}  alt="Ethereum"/>
+              <Text style="body3" color="dark">Ethereum</Text>
             </Flex>
           </Flex>
           {loading ? (
@@ -219,13 +227,8 @@ const ClaimList = () => {
                   width: '100%'
                 }}
               >
-                <Text style="body3">Total Rewards</Text>
-                <Text style="subtitle1" css={{ fontWeight: 'bold' }}>{`${
-                  formatBN(
-                    BigInt(wethPrice?.nativePrice || 0) +
-                    BigInt(nftePrice?.nativePrice || 0)
-                    , 2, 18, { notation: "standard" }
-                  )} ($${formatBN(
+                <Text style="body3">Rewards in USD</Text>
+                <Text style="subtitle1" css={{ fontWeight: 'bold' }}>{`($${formatBN(
                   BigInt(wethPrice?.usdPrice || 0) +
                   BigInt(nftePrice?.usdPrice || 0),
                   2, 6, { notation: "standard" }
