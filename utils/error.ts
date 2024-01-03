@@ -59,7 +59,7 @@ export const parseError = (error: any, defaultMessage?: string) => {
   }
 
   if (name === 'ZeroDeposits') {
-    message = 'You must deposit ETH/ARB/NFTE or an eligible NFT to enter'
+    message = 'You must deposit ETH/NFTE or an eligible NFT to enter'
   }
 
   if (name === 'OLD') {
@@ -71,7 +71,7 @@ export const parseError = (error: any, defaultMessage?: string) => {
   }
 
   if (message === 'ds-math-sub-underflow') {
-    message = 'Already Staked.'
+    message = 'Already Staked, Try Again.'
   }
 
   return {
