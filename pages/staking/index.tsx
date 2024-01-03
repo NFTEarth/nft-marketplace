@@ -31,6 +31,7 @@ import {formatBN} from "utils/numbers";
 import ERC20Abi from 'artifact/ERC20Abi'
 import veNFTEAbi from 'artifact/veNFTEAbi'
 import { base } from "utils/chains";
+import { NFTE_LP, VE_NFTE } from "utils/contracts";
 
 const StakingPage = () => {
   const chain = OFT_CHAINS.find((chain) => chain.id === base.id)
@@ -86,12 +87,12 @@ const StakingPage = () => {
           direction="column"
         >
           <Text style="h4">You don’t have any NFTE/WETH LP tokens to stake in your wallet.</Text>
-          <Text css={{ maxWidth: '75%' }}>{`veNFTE holders earn all revenue that is shared from the NFTEarth DAO. Governance is controlled entirely by veNFTE holders.`}</Text>
+          <Text css={{ maxWidth: '75%' }}>{`veNFTE holders earn all revenue that is shared from the NFTEarth DAO. Governance is controlled entirely by veNFTE holders. Get veNFTE by using our in-app feature tool to add liquidity below, or head to SushiSwap to add liquidity.`}</Text>
           <Flex css={{ mt: 20}}>
             <Button
               color="primary"
               as={Link}
-              href="https://www.sushi.com/pool/add/v2/8453"
+              href="/staking"
             >Get NFTE/WETH LP</Button>
           </Flex>
         </Flex>
@@ -113,12 +114,12 @@ const StakingPage = () => {
           </Text>
           {` available to stake.`}
         </Text>
-        <Text css={{ maxWidth: '75%' }}>{`veNFTE holders earn all revenue that is shared from the NFTEarth DAO. Governance is controlled entirely by veNFTE holders.`}</Text>
+        <Text css={{ maxWidth: '75%' }}>{`veNFTE holders earn all revenue that is shared from the NFTEarth DAO. veNFTE holders earn all revenue that is shared from the NFTEarth DAO. Governance is controlled entirely by veNFTE holders. Get veNFTE by using our in-app feature tool to add liquidity below, or head to SushiSwap to add liquidity.`}</Text>
         <Flex css={{ mt: 20}}>
           <Button
             color="primary"
             as={Link}
-            href="https://www.sushi.com/pool/add/v2/8453"
+            href="/staking"
           >Get NFTE/WETH LP</Button>
         </Flex>
       </Flex>
@@ -296,7 +297,7 @@ const StakingPage = () => {
                   }}
                 >
                   <CryptoCurrencyIcon
-                    address={chain?.LPNFTE || zeroAddress}
+                    address={NFTE_LP || zeroAddress}
                     chainId={base.id}
                     css={{
                       width: 20,
@@ -341,7 +342,7 @@ const StakingPage = () => {
                   }}
                 >
                   <CryptoCurrencyIcon
-                    address={chain?.LPNFTE || zeroAddress}
+                    address={NFTE_LP || zeroAddress}
                     chainId={base.id}
                     css={{
                       width: 20,
@@ -379,7 +380,7 @@ const StakingPage = () => {
                   }}
                 >
                   <CryptoCurrencyIcon
-                    address={chain?.veNFTE || zeroAddress}
+                    address={VE_NFTE || zeroAddress}
                     chainId={base.id}
                     css={{
                       width: 20,
@@ -452,7 +453,7 @@ const StakingPage = () => {
               <Text style="h5">My Voting Power</Text>
               <Text
                 as={Link}
-                href="https://docs.nftearth.exchange/nfte-token/xnfte-and-nfte-staking"
+                href="https://docs.nftearth.exchange"
                 target="_blank"
                 style="body3"
                 css={{

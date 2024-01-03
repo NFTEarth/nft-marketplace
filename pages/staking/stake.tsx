@@ -276,7 +276,7 @@ const StakingChainPage: FC = () => {
                       />
                       <CryptoCurrencyIcon
                         address={NFTE_LP}
-                        chainId={chain?.id}
+                        chainId={base.id}
                         css={{
                           position: 'absolute',
                           width: 25,

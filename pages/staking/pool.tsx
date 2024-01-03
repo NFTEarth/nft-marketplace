@@ -41,7 +41,7 @@ import NFTELPAbi from "../../artifact/NFTELPAbi";
 import {InferGetServerSidePropsType} from "next";
 import {getServerSideProps} from "../portfolio/settings";
 import NFTEOFTAbi from "artifact/NFTEOFTAbi";
-
+const tokenChain = OFT_CHAINS.find(c => c.id === base.id)
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>
 
 const PoolPage = () => {
