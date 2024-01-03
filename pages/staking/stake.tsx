@@ -34,7 +34,7 @@ const StakingChainPage: FC = () => {
   const [activeTab, setActiveTab] = useState('staking')
   const [valueEth, setValueEth] = useState<string>('0')
   const [duration, setDuration] = useState<string>('0')
-  const [maxDuration, setMaxDuration] = useState<string>('365')
+  const [maxDuration, setMaxDuration] = useState<string>('52')
   const [enableUnStake, setEnableUnStake] = useState<boolean>(false)
   const { address } = useAccount()
   const mounted = useMounted()
