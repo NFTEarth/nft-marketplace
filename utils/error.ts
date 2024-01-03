@@ -66,6 +66,14 @@ export const parseError = (error: any, defaultMessage?: string) => {
     message = 'Price oracle unable to retrieve token price, try again shortly.'
   }
 
+  if (message === 'Execution reverted') {
+    message = 'Get NFTE/WETH LP Tokens First.'
+  }
+
+  if (message === 'ds-math-sub-underflow') {
+    message = 'Already Staked.'
+  }
+
   return {
     name,
     message,
