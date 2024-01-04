@@ -30,7 +30,7 @@ export default function useBridge(
     if (bridgeState !== State.Ready) return;
     setPending(true);
     try {
-      // await tarotRouter.bridge(amount, dest, (hash: string) => {
+      // await Router.bridge(amount, dest, (hash: string) => {
       //   addTransaction({ hash, summary });
       // });
       //doUpdate();

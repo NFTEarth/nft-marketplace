@@ -8,7 +8,7 @@ export default function useBridgeRouter() {
   const context = useContext(BridgeRouterContext);
 
   if (context === undefined) {
-    throw new Error('useTarotRouter must be used within a TarotRouterProvider');
+    throw new Error('useRouter must be used within a RouterProvider');
   }
 
   return context;

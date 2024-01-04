@@ -30,8 +30,9 @@ import {formatBN} from "utils/numbers";
 
 import ERC20Abi from 'artifact/ERC20Abi'
 import veNFTEAbi from 'artifact/veNFTEAbi'
-import { base } from "utils/chains";
+import {}
 import { NFTE_LP, VE_NFTE } from "utils/contracts";
+import { base } from "viem/chains";
 
 const StakingPage = () => {
   const chain = OFT_CHAINS.find((chain) => chain.id === base.id)
