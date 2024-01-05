@@ -1,7 +1,7 @@
 import {Box, Button, CryptoCurrencyIcon, Flex, Text} from "../primitives";
 import {useAccount, useContractWrite, usePrepareContractWrite, useWaitForTransaction} from "wagmi";
 import FeeDistributorAbi from "../../artifact/FeeDistributorAbi";
-import { base } from "utils/chains";
+import { base } from "viem/chains";
 import {formatBN} from "../../utils/numbers";
 import {parseError} from "../../utils/error";
 import {useContext} from "react";
