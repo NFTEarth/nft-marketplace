@@ -7,7 +7,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faLock} from "@fortawesome/free-solid-svg-icons";
 import {formatEther, zeroAddress} from "viem";
 import Link from "next/link";
-
+import { createConfig } from '@wagmi/core'
 import Layout from "components/Layout";
 import {Footer} from "components/Footer";
 import {

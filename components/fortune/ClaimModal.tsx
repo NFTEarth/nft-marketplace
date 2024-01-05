@@ -1,4 +1,4 @@
-import {Modal} from "../common/Modal";
+/*import {Modal} from "../common/Modal";
 import {FC} from "preact/compat";
 import {useContext, useMemo, useState} from "react";
 import {Button, Flex, FormatCryptoCurrency, Text} from "../primitives";
@@ -241,4 +241,4 @@ const ClaimModal: FC<ClaimModalProps> = ({ open: defaultOpen, rewards, disabled,
   )
 }
 
-export default ClaimModal
+export default ClaimModal*/
