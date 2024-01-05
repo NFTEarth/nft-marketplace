@@ -15,9 +15,9 @@ import {
   useWaitForTransaction,
 } from "wagmi";
 import {useConnectModal} from "@rainbow-me/rainbowkit";
-import { base } from "viem/chains";
+import { base } from "utils/chains";
 import {Box, Button, CryptoCurrencyIcon, Flex, Text, Tooltip} from "../primitives";
-import { createPublicClient, http } from 'viem'
+
 import {ToastContext} from "context/ToastContextProvider";
 import {StakingDepositor} from "hooks/useStakingDepositor";
 

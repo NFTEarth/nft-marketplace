@@ -10,7 +10,7 @@ import {ToastContext} from "../../context/ToastContextProvider";
 import {formatBN} from "../../utils/numbers";
 import {VE_NFTE} from "../../utils/contracts";
 import veNFTEAbi from "artifact/veNFTEAbi";
-import { base } from "viem/chains";
+import { base } from "utils/chains";
 
 type UnStakingTabProps = {
   onSuccess: () => void

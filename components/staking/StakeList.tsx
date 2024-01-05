@@ -1,6 +1,6 @@
 import {FC} from "react";
 import Link from "next/link";
-import { base } from "viem/chains";
+import { base } from "utils/chains";
 
 import {Box, Button, CryptoCurrencyIcon, Flex, Text} from "../primitives";
 
