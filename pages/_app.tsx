@@ -16,13 +16,11 @@ import {
   getDefaultWallets,
   darkTheme as rainbowDarkTheme,
 } from '@rainbow-me/rainbowkit'
-import { WagmiConfig, configureChains } from 'wagmi'
+import { WagmiConfig, createConfig, configureChains } from 'wagmi'
 import {SessionProvider} from 'next-auth/react'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { publicProvider } from 'wagmi/providers/public'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
-import { http, createConfig } from '@wagmi/core'
-import { mainnet, arbitrum, optimism, base, linea, polygon } from '@wagmi/core/chains'
 
 import {
   ReservoirKitProvider,
@@ -40,7 +38,6 @@ import ReferralContextProvider, {
 } from 'context/ReferralContextProvider'
 import FortuneContextProvider from "../context/FortuneContextProvider";
 import { Analytics } from '@vercel/analytics/react';
-import chains from 'utils/chains'
 
 
 //CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
@@ -56,18 +53,11 @@ const projectId = '43f64cebd8e57e82652232682308e822';
 
 const WALLET_CONNECT_PROJECT_ID =
   process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || ''
-  
-  export const config = createConfig({
-    chains: [mainnet, arbitrum, base, optimism, polygon, linea],
-    transports: {
-      [mainnet.id]: http(),
-      [arbitrum.id]: http(),
-      [base.id]: http(),
-      [optimism.id]: http(),
-      [polygon.id]: http(),
-      [linea.id]: http(),
-    },
-  })
+
+const { chains, publicClient } = configureChains(supportedChains, [
+  alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
+  publicProvider(),
+])
 
 const { connectors } = getDefaultWallets({
   appName: 'NFTEarth',
