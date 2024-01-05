@@ -1,15 +1,14 @@
 <h3 align="center">NFTEarth</h3>
   <p align="center">
 
-# App 
+# App Screencap: 
 
-[NFTEarth](https://nftearth.exchange)
+![image](https://github.com/NFTEarth/nftearth-marketplace/assets/29180454/46bb227b-533c-4e5e-9f76-8cca928ea964)
+
 
 <p align="center">Omnichain NFT protocol.</p>
 
-<p align="center">NFT Marketplace, NFTFi, SocialFi, GameFi, NFT Launchpad, and AI-infused NFTs - all part of the NFTEarth protocol.</p>
-
-![NFTEarth](image.png)
+<p align="center">NFT Exchange, NFTFi, SocialFi, GameFi, NFT Launchpad, and AI-infused NFTs - all part of the NFTEarth protocol.</p>
 
 
 ### Built With
