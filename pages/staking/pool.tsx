@@ -28,7 +28,6 @@ import {OFT_CHAINS, base} from "utils/chains";
 
 import ERC20Abi from 'artifact/ERC20Abi'
 import ERC20WethAbi from 'artifact/ERC20WethAbi'
-import UniProxyAbi from 'artifact/UniProxyAbi'
 import UniswapV2RouterAbi from 'artifact/UniswapV2RouterAbi'
 import useUSDAndNativePrice from "../../hooks/useUSDAndNativePrice";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
@@ -48,8 +47,8 @@ const PoolPage = () => {
   const mounted = useMounted()
   const { address} = useAccount()
   const { openConnectModal } = useConnectModal()
-  const [valueWEth, setValueWEth] = useState<string>('0')
-  const [valueNFTE, setValueNFTE] = useState<string>('0')
+  const [valueWeth, setValueWeth] = useState<string>('0')
+  const [valueNFTEOFT, setValueNFTEOFT] = useState<string>('0')
   const [expectedNFTELP, setExpectedNFTELP] = useState<bigint>(BigInt(0))
   const [changedValue, setChangedValue] = useState('')
   const [loading, setLoading] = useState(false)
@@ -95,7 +94,7 @@ const PoolPage = () => {
     enabled: !!address,
   })
 
-  const isZeroValue = parseEther(valueWEth as `${number}`, 'wei', ) <= BigInt(0)
+  const isZeroValue = parseEther(valueWeth as `${number}`, 'wei', ) <= BigInt(0)
 
   const { data: allowanceData, refetch: refetchAllowance } = useContractReads({
     contracts: [
@@ -135,11 +134,11 @@ const PoolPage = () => {
 
 
   const [reserveData, totalSupplyLP] = lpData || [] as any
-  const [reserveETH, reserveNFTE, blockTimestampLast] = reserveData?.result || [] as any
+  const [reserveETH, reserveNFTEOFT, blockTimestampLast] = reserveData?.result || [] as any
   const [wethBalance, nfteoftBalance, nfteLPBalance ] = balanceData || [] as any
   const [wethAllowance, nfteoftAllowance] = allowanceData || [] as any
-  const wethValue = useMemo(() => parseEther(valueWEth as `${number}`), [valueWEth])
-  const nfteoftValue = useMemo(() => parseEther(valueNFTE as `${number}`), [valueNFTE])
+  const wethValue = useMemo(() => parseEther(valueWeth as `${number}`), [valueWeth])
+  const nfteoftValue = useMemo(() => parseEther(valueNFTEOFT as `${number}`), [valueNFTEOFT])
   const requireWethAllowance = useMemo(() => BigInt(wethAllowance?.result || 0) < wethValue, [wethAllowance?.result, wethValue]);
   const requireNFTEOFTAllowance = useMemo(() => BigInt(nfteoftAllowance?.result || 0) < nfteoftValue, [nfteoftAllowance?.result, nfteoftValue]);
   const requireETHWrap = useMemo(() => BigInt(wethBalance?.result || 0) < wethValue && (BigInt(ethBalance?.value || 0) + BigInt(wethBalance?.result || 0)) >= wethValue, [ethBalance?.value, wethBalance?.result, wethValue])
@@ -165,17 +164,18 @@ const PoolPage = () => {
           abi: UniswapV2RouterAbi,
           address: STAKING_UNI_ROUTER,
           functionName: 'quote',
-          args: [value, isWethChange ? reserveETH || BigInt(0) : reserveNFTE || BigInt(0), isWethChange ? reserveNFTE || BigInt(0) : reserveETH || BigInt(0)]
+          args: [value, isWethChange ? reserveETH || BigInt(0) : reserveNFTEOFT || BigInt(0), isWethChange ? reserveNFTEOFT || BigInt(0) : reserveETH || BigInt(0)]
         }).then(async (res) => {
           const val = (parseFloat(formatEther(res, 'wei')) * 0.97).toString()
           if (isWethChange) {
-            setValueNFTE(val)
+            setValueNFTEOFT(val)
           } else {
-            setValueWEth(val)
+            setValueWeth(val)
           }
 
-          const wethLiquidity = (isWethChange ? BigInt(value) : parseEther(val)) * BigInt(totalSupplyLP?.result || 0) / BigInt(reserveETH || 0);
-          const nfteoftLiquidity = (isWethChange ? parseEther(val) : BigInt(value)) * BigInt(totalSupplyLP?.result || 0) / BigInt(reserveNFTE || 0);
+          const wethLiquidity = (isWethChange ? BigInt(value) : parseEther(val as `${number}`)) * BigInt(totalSupplyLP?.result || 0) / BigInt(reserveETH || 0);
+          const nfteoftLiquidity = (isWethChange ? parseEther(val as `${number}`) : BigInt(value)) * BigInt(totalSupplyLP?.result || 0) / BigInt(reserveNFTEOFT || 0);
+          
           const expectedNFTELP = nfteoftLiquidity > wethLiquidity ? wethLiquidity : nfteoftLiquidity;
           console.log(wethLiquidity, nfteoftLiquidity, expectedNFTELP, res, totalSupplyLP?.result);
           
@@ -187,7 +187,7 @@ const PoolPage = () => {
           setLoading(false)
         })
     }
-  }, [changedValue, wethValue, nfteoftValue, totalSupplyLP?.result, reserveNFTE, reserveETH], 1000)
+  }, [changedValue, wethValue, nfteoftValue, totalSupplyLP?.result, reserveNFTEOFT, reserveETH], 1000)
 
   const { config, error: preparedError, refetch: refetchPrepareContract } = usePrepareContractWrite({
     enabled: !!address && !isZeroValue,
@@ -199,8 +199,8 @@ const PoolPage = () => {
       NFTEOFT,
       wethValue,
       nfteoftValue,
-      parseEther(`${parseFloat(valueWEth) * 0.97}`), // 0.3% slippage
-      parseEther(`${parseFloat(valueNFTE) * 0.97}`), // 0.3% slippage
+      parseEther(`${parseFloat(valueWeth) * 0.97}`), // 0.3% slippage
+      parseEther(`${parseFloat(valueNFTEOFT) * 0.97}`), // 0.3% slippage
       address as `0x${string}`,
       BigInt(Math.round(((new Date()).getTime() + (1000 * 60 * 5)) / 1000)) // 5 Minute Deadline
     ],
@@ -241,20 +241,20 @@ const PoolPage = () => {
   const handleSetValue = (val: string) => {
     try {
       parseUnits(`${+val}`, 18);
-      setValueWEth(val);
+      setValueWeth(val);
       setChangedValue('weth')
     } catch (e) {
-      setValueWEth('0');
+      setValueWeth('0');
     }
   }
 
   const handleSetNFTEOFTValue = (val: string) => {
     try {
       parseUnits(`${+val}`, 18);
-      setValueNFTE(val);
+      setValueNFTEOFT(val);
       setChangedValue('nfte')
     } catch (e) {
-      setValueNFTE('0');
+      setValueNFTEOFT('0');
     }
   }
 
@@ -263,7 +263,7 @@ const PoolPage = () => {
     handleSetValue(formatEther(BigInt(wethBalance?.result || 0) + BigInt(ethBalance?.value || 0), 'wei') || '0')
   }, [wethBalance])
 
-  const handleSetMaxNFTEValue = useCallback(() => {
+  const handleSetMaxNFTEOFTValue = useCallback(() => {
     handleSetNFTEOFTValue(formatEther(BigInt(nfteoftBalance?.result || 0), 'wei') || '0')
   }, [nfteoftBalance])
 
@@ -509,7 +509,7 @@ const PoolPage = () => {
                 }}
               >
                 <NumericalInput
-                  value={valueWEth}
+                  value={valueWeth}
                   onUserInput={handleSetValue}
                   icon={<Button size="xs" onClick={() => handleSetMaxValue()}>MAX</Button>}
                   iconStyles={{
@@ -596,9 +596,9 @@ const PoolPage = () => {
                 }}
               >
                 <NumericalInput
-                  value={valueNFTE}
+                  value={valueNFTEOFT}
                   onUserInput={handleSetNFTEOFTValue}
-                  icon={<Button size="xs" onClick={() => handleSetMaxNFTEValue()}>MAX</Button>}
+                  icon={<Button size="xs" onClick={() => handleSetMaxNFTEOFTValue()}>MAX</Button>}
                   iconStyles={{
                     top: 4,
                     right: 4,
@@ -736,7 +736,7 @@ const PoolPage = () => {
             }
           }}
         >
-          <Text style="body3"><h2> 1. Add to the NFTE/WETH liquidity pool on SushiSwap. </h2>2. Lock the SushiSwap LP Tokens received (NFTE/WETH LP). <br></br> 3. The longer lock of your NFTE/WETH LP tokens (max 1 year), and the more tokens you lock, the more veNFTE you attain, and the greater your rewards and voting power. <Text style="body3" as={Link} css={{ fontWeight: 'bold', '&:hover': { textDecoration: 'underline' } }} href="https://docs.nftearth.exchange/nfte-token/venfte" target="_blank"><h1>Learn more about veNFTE in our docs.</h1></Text></Text>
+          <Text style="body3"><h2> Get veNFTE in 3 easy steps: <br></br> 1. Add to the NFTE/WETH liquidity pool on SushiSwap. </h2>2. Lock the SushiSwap LP Tokens received (NFTE/WETH LP). <br></br> 3. The longer lock and the more LP tokens locked, the more veNFTE you get. <Text style="body3" as={Link} css={{ fontWeight: 'bold', '&:hover': { textDecoration: 'underline' } }} href="https://docs.nftearth.exchange/nfte-token/venfte" target="_blank"><h1>Learn more about veNFTE in our docs.</h1></Text></Text>
         </Flex>
       </Flex>
     </Layout>
