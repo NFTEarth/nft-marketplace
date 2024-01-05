@@ -71,7 +71,7 @@ export const parseError = (error: any, defaultMessage?: string) => {
   }
 
   if (message === 'ds-math-sub-underflow') {
-    message = 'Please Remove Some Decimals in: "Select Amount" To Stake.'
+    message = 'Already Staked, Try Again.'
   }
 
   return {
