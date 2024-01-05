@@ -46,7 +46,7 @@ const StakingChainPage: FC = () => {
     'veNFTE': VE_NFTE,
   }
 
-  const { data: nfteoftData } : { data: any } = useContractReads<
+  const { data: nfteData } : { data: any } = useContractReads<
     [
       ContractFunctionConfig<typeof NFTEOFTAbi, 'balanceOf', 'view'>,
       ContractFunctionConfig<typeof veNFTEAbi, 'locked', 'view'>,
@@ -75,7 +75,7 @@ const StakingChainPage: FC = () => {
     enabled: !!address,
   })
 
-  const [nfteLPBalance, locked] = nfteoftData || []
+  const [nfteLPBalance, locked] = nfteData || []
 
   useEffect(() => {
     if (new Date((parseInt(`${locked?.result?.[1]}`) || 0) * 1000) > new Date()) {

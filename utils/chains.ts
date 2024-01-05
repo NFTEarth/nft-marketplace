@@ -5,14 +5,10 @@ import {
   polygon,
   optimism,
   polygonZkEvm,
-  bsc, 
-  base,
-  scroll,
-  linea
-
+  bsc
 } from 'wagmi/chains'
 
-/*Chains that are missing from wagmi:
+//Chains that are missing from wagmi:
 export const scroll = {
   id: 534352,
   name: 'Scroll',
@@ -157,7 +153,7 @@ export const linea = {
       url: 'https://explorer.linea.build',
     },
   },
-} as const satisfies Chain*/
+} as const satisfies Chain
 
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
