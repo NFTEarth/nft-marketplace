@@ -27,7 +27,7 @@ import { TimeFilterToggle } from 'components/home/TimeFilterToggle'
 import HeroSection from "components/HeroSection";
 import fetcher from 'utils/fetcher'
 import Link from 'next/link'
-import {faDiscord, faGithub, faLinkedin, faTwitter} from "@fortawesome/free-brands-svg-icons";
+import {faDiscord, faGithub, faXTwitter} from "@fortawesome/free-brands-svg-icons";
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -291,7 +291,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                   <FontAwesomeIcon icon={faGithub} width={16} height={16} color="#fff" />
                 </Link>
                 <Link href="https://x.com/westonnelson/" target="_blank">
-                  <FontAwesomeIcon icon={faTwitter} width={16} height={16} color="#fff" />
+                  <FontAwesomeIcon icon={faXTwitter} width={16} height={16} color="#fff" />
                 </Link>
                 <Link href="https://discordapp.com/users/456602347209228288" target="_blank">
                   <FontAwesomeIcon icon={faDiscord} width={16} height={16} color="#fff" />
@@ -327,7 +327,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                   <FontAwesomeIcon icon={faGithub} width={16} height={16} color="#fff" />
                 </Link>
                 <Link href="https://x.com/ShinjiKagehisa/" target="_blank">
-                  <FontAwesomeIcon icon={faTwitter} width={16} height={16} color="#fff" />
+                  <FontAwesomeIcon icon={faXTwitter} width={16} height={16} color="#fff" />
                 </Link>
                 <Link href="https://discordapp.com/users/210760420766515210" target="_blank">
                   <FontAwesomeIcon icon={faDiscord} width={16} height={16} color="#fff" />
@@ -358,7 +358,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                 }}
               >
                 <Link href="https://x.com/0xMaestro/" target="_blank">
-                  <FontAwesomeIcon icon={faTwitter} width={16} height={16} color="#fff" />
+                  <FontAwesomeIcon icon={faXTwitter} width={16} height={16} color="#fff" />
                 </Link>
                 <Link href="https://discordapp.com/users/896166209932886040" target="_blank">
                   <FontAwesomeIcon icon={faDiscord} width={16} height={16} color="#fff" />
@@ -389,7 +389,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                 }}
               >
                 <Link href="https://x.com/_SirJoey/" target="_blank">
-                  <FontAwesomeIcon icon={faTwitter} width={16} height={16} color="#fff" />
+                  <FontAwesomeIcon icon={faXTwitter} width={16} height={16} color="#fff" />
                 </Link>
                 <Link href="https://discordapp.com/users/239724646465929216" target="_blank">
                   <FontAwesomeIcon icon={faDiscord} width={16} height={16} color="#fff" />

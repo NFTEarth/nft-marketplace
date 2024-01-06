@@ -80,7 +80,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
             '@lg': { width: '50%' },
           }}
         >
-          {`Omnichain NFT Marketplace`}
+          {`Omnichain NFT Exchange`}
         </Text>
         {hideLink ?? (
           <Flex css={{ gap: 10 }}>
@@ -90,7 +90,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
                 color="tertiary"
                 size="large"
               >
-                Trade Collectibles Now
+                Trade Digital Collectibles
               </Button>
             </Link>
             

@@ -118,7 +118,7 @@ const StakingPage = () => {
           <Button
             color="primary"
             as={Link}
-            href="/staking"
+            href="/staking/pool"
           >Get NFTE/WETH LP</Button>
         </Flex>
       </Flex>
@@ -452,7 +452,7 @@ const StakingPage = () => {
               <Text style="h5">My Voting Power</Text>
               <Text
                 as={Link}
-                href="https://docs.nftearth.exchange/nfte-token/xnfte-and-nfte-staking"
+                href="https://docs.nftearth.exchange/nfte-token/venfte"
                 target="_blank"
                 style="body3"
                 css={{
