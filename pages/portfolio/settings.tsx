@@ -1,7 +1,8 @@
 import {useEffect, useState} from 'react'
 import {useAccount, useConnect, useSignMessage} from "wagmi"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faGear, faGift} from '@fortawesome/free-solid-svg-icons'
+import {faGear, faEnvelope, faGift} from '@fortawesome/free-solid-svg-icons'
+import { faXTwitter, faFontAwesome } from '@fortawesome/free-brands-svg-icons'
 import {useSession} from "next-auth/react";
 import {signIn} from "next-auth/react";
 import {Text, Flex, Box, Grid, Button} from 'components/primitives'
@@ -56,7 +57,7 @@ const PortfolioSettings : NextPage<Props> = ({ ssr }) => {
 
   useEffect(() => {
     if (!data) {
-      signMessage({ message: 'NFTEarth wants you to sign in with your Ethereum account' })
+      signMessage({ message: 'NFTEarth: Please sign in with your Ethereum wallet.' })
     }
   }, [data])
 
@@ -91,9 +92,9 @@ const PortfolioSettings : NextPage<Props> = ({ ssr }) => {
     return (
       <Layout>
         <Flex direction="column" align="center" justify="center" css={{ py: '40vh', gap: 20 }}>
-          <Text>Sign this message to prove your ownership of this wallet </Text>
+          <Text>NFTEarth: Please sign in with your Ethereum wallet. </Text>
           <Button onClick={() => {
-            signMessage({ message: 'NFTEarth wants you to sign in with your Ethereum account' })
+            signMessage({ message: 'NFTEarth: Please sign in with your Ethereum wallet.' })
           }}>Sign</Button>
         </Flex>
       </Layout>
@@ -142,15 +143,15 @@ const PortfolioSettings : NextPage<Props> = ({ ssr }) => {
                 </Box>
                 <Text css={getCssTab('details').text}>Details</Text>
               </Flex>
-              <Flex
-                align='center'
-                // onClick={() => setActiveTab('details')}
-                css={getCssTab('referral').tab}>
-                <Box css={{ width: 16 }}>
-                  <FontAwesomeIcon icon={faGift} />
-                </Box>
-                <Text css={getCssTab('referral').text}> Your Referral Dashboard (Coming Soon)</Text>
-              </Flex>
+              {/*<Flex*/}
+              {/*  align='center'*/}
+              {/*  // onClick={() => setActiveTab('details')}*/}
+              {/*  css={getCssTab('referral').tab}>*/}
+              {/*  <Box css={{ width: 16 }}>*/}
+              {/*    <FontAwesomeIcon icon={faGift} />*/}
+              {/*  </Box>*/}
+              {/*  <Text css={getCssTab('referral').text}>Your Referral Dashboard (Coming Soon)</Text>*/}
+              {/*</Flex>*/}
             </Box>
           </Flex>
           <Box
@@ -167,14 +168,14 @@ const PortfolioSettings : NextPage<Props> = ({ ssr }) => {
                 profile={profile}
               />
             </SettingsContentContainer>
-            <SettingsContentContainer
-              tab='referral'
-              tabLabel='referral'
-              activeTab={activeTab}
-              icon={faGift}
-              setActiveTab={() => setActiveTab('referral')}>
-              <Flex/>
-            </SettingsContentContainer>
+            {/*<SettingsContentContainer*/}
+            {/*  tab='referral'*/}
+            {/*  tabLabel='referral'*/}
+            {/*  activeTab={activeTab}*/}
+            {/*  icon={faGift}*/}
+            {/*  setActiveTab={() => setActiveTab('referral')}>*/}
+            {/*  <Flex/>*/}
+            {/*</SettingsContentContainer>*/}
           </Box>
         </Grid>
       </Box>

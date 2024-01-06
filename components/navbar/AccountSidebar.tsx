@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react'
 import { AnimatedOverlay, Content } from 'components/primitives/Dialog'
 import { useAccount, useDisconnect } from 'wagmi'
-import {useENSResolver, useProfile} from 'hooks'
+import { useENSResolver, useProfile } from 'hooks'
 import { Box, Button, Flex, Grid, Text } from 'components/primitives'
 import { Avatar } from 'components/primitives/Avatar'
 import Jazzicon from 'react-jazzicon/dist/Jazzicon'
@@ -12,10 +12,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faChartLine,
   faClose,
-  faCopy, faGear,
+  faCopy,
   faHand,
   faList,
-  faRightFromBracket,
+  faGear,
   faStore,
 } from '@fortawesome/free-solid-svg-icons'
 import CopyText from 'components/common/CopyText'
@@ -118,7 +118,7 @@ export const AccountSidebar: FC = () => {
                       setOpen(false)
                     }}
                   >
-                    <FontAwesomeIcon icon={faClose} height={16} width={16} />
+                    <FontAwesomeIcon icon={faClose} height={18} width={18} />
                   </Button>
                   <Flex align="center" css={{ gap: '$3', ml: '$3' }}>
                     {profile?.profileImage ? (
@@ -136,7 +136,7 @@ export const AccountSidebar: FC = () => {
                         <Flex
                           align="center"
                           css={{
-                            gap: 10,
+                            gap: 8,
                             color: '$gray11',
                             cursor: 'pointer',
                           }}
@@ -147,8 +147,8 @@ export const AccountSidebar: FC = () => {
                           {!profile?.username && !shortEnsName ? (
                             <FontAwesomeIcon
                               icon={faCopy}
-                              width={16}
-                              height={16}
+                              width={12}
+                              height={14}
                             />
                           ) : null}
                         </Flex>
@@ -156,7 +156,7 @@ export const AccountSidebar: FC = () => {
                           <Flex
                             align="center"
                             css={{
-                              gap: 10,
+                              gap: 8,
                               color: '$gray11',
                               cursor: 'pointer',
                             }}
@@ -166,8 +166,8 @@ export const AccountSidebar: FC = () => {
                             </Text>
                             <FontAwesomeIcon
                               icon={faCopy}
-                              width={16}
-                              height={16}
+                              width={12}
+                              height={12}
                             />
                           </Flex>
                         ) : null}
@@ -181,11 +181,11 @@ export const AccountSidebar: FC = () => {
                         css={{
                           gap: 6,
                           p: '$3',
-                          color: '$gray10',
+                          color: '#FF0420',
                           cursor: 'pointer',
                         }}
                       >
-                        <FontAwesomeIcon icon={faStore} width={16} height={16} />
+                        <FontAwesomeIcon icon={faStore} />
                         <Text style="body1">My Assets</Text>
                       </Flex>
                     </Link>
@@ -195,26 +195,12 @@ export const AccountSidebar: FC = () => {
                         css={{
                           gap: 6,
                           p: '$3',
-                          color: '$gray10',
+                          color: '#FF0420',
                           cursor: 'pointer',
                         }}
                       >
-                        <FontAwesomeIcon icon={faList} width={16} height={16} />
+                        <FontAwesomeIcon icon={faList} />
                         <Text style="body1">Listings</Text>
-                      </Flex>
-                    </Link>
-                    <Link href="/portfolio?tab=offers" replace={true}>
-                      <Flex
-                        align="center"
-                        css={{
-                          gap: 6,
-                          p: '$3',
-                          color: '$gray10',
-                          cursor: 'pointer',
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faHand} width={16} height={16} />
-                        <Text style="body1">Offers Made</Text>
                       </Flex>
                     </Link>
                     <Link href="/portfolio?tab=activity" replace={true}>
@@ -223,51 +209,39 @@ export const AccountSidebar: FC = () => {
                         css={{
                           gap: 6,
                           p: '$3',
+                          color: '#FF0420',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faChartLine} />
+                        <Text style="body1">Activity</Text>
+                      </Flex>
+                    </Link>
+
+                    <Link href="/portfolio/settings">
+                      <Flex
+                        align="center"
+                        css={{
+                          gap: 6,
+                          p: '$3',
                           color: '$gray10',
                           cursor: 'pointer',
                         }}
                       >
-                        <FontAwesomeIcon icon={faChartLine} width={16} height={16} />
-                        <Text style="body1">Activity</Text>
+                        <FontAwesomeIcon icon={faGear} width={16} height={16} color="#FF0420" />
+                        <Text style="body1">Settings</Text>
                       </Flex>
                     </Link>
                   </Grid>
-                  <Wallet
-                    exp={profile?.exp}
-                  />
-                  <Link href="/portfolio/settings">
-                    <Flex
-                      align="center"
-                      css={{
-                        gap: 6,
-                        p: '$3',
-                        color: '$gray10',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faGear} width={16} height={16} />
-                      <Text style="body1">Settings</Text>
-                    </Flex>
-                  </Link>
-                  <Flex
-                    justify="between"
-                    align="center"
-                    css={{
-                      cursor: 'pointer',
-                      px: '$4',
-                      my: '$3',
-                    }}
+                  <Wallet exp={''} />
+                  <Button
+                    size="large"
+                    css={{ my: '$4', justifyContent: 'center' }}
+                    color="gray3"
                     onClick={() => disconnect()}
                   >
-                    <Text style="body1">Logout</Text>
-                    <Box css={{ color: '$gray10' }}>
-                      <FontAwesomeIcon
-                        icon={faRightFromBracket}
-                        width={16}
-                        height={16}
-                      />
-                    </Box>
-                  </Flex>
+                    Logout
+                  </Button>
                 </Flex>
               </motion.div>
             </Content>
