@@ -39,27 +39,27 @@ export const parseError = (error: any, defaultMessage?: string) => {
   }
 
   if (message === 'Voting lock can be 3 years max') {
-    message = 'Max lock time is 1 year'
+    message = 'Max lock time is 1 year.'
   }
 
   if (message === 'Improper ratio') {
-    message = 'NFTE/WETH amount improper ratio'
+    message = 'NFTE/WETH amount improper ratio.'
   }
 
   if (message === 'Execution reverted for an unknown reason.') {
-    message = defaultMessage || 'Execution reverted'
+    message = defaultMessage || 'Execution reverted.'
   }
 
   if (/exceeds(.*)balance/.test(message)) {
-    message = 'Insufficient balance'
+    message = 'Insufficient balance.'
   }
 
   if (/User rejected/.test(message)) {
-    message = 'User rejected the request'
+    message = 'User rejected the request.'
   }
 
   if (name === 'ZeroDeposits') {
-    message = 'You must deposit ETH/NFTE or an eligible NFT to enter'
+    message = 'You must deposit ETH/NFTE or an eligible NFT to enter.'
   }
 
   if (name === 'OLD') {
@@ -71,7 +71,7 @@ export const parseError = (error: any, defaultMessage?: string) => {
   }
 
   if (message === 'ds-math-sub-underflow') {
-    message = 'Already Staked, Try Again.'
+    message = 'Try Again or Reduce The Amount of Decimals On Amount Input.'
   }
 
   return {
