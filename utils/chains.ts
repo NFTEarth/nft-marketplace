@@ -4,11 +4,9 @@ import {
   mainnet,
   polygon,
   optimism,
-  polygonZkEvm,
-  bsc
 } from 'wagmi/chains'
 
-//Chains that are missing from wagmi:
+// Chains that are missing from wagmi:
 export const scroll = {
   id: 534352,
   name: 'Scroll',
@@ -76,10 +74,10 @@ export const base = {
   nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
   rpcUrls: {
     default: {
-      http: ['https://developer-access-mainnet.base.org'],
+      http: ['https://mainnet.base.org'],
     },
     public: {
-      http: ['https://developer-access-mainnet.base.org'],
+      http: ['https://mainnet.base.org'],
     },
   },
   blockExplorers: {
@@ -94,7 +92,7 @@ export const base = {
   },
 } as const satisfies Chain
 
-export const arbitrumNova = {
+/*export const arbitrumNova = {
   id: 42170,
   name: 'Arbitrum Nova',
   network: 'arbitrum-nova',
@@ -125,7 +123,7 @@ export const arbitrumNova = {
       blockCreated: 1746963,
     },
   },
-} as const satisfies Chain
+} as const satisfies Chain*/
 
 export const linea = {
   id: 59144,
@@ -223,7 +221,6 @@ export type OFTChain = {
   address: `0x${string}`
   LPNFTE?: `0x${string}`
   veNFTE?: `0x${string}`
-  uniProxy?: `0x${string}`
   feeDistributor?: `0x${string}`
   lightIconUrl: string
   darkIconUrl: string
@@ -239,7 +236,6 @@ export const DefaultOFTChain: OFTChain = {
   LPNFTE: '0xd00CD4363bCF7DC19E84fDB836ce28D24F00716c',
   veNFTE: '0xc526C83849Fb4424e4563A3b609a4eBf916cf6d0',
   feeDistributor: '0x99032fD0727dEd2a579dcB447e85359ddE9223B6',
-  /*uniProxy: '0x82FcEB07a4D01051519663f6c1c919aF21C27845',*/
   lightIconUrl: '/icons/base-icon-dark.svg',
   darkIconUrl: '/icons/base-icon-light.svg',
   coingeckoNetworkId: 'base'
@@ -288,13 +284,13 @@ export const OFT_CHAINS : OFTChain[] = [
     coingeckoNetworkId: 'arbitrum-one'
   },
   {
-  id: linea.id,
-  lzId: 183,
-  name: linea.name,
-  address: '0x2140Ea50bc3B6Ac3971F9e9Ea93A1442665670e4',
-  lightIconUrl: '/icons/linea-icon-dark.svg',
-  darkIconUrl: '/icons/linea-icon-light.svg',
-  coingeckoNetworkId: 'linea'
+    id: linea.id,
+    lzId: 183,
+    name: linea.name,
+    address: '0x2140Ea50bc3B6Ac3971F9e9Ea93A1442665670e4',
+    lightIconUrl: '/icons/linea-icon-dark.svg',
+    darkIconUrl: '/icons/linea-icon-light.svg',
+    coingeckoNetworkId: 'linea'
   },
   {
     id: mainnet.id,
@@ -315,15 +311,6 @@ export const OFT_CHAINS : OFTChain[] = [
      coingeckoNetworkId: 'binance-smart-chain'
    },
   {
-    id: base.id,
-    lzId: 184,
-    name: base.name,
-    address: '0xc2106ca72996e49bBADcB836eeC52B765977fd20',
-    lightIconUrl: '/icons/base-icon-dark.svg',
-    darkIconUrl: '/icons/base-icon-light.svg',
-    coingeckoNetworkId: 'base'
-  },
-  {
     id: polygonZkEvm.id,
     lzId: 158,
     name: polygonZkEvm.name,
@@ -333,14 +320,14 @@ export const OFT_CHAINS : OFTChain[] = [
     coingeckoNetworkId: 'zkevm'
   }
 
-  // {
-  //   id: 5000,
-  //   lzId: 181,
-  //   name: 'Mantle',
-  //   address: '0x3E173b825ADEeF9661920B91A8d50B075Ad51bA5',
-  //   lightIconUrl: '/icons/mantle-icon-dark.svg',
-  //   darkIconUrl: '/icons/mantle-icon-light.svg'
-  // }*/
+  {
+    id: 5000,
+    lzId: 181,
+    name: 'Mantle',
+    address: '0x3E173b825ADEeF9661920B91A8d50B075Ad51bA5',
+    lightIconUrl: '/icons/mantle-icon-dark.svg',
+    darkIconUrl: '/icons/mantle-icon-light.svg'
+   }*/
 ]
 
 export const FORTUNE_CHAINS = [
@@ -372,6 +359,8 @@ export const getAlchemyNetworkName = (chainId: number) => {
     network = "polygonzkevm-mainnet";
   } else if (chainId === 42161) {
     network = "arb-mainnet";
+  } else if (chainId === 8453) {
+    network = "base-mainnet";
   } else {
     return null;
   }
@@ -381,19 +370,6 @@ export const getAlchemyNetworkName = (chainId: number) => {
 
 export default [
   DefaultChain,
-
-  /*{
-    ...arbitrumNova,
-    lightIconUrl: '/icons/arbitrum-nova-icon-dark.svg',
-    darkIconUrl: '/icons/arbitrum-nova-icon-light.svg',
-    reservoirBaseUrl: 'https://api-arbitrum-nova.reservoir.tools',
-    proxyApi: '/api/reservoir/arbitrum-nova',
-    routePrefix: 'arbitrum-nova',
-    apiKey: process.env.RESERVOIR_API_KEY,
-    coingeckoId: 'ethereum',
-    collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_NOVA_COLLECTION_SET_ID,
-    community: process.env.NEXT_PUBLIC_ARBITRUM_NOVA_COMMUNITY,
-  },*/
   {
     ...optimism,
     name: 'Optimism',
@@ -456,20 +432,18 @@ export default [
     collectionSetId: process.env.NEXT_PUBLIC_ETH_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_ETH_COMMUNITY,
   },
-  
-
-  // {
-  //   ...zora,
-  //   name: 'Zora',
-  //   lightIconUrl: '/icons/zora-icon-dark.svg',
-  //   darkIconUrl: '/icons/zora-icon-light.svg',
-  //   reservoirBaseUrl: 'https://api-zora.reservoir.tools',
-  //   proxyApi: '/api/reservoir/zora',
-  //   routePrefix: 'zora',
-  //   apiKey: process.env.RESERVOIR_API_KEY,
-  //   coingeckoId: 'ethereum',
-  // },
-  /* {
+  /*{
+     ...zora,
+     name: 'Zora',
+     lightIconUrl: '/icons/zora-icon-dark.svg',
+     darkIconUrl: '/icons/zora-icon-light.svg',
+     reservoirBaseUrl: 'https://api-zora.reservoir.tools',
+     proxyApi: '/api/reservoir/zora',
+     routePrefix: 'zora',
+     apiKey: process.env.RESERVOIR_API_KEY,
+     coingeckoId: 'ethereum',
+   },
+   {
      ...bsc,
      lightIconUrl: '/icons/bsc-icon-dark.svg',
      darkIconUrl: '/icons/bsc-icon-light.svg',
@@ -481,20 +455,7 @@ export default [
      collectionSetId: process.env.NEXT_PUBLIC_BSC_COLLECTION_SET_ID,
      community: process.env.NEXT_PUBLIC_BSC_COMMUNITY,
    },
-  {
-     ...base,
-     lightIconUrl: '/icons/base-icon-dark.svg',
-     darkIconUrl: '/icons/base-icon-light.svg',
-     reservoirBaseUrl: 'https://api-base.reservoir.tools',
-     proxyApi: '/api/reservoir/base',
-     routePrefix: 'base',
-     apiKey: process.env.RESERVOIR_API_KEY,
-     coingeckoId: 'base',
-     collectionSetId: process.env.NEXT_PUBLIC_BASE_COLLECTION_SET_ID,
-     community: process.env.NEXT_PUBLIC_BASE_COMMUNITY,
-   },
-    /*{
-      ...polygonZkEvm,
+   {      ...polygonZkEvm,
       lightIconUrl: '/icons/polygon-zkevm-icon-dark.svg',
       darkIconUrl: '/icons/polygon-zkevm-icon-light.svg',
       reservoirBaseUrl: 'https://api-polygon-zkevm.reservoir.tools',
@@ -504,5 +465,17 @@ export default [
       coingeckoId: 'ethereum',
       collectionSetId: process.env.NEXT_PUBLIC_POLYGON_ZKEVM_COLLECTION_SET_ID,
       community: process.env.NEXT_PUBLIC_POLYGON_ZKEVM_COMMUNITY,
-    },*/
+    },
+    {
+    ...arbitrumNova,
+    lightIconUrl: '/icons/arbitrum-nova-icon-dark.svg',
+    darkIconUrl: '/icons/arbitrum-nova-icon-light.svg',
+    reservoirBaseUrl: 'https://api-arbitrum-nova.reservoir.tools',
+    proxyApi: '/api/reservoir/arbitrum-nova',
+    routePrefix: 'arbitrum-nova',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_NOVA_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_ARBITRUM_NOVA_COMMUNITY,
+  },*/
 ] as ReservoirChain[]

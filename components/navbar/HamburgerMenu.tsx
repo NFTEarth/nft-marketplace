@@ -7,7 +7,7 @@ import {
   faRightFromBracket, faChevronDown, faBridge, faGift, faGear,
 } from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faXTwitter} from '@fortawesome/free-brands-svg-icons'
+import {faXTwitter, faDiscord, faTelegram} from '@fortawesome/free-brands-svg-icons'
 import Link from 'next/link'
 import Image from "next/legacy/image"
 import {useAccount, useDisconnect} from 'wagmi'
@@ -236,7 +236,10 @@ const HamburgerMenu = () => {
                 >
                   Products
                 </Text>
-                <FontAwesomeIcon icon={faChevronDown} width={20} height={20}/>
+                <FontAwesomeIcon icon={faChevronDown} width={20} height={20} style={{
+      marginLeft: 10, // Add some space between the text and the icon
+    }} />
+                
               </Flex>
             }>
             <Flex
@@ -287,18 +290,17 @@ const HamburgerMenu = () => {
             >
               <Text style="subtitle1">Portfolio</Text>
               <Text style="body3" color="subtle">
-                Manage your items, collections, listings and offers
+                Manage your assets
               </Text>
             </Flex>
-          </Link>
+            </Link>
           {isConnected ? (
             <>
-              <Wallet exp={profile?.exp}/>
               <Link href="/portfolio/settings" legacyBehavior>
                 <Text
                   style="subtitle1"
                   css={{
-                    borderBottom: '1px solid $gray4',
+                    borderBottom: '1px solid $primary9',
                     cursor: 'pointer',
                     pb: '$4',
                     pt: '24px',
@@ -310,12 +312,14 @@ const HamburgerMenu = () => {
                     height={16}
                     style={{
                       marginRight: 10,
-                      display: 'inline-block'
+                      display: 'inline-block',
+                      color: '#FF0420', // Add this line
                     }}
                   />
                   {`Settings`}
                 </Text>
               </Link>
+              <Wallet exp={profile?.exp}/>
               <Flex
                 css={{
                   justifyContent: 'space-between',
@@ -351,25 +355,38 @@ const HamburgerMenu = () => {
         </Flex>
         <Flex
           css={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center', // Optional: Add some space between the icons
             pt: '24px',
             pb: '$5',
             px: '$4',
             gap: '$4',
             width: '100%',
-            borderTop: '1px solid $gray4',
+            borderTop: '1px solid #FF0420',
           }}
         >
           <a href="https://x.com/NFTEarth_L2" target="_blank">
-            <Button
-              css={{justifyContent: 'center', width: '44px', height: '44px'}}
-              type="button"
-              size="small"
-              color="gray3"
-            >
-              <FontAwesomeIcon icon={faXTwitter} width={20} height={20}/>
-            </Button>
-          </a>
-        </Flex>
+    <Button
+      css={{justifyContent: 'center', width: '44px', height: '44px'}}
+      type="button"
+      size="small"
+      color="gray3"
+    >
+      <FontAwesomeIcon icon={faXTwitter} width={20} height={20}/>
+    </Button>
+  </a>
+  <a href="https://discord.gg/56a7u3wDkX" target="_blank">
+    <Button
+      css={{justifyContent: 'center', width: '44px', height: '44px'}}
+      type="button"
+      size="small"
+      color="gray3"
+    >
+      <FontAwesomeIcon icon={faDiscord} width={20} height={20}/>
+    </Button>
+  </a>
+</Flex>
       </Flex>
     </FullscreenModal>
   )
