@@ -2,7 +2,7 @@ import {request, RequestDocument, Variables} from 'graphql-request'
 import useSWR, {SWRConfiguration} from "swr";
 
 const subgraphFetcher = <T>([query, variables]: [RequestDocument, Variables]) =>
-  request<T>('https://api.studio.thegraph.com/query/16559/venfte/version/latest', query, variables)
+  request<T>('https://api.studio.thegraph.com/query/16559/venfte/v0.0.1', query, variables)
 
 export type NFTELPToken = {
   id: `0x${string}`
