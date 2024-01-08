@@ -100,7 +100,7 @@ const currencies = [
     coinGeckoId: 'arbitrum',
   },*/
   {
-    address: '0x492Fa53b88614923937B7197C87E0F7F8EEb7B20',
+    address: '0xc2106ca72996e49bBADcB836eeC52B765977fd20',
     symbol: 'NFTE',
     decimals: base.nativeCurrency.decimals,
     chain: {

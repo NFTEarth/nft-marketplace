@@ -3,7 +3,7 @@ import useSWR, {SWRConfiguration} from "swr";
 import {NFTELPToken} from "./useStakingLP";
 
 const subgraphFetcher = <T>([query, variables]: [RequestDocument, Variables]) =>
-  request<T>('https://api.thegraph.com/subgraphs/name/ryuzaki01/staking', query, variables)
+  request<T>('https://api.studio.thegraph.com/query/16559/venfte/version/latest', query, variables)
 
 export type StakingDepositor = {
   id: `0x${string}`
