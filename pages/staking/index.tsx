@@ -31,6 +31,7 @@ import {formatBN} from "utils/numbers";
 import ERC20Abi from 'artifact/ERC20Abi'
 import veNFTEAbi from 'artifact/veNFTEAbi'
 import { base } from "utils/chains";
+import { NFTE_LP, VE_NFTE } from "utils/contracts";
 
 const StakingPage = () => {
   const chain = OFT_CHAINS.find((chain) => chain.id === base.id)
@@ -43,7 +44,7 @@ const StakingPage = () => {
       // LPNFTE Balance
       {
         abi: ERC20Abi,
-        address: chain?.LPNFTE as `0x${string}`,
+        address: NFTE_LP,
         chainId: base.id,
         functionName: 'balanceOf',
         args: [address as `0x${string}`]
@@ -51,7 +52,7 @@ const StakingPage = () => {
       // veNFTE Balance
       {
         abi: ERC20Abi,
-        address: chain?.veNFTE as `0x${string}`,
+        address: VE_NFTE,
         chainId: base.id,
         functionName: 'balanceOf',
         args: [address as `0x${string}`],
@@ -59,14 +60,14 @@ const StakingPage = () => {
       // veNFTE TotalSupply
       {
         abi: ERC20Abi,
-        address: chain?.veNFTE as `0x${string}`,
+        address: VE_NFTE,
         functionName: 'totalSupply',
         chainId: base.id,
       },
       // veNFTE Locked
       {
         abi: veNFTEAbi,
-        address: chain?.veNFTE as `0x${string}`,
+        address: VE_NFTE,
         functionName: 'locked',
         chainId: base.id,
         args: [address as `0x${string}`],

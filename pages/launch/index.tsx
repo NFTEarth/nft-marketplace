@@ -6,7 +6,7 @@ import {
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faLock} from "@fortawesome/free-solid-svg-icons";
 import {formatEther, zeroAddress} from "viem";
-import {arbitrum} from "viem/chains";
+import { base } from "utils/chains";
 import Link from "next/link";
 
 import Layout from "components/Layout";
@@ -26,11 +26,12 @@ import ClaimList from "components/staking/ClaimList";
 
 import {useMounted, useStakingLP} from "hooks";
 
-import {OFT_CHAINS, base} from "utils/chains";
+import {OFT_CHAINS} from "utils/chains";
 import {formatBN} from "utils/numbers";
 
 import ERC20Abi from 'artifact/ERC20Abi'
 import veNFTEAbi from 'artifact/veNFTEAbi'
+import { NFTE_LP, VE_NFTE } from "utils/contracts";
 
 const LaunchPage = () => {
   const chain = OFT_CHAINS.find((chain) => chain.id === base.id)
@@ -43,7 +44,7 @@ const LaunchPage = () => {
       // LPNFTE Balance
       {
         abi: ERC20Abi,
-        address: chain?.LPNFTE as `0x${string}`,
+        address: NFTE_LP,
         chainId: base.id,
         functionName: 'balanceOf',
         args: [address as `0x${string}`]
@@ -51,7 +52,7 @@ const LaunchPage = () => {
       // veNFTE Balance
       {
         abi: ERC20Abi,
-        address: chain?.veNFTE as `0x${string}`,
+        address: VE_NFTE,
         chainId: base.id,
         functionName: 'balanceOf',
         args: [address as `0x${string}`],
@@ -59,16 +60,16 @@ const LaunchPage = () => {
       // veNFTE TotalSupply
       {
         abi: ERC20Abi,
-        address: chain?.veNFTE as `0x${string}`,
+        address: VE_NFTE,
         functionName: 'totalSupply',
-        chainId: arbitrum.id,
+        chainId: base.id,
       },
       // veNFTE Locked
       {
         abi: veNFTEAbi,
-        address: chain?.veNFTE as `0x${string}`,
+        address: VE_NFTE,
         functionName: 'locked',
-        chainId: arbitrum.id,
+        chainId: base.id,
         args: [address as `0x${string}`],
       }
     ],
@@ -503,7 +504,7 @@ const LaunchPage = () => {
                     textStyle="h6"
                     logoHeight={20}
                     address={chain?.veNFTE || zeroAddress}
-                    chainId={arbitrum.id}
+                    chainId={base.id}
                   />
                 </div>
               </Flex>
