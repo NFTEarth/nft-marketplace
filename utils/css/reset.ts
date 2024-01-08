@@ -280,7 +280,7 @@ Prevent resizing textareas horizontally by default.
 
   'input::placeholder, textarea::placeholder': {
     opacity: 1 /* 1 */,
-    // color: theme('colors.gray.400', #9ca3af), /* 2 */
+    // color: theme('colors.gray.400', #fff077), /* 2 */
   },
 
   /*
