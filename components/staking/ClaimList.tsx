@@ -42,7 +42,7 @@ const ClaimList = () => {
     price: preparedData?.result?.[0] || BigInt(0)
   })
 
-  const { data: nftePrice, isLoading: isLoadingNFTEPrice } = useUSDAndNativePrice({
+  const { data: nfteoftPrice, isLoading: isLoadingNfteoftPrice } = useUSDAndNativePrice({
     enabled: !!preparedData?.result?.[1],
     chainId: base.id,
     contract: NFTEOFT,
@@ -65,7 +65,7 @@ const ClaimList = () => {
               <Flex
                 direction="column"
               >
-                <Text css={{ fontSize: 'inherit' }}>{`Claiming Successful`}</Text>
+                <Text css={{ fontSize: 'inherit' }}>{`Rewards Claimed Successfully`}</Text>
                 <Link
                   href={`${base.blockExplorers.etherscan.url}/tx/${tx?.hash}`}
                   target="_blank"
@@ -230,7 +230,7 @@ const ClaimList = () => {
                 <Text style="body3">Rewards in USD</Text>
                 <Text style="subtitle1" css={{ fontWeight: 'bold' }}>{`($${formatBN(
                   BigInt(wethPrice?.usdPrice || 0) +
-                  BigInt(nftePrice?.usdPrice || 0),
+                  BigInt(nfteoftPrice?.usdPrice || 0),
                   2, 6, { notation: "standard" }
                 )})`}</Text>
               </Flex>
