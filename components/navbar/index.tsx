@@ -237,8 +237,8 @@ const Navbar = () => {
                 gap: 10
               }}
             >
-              <Image src="/images/web3chat-icon.png" width={20} height={20} objectFit="contain" alt="Web3Chat"/>
-              {`Web3Chat`}
+              <Image src="/images/web3chat-icon.png" width={20} height={20} objectFit="contain" alt="Inscriptions"/>
+              {`Inscriptions`}
               <Badge corners="pill">Soon</Badge>
             </DropdownMenuItem>
 

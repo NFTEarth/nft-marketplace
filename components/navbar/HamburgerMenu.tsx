@@ -7,7 +7,7 @@ import {
   faRightFromBracket, faChevronDown, faBridge, faGift, faGear,
 } from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faTwitter} from '@fortawesome/free-brands-svg-icons'
+import {faXTwitter} from '@fortawesome/free-brands-svg-icons'
 import Link from 'next/link'
 import Image from "next/legacy/image"
 import {useAccount, useDisconnect} from 'wagmi'
@@ -359,14 +359,14 @@ const HamburgerMenu = () => {
             borderTop: '1px solid $gray4',
           }}
         >
-          <a href="https://twitter.com/NFTEarth_L2" target="_blank">
+          <a href="https://x.com/NFTEarth_L2" target="_blank">
             <Button
               css={{justifyContent: 'center', width: '44px', height: '44px'}}
               type="button"
               size="small"
               color="gray3"
             >
-              <FontAwesomeIcon icon={faTwitter} width={20} height={20}/>
+              <FontAwesomeIcon icon={faXTwitter} width={20} height={20}/>
             </Button>
           </a>
         </Flex>

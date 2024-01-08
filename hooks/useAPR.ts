@@ -58,7 +58,7 @@ const useAPR = (timestamp: number | undefined, chain: Chain) => {
     keepPreviousData: true
   })
 
-  const [distributedWeth, distributedNFTEOFT, totalSupplyVeDream, reserves] = data || []
+  const [distributedWeth, distributedNFTEOFT, totalSupplyVeNfte, reserves] = data || []
 
   const { data: wethPrice, isLoading: isLoadingWethPrice } = useUSDAndNativePrice({
     chainId: base.id,
@@ -84,21 +84,21 @@ const useAPR = (timestamp: number | undefined, chain: Chain) => {
     price: reserves?.result?.[1] || BigInt(0)
   })
 
-  const veDreamSupply = parseFloat(formatUnits(totalSupplyVeDream?.result || BigInt(0), 18))
+  const veNfteSupply = parseFloat(formatUnits(totalSupplyVeNfte?.result || BigInt(0), 18))
   const lastWeekWethRevenue =  parseFloat(formatUnits(BigInt(wethPrice?.usdPrice || 0), 8) || '0')
   const lastWeekNFTEOFTRevenue =  parseFloat(formatUnits(BigInt(nfteoftPrice?.usdPrice || 0), 8) || '0')
 
   const lastWeekRevenue = (lastWeekWethRevenue + lastWeekNFTEOFTRevenue)
   const dailyRevenue = lastWeekRevenue / 7;
-  const dreamLPLiquidity = parseFloat(wethLiquidity?.usdPrice || '0') + parseFloat(nfteoftLiquidity?.usdPrice || '0')
+  const nfteLPLiquidity = parseFloat(wethLiquidity?.usdPrice || '0') + parseFloat(nfteoftLiquidity?.usdPrice || '0')
 
   const APR = Math.round(
-    (10000 * (365 * dailyRevenue)) / (dreamLPLiquidity * veDreamSupply)
+    (10000 * (365 * dailyRevenue)) / (nfteLPLiquidity * veNfteSupply)
   ) * 52
 
   return {
     isLoading: isLoading || isLoadingWethPrice || isLoadingNFTEOFTPrice || isLoadingNfteoftLiquidity || isLoadingWethLiquidity,
-    TVL: dreamLPLiquidity,
+    TVL: nfteLPLiquidity,
     dailyRevenue,
     lastWeekRevenue,
     dailyAPR: APR / 365,
