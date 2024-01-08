@@ -1,7 +1,7 @@
 import { setParams } from '@reservoir0x/reservoir-sdk'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import supportedChains, { DefaultChain } from 'utils/chains'
-import { arbitrum, goerli, mainnet, optimism, zora } from 'wagmi/chains'
+import supportedChains, { DefaultChain, base } from 'utils/chains'
+import { arbitrum, goerli, mainnet, optimism, polygon, zora } from 'wagmi/chains'
 import wrappedContracts from 'utils/wrappedContracts'
 import { zeroAddress } from 'viem'
 
@@ -46,8 +46,11 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
         zora.id,
         optimism.id,
         arbitrum.id,
+        base.id,
+        polygon.id,
       ].includes(chain.id) &&
       endpoint.includes('currency')
+      
     ) {
       if (endpoint.includes(zeroAddress)) {
         res.redirect('/icons/currency/no-padding-eth.png')
@@ -59,7 +62,11 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
         res.redirect('/icons/currency/no-padding-weth.png')
         return
       }
+    } else if (endpoint.includes('0x492Fa53b88614923937B7197C87E0F7F8EEb7B20')) { 
+      res.redirect('/icons/currency/nfte.png') 
+      return
     }
+    
     res.redirect(url.href)
     return
   }
