@@ -31,7 +31,7 @@ const CryptoCurrencyIcon: FC<Props> = ({
     const isNFTELP = address.toLowerCase() === tokenChain?.LPNFTE?.toLowerCase()
 
     if (isNFTE) {
-      return '/icons/currency/nfte.png'
+      return '/icons/currency/nfte.svg'
     }
 
     if (isVENFTE) {
