@@ -23,7 +23,8 @@ import StakingList from "components/staking/StakingList";
 import StakeList from "components/staking/StakeList";
 import ClaimList from "components/staking/ClaimList";
 
-import { useMounted, useStakingLP} from "hooks";
+import { useAPR, useMounted, useStakingLP} from "hooks";
+
 
 import {OFT_CHAINS} from "utils/chains";
 import {formatBN} from "utils/numbers";
@@ -33,15 +34,17 @@ import veNFTEAbi from 'artifact/veNFTEAbi'
 import { base } from "utils/chains";
 import { NFTE_LP, VE_NFTE } from "utils/contracts";
 
+
 const StakingPage = () => {
   const chain = OFT_CHAINS.find((chain) => chain.id === base.id)
   const isMounted = useMounted()
   const [activeTab, setActiveTab] = useState('stakes')
+  const { APR } = useAPR(undefined, base)
   const { address } = useAccount()
-  const { data: lp } = useStakingLP(chain?.LPNFTE, { refreshInterval: 5000 })
-  const { data: nfteData } : { data: any } = useContractReads({
+  const { data: lp } = useStakingLP(NFTE_LP, { refreshInterval: 5000 })
+  const { data: nfteoftData } : { data: any } = useContractReads({
     contracts: [
-      // LPNFTE Balance
+      // NFTE LP Balance
       {
         abi: ERC20Abi,
         address: NFTE_LP,
@@ -78,7 +81,7 @@ const StakingPage = () => {
     enabled: !!address,
   })
 
-  const [nfteLPBalance, veNfteBalance, totalSupplyVeNfte, locked] = nfteData || []
+  const [nfteLPBalance, veNfteBalance, totalSupplyVeNfte, locked] = nfteoftData || []
 
   const stakingTitle = useMemo(() => {
     if (BigInt(nfteLPBalance?.result || 0) === BigInt(0) && BigInt(locked?.result?.[0] || 0) === BigInt(0)) {
@@ -258,7 +261,9 @@ const StakingPage = () => {
                   )}
                   {activeTab === 'staking' && (
                     <StakingList
-                      nfteLPBalance={nfteLPBalance?.result || BigInt(0)} APR={0}                    />
+                      APR={APR}
+                      nfteLPBalance={nfteLPBalance?.result || BigInt(0)} 
+                      />
                   )}
                   {activeTab === 'claim' && (
                     <ClaimList />
@@ -297,7 +302,7 @@ const StakingPage = () => {
                   }}
                 >
                   <CryptoCurrencyIcon
-                    address={chain?.LPNFTE || zeroAddress}
+                    address={NFTE_LP || zeroAddress}
                     chainId={base.id}
                     css={{
                       width: 20,
@@ -342,7 +347,7 @@ const StakingPage = () => {
                   }}
                 >
                   <CryptoCurrencyIcon
-                    address={chain?.LPNFTE || zeroAddress}
+                    address={NFTE_LP || zeroAddress}
                     chainId={base.id}
                     css={{
                       width: 20,
@@ -380,7 +385,7 @@ const StakingPage = () => {
                   }}
                 >
                   <CryptoCurrencyIcon
-                    address={chain?.veNFTE || zeroAddress}
+                    address={VE_NFTE || zeroAddress}
                     chainId={base.id}
                     css={{
                       width: 20,
@@ -423,7 +428,7 @@ const StakingPage = () => {
                     gap: 5
                   }}
                 >
-                  <Text style="body4"></Text>
+               <Text style="body4">APR</Text>
                 </Flex>
               </Flex>
               <Text
@@ -434,6 +439,7 @@ const StakingPage = () => {
                   width: '100%'
                 }}
               >
+                {`${APR}%`}
               </Text>
             </Flex>
             <Flex css={{
@@ -486,7 +492,7 @@ const StakingPage = () => {
                     amount={locked?.result?.[0] || 0n}
                     textStyle="h6"
                     logoHeight={20}
-                    address={chain?.LPNFTE || zeroAddress}
+                    address={NFTE_LP || zeroAddress}
                     chainId={base.id}
                   />
                 </div>
@@ -502,7 +508,7 @@ const StakingPage = () => {
                     amount={veNfteBalance?.result || 0n}
                     textStyle="h6"
                     logoHeight={20}
-                    address={chain?.veNFTE || zeroAddress}
+                    address={VE_NFTE || zeroAddress}
                     chainId={base.id}
                   />
                 </div>

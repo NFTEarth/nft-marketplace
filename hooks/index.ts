@@ -26,4 +26,4 @@ export { default as useRaffle } from './useRaffle'
 export { default as useRaffleEntries } from './useRaffleEntries'
 export { default as useRaffleHistory } from './useRaffleHistory'
 export { default as useRaffleStats } from './useRaffleStats'
-
+export { default as useAPR } from './useAPR'

@@ -32,7 +32,7 @@ import Link from "next/link";
 import Decimal from "decimal.js-light";
 import {NFTE_LP, VE_NFTE} from "../../utils/contracts";
 import {MaxUint256} from "@ethersproject/constants";
-
+import { useAPR } from "hooks";
 
 
 type Props = {
@@ -50,7 +50,7 @@ const StakingTab: FC<Props> = (props) => {
   const { openConnectModal } = useConnectModal()
   const publicClient = getPublicClient()
   const {addToast} = useContext(ToastContext)
-
+  const { APR } = useAPR(undefined, base)
   const valueBn = parseEther((new Decimal(value)).toFixed() as `${number}`)
   const timeStamp = parseInt(`${depositor?.lockEndTimestamp || 0}`);
   const newTime = timeStamp > 0 && timeStamp > dayjs().startOf('day').unix() ? dayjs.unix(timeStamp).startOf('day') : dayjs().startOf('day')

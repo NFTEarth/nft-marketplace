@@ -6,7 +6,6 @@ import {
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faLock} from "@fortawesome/free-solid-svg-icons";
 import {formatEther, zeroAddress} from "viem";
-import { base } from "utils/chains";
 import Link from "next/link";
 
 import Layout from "components/Layout";
@@ -24,24 +23,27 @@ import StakingList from "components/staking/StakingList";
 import StakeList from "components/staking/StakeList";
 import ClaimList from "components/staking/ClaimList";
 
-import {useMounted, useStakingLP} from "hooks";
+import { useMounted, useStakingLP} from "hooks";
 
 import {OFT_CHAINS} from "utils/chains";
 import {formatBN} from "utils/numbers";
 
 import ERC20Abi from 'artifact/ERC20Abi'
 import veNFTEAbi from 'artifact/veNFTEAbi'
+import { base } from "utils/chains";
 import { NFTE_LP, VE_NFTE } from "utils/contracts";
+import useAPR from "hooks/useAPR";
 
 const LaunchPage = () => {
   const chain = OFT_CHAINS.find((chain) => chain.id === base.id)
   const isMounted = useMounted()
   const [activeTab, setActiveTab] = useState('stakes')
+  const { APR } = useAPR(undefined, base)
   const { address } = useAccount()
-  const { data: lp } = useStakingLP(chain?.LPNFTE, { refreshInterval: 5000 })
+  const { data: lp } = useStakingLP(NFTE_LP, { refreshInterval: 5000 })
   const { data: nfteData } : { data: any } = useContractReads({
     contracts: [
-      // LPNFTE Balance
+      // NFTE LP Balance
       {
         abi: ERC20Abi,
         address: NFTE_LP,
@@ -92,7 +94,7 @@ const LaunchPage = () => {
             <Button
               color="primary"
               as={Link}
-              href="https://www.sushi.com/pool/add/v2/8453"
+              href="/staking/pool"
             >Get NFTE/WETH LP</Button>
           </Flex>
         </Flex>
@@ -119,7 +121,7 @@ const LaunchPage = () => {
           <Button
             color="primary"
             as={Link}
-            href="https://www.sushi.com/pool/add/v2/8453"
+            href="/staking/pool"
           >Get NFTE/WETH LP</Button>
         </Flex>
       </Flex>
@@ -258,7 +260,9 @@ const LaunchPage = () => {
                   )}
                   {activeTab === 'staking' && (
                     <StakingList
-                      nfteLPBalance={nfteLPBalance?.result || BigInt(0)} APR={0}                    />
+                      APR={APR}
+                      nfteLPBalance={nfteLPBalance?.result || BigInt(0)} 
+                      />
                   )}
                   {activeTab === 'claim' && (
                     <ClaimList />
@@ -297,7 +301,7 @@ const LaunchPage = () => {
                   }}
                 >
                   <CryptoCurrencyIcon
-                    address={chain?.LPNFTE || zeroAddress}
+                    address={NFTE_LP || zeroAddress}
                     chainId={base.id}
                     css={{
                       width: 20,
@@ -342,7 +346,7 @@ const LaunchPage = () => {
                   }}
                 >
                   <CryptoCurrencyIcon
-                    address={chain?.LPNFTE || zeroAddress}
+                    address={NFTE_LP || zeroAddress}
                     chainId={base.id}
                     css={{
                       width: 20,
@@ -380,7 +384,7 @@ const LaunchPage = () => {
                   }}
                 >
                   <CryptoCurrencyIcon
-                    address={chain?.veNFTE || zeroAddress}
+                    address={VE_NFTE || zeroAddress}
                     chainId={base.id}
                     css={{
                       width: 20,
@@ -423,7 +427,7 @@ const LaunchPage = () => {
                     gap: 5
                   }}
                 >
-                  <Text style="body4">APR</Text>
+               <Text style="body4">APR</Text>
                 </Flex>
               </Flex>
               <Text
@@ -434,7 +438,7 @@ const LaunchPage = () => {
                   width: '100%'
                 }}
               >
-             
+                {`${APR}%`}
               </Text>
             </Flex>
             <Flex css={{
@@ -454,7 +458,7 @@ const LaunchPage = () => {
               <Text style="h5">My Voting Power</Text>
               <Text
                 as={Link}
-                href="https://docs.nftearth.exchange/nfte-token/xnfte-and-nfte-staking"
+                href="https://docs.nftearth.exchange/nfte-token/venfte"
                 target="_blank"
                 style="body3"
                 css={{
@@ -487,7 +491,7 @@ const LaunchPage = () => {
                     amount={locked?.result?.[0] || 0n}
                     textStyle="h6"
                     logoHeight={20}
-                    address={chain?.LPNFTE || zeroAddress}
+                    address={NFTE_LP || zeroAddress}
                     chainId={base.id}
                   />
                 </div>
@@ -503,7 +507,7 @@ const LaunchPage = () => {
                     amount={veNfteBalance?.result || 0n}
                     textStyle="h6"
                     logoHeight={20}
-                    address={chain?.veNFTE || zeroAddress}
+                    address={VE_NFTE || zeroAddress}
                     chainId={base.id}
                   />
                 </div>
