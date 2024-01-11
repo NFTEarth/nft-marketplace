@@ -61,7 +61,7 @@ export const Head: FC<Props> = ({
       <meta name="twitter:image" content={ogImage} />
 
       {/* Open Graph */}
-      <meta property="og:type" content="website" />
+      <meta property="og:type" content="https://nftearth.exchange" />
       <meta property="og:determiner" content="the" />
       <meta property="og:locale" content="en" />
       <meta property="og:title" content={title} />

@@ -254,7 +254,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               textAlign: 'center'
             }}
           >
-            {`Team`}
+            {`NFTEarth Team`}
           </Text>
           <Flex css={{
             gap: 40,

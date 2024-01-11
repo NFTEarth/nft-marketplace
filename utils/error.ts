@@ -74,6 +74,10 @@ export const parseError = (error: any, defaultMessage?: string) => {
     message = 'Try Again or Reduce The Amount of Decimals On Amount Input.'
   }
 
+  if (message === 'Execution reverted.') {
+    message = 'Stake'
+  }
+
   return {
     name,
     message,

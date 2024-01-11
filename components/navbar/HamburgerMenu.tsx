@@ -142,7 +142,7 @@ const HamburgerMenu = () => {
                 pt: '24px',
               }}
             >
-              Collections
+              NFTs
             </Text>
           </Link>
         

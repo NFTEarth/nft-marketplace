@@ -120,7 +120,7 @@ const Navbar = () => {
           <Flex css={{ flex: 1, px: '$5', maxWidth: 600 }}>
             <GlobalSearch
               ref={searchRef}
-              placeholder="Search NFTs..."
+              placeholder="Search..."
               containerCss={{ width: '100%' }}
               key={router.asPath}
             />
@@ -129,7 +129,7 @@ const Navbar = () => {
         <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
           <Link href={`/${routePrefix}/collection-rankings`}>
             <NavItem active={router.pathname.includes('collection-rankings')}>
-              Collections
+              NFTs
             </NavItem>
           </Link>
           <Dropdown

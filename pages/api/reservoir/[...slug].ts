@@ -63,7 +63,7 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
         return
       }
     } else if (endpoint.includes('0x492Fa53b88614923937B7197C87E0F7F8EEb7B20')) { 
-      res.redirect('/icons/currency/nfte.png') 
+      res.redirect('/icons/currency/nfte.svg') 
       return
     }
     

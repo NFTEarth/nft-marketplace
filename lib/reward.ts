@@ -21,7 +21,8 @@ type Collection = {
 type CollectionReward = Record<string, Collection | undefined>
 const collectionReward: Record<number, CollectionReward | undefined> = {
   10: undefined,
-  42161: undefined
+  42161: undefined,
+  8453: undefined
 }
 
 const fetchCollection =  async (chainId: number, continuation: string | undefined) => {
