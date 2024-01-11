@@ -178,8 +178,8 @@ const ClaimList = () => {
                 borderRadius: 8
               }}
             >
-              <img src="/icons/eth-icon-dark.svg" width={14} height={14}  alt="Ethereum"/>
-              <Text style="body3" color="dark">Ethereum</Text>
+              <img src="/icons/base-icon-dark.svg" width={14} height={14}  alt="Base"/>
+              <Text style="body3" color="dark">Base</Text>
             </Flex>
           </Flex>
           {loading ? (
