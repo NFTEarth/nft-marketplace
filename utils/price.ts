@@ -16,7 +16,7 @@ import {
 import {BigNumber} from "@ethersproject/bignumber";
 import db from "lib/db";
 
-import {OFT_CHAINS} from "./chains";
+import {OFT_CHAINS, base} from "./chains";
 
 const currencyPrice = db.collection('currency_price')
 import { getCurrency } from "./currency";
@@ -36,6 +36,7 @@ const Weth: Record<number, string> = {
   [optimism.id]: "0x4200000000000000000000000000000000000006",
   [arbitrum.id]: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
   [polygonZkEvm.id]: "0x4F9A0e7FD2Bf6067db6994CF12E4495Df938E6e9",
+  [base.id] :"0x4200000000000000000000000000000000000006",
   // Polygon: Wrapped MATIC
   [polygon.id]: "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
   // Avalanche: Wrapped AVAX
