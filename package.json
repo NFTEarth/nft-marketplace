@@ -10,6 +10,8 @@
     "@balancer-labs/sdk": "^1.1.5",
     "@datadog/browser-rum": "^4.30.1",
     "@davatar/react": "^1.11.1",
+    "@fortawesome/fontawesome-common-types": "^6.5.1",
+    "@fortawesome/fontawesome-free": "^6.5.1",
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-brands-svg-icons": "^6.5.1",
     "@fortawesome/free-regular-svg-icons": "^6.5.1",
@@ -45,6 +47,7 @@
     "dayjs": "^1.11.6",
     "ethers": "^6.7.1",
     "framer-motion": "^6.3.6",
+    "fs-extra": "^11.2.0",
     "graphql": "^16.8.0",
     "graphql-request": "^6.1.0",
     "highcharts": "^11.1.0",
@@ -73,7 +76,7 @@
     "uuid": "^9.0.0",
     "viem": "~1.0.6",
     "wagmi": "~1.2.1",
-    "yarn": "^1.22.19"
+    "yarn": "^1.22.21"
   },
   "prettier": {
     "semi": false,
