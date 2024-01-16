@@ -1,23 +1,19 @@
-<h2 align="center">NFTEarth</h2>
+<h1 align="center">NFTEarth</h1>
   <p align="center">
 
 # App Screencap: 
 
 ![image](https://github.com/NFTEarth/nftearth-marketplace/assets/29180454/7e4fab8d-fa35-4f49-9045-b68e025a0d84)
 
-
-
 <p align="center">Omnichain NFT protocol.</p>
 
 <p align="center">NFT Exchange, NFTFi, SocialFi, GameFi, NFT Launchpad, and AI-infused NFTs - all part of the NFTEarth protocol.</p>
-
 
 NFTEarth will be bringing the first Omnichain inscription tooling/markets to NFT enthusiasts - creating the potential for anyone to easily inscribe whatever they would like onchain!
 
 ![image](https://github.com/NFTEarth/nftearth-marketplace/assets/29180454/98468dbe-0770-473d-b1d8-f44d013382f5)
 
-
-### Built With
+# Built With
 
 - [ReservoirKit](https://docs.reservoir.tools/docs/reservoir-kit)
 - [Reservoir Protocol and API](https://reservoirprotocol.github.io/)
@@ -29,7 +25,7 @@ NFTEarth will be bringing the first Omnichain inscription tooling/markets to NFT
 
 ---
 
-### Community
+# Community
 
 - [X](https://twitter.com/NFTEarth_L2)
 - [Discord](https://discord.gg/56a7u3wDkX)
