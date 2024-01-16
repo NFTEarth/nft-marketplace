@@ -132,6 +132,11 @@ const Navbar = () => {
               NFTs
             </NavItem>
           </Link>
+          <Link href="/inscriptions">
+          <NavItem active={router.pathname.includes('inscriptions')}>
+           Inscriptions
+          </NavItem>
+          </Link>
           <Dropdown
             modal={false}
             trigger={
