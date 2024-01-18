@@ -18,7 +18,7 @@ import { base } from 'utils/chains'
 //CONFIGURABLE: Here you may configure currencies that you want to display in the wallet menu. Native currencies,
 //like ETH/MATIC etc need to be fetched in a different way. Configure them below
 const currencies = [
-  /*{
+  {
     address: zeroAddress,
     symbol: 'ETH',
     decimals: mainnet.nativeCurrency.decimals,
@@ -27,7 +27,7 @@ const currencies = [
       name: mainnet.name,
     },
     coinGeckoId: 'ethereum',
-  },*/
+  },
   {
     address: zeroAddress,
     symbol: 'ETH',
@@ -38,7 +38,7 @@ const currencies = [
     },
     coinGeckoId: 'ethereum',
   },
-  {
+ /* {
     address: zeroAddress,
     symbol: 'ETH',
     decimals: optimism.nativeCurrency.decimals,
@@ -47,7 +47,7 @@ const currencies = [
       name: optimism.name,
     },
     coinGeckoId: 'ethereum',
-  },  
+  },*/
   /*{
     address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
     symbol: 'WETH',
@@ -58,7 +58,7 @@ const currencies = [
     },
     coinGeckoId: 'weth',
   },*/
-  /*{
+  {
     address: '0x8c223a82E07feCB49D602150d7C2B3A4c9630310',
     symbol: 'NFTE',
     decimals: mainnet.nativeCurrency.decimals,
@@ -80,15 +80,15 @@ const currencies = [
   },
  
   /*{
-    address: '0x492Fa53b88614923937B7197C87E0F7F8EEb7B20',
+    address: '0x8637725aDa78db0674a679CeA2A5e0A0869EF4A1',
     symbol: 'NFTE',
-    decimals: polygon.nativeCurrency.decimals,
+    decimals: optimism.nativeCurrency.decimals,
     chain: {
-      id: polygon.id,
-      name: polygon.name,
+      id: optimism.id,
+      name: optimism.name,
     },
     coinGeckoId: 'nftearth',
-  },*/
+  },
   /*{
     address: '0x912CE59144191C1204E64559FE8253a0e49E6548',
     symbol: 'ARB',
@@ -110,24 +110,14 @@ const currencies = [
     coinGeckoId: 'nftearth',
   },
   {
-    address: '0x8637725aDa78db0674a679CeA2A5e0A0869EF4A1',
+    address: '0x492Fa53b88614923937B7197C87E0F7F8EEb7B20',
     symbol: 'NFTE',
-    decimals: optimism.nativeCurrency.decimals,
+    decimals: polygon.nativeCurrency.decimals,
     chain: {
-      id: optimism.id,
-      name: optimism.name,
+      id: polygon.id,
+      name: polygon.name,
     },
     coinGeckoId: 'nftearth',
-  },
-  {
-    address: '0x4200000000000000000000000000000000000042',
-    symbol: 'OP',
-    decimals: optimism.nativeCurrency.decimals,
-    chain: {
-      id: optimism.id,
-      name: optimism.name,
-    },
-    coinGeckoId: 'optimism',
   },
 ]
 
@@ -210,8 +200,12 @@ const Wallet : FC<WalletProps> = ({ exp }) => {
            balance = ethBalance.data?.value || 0n
            break
           }*/
-          case optimism.id: {
-            balance = optimismBalance.data?.value || 0n
+          case polygon.id: {
+            const polygonBalance = useBalance({
+              address,
+              chainId: polygon.id,
+            })
+            balance = polygonBalance.data?.value || 0n
             break
           }
           case base.id: { 

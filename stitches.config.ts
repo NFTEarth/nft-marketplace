@@ -39,18 +39,18 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         //Aliases
 
         //Primary
-        primary1: '#110c19',
-        primary2: '#221833',
-        primary3: '#0420FF',
-        primary4: '#0420FF',
-        primary5: '#0420FF',
-        primary6: '#0420FF',
-        primary7: '#FF0420',
-        primary8: '#FF0420',
-        primary9: '#FF0420',
-        primary10: '#FF0420',
-        primary11: '#0420FF',
-        primary12: '#FF0420',
+        primary1: '#A879FF',
+        primary2: '#A879FF',
+        primary3: '#A879FF',
+        primary4: '#A879FF',
+        primary5: '#A879FF',
+        primary6: '#A879FF',
+        primary7: '#A879FF',
+        primary8: '#A879FF',
+        primary9: '#79FFEB',
+        primary10: '#A879FF',
+        primary11: '#A879FF',
+        primary12: '#A879FF',
 
         //Secondary
         secondary1: '#0420FF',
@@ -67,9 +67,9 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         secondary12: '#0420FF',
 
         //Gray
-        gray1: '$slate1',
-        gray2: '$slate2',
-        gray3: '$slate3',
+        gray1: '#000000',
+        gray2: '#000000',
+        gray3: '#000000',
         gray4: '$slate4',
         gray5: '$slate5',
         gray6: '$slate6',
@@ -82,11 +82,11 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
 
         accent: '#0420ff',
 
-        neutralBgSubtle: '$gray3',
+        neutralBgSubtle: '#ffffff',
         neutralBg: '$gray1',
 
-        panelBg: '$gray3',
-        panelBorder: '$slate7',
+        panelBg: '#000000',
+        panelBorder: '#000000',
         panelShadow: 'transparent',
         dropdownBg: '$gray3',
         sidebarOverlay: 'black',

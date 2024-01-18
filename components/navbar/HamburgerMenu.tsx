@@ -313,7 +313,7 @@ const HamburgerMenu = () => {
                     style={{
                       marginRight: 10,
                       display: 'inline-block',
-                      color: '#FF0420', // Add this line
+                      color: '#79FFEB',
                     }}
                   />
                   {`Settings`}
@@ -357,13 +357,13 @@ const HamburgerMenu = () => {
           css={{
             display: 'flex',
             flexDirection: 'row',
-            justifyContent: 'center', // Optional: Add some space between the icons
+            justifyContent: 'center',
             pt: '24px',
             pb: '$5',
             px: '$4',
             gap: '$4',
             width: '100%',
-            borderTop: '1px solid #FF0420',
+            borderTop: '1px solid #79FFEB',
           }}
         >
           <a href="https://x.com/NFTEarth_L2" target="_blank">
