@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Image from "next/legacy/image"
 import { Box, Button, Flex, Grid, Text } from './primitives'
 import { FC } from 'react'
+import { FaShoppingCart } from 'react-icons/fa';
 
 interface IProp {
   hideLink?: boolean
@@ -84,15 +85,18 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
         </Text>
         {hideLink ?? (
           <Flex css={{ gap: 10 }}>
-            <Link href="/portfolio" passHref legacyBehavior>
-              <Button
-                as="a"
-                color="tertiary"
-                size="large"
-              >
-                Trade Digital Collectibles
-              </Button>
-            </Link>
+           <Link href="https://swap.defillama.com/?chain=arbitrum&from=0x0000000000000000000000000000000000000000&to=0x51b902f19a56f0c8e409a34a215ad2673edf3284" passHref legacyBehavior>
+          <Button
+          as="a"
+          color="tertiary"
+          size="large"
+          target="_blank"
+          rel="noopener noreferrer"
+          >
+          <FaShoppingCart />
+          Buy NFTE
+          </Button>
+          </Link>
             
           </Flex>
         )}

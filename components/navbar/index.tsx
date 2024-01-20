@@ -132,9 +132,15 @@ const Navbar = () => {
               NFTs
             </NavItem>
           </Link>
+          
           <Link href="/inscriptions">
           <NavItem active={router.pathname.includes('inscriptions')}>
            Inscriptions
+          </NavItem>
+          </Link>
+          <Link href="https://sol.nftearth.exchange/">
+          <NavItem>
+            SolEth Portal
           </NavItem>
           </Link>
           <Dropdown
@@ -142,7 +148,7 @@ const Navbar = () => {
             trigger={
               <NavItem>
                 <Flex as="span" align="center">
-                  {`NFTE Token`}
+                  {`NFTE Rewards`}
                   <FontAwesomeIcon
                     icon={faChevronDown}
                     width={16}
@@ -213,7 +219,7 @@ const Navbar = () => {
                   align="center"
                 >
               
-                  {`Products`}
+                  {`Games`}
                   <FontAwesomeIcon
                     icon={faChevronDown}
                     width={16}

@@ -145,8 +145,34 @@ const HamburgerMenu = () => {
               NFTs
             </Text>
           </Link>
+           <Link href={`https://nftearth.exchange/inscriptions`} legacyBehavior>
+            <Text
+              style="subtitle1"
+              css={{
+                borderBottom: '1px solid $gray4',
+                cursor: 'pointer',
+                pb: '$4',
+                pt: '24px',
+              }}
+            >
+              Inscriptions
+            </Text>
+          </Link>
+           <Link href={`https://sol.nftearth.exchange/`} legacyBehavior>
+            <Text
+              style="subtitle1"
+              css={{
+                borderBottom: '1px solid $gray4',
+                cursor: 'pointer',
+                pb: '$4',
+                pt: '24px',
+              }}
+            >
+              SolEth Portal
+            </Text>
+          </Link>
         
-          <Collapsible
+            <Collapsible
             trigger={
               <Flex
                 justify="between"
@@ -165,7 +191,7 @@ const HamburgerMenu = () => {
                     alignItems: 'center'
                   }}
                 >
-                  {`NFTE Token`}
+                  {`NFTE Rewards`}
                 </Text>
                 <FontAwesomeIcon icon={faChevronDown} width={20} height={20}/>
               </Flex>
@@ -234,7 +260,7 @@ const HamburgerMenu = () => {
                 <Text
                   style="subtitle1"
                 >
-                  Products
+                  Games
                 </Text>
                 <FontAwesomeIcon icon={faChevronDown} width={20} height={20} style={{
       marginLeft: 10, // Add some space between the text and the icon

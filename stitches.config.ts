@@ -67,9 +67,9 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         secondary12: '#0420FF',
 
         //Gray
-        gray1: '#000000',
-        gray2: '#000000',
-        gray3: '#000000',
+        gray1: '#000001',
+        gray2: '#000001',
+        gray3: '#A879FF',
         gray4: '$slate4',
         gray5: '$slate5',
         gray6: '$slate6',
@@ -82,7 +82,7 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
 
         accent: '#0420ff',
 
-        neutralBgSubtle: '#ffffff',
+        neutralBgSubtle: '#fffff1',
         neutralBg: '$gray1',
 
         panelBg: '#000000',

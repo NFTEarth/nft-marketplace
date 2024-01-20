@@ -578,7 +578,7 @@ const PoolPage = () => {
                       py: 5
                     }}
                   >
-                    {`Get NFTE Token`}
+                    {`Get NFTE`}
                     <FontAwesomeIcon icon={faExternalLink} style={{ height: 12, width: 12, display: 'inline-block', marginLeft: 5}}/>
                   </Text>
                 )}
