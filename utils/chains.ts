@@ -40,7 +40,7 @@ export const scroll = {
   },
 } as const satisfies Chain
 
-export const zora = {
+/*export const zora = {
   id: 7777777,
   name: 'ZORA',
   network: 'zora',
@@ -65,7 +65,7 @@ export const zora = {
       url: 'https://explorer.zora.energy',
     },
   },
-} as const satisfies Chain
+} as const satisfies Chain*/
 
 export const base = {
   id: 8453,
@@ -192,7 +192,7 @@ export const DefaultChain: ReservoirChain = {
   apiKey: process.env.RESERVOIR_API_KEY,
   // Coingecko id, used to convert the chain's native prices to usd. Can be found here:
   // https://www.coingecko.com/en/api/documentation#operations-coins-get_coins_list
-  coingeckoId: 'polygon-pos',
+  coingeckoId: 'matic-network',
   collectionSetId: process.env.NEXT_PUBLIC_BASE_COLLECTION_SET_ID,
   community: process.env.NEXT_PUBLIC_BASE_COMMUNITY,
 }
@@ -236,9 +236,9 @@ export const DefaultOFTChain: OFTChain = {
   /*LPNFTE: '0xd00CD4363bCF7DC19E84fDB836ce28D24F00716c',
   veNFTE: '0xc526C83849Fb4424e4563A3b609a4eBf916cf6d0',
   feeDistributor: '0x99032fD0727dEd2a579dcB447e85359ddE9223B6',*/
-  lightIconUrl: '/icons/base-icon-dark.svg',
-  darkIconUrl: '/icons/base-icon-light.svg',
-  coingeckoNetworkId: 'polygon-pos' //matic-network?
+  lightIconUrl: '/icons/polygon-icon-dark.svg',
+  darkIconUrl: '/icons/polygon-icon-light.svg',
+  coingeckoNetworkId: 'matic-network' //matic-network?
 }
 
 export const OFT_CHAINS : OFTChain[] = [
@@ -273,20 +273,6 @@ export const OFT_CHAINS : OFTChain[] = [
     lightIconUrl: '/icons/optimism-icon-dark.svg',
     darkIconUrl: '/icons/optimism-icon-light.svg',
     coingeckoNetworkId: 'optimistic-ethereum'
-  },
-
-  { id: arbitrum.id,
-    lzId: 110,
-    name: arbitrum.name,
-    routePrefix: 'arbitrum',
-    address: '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
-    LPNFTE: '0x82496243c0a1a39c5c6250bf0115c134Ba76698c',
-    veNFTE: '0xE57bd15448C3b2D1dBAD598775DD2F36F93EBf90',
-    feeDistributor: '0x9138A2e628f92a42397B3B600E86047AE49aCa98',
-    /*uniProxy: '0x82FcEB07a4D01051519663f6c1c919aF21C27845',*/
-    lightIconUrl: '/icons/arbitrum-icon-dark.svg',
-    darkIconUrl: '/icons/arbitrum-icon-light.svg',
-    coingeckoNetworkId: 'arbitrum-one'
   },
   {
     id: base.id,
@@ -385,18 +371,20 @@ export default [
   DefaultChain,
    {
     ...polygon,
+    name: 'Polygon',
     lightIconUrl: '/icons/polygon-icon-dark.svg',
     darkIconUrl: '/icons/polygon-icon-light.svg',
     reservoirBaseUrl: 'https://api-polygon.reservoir.tools',
     proxyApi: '/api/reservoir/polygon',
     routePrefix: 'polygon',
     apiKey: process.env.RESERVOIR_API_KEY,
-    coingeckoId: 'polygon-pos',
+    coingeckoId: 'matic-network',
     collectionSetId: process.env.NEXT_PUBLIC_POLYGON_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_POLYGON_COMMUNITY,
   },
   {
     ...arbitrum,
+    name: 'Arbitrum',
     lightIconUrl: '/icons/arbitrum-icon-dark.svg',
     darkIconUrl: '/icons/arbitrum-icon-light.svg',
     reservoirBaseUrl: 'https://api-arbitrum.reservoir.tools',
@@ -422,6 +410,7 @@ export default [
   },
   {
     ...linea,
+    name: 'Linea',
     lightIconUrl: '/icons/linea-icon-dark.svg',
     darkIconUrl: '/icons/linea-icon-light.svg',
     reservoirBaseUrl: 'https://api-linea.reservoir.tools',
@@ -444,6 +433,19 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_ETH_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_ETH_COMMUNITY,
+  },
+  {
+    ...base,
+    name: 'Base',
+    lightIconUrl: '/icons/base-icon-dark.svg',
+    darkIconUrl: '/icons/polygon-icon-light.svg',
+    reservoirBaseUrl: 'https://api-base.reservoir.tools',
+    proxyApi: '/api/reservoir/base',
+    routePrefix: 'base',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'base',
+    collectionSetId: process.env.NEXT_PUBLIC_POLYGON_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_POLYGON_COMMUNITY,
   },
   /*{
      ...zora,
