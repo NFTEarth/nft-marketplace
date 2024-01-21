@@ -19,7 +19,7 @@ import {
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
-import {arbitrum} from "wagmi/chains";
+import {arbitrum, polygon} from "wagmi/chains";
 
 type Props = {
   tokenId?: string | undefined
@@ -80,6 +80,22 @@ const Bid: FC<Props> = ({
       },
     ]
   }
+  if (marketplaceChain.id === polygon.id) {
+    bidCurrencies = [
+      {
+        contract: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
+        symbol: 'WETH',
+        coinGeckoId: 'ethereum',
+      },
+      {
+        contract: '0x492Fa53b88614923937B7197C87E0F7F8EEb7B20',
+        symbol: 'NFTE',
+        decimals: 18,
+        coinGeckoId: 'nftearth',
+      },
+    ]
+  }
+
 
   if (marketplaceChain.id === arbitrum.id) {
     bidCurrencies = [
@@ -95,12 +111,12 @@ const Bid: FC<Props> = ({
         decimals: 18,
         coinGeckoId: 'nftearth',
       },
-      {
+      /*{
         contract: '0x912CE59144191C1204E64559FE8253a0e49E6548',
         symbol: 'ARB',
         decimals: 18,
         coinGeckoId: 'arbitrum',
-      }
+      }*/
     ]
   }
 

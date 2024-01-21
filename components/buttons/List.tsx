@@ -17,7 +17,7 @@ import {
 } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { useMarketplaceChain } from 'hooks'
-import { mainnet, arbitrum, optimism, polygon, bsc } from "wagmi/chains";
+import { mainnet, arbitrum, optimism, polygon, bsc, polygonMumbai } from "wagmi/chains";
 import { zeroAddress } from 'viem'
 
 import { Button } from 'components/primitives'
@@ -90,12 +90,12 @@ const List: FC<Props> = ({
         decimals: 18,
         coinGeckoId: 'nftearth',
       },
-      {
+      /*{
         contract: '0x912CE59144191C1204E64559FE8253a0e49E6548',
         symbol: 'ARB',
         decimals: 18,
         coinGeckoId: 'arbitrum',
-      }
+      }*/
     ]
   }
 
@@ -106,18 +106,18 @@ const List: FC<Props> = ({
         symbol: 'ETH',
         coinGeckoId: 'ethereum',
       },
-      {
+      /*{
         contract: '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
         symbol: 'NFTE',
         decimals: 18,
         coinGeckoId: 'nftearth',
-      },
-      {
+      },/*
+      /*{
         contract: '0x4200000000000000000000000000000000000042',
         symbol: 'OP',
         decimals: 18,
         coinGeckoId: 'optimism',
-      }
+      }*/
     ]
   }
 
@@ -128,6 +128,12 @@ const List: FC<Props> = ({
         contract: zeroAddress,
         symbol: 'MATIC',
         coinGeckoId: 'matic-network',
+      },
+      {
+        contract: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
+        symbol: 'WETH',
+        decimals: 18,
+        coinGeckoId: 'ethereum',
       },
       {
         contract: '0x492Fa53b88614923937B7197C87E0F7F8EEb7B20',

@@ -119,6 +119,16 @@ const currencies = [
     },
     coinGeckoId: 'nftearth',
   },
+  {
+    address: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
+    symbol: 'WETH',
+    decimals: polygon.nativeCurrency.decimals,
+    chain: {
+      id: polygon.id,
+      name: polygon.name,
+    },
+    coinGeckoId: 'ethereum',
+  },
 ]
 
 type EnhancedCurrency = (typeof currencies)[0] & {
