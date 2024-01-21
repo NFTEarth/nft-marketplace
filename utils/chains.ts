@@ -170,29 +170,29 @@ export type ReservoirChain = Chain & {
 }
 
 export const DefaultChain: ReservoirChain = {
-  ...base,
+  ...polygon,
   // Any url to display the logo of the chain in light mode
-  lightIconUrl: '/icons/base-icon-dark.svg',
+  lightIconUrl: '/icons/polygon-icon-dark.svg',
   // Any url to display the logo of the chain in dark mode
-  darkIconUrl: '/icons/base-icon-light.svg',
+  darkIconUrl: '/icons/polygon-icon-light.svg',
   // The base url of the reservoir api, this is used in the app when
   // directly interacting with the reservoir indexer servers (in the api proxy for example)
   // or when prefetching server side rendered data
-  reservoirBaseUrl: 'https://api-base.reservoir.tools',
+  reservoirBaseUrl: 'https://api-polygon.reservoir.tools',
   // Used on the client side portions of the marketplace that need an api key added
   // Prevents the api key from being leaked in the clientside requests
   // If you'd like to disable proxying you can just change the proxyApi to the reservoirBaseUrl
   // Doing so will omit the api key unless further changes are made
-  proxyApi: '/api/reservoir/base',
+  proxyApi: '/api/reservoir/polgyon',
   // A prefix used in the asset specific routes on the app (tokens/collections)
-  routePrefix: 'base',
+  routePrefix: 'polygon',
   // Reservoir API key which you can generate at https://reservoir.tools/
   // This is a protected key and displays as 'undefined' on the browser
   // DO NOT add NEXT_PUBLIC to the key or you'll risk leaking it on the browser
   apiKey: process.env.RESERVOIR_API_KEY,
   // Coingecko id, used to convert the chain's native prices to usd. Can be found here:
   // https://www.coingecko.com/en/api/documentation#operations-coins-get_coins_list
-  coingeckoId: 'base',
+  coingeckoId: 'polygon-pos',
   collectionSetId: process.env.NEXT_PUBLIC_BASE_COLLECTION_SET_ID,
   community: process.env.NEXT_PUBLIC_BASE_COMMUNITY,
 }
@@ -228,17 +228,17 @@ export type OFTChain = {
 }
 
 export const DefaultOFTChain: OFTChain = {
-  id: base.id,
-  lzId: 184,
-  name: base.name,
-  routePrefix: 'base',
-  address: '0xc2106ca72996e49bBADcB836eeC52B765977fd20',
-  LPNFTE: '0xd00CD4363bCF7DC19E84fDB836ce28D24F00716c',
+  id: polygon.id,
+  lzId: 109,
+  name: polygon.name,
+  routePrefix: 'polygon',
+  address: '0x492Fa53b88614923937B7197C87E0F7F8EEb7B20',
+  /*LPNFTE: '0xd00CD4363bCF7DC19E84fDB836ce28D24F00716c',
   veNFTE: '0xc526C83849Fb4424e4563A3b609a4eBf916cf6d0',
-  feeDistributor: '0x99032fD0727dEd2a579dcB447e85359ddE9223B6',
+  feeDistributor: '0x99032fD0727dEd2a579dcB447e85359ddE9223B6',*/
   lightIconUrl: '/icons/base-icon-dark.svg',
   darkIconUrl: '/icons/base-icon-light.svg',
-  coingeckoNetworkId: 'base'
+  coingeckoNetworkId: 'polygon-pos' //matic-network?
 }
 
 export const OFT_CHAINS : OFTChain[] = [
@@ -252,24 +252,6 @@ export const OFT_CHAINS : OFTChain[] = [
     darkIconUrl: '/icons/arbitrum-nova-icon-light.svg',
     coingeckoNetworkId: 'arbitrum-nova'
   },*/
-  {
-    id: optimism.id,
-    lzId: 111,
-    name: optimism.name,
-    address: '0x8637725aDa78db0674a679CeA2A5e0A0869EF4A1',
-    lightIconUrl: '/icons/optimism-icon-dark.svg',
-    darkIconUrl: '/icons/optimism-icon-light.svg',
-    coingeckoNetworkId: 'optimistic-ethereum'
-  },
-  {
-    id: polygon.id,
-    lzId: 109,
-    name: polygon.name,
-    address: '0x492Fa53b88614923937B7197C87E0F7F8EEb7B20',
-    lightIconUrl: '/icons/polygon-icon-dark.svg',
-    darkIconUrl: '/icons/polygon-icon-light.svg',
-    coingeckoNetworkId: 'polygon-pos'
-  },
   { id: arbitrum.id,
     lzId: 110,
     name: arbitrum.name,
@@ -282,6 +264,38 @@ export const OFT_CHAINS : OFTChain[] = [
     lightIconUrl: '/icons/arbitrum-icon-dark.svg',
     darkIconUrl: '/icons/arbitrum-icon-light.svg',
     coingeckoNetworkId: 'arbitrum-one'
+  },
+  {
+    id: optimism.id,
+    lzId: 111,
+    name: optimism.name,
+    address: '0x8637725aDa78db0674a679CeA2A5e0A0869EF4A1',
+    lightIconUrl: '/icons/optimism-icon-dark.svg',
+    darkIconUrl: '/icons/optimism-icon-light.svg',
+    coingeckoNetworkId: 'optimistic-ethereum'
+  },
+
+  { id: arbitrum.id,
+    lzId: 110,
+    name: arbitrum.name,
+    routePrefix: 'arbitrum',
+    address: '0x51B902f19a56F0c8E409a34a215AD2673EDF3284',
+    LPNFTE: '0x82496243c0a1a39c5c6250bf0115c134Ba76698c',
+    veNFTE: '0xE57bd15448C3b2D1dBAD598775DD2F36F93EBf90',
+    feeDistributor: '0x9138A2e628f92a42397B3B600E86047AE49aCa98',
+    /*uniProxy: '0x82FcEB07a4D01051519663f6c1c919aF21C27845',*/
+    lightIconUrl: '/icons/arbitrum-icon-dark.svg',
+    darkIconUrl: '/icons/arbitrum-icon-light.svg',
+    coingeckoNetworkId: 'arbitrum-one'
+  },
+  {
+    id: base.id,
+    lzId: 184,
+    name: base.name,
+    address: '0xc2106ca72996e49bBADcB836eeC52B765977fd20',
+    lightIconUrl: '/icons/base-icon-dark.svg',
+    darkIconUrl: '/icons/base-icon-light.svg',
+    coingeckoNetworkId: 'base'
   },
   {
     id: linea.id,
@@ -319,8 +333,7 @@ export const OFT_CHAINS : OFTChain[] = [
     darkIconUrl: '/icons/polygon-zkevm-icon-light.svg',
     coingeckoNetworkId: 'zkevm'
   }
-
-  {
+/*{
     id: 5000,
     lzId: 181,
     name: 'Mantle',
@@ -370,20 +383,7 @@ export const getAlchemyNetworkName = (chainId: number) => {
 
 export default [
   DefaultChain,
-  {
-    ...optimism,
-    name: 'Optimism',
-    lightIconUrl: '/icons/optimism-icon-dark.svg',
-    darkIconUrl: '/icons/optimism-icon-light.svg',
-    reservoirBaseUrl: 'https://api-optimism.reservoir.tools',
-    proxyApi: '/api/reservoir/optimism',
-    routePrefix: 'optimism',
-    apiKey: process.env.RESERVOIR_API_KEY,
-    coingeckoId: 'optimism',
-    collectionSetId: process.env.NEXT_PUBLIC_OPTIMISM_COLLECTION_SET_ID,
-    community: process.env.NEXT_PUBLIC_OPTIMISM_COMMUNITY,
-  },
-  {
+   {
     ...polygon,
     lightIconUrl: '/icons/polygon-icon-dark.svg',
     darkIconUrl: '/icons/polygon-icon-light.svg',
@@ -391,7 +391,7 @@ export default [
     proxyApi: '/api/reservoir/polygon',
     routePrefix: 'polygon',
     apiKey: process.env.RESERVOIR_API_KEY,
-    coingeckoId: 'matic-network',
+    coingeckoId: 'polygon-pos',
     collectionSetId: process.env.NEXT_PUBLIC_POLYGON_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_POLYGON_COMMUNITY,
   },
@@ -406,6 +406,19 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_ARBITRUM_COMMUNITY,
+  },
+  {
+    ...optimism,
+    name: 'Optimism',
+    lightIconUrl: '/icons/optimism-icon-dark.svg',
+    darkIconUrl: '/icons/optimism-icon-light.svg',
+    reservoirBaseUrl: 'https://api-optimism.reservoir.tools',
+    proxyApi: '/api/reservoir/optimism',
+    routePrefix: 'optimism',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'optimism',
+    collectionSetId: process.env.NEXT_PUBLIC_OPTIMISM_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_OPTIMISM_COMMUNITY,
   },
   {
     ...linea,

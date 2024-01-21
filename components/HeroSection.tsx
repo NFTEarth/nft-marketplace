@@ -76,7 +76,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
           style="subtitle1"
           css={{
             lineHeight: 2,
-            color: '$whiteA12',
+            color: '#798DFF',
             width: '100%',
             '@lg': { width: '50%' },
           }}
@@ -85,7 +85,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
         </Text>
         {hideLink ?? (
           <Flex css={{ gap: 10 }}>
-           <Link href="https://swap.defillama.com/?chain=arbitrum&from=0x0000000000000000000000000000000000000000&to=0x51b902f19a56f0c8e409a34a215ad2673edf3284" passHref legacyBehavior>
+           <Link href="https://swap.defillama.com/?chain=polygon&from=0x0000000000000000000000000000000000000000&to=0x492fa53b88614923937b7197c87e0f7f8eeb7b20" passHref legacyBehavior>
           <Button
           as="a"
           color="tertiary"
@@ -94,7 +94,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
           rel="noopener noreferrer"
           >
           <FaShoppingCart />
-          Buy NFTE
+          Buy NFTE Tokens Here!
           </Button>
           </Link>
             

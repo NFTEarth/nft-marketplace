@@ -28,7 +28,7 @@ const currencies = [
     },
     coinGeckoId: 'ethereum',
   },
-  {
+  /*{
     address: zeroAddress,
     symbol: 'ETH',
     decimals: base.nativeCurrency.decimals,
@@ -38,7 +38,7 @@ const currencies = [
     },
     coinGeckoId: 'ethereum',
   },
- /* {
+  {
     address: zeroAddress,
     symbol: 'ETH',
     decimals: optimism.nativeCurrency.decimals,
@@ -47,7 +47,7 @@ const currencies = [
       name: optimism.name,
     },
     coinGeckoId: 'ethereum',
-  },*/
+  },
   /*{
     address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
     symbol: 'WETH',
@@ -99,7 +99,7 @@ const currencies = [
     },
     coinGeckoId: 'arbitrum',
   },*/
-  {
+  /*{
     address: '0xc2106ca72996e49bBADcB836eeC52B765977fd20',
     symbol: 'NFTE',
     decimals: base.nativeCurrency.decimals,
@@ -108,7 +108,7 @@ const currencies = [
       name: base.name,
     },
     coinGeckoId: 'nftearth',
-  },
+  },*/
   {
     address: '0x492Fa53b88614923937B7197C87E0F7F8EEb7B20',
     symbol: 'NFTE',
@@ -175,14 +175,15 @@ const Wallet : FC<WalletProps> = ({ exp }) => {
     address,
     chainId: polygon.id,
   })  
-  const optimismBalance = useBalance({
+  /*const optimismBalance = useBalance({
     address,
     chainId: optimism.id,  
   })
   const baseBalance = useBalance({
     address,
-    chainId: base.id, 
-})
+    chainId: base.id,*/
+
+
 
   const usdConversions = useCoinConversion(
     'USD',
@@ -202,26 +203,25 @@ const Wallet : FC<WalletProps> = ({ exp }) => {
       if (currency.address === zeroAddress) {
         //CONFIGURABLE: Configure these to show the fetched balance results configured above in the useBalance hooks
         switch (currency.chain.id) {
-          /*case polygon.id: {
+          case polygon.id: {
             balance = maticBalance.data?.value || 0n
             break
           }
          case mainnet.id: {
            balance = ethBalance.data?.value || 0n
            break
-          }*/
+          }
           case polygon.id: {
             const polygonBalance = useBalance({
-              address,
-              chainId: polygon.id,
+        
             })
             balance = polygonBalance.data?.value || 0n
             break
           }
-          case base.id: { 
+          /*case base.id: { 
             balance = baseBalance.data?.value || 0n
-            break 
-          }
+            break*/
+          
         }
       } else {
         const index = nonNativeCurrencies.findIndex(
@@ -302,7 +302,7 @@ const Wallet : FC<WalletProps> = ({ exp }) => {
         <Button
           css={{ width: '100%', justifyContent: 'center' }}
           onClick={() => {
-            window.open('https://app.uniswap.org/', '_blank')
+            window.open('https://www.sushi.com/swap', '_blank')
           }}
         >
           Swap Crypto
