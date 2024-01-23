@@ -57,7 +57,7 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: `/${defaultChain.routePrefix}`,
+        destination: "https://nftearth.exchange/polygon",
         permanent: true,
       },
       {
