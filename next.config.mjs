@@ -34,14 +34,7 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'openseauserdata.com'
       },
-      {
-        protocol: 'https',
-        hostname: 'lh3.googleusercontent.com'
-      },
-      {
-        protocol: 'https',
-        hostname: 'cdn.simplehash.com'
-      }
+   
     ],
   },
   async rewrites() {
@@ -64,8 +57,8 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: `/${defaultChain.routePrefix}`,
-        permanent: false,
+        destination: '/polygon',
+        permanent: true,
       },
       {
         source: '/collection/:chain/:collection',
