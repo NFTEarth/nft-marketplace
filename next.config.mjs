@@ -57,7 +57,7 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: '/polygon',
+        destination: "nftearth.exchange/polygon",
         permanent: true,
       },
       {
