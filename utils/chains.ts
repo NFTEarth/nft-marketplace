@@ -369,7 +369,7 @@ export const getAlchemyNetworkName = (chainId: number) => {
 
 export default [
   DefaultChain,
-   /*{
+   {
     ...polygon,
     name: 'Polygon',
     lightIconUrl: '/icons/polygon-icon-dark.svg',
@@ -381,7 +381,7 @@ export default [
     coingeckoId: 'matic-network',
     collectionSetId: process.env.NEXT_PUBLIC_POLYGON_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_POLYGON_COMMUNITY,
-  },*/
+  },
   {
     ...arbitrum,
     name: 'Arbitrum',
