@@ -171,39 +171,8 @@ const HamburgerMenu = () => {
               SolEth Portal
             </Text>
           </Link>
-        
-            <Collapsible
-            trigger={
-              <Flex
-                justify="between"
-                css={{
-                  width: '100%',
-                  borderBottom: '1px solid $gray4',
-                  cursor: 'pointer',
-                  pb: '$4',
-                  pt: '24px',
-                }}
-              >
-                <Text
-                  style="subtitle1"
-                  css={{
-                    display: 'flex',
-                    alignItems: 'center'
-                  }}
-                >
-                  {`NFTE Rewards`}
-                </Text>
-                <FontAwesomeIcon icon={faChevronDown} width={20} height={20}/>
-              </Flex>
-            }>
-            <Flex
-              direction="column"
-              css={{
-                backgroundColor: '$gray2',
-                px: '$4'
-              }}
-            >
-              <Link href="/bridge" legacyBehavior>
+
+          <Link href="/bridge" legacyBehavior>
                 <Text
                   style="subtitle1"
                   css={{
@@ -213,38 +182,10 @@ const HamburgerMenu = () => {
                     pt: '24px',
                   }}
                 >
-                  Bridge NFTE
+                 NFTE Bridge
                 </Text>
               </Link>
-              <Link href="/staking" legacyBehavior>
-                <Text
-                  style="subtitle1"
-                  css={{
-                    borderBottom: '1px solid $gray4',
-                    cursor: 'pointer',
-                    pb: '$4',
-                    pt: '24px',
-                  }}
-                >
-                  Get veNFTE
-                </Text>
-              </Link>
-              <Link href="https://www.sushi.com/swap?chainId=8453&token1=0xc2106ca72996e49bBADcB836eeC52B765977fd20" legacyBehavior>
-                <Text
-                  style="subtitle1"
-                  css={{
-                    borderBottom: '1px solid $gray4',
-                    cursor: 'pointer',
-                    pb: '$4',
-                    pt: '24px',
-                  }}
-                >
-                  Swap NFTE
-                </Text>
-              </Link>
-              
-            </Flex>
-          </Collapsible>
+           
           <Collapsible
             trigger={
               <Flex

@@ -36,7 +36,7 @@ export const Head: FC<Props> = ({
       <meta name="description" content={description} />
       <meta name="format-detection" content="telephone=no" />
       <meta name="mobile-web-app-capable" content="yes" />
-      <meta name="msapplication-TileColor" content="#8EFF7A" />
+      <meta name="msapplication-TileColor" content="#A879FF" />
       <meta name="msapplication-tap-highlight" content="no" />
       <meta name="theme-color" content="#000000" />
       <link rel="manifest" href="/manifest.json" />
@@ -49,7 +49,7 @@ export const Head: FC<Props> = ({
       <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
       <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
       <link rel="shortcut icon" href="/favicon.ico" />
-      <link rel="mask-icon" href="/nftearth-icon-gray.svg" color="#8EFF7A" />
+      <link rel="mask-icon" href="/nftearth-icon-gray.svg" color="#A879FF" />
 
       <link rel='apple-touch-startup-image' href={ogImage} sizes='540x540' />
 

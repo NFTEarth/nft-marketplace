@@ -143,73 +143,11 @@ const Navbar = () => {
             SolEth Portal
           </NavItem>
           </Link>
-          <Dropdown
-            modal={false}
-            trigger={
-              <NavItem>
-                <Flex as="span" align="center">
-                  {`NFTE Rewards`}
-                  <FontAwesomeIcon
-                    icon={faChevronDown}
-                    width={16}
-                    height={16}
-                    style={{
-                      marginLeft: 5,
-                      display: 'inline-block'
-                    }}
-                  />
-                </Flex>
-              </NavItem>
-            }
-            contentProps={{
-              asChild: true,
-              forceMount: true,
-              sideOffset: 35
-            }}
-          >
-            <DropdownMenuItem
-              as={Link}
-              href="/bridge"
-              css={{
-                display: 'flex',
-                py: '$3',
-                width: '100%',
-                alignItems: 'center',
-                gap: 10
-              }}
-            >
-              <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faBridge} width={20} height={20}/>
-              Bridge NFTE
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              as={Link}
-              href="/staking"
-              css={{
-                display: 'flex',
-                py: '$3',
-                width: '100%',
-                alignItems: 'center',
-                gap: 10
-              }}
-            >
-              <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faLock} width={20} height={20}/>
-              Get veNFTE
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              as={Link}
-              href="https://www.sushi.com/swap?chainId=8453&token1=0xc2106ca72996e49bBADcB836eeC52B765977fd20"
-              css={{
-                display: 'flex',
-                py: '$3',
-                width: '100%',
-                alignItems: 'center',
-                gap: 10
-              }}
-            >
-              <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faArrowsLeftRight} width={20} height={20}/>
-              Swap NFTE
-            </DropdownMenuItem>
-          </Dropdown>
+          <Link href="/bridge">
+          <NavItem active={router.pathname.includes('bridge')}>
+           NFTE Bridge
+          </NavItem>
+          </Link>
           <Dropdown
             modal={false}
             trigger={

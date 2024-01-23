@@ -76,19 +76,19 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
           style="subtitle1"
           css={{
             lineHeight: 2,
-            color: '#798DFF',
+            color: '#A879FF',
             width: '100%',
             '@lg': { width: '50%' },
           }}
         >
-          {`Omnichain NFT Exchange`}
+       
         </Text>
         {hideLink ?? (
           <Flex css={{ gap: 10 }}>
            <Link href="https://swap.defillama.com/?chain=polygon&from=0x0000000000000000000000000000000000000000&to=0x492fa53b88614923937b7197c87e0f7f8eeb7b20" passHref legacyBehavior>
           <Button
           as="a"
-          color="tertiary"
+            color="primary"
           size="large"
           target="_blank"
           rel="noopener noreferrer"
