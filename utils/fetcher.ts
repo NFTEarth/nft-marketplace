@@ -53,6 +53,4 @@ export const fetchWithTimeout = async (
   }
 }
 
-
-
 export default fetcher
