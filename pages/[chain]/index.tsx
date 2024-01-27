@@ -279,17 +279,13 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                 }}
                 alt="Weston"
               />
-              <Text style="h5" color="primary">Weston Nelson</Text>
-              <Text>aka WΞston</Text>
+              <Text style="h5" color="primary">Weston</Text>
               <Text style="h6">Project Lead</Text>
               <Flex
                 css={{
                   gap: 10
                 }}
               >
-                <Link href="https://github.com/westonnelson" target="_blank">
-                  <FontAwesomeIcon icon={faGithub} width={16} height={16} color="#fff" />
-                </Link>
                 <Link href="https://x.com/westonnelson/" target="_blank">
                   <FontAwesomeIcon icon={faXTwitter} width={16} height={16} color="#fff" />
                 </Link>
@@ -313,19 +309,13 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                 }}
                 alt="Weston"
               />
-              <Text style="h5" color="primary">Ihsan Rahman</Text>
-              <Text>aka Ryuzaki01</Text>
+              <Text style="h5" color="primary">Ryuzaki01</Text>
               <Text style="h6">Lead Developer</Text>
               <Flex
                 css={{
                   gap: 10
                 }}
-              >
-                
-                
-                <Link href="https://github.com/ryuzaki01" target="_blank">
-                  <FontAwesomeIcon icon={faGithub} width={16} height={16} color="#fff" />
-                </Link>
+              >                
                 <Link href="https://x.com/ShinjiKagehisa/" target="_blank">
                   <FontAwesomeIcon icon={faXTwitter} width={16} height={16} color="#fff" />
                 </Link>
@@ -349,8 +339,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                 }}
                 alt="Weston"
               />
-              <Text style="h5" color="primary">Elias Pederiva</Text>
-              <Text>aka Maestro</Text>
+              <Text style="h5" color="primary">Maestro</Text>
               <Text style="h6">Head of Marketing</Text>
               <Flex
                 css={{
@@ -381,7 +370,6 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                 alt="Weston"
               />
               <Text style="h5" color="primary">SirJoey</Text>
-              <Text>aka SirEthALot</Text>
               <Text style="h6" css={{ textAlign: 'center' }}>Head of Business Dev</Text>
               <Flex
                 css={{

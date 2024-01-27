@@ -94,7 +94,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
           rel="noopener noreferrer"
           >
           <FaShoppingCart />
-          Buy NFTE Tokens Here!
+          Buy NFTE Tokens Here
           </Button>
           </Link>
             

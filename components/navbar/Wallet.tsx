@@ -18,7 +18,7 @@ import { base } from 'utils/chains'
 //CONFIGURABLE: Here you may configure currencies that you want to display in the wallet menu. Native currencies,
 //like ETH/MATIC etc need to be fetched in a different way. Configure them below
 const currencies = [
-  {
+  /*{
     address: zeroAddress,
     symbol: 'ETH',
     decimals: mainnet.nativeCurrency.decimals,
@@ -27,7 +27,7 @@ const currencies = [
       name: mainnet.name,
     },
     coinGeckoId: 'ethereum',
-  },
+  },*/
   /*{
     address: zeroAddress,
     symbol: 'ETH',
@@ -57,7 +57,7 @@ const currencies = [
       name: mainnet.name,
     },
     coinGeckoId: 'weth',
-  },*/
+  },
   {
     address: '0x8c223a82E07feCB49D602150d7C2B3A4c9630310',
     symbol: 'NFTE',
@@ -67,7 +67,8 @@ const currencies = [
       name: mainnet.name,
     },
     coinGeckoId: 'nftearth',
-  },
+  },*/
+
   {
     address: zeroAddress,
     symbol: 'MATIC',
@@ -207,10 +208,10 @@ const Wallet : FC<WalletProps> = ({ exp }) => {
             balance = maticBalance.data?.value || 0n
             break
           }
-         case mainnet.id: {
+         /*case mainnet.id: {
            balance = ethBalance.data?.value || 0n
            break
-          }
+          }*/
           case polygon.id: {
             const polygonBalance = useBalance({
         

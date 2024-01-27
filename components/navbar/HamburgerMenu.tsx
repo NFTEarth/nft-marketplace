@@ -145,6 +145,21 @@ const HamburgerMenu = () => {
               NFTs
             </Text>
           </Link>
+
+          <Link href="/bridge" legacyBehavior>
+                <Text
+                  style="subtitle1"
+                  css={{
+                    borderBottom: '1px solid $gray4',
+                    cursor: 'pointer',
+                    pb: '$4',
+                    pt: '24px',
+                  }}
+                >
+                 NFTE Bridge
+                </Text>
+              </Link>
+
            <Link href={`https://nftearth.exchange/inscriptions`} legacyBehavior>
             <Text
               style="subtitle1"
@@ -172,20 +187,6 @@ const HamburgerMenu = () => {
             </Text>
           </Link>
 
-          <Link href="/bridge" legacyBehavior>
-                <Text
-                  style="subtitle1"
-                  css={{
-                    borderBottom: '1px solid $gray4',
-                    cursor: 'pointer',
-                    pb: '$4',
-                    pt: '24px',
-                  }}
-                >
-                 NFTE Bridge
-                </Text>
-              </Link>
-           
           <Collapsible
             trigger={
               <Flex
@@ -201,7 +202,7 @@ const HamburgerMenu = () => {
                 <Text
                   style="subtitle1"
                 >
-                  Games
+                  Products
                 </Text>
                 <FontAwesomeIcon icon={faChevronDown} width={20} height={20} style={{
       marginLeft: 10, // Add some space between the text and the icon
@@ -257,7 +258,7 @@ const HamburgerMenu = () => {
             >
               <Text style="subtitle1">Portfolio</Text>
               <Text style="body3" color="subtle">
-                Manage your assets
+                Manage your digital assets
               </Text>
             </Flex>
             </Link>
