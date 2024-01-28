@@ -4,6 +4,7 @@ import {
   mainnet,
   polygon,
   optimism,
+  polygonZkEvm,
 } from 'wagmi/chains'
 
 // Chains that are missing from wagmi:
@@ -252,6 +253,15 @@ export const OFT_CHAINS : OFTChain[] = [
     darkIconUrl: '/icons/arbitrum-nova-icon-light.svg',
     coingeckoNetworkId: 'arbitrum-nova'
   },*/
+  {
+    id: polygonZkEvm.id,
+    lzId: 158,
+    name: polygonZkEvm.name,
+    address: '0xf1B8982eC774AE84e936Bd63f372280bd534E797',
+    lightIconUrl: '/icons/polygon-zkevm-icon-dark.svg',
+    darkIconUrl: '/icons/polygon-zkevm-icon-light.svg',
+    coingeckoNetworkId: 'zkevm'
+  }, 
   { id: arbitrum.id,
     lzId: 110,
     name: arbitrum.name,
@@ -382,6 +392,17 @@ export default [
     collectionSetId: process.env.NEXT_PUBLIC_POLYGON_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_POLYGON_COMMUNITY,
   },*/
+  {      ...polygonZkEvm,
+    lightIconUrl: '/icons/polygon-zkevm-icon-dark.svg',
+    darkIconUrl: '/icons/polygon-zkevm-icon-light.svg',
+    reservoirBaseUrl: 'https://api-polygon-zkevm.reservoir.tools',
+    proxyApi: '/api/reservoir/polygon-zkevm',
+    routePrefix: 'polygon-zkevm',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_POLYGON_ZKEVM_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_POLYGON_ZKEVM_COMMUNITY,
+  },
   {
     ...arbitrum,
     name: 'Arbitrum',
