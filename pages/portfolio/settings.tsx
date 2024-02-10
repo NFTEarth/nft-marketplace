@@ -1,31 +1,33 @@
-import {useEffect, useState} from 'react'
-import {useAccount, useConnect, useSignMessage} from "wagmi"
+import { useEffect, useState } from 'react'
+import { useAccount, useConnect, useSignMessage } from 'wagmi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faGear, faEnvelope, faGift} from '@fortawesome/free-solid-svg-icons'
+import { faGear, faEnvelope, faGift } from '@fortawesome/free-solid-svg-icons'
 import { faXTwitter, faFontAwesome } from '@fortawesome/free-brands-svg-icons'
-import {useSession} from "next-auth/react";
-import {signIn} from "next-auth/react";
-import {Text, Flex, Box, Grid, Button} from 'components/primitives'
+import { useSession } from 'next-auth/react'
+import { signIn } from 'next-auth/react'
+import { Text, Flex, Box, Grid, Button } from 'components/primitives'
 import Layout from 'components/Layout'
-import SettingsContentContainer from "components/portfolio/SettingsContentContainer"
+import SettingsContentContainer from 'components/portfolio/SettingsContentContainer'
 import DetailsSettings from 'components/portfolio/DetailsSettings'
-import LoadingSpinner from "components/common/LoadingSpinner";
-import {useProfile} from "hooks";
-import {
-  GetServerSideProps,
-  InferGetServerSidePropsType,
-  NextPage
-} from "next";
-import {recoverMessageAddress} from "viem";
-import {AuthOptions, getServerSession} from "next-auth";
-import {authOptions} from "../api/auth/[...nextauth]";
+import LoadingSpinner from 'components/common/LoadingSpinner'
+import { useProfile } from 'hooks'
+import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
+import { recoverMessageAddress } from 'viem'
+import { AuthOptions, getServerSession } from 'next-auth'
+import { authOptions } from '../api/auth/[...nextauth]'
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>
 
-const PortfolioSettings : NextPage<Props> = ({ ssr }) => {
+const PortfolioSettings: NextPage<Props> = ({ ssr }) => {
   const [activeTab, setActiveTab] = useState<string | null>('details')
   const { data, update } = useSession()
-  const { data: signMessageData, error, isLoading: isLoadingSignature, signMessage, variables } = useSignMessage()
+  const {
+    data: signMessageData,
+    error,
+    isLoading: isLoadingSignature,
+    signMessage,
+    variables,
+  } = useSignMessage()
 
   const {
     data: profile,
@@ -42,22 +44,27 @@ const PortfolioSettings : NextPage<Props> = ({ ssr }) => {
   )
 
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       if (variables?.message && signMessageData) {
         const recoveredAddress = await recoverMessageAddress({
           message: variables?.message,
           signature: signMessageData,
         })
 
-        await signIn('credentials', { redirect: false, wallet: recoveredAddress } );
-        await update();
+        await signIn('credentials', {
+          redirect: false,
+          wallet: recoveredAddress,
+        })
+        await update()
       }
     })()
   }, [signMessageData, variables?.message])
 
   useEffect(() => {
     if (!data) {
-      signMessage({ message: 'NFTEarth: Please sign in with your Ethereum wallet.' })
+      signMessage({
+        message: 'NFTEarth: Please sign in with your Ethereum wallet.',
+      })
     }
   }, [data])
 
@@ -68,14 +75,14 @@ const PortfolioSettings : NextPage<Props> = ({ ssr }) => {
       padding: '4px 12px',
       color: activeTab === tab ? '$primary10' : '$gray10',
       borderLeft: `solid 2px ${activeTab === tab ? '$primary10' : '$gray10'}`,
-      marginBottom: 20
+      marginBottom: 20,
     },
     text: {
       ml: 12,
       fontSize: 14,
       fontWeight: 'bold',
       color: activeTab === tab ? '$primary10' : '$gray10',
-    }
+    },
   })
 
   if (isLoadingSignature || isLoadingSignature) {
@@ -91,11 +98,22 @@ const PortfolioSettings : NextPage<Props> = ({ ssr }) => {
   if (!profile) {
     return (
       <Layout>
-        <Flex direction="column" align="center" justify="center" css={{ py: '40vh', gap: 20 }}>
+        <Flex
+          direction="column"
+          align="center"
+          justify="center"
+          css={{ py: '40vh', gap: 20 }}
+        >
           <Text>NFTEarth: Please sign in with your Ethereum wallet. </Text>
-          <Button onClick={() => {
-            signMessage({ message: 'NFTEarth: Please sign in with your Ethereum wallet.' })
-          }}>Sign</Button>
+          <Button
+            onClick={() => {
+              signMessage({
+                message: 'NFTEarth: Please sign in with your Ethereum wallet.',
+              })
+            }}
+          >
+            Sign
+          </Button>
         </Flex>
       </Layout>
     )
@@ -110,34 +128,39 @@ const PortfolioSettings : NextPage<Props> = ({ ssr }) => {
           '@bp800': {
             p: '$5',
           },
-        }}>
-        <Text style='h6' css={{ fontWeight: 'bold' }}>
+        }}
+      >
+        <Text style="h6" css={{ fontWeight: 'bold' }}>
           Profile Settings
         </Text>
-        <Grid css={{
-          marginTop: 18,
-          width: '100%',
-          '@md': {
-            gridTemplateColumns: '3fr 9fr',
-          },
-          '@lg': {
-            gridTemplateColumns: '2fr 10fr',
-          },
-        }}>
+        <Grid
+          css={{
+            marginTop: 18,
+            width: '100%',
+            '@md': {
+              gridTemplateColumns: '3fr 9fr',
+            },
+            '@lg': {
+              gridTemplateColumns: '2fr 10fr',
+            },
+          }}
+        >
           <Flex
-            direction='column'
+            direction="column"
             css={{
               widht: '100%',
               display: 'none',
               '@md': {
-                display: 'flex'
+                display: 'flex',
               },
-            }}>
+            }}
+          >
             <Box>
               <Flex
-                align='center'
+                align="center"
                 onClick={() => setActiveTab('details')}
-                css={getCssTab('details').tab}>
+                css={getCssTab('details').tab}
+              >
                 <Box css={{ width: 16 }}>
                   <FontAwesomeIcon icon={faGear} />
                 </Box>
@@ -156,17 +179,17 @@ const PortfolioSettings : NextPage<Props> = ({ ssr }) => {
           </Flex>
           <Box
             css={{
-              width: '100%'
-            }}>
+              width: '100%',
+            }}
+          >
             <SettingsContentContainer
-              tab='details'
-              tabLabel='details'
+              tab="details"
+              tabLabel="details"
               activeTab={activeTab}
               icon={faGear}
-              setActiveTab={() => setActiveTab('details')}>
-              <DetailsSettings
-                profile={profile}
-              />
+              setActiveTab={() => setActiveTab('details')}
+            >
+              <DetailsSettings profile={profile} />
             </SettingsContentContainer>
             {/*<SettingsContentContainer*/}
             {/*  tab='referral'*/}
@@ -194,12 +217,16 @@ export const getServerSideProps: GetServerSideProps<{
     authOptions as AuthOptions
   )
 
-  const profile = session ? await fetch(`${process.env.NEXT_PUBLIC_HOST_URL}/api/profile?address=${session.wallet}`)
-    .then(res => res.json())
-    .catch(() => null) : null
+  const profile = session
+    ? await fetch(
+        `${process.env.NEXT_PUBLIC_HOST_URL}/api/profile?address=${session.wallet}`
+      )
+        .then((res) => res.json())
+        .catch(() => null)
+    : null
 
   return {
-    props: { ssr: { profile } }
+    props: { ssr: { profile } },
   }
 }
 

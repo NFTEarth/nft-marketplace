@@ -77,8 +77,8 @@ const reservoirKitThemeOverrides = {
   font: inter.style.fontFamily,
   buttonTextColor: '#000',
   buttonTextHoverColor: '#000',
-  primaryColor: '#0420FF',
-  primaryHoverColor: '#0420FF',
+  primaryColor: '#9431D2',
+  primaryHoverColor: '#9431D2',
 }
 
 nProgress.configure({
@@ -106,7 +106,7 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
   )
 }
 
-const color = '#0420FF'
+const color = '#9431D2'
 
 function MyApp({
   Component,

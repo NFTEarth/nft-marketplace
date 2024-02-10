@@ -1,51 +1,56 @@
-import {Anchor, Box, Button, Flex, Text} from 'components/primitives'
-import {Avatar} from 'components/primitives/Avatar'
+import { Anchor, Box, Button, Flex, Text } from 'components/primitives'
+import { Avatar } from 'components/primitives/Avatar'
 import * as RadixDialog from '@radix-ui/react-dialog'
 import {
   faBars,
   faXmark,
-  faRightFromBracket, faChevronDown, faBridge, faGift, faGear,
+  faRightFromBracket,
+  faChevronDown,
+  faBridge,
+  faGift,
+  faGear,
 } from '@fortawesome/free-solid-svg-icons'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faXTwitter, faDiscord, faTelegram} from '@fortawesome/free-brands-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  faXTwitter,
+  faDiscord,
+  faTelegram,
+} from '@fortawesome/free-brands-svg-icons'
 import Link from 'next/link'
-import Image from "next/legacy/image"
-import {useAccount, useDisconnect} from 'wagmi'
-import {ConnectWalletButton} from 'components/ConnectWalletButton'
-import Jazzicon, {jsNumberForAddress} from 'react-jazzicon'
-import {FullscreenModal} from 'components/common/FullscreenModal'
-import {useENSResolver, useMarketplaceChain, useProfile} from 'hooks'
+import Image from 'next/legacy/image'
+import { useAccount, useDisconnect } from 'wagmi'
+import { ConnectWalletButton } from 'components/ConnectWalletButton'
+import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
+import { FullscreenModal } from 'components/common/FullscreenModal'
+import { useENSResolver, useMarketplaceChain, useProfile } from 'hooks'
 import Wallet from 'components/navbar/Wallet'
-import {Collapsible} from "../primitives/Collapsible";
-import {signOut} from "next-auth/react";
-import Badge from "../primitives/Badge";
+import { Collapsible } from '../primitives/Collapsible'
+import { signOut } from 'next-auth/react'
+import Badge from '../primitives/Badge'
 
 const HamburgerMenu = () => {
-  const {
-    address,
-    isConnected,
-  } = useAccount({
+  const { address, isConnected } = useAccount({
     onDisconnect: async () => {
-      await signOut({ callbackUrl: '/' });
-    }
+      await signOut({ callbackUrl: '/' })
+    },
   })
   const {
     avatar: ensAvatar,
     shortAddress,
     shortName: shortEnsName,
   } = useENSResolver(address)
-  const {disconnect} = useDisconnect()
-  const {routePrefix} = useMarketplaceChain()
+  const { disconnect } = useDisconnect()
+  const { routePrefix } = useMarketplaceChain()
   const { data: profile } = useProfile(address)
 
   const trigger = (
     <Button
-      css={{justifyContent: 'center', width: '44px', height: '44px'}}
+      css={{ justifyContent: 'center', width: '44px', height: '44px' }}
       type="button"
       size="small"
       color="gray3"
     >
-      <FontAwesomeIcon icon={faBars} width={16} height={16}/>
+      <FontAwesomeIcon icon={faBars} width={16} height={16} />
     </Button>
   )
 
@@ -69,7 +74,7 @@ const HamburgerMenu = () => {
           justify="between"
         >
           <Link href="/">
-            <Box css={{width: 34, cursor: 'pointer'}}>
+            <Box css={{ width: 34, cursor: 'pointer' }}>
               <Image
                 src="/nftearth-icon.svg"
                 width={34}
@@ -93,7 +98,7 @@ const HamburgerMenu = () => {
                 },
               }}
             >
-              <FontAwesomeIcon icon={faXmark} width={16} height={16}/>
+              <FontAwesomeIcon icon={faXmark} width={16} height={16} />
             </Flex>
           </RadixDialog.Close>
         </Flex>
@@ -116,16 +121,16 @@ const HamburgerMenu = () => {
                   pb: '$4',
                 }}
               >
-                <Flex css={{alignItems: 'center'}}>
+                <Flex css={{ alignItems: 'center' }}>
                   {ensAvatar ? (
-                    <Avatar size="medium" src={ensAvatar}/>
+                    <Avatar size="medium" src={ensAvatar} />
                   ) : (
                     <Jazzicon
                       diameter={36}
                       seed={jsNumberForAddress(address as string)}
                     />
                   )}
-                  <Text style="subtitle1" css={{ml: '$2'}}>
+                  <Text style="subtitle1" css={{ ml: '$2' }}>
                     {shortEnsName ? shortEnsName : shortAddress}
                   </Text>
                 </Flex>
@@ -142,25 +147,11 @@ const HamburgerMenu = () => {
                 pt: '24px',
               }}
             >
-              NFTs
+              Collections
             </Text>
           </Link>
 
           <Link href="/bridge" legacyBehavior>
-                <Text
-                  style="subtitle1"
-                  css={{
-                    borderBottom: '1px solid $gray4',
-                    cursor: 'pointer',
-                    pb: '$4',
-                    pt: '24px',
-                  }}
-                >
-                 NFTE Bridge
-                </Text>
-              </Link>
-
-           <Link href={`https://nftearth.exchange/inscriptions`} legacyBehavior>
             <Text
               style="subtitle1"
               css={{
@@ -170,20 +161,7 @@ const HamburgerMenu = () => {
                 pt: '24px',
               }}
             >
-              Inscriptions
-            </Text>
-          </Link>
-           <Link href={`https://sol.nftearth.exchange/`} legacyBehavior>
-            <Text
-              style="subtitle1"
-              css={{
-                borderBottom: '1px solid $gray4',
-                cursor: 'pointer',
-                pb: '$4',
-                pt: '24px',
-              }}
-            >
-              SolEth Portal
+              NFTE Bridge
             </Text>
           </Link>
 
@@ -199,24 +177,51 @@ const HamburgerMenu = () => {
                   pt: '24px',
                 }}
               >
-                <Text
-                  style="subtitle1"
-                >
-                  Products
-                </Text>
-                <FontAwesomeIcon icon={faChevronDown} width={20} height={20} style={{
-      marginLeft: 10, // Add some space between the text and the icon
-    }} />
-                
+                <Text style="subtitle1">Products</Text>
+                <FontAwesomeIcon
+                  icon={faChevronDown}
+                  width={20}
+                  height={20}
+                  style={{
+                    marginLeft: 10, // Add some space between the text and the icon
+                  }}
+                />
               </Flex>
-            }>
+            }
+          >
             <Flex
               direction="column"
               css={{
                 backgroundColor: '$gray2',
-                px: '$4'
+                px: '$4',
               }}
             >
+              <Link href={`https://nftearth.exchange/inscriptions`} legacyBehavior>
+            <Text
+              style="subtitle1"
+              css={{
+                borderBottom: '1px solid $gray4',
+                cursor: 'pointer',
+                pb: '$4',
+                pt: '24px',
+              }}
+            >
+              Inscriptions
+            </Text>
+          </Link>
+          <Link href={`https://nftearth.exchange/raffle`} legacyBehavior>
+            <Text
+              style="subtitle1"
+              css={{
+                borderBottom: '1px solid $gray4',
+                cursor: 'pointer',
+                pb: '$4',
+                pt: '24px',
+              }}
+            >
+              Raffle
+            </Text>
+          </Link>
               <Link href="/fortune" legacyBehavior>
                 <Text
                   style="subtitle1"
@@ -230,7 +235,11 @@ const HamburgerMenu = () => {
                   Fortune
                 </Text>
               </Link>
-              <Link href="https://smartnft.nftearth.exchange" target="_blank" legacyBehavior>
+              <Link
+                href="https://smartnft.nftearth.exchange"
+                target="_blank"
+                legacyBehavior
+              >
                 <Text
                   style="subtitle1"
                   css={{
@@ -261,7 +270,7 @@ const HamburgerMenu = () => {
                 Manage your digital assets
               </Text>
             </Flex>
-            </Link>
+          </Link>
           {isConnected ? (
             <>
               <Link href="/portfolio/settings" legacyBehavior>
@@ -281,13 +290,13 @@ const HamburgerMenu = () => {
                     style={{
                       marginRight: 10,
                       display: 'inline-block',
-                      color: '#79FFEB',
+                      color: '#75F5A5',
                     }}
                   />
                   {`Settings`}
                 </Text>
               </Link>
-              <Wallet exp={profile?.exp}/>
+              <Wallet exp={profile?.exp} />
               <Flex
                 css={{
                   justifyContent: 'space-between',
@@ -306,7 +315,7 @@ const HamburgerMenu = () => {
                 >
                   Logout
                 </Text>
-                <Box css={{color: '$gray10'}}>
+                <Box css={{ color: '$gray10' }}>
                   <FontAwesomeIcon
                     icon={faRightFromBracket}
                     width={16}
@@ -317,7 +326,7 @@ const HamburgerMenu = () => {
             </>
           ) : (
             <Box>
-              <ConnectWalletButton/>
+              <ConnectWalletButton />
             </Box>
           )}
         </Flex>
@@ -331,30 +340,30 @@ const HamburgerMenu = () => {
             px: '$4',
             gap: '$4',
             width: '100%',
-            borderTop: '1px solid #79FFEB',
+            borderTop: '1px solid #75F5A5',
           }}
         >
           <a href="https://x.com/NFTEarth_L2" target="_blank">
-    <Button
-      css={{justifyContent: 'center', width: '44px', height: '44px'}}
-      type="button"
-      size="small"
-      color="gray3"
-    >
-      <FontAwesomeIcon icon={faXTwitter} width={20} height={20}/>
-    </Button>
-  </a>
-  <a href="https://discord.gg/56a7u3wDkX" target="_blank">
-    <Button
-      css={{justifyContent: 'center', width: '44px', height: '44px'}}
-      type="button"
-      size="small"
-      color="gray3"
-    >
-      <FontAwesomeIcon icon={faDiscord} width={20} height={20}/>
-    </Button>
-  </a>
-</Flex>
+            <Button
+              css={{ justifyContent: 'center', width: '44px', height: '44px' }}
+              type="button"
+              size="small"
+              color="gray3"
+            >
+              <FontAwesomeIcon icon={faXTwitter} width={20} height={20} />
+            </Button>
+          </a>
+          <a href="https://discord.gg/56a7u3wDkX" target="_blank">
+            <Button
+              css={{ justifyContent: 'center', width: '44px', height: '44px' }}
+              type="button"
+              size="small"
+              color="gray3"
+            >
+              <FontAwesomeIcon icon={faDiscord} width={20} height={20} />
+            </Button>
+          </a>
+        </Flex>
       </Flex>
     </FullscreenModal>
   )

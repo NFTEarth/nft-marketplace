@@ -4,7 +4,7 @@ import GlobalSearch from './GlobalSearch'
 import { useRouter } from 'next/router'
 import { useHotkeys } from 'react-hotkeys-hook'
 import Link from 'next/link'
-import Image from "next/legacy/image"
+import Image from 'next/legacy/image'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import NavItem from './NavItem'
 import HamburgerMenu from './HamburgerMenu'
@@ -15,17 +15,17 @@ import { useAccount } from 'wagmi'
 import CartButton from './CartButton'
 import { AccountSidebar } from 'components/navbar/AccountSidebar'
 import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faDollarSign,
   faChevronDown,
   faDroplet,
   faArrowsLeftRight,
   faBridge,
-  faLock
-} from "@fortawesome/free-solid-svg-icons";
+  faLock,
+} from '@fortawesome/free-solid-svg-icons'
 import { link } from 'fs'
-import Badge from "../primitives/Badge";
+import Badge from '../primitives/Badge'
 
 export const NAVBAR_HEIGHT = 81
 export const NAVBAR_HEIGHT_MOBILE = 77
@@ -120,7 +120,7 @@ const Navbar = () => {
           <Flex css={{ flex: 1, px: '$5', maxWidth: 600 }}>
             <GlobalSearch
               ref={searchRef}
-              placeholder="Search..."
+              placeholder="Search NFTs"
               containerCss={{ width: '100%' }}
               key={router.asPath}
             />
@@ -129,33 +129,19 @@ const Navbar = () => {
         <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
           <Link href={`/${routePrefix}/collection-rankings`}>
             <NavItem active={router.pathname.includes('collection-rankings')}>
-              NFTs
+              Collections
             </NavItem>
           </Link>
           <Link href="/bridge">
-          <NavItem active={router.pathname.includes('bridge')}>
-           NFTE Bridge
-          </NavItem>
+            <NavItem active={router.pathname.includes('bridge')}>
+              NFTE Bridge
+            </NavItem>
           </Link>
-          <Link href="/inscriptions">
-          <NavItem active={router.pathname.includes('inscriptions')}>
-           Inscriptions
-          </NavItem>
-          </Link>
-          <Link href="https://sol.nftearth.exchange/">
-          <NavItem>
-            Solana/Ethereum Portal
-          </NavItem>
-          </Link> 
           <Dropdown
             modal={false}
             trigger={
               <NavItem>
-                <Flex
-                  as="span"
-                  align="center"
-                >
-              
+                <Flex as="span" align="center">
                   {`Products`}
                   <FontAwesomeIcon
                     icon={faChevronDown}
@@ -163,7 +149,7 @@ const Navbar = () => {
                     height={16}
                     style={{
                       marginLeft: 5,
-                      display: 'inline-block'
+                      display: 'inline-block',
                     }}
                   />
                 </Flex>
@@ -172,9 +158,30 @@ const Navbar = () => {
             contentProps={{
               asChild: true,
               forceMount: true,
-              sideOffset: 35
+              sideOffset: 35,
             }}
           >
+            <Link href="/inscriptions">
+              <DropdownMenuItem
+                css={{
+                  display: 'flex',
+                  py: '$3',
+                  width: '100%',
+                  alignItems: 'center',
+                  gap: 10,
+                }}
+              >
+                <Image
+                  src="/images/web3chat-icon.png"
+                  width={20}
+                  height={20}
+                  objectFit="contain"
+                  alt="Inscriptions"
+                />
+                {`Inscriptions`}
+                <Badge corners="pill">Soon</Badge>
+              </DropdownMenuItem>
+            </Link>
 
             <DropdownMenuItem
               css={{
@@ -182,28 +189,20 @@ const Navbar = () => {
                 py: '$3',
                 width: '100%',
                 alignItems: 'center',
-                gap: 10
+                gap: 10,
               }}
             >
-              <Image src="/images/web3chat-icon.png" width={20} height={20} objectFit="contain" alt="Inscriptions"/>
-              {`Inscriptions`}
-              <Badge corners="pill">Soon</Badge>
-            </DropdownMenuItem>
-
-            <DropdownMenuItem
-              css={{
-                display: 'flex',
-                py: '$3',
-                width: '100%',
-                alignItems: 'center',
-                gap: 10
-              }}
-            >
-              <Image src="/images/raffle-icon.png" width={20} height={20} objectFit="contain" alt="Raffle"/>
+              <Image
+                src="/images/raffle-icon.png"
+                width={20}
+                height={20}
+                objectFit="contain"
+                alt="Raffle"
+              />
               {`Raffle`}
               <Badge corners="pill">Soon</Badge>
             </DropdownMenuItem>
-            
+
             <DropdownMenuItem
               as={Link}
               href="/fortune"
@@ -212,10 +211,16 @@ const Navbar = () => {
                 py: '$3',
                 width: '100%',
                 alignItems: 'center',
-                gap: 10
+                gap: 10,
               }}
             >
-              <Image src="/images/fortune.png" width={20} height={20} objectFit="contain" alt="Fortune"/>
+              <Image
+                src="/images/fortune.png"
+                width={20}
+                height={20}
+                objectFit="contain"
+                alt="Fortune"
+              />
               {`Fortune`}
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -227,12 +232,17 @@ const Navbar = () => {
                 py: '$3',
                 width: '100%',
                 alignItems: 'center',
-                gap: 10
+                gap: 10,
               }}
             >
-              <Image src="/images/smartnft.png" width={20} height={20} objectFit="contain" alt="SmartNFT"/>
+              <Image
+                src="/images/smartnft.png"
+                width={20}
+                height={20}
+                objectFit="contain"
+                alt="SmartNFT"
+              />
               {`SmartNFT`}
-
             </DropdownMenuItem>
           </Dropdown>
         </Flex>

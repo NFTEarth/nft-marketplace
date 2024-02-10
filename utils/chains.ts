@@ -204,14 +204,14 @@ type NFTBridge = {
   ERC1155Factory?: `0x${string}`
 }
 
-export const NFT_BRIDGE : Record<number, NFTBridge> = {
+export const NFT_BRIDGE: Record<number, NFTBridge> = {
   [mainnet.id]: {
     proxy: '0x90aEC282ed4CDcAab0934519DE08B56F1f2aB4d7',
   },
   [optimism.id]: {
     proxy: '0x653b58c9D23De54E44dCBFbD94C6759CdDa7f93D',
-    ERC721Factory: '0xc2106ca72996e49bBADcB836eeC52B765977fd20'
-  }
+    ERC721Factory: '0xc2106ca72996e49bBADcB836eeC52B765977fd20',
+  },
 }
 
 export type OFTChain = {
@@ -239,10 +239,10 @@ export const DefaultOFTChain: OFTChain = {
   feeDistributor: '0x99032fD0727dEd2a579dcB447e85359ddE9223B6',*/
   lightIconUrl: '/icons/polygon-icon-dark.svg',
   darkIconUrl: '/icons/polygon-icon-light.svg',
-  coingeckoNetworkId: 'matic-network' //matic-network?
+  coingeckoNetworkId: 'matic-network', //matic-network?
 }
 
-export const OFT_CHAINS : OFTChain[] = [
+export const OFT_CHAINS: OFTChain[] = [
   DefaultOFTChain,
   /*{
     id: arbitrumNova.id,
@@ -260,9 +260,10 @@ export const OFT_CHAINS : OFTChain[] = [
     address: '0xf1B8982eC774AE84e936Bd63f372280bd534E797',
     lightIconUrl: '/icons/polygon-zkevm-icon-dark.svg',
     darkIconUrl: '/icons/polygon-zkevm-icon-light.svg',
-    coingeckoNetworkId: 'zkevm'
-  }, 
-  { id: arbitrum.id,
+    coingeckoNetworkId: 'zkevm',
+  },
+  {
+    id: arbitrum.id,
     lzId: 110,
     name: arbitrum.name,
     routePrefix: 'arbitrum',
@@ -273,7 +274,7 @@ export const OFT_CHAINS : OFTChain[] = [
     /*uniProxy: '0x82FcEB07a4D01051519663f6c1c919aF21C27845',*/
     lightIconUrl: '/icons/arbitrum-icon-dark.svg',
     darkIconUrl: '/icons/arbitrum-icon-light.svg',
-    coingeckoNetworkId: 'arbitrum-one'
+    coingeckoNetworkId: 'arbitrum-one',
   },
   {
     id: optimism.id,
@@ -282,7 +283,7 @@ export const OFT_CHAINS : OFTChain[] = [
     address: '0x8637725aDa78db0674a679CeA2A5e0A0869EF4A1',
     lightIconUrl: '/icons/optimism-icon-dark.svg',
     darkIconUrl: '/icons/optimism-icon-light.svg',
-    coingeckoNetworkId: 'optimistic-ethereum'
+    coingeckoNetworkId: 'optimistic-ethereum',
   },
   {
     id: base.id,
@@ -291,7 +292,7 @@ export const OFT_CHAINS : OFTChain[] = [
     address: '0xc2106ca72996e49bBADcB836eeC52B765977fd20',
     lightIconUrl: '/icons/base-icon-dark.svg',
     darkIconUrl: '/icons/base-icon-light.svg',
-    coingeckoNetworkId: 'base'
+    coingeckoNetworkId: 'base',
   },
   {
     id: linea.id,
@@ -300,7 +301,7 @@ export const OFT_CHAINS : OFTChain[] = [
     address: '0x2140Ea50bc3B6Ac3971F9e9Ea93A1442665670e4',
     lightIconUrl: '/icons/linea-icon-dark.svg',
     darkIconUrl: '/icons/linea-icon-light.svg',
-    coingeckoNetworkId: 'linea'
+    coingeckoNetworkId: 'linea',
   },
   {
     id: mainnet.id,
@@ -309,7 +310,7 @@ export const OFT_CHAINS : OFTChain[] = [
     address: '0x8c223a82E07feCB49D602150d7C2B3A4c9630310',
     lightIconUrl: '/icons/eth-icon-dark.svg',
     darkIconUrl: '/icons/eth-icon-light.svg',
-    coingeckoNetworkId: 'ethereum'
+    coingeckoNetworkId: 'ethereum',
   },
   /* {
      id: bsc.id,
@@ -344,8 +345,8 @@ export const FORTUNE_CHAINS = [
     id: arbitrum.id as number,
     address: '0xB11eD4D3b3D8Ace516Ceae0a8D4764BbF2B08c50',
     priceOracle: '0x896397f72bd5c207cab95740d48ca76acf960b16',
-    transferManager: '0xf502c99ebdffd2f5fb92c162ea12d741b98402c2'
-  }
+    transferManager: '0xf502c99ebdffd2f5fb92c162ea12d741b98402c2',
+  },
 ]
 
 export const RAFFLE_CHAINS = [
@@ -353,33 +354,33 @@ export const RAFFLE_CHAINS = [
     id: arbitrum.id as number,
     address: '0x8827e1c62a6bc98fb3c19003729c357a311c6e5e',
     priceOracle: '0x896397f72bd5c207cab95740d48ca76acf960b16',
-    transferManager: '0xf502c99ebdffd2f5fb92c162ea12d741b98402c2'
-  }
+    transferManager: '0xf502c99ebdffd2f5fb92c162ea12d741b98402c2',
+  },
 ]
 export const getAlchemyNetworkName = (chainId: number) => {
-  let network;
+  let network
   if (chainId === 1) {
-    network = "eth-mainnet";
+    network = 'eth-mainnet'
   } else if (chainId === 10) {
-    network = "opt-mainnet";
+    network = 'opt-mainnet'
   } else if (chainId === 137) {
-    network = "polygon-mainnet";
+    network = 'polygon-mainnet'
   } else if (chainId === 1101) {
-    network = "polygonzkevm-mainnet";
+    network = 'polygonzkevm-mainnet'
   } else if (chainId === 42161) {
-    network = "arb-mainnet";
+    network = 'arb-mainnet'
   } else if (chainId === 8453) {
-    network = "base-mainnet";
+    network = 'base-mainnet'
   } else {
-    return null;
+    return null
   }
 
-  return network;
-};
+  return network
+}
 
 export default [
   DefaultChain,
-   /*{
+  /*{
     ...polygon,
     name: 'Polygon',
     lightIconUrl: '/icons/polygon-icon-dark.svg',
@@ -392,7 +393,8 @@ export default [
     collectionSetId: process.env.NEXT_PUBLIC_POLYGON_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_POLYGON_COMMUNITY,
   },*/
-  {      ...polygonZkEvm,
+  {
+    ...polygonZkEvm,
     lightIconUrl: '/icons/polygon-zkevm-icon-dark.svg',
     darkIconUrl: '/icons/polygon-zkevm-icon-light.svg',
     reservoirBaseUrl: 'https://api-polygon-zkevm.reservoir.tools',

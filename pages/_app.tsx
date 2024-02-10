@@ -17,7 +17,7 @@ import {
   darkTheme as rainbowDarkTheme,
 } from '@rainbow-me/rainbowkit'
 import { WagmiConfig, createConfig, configureChains } from 'wagmi'
-import {SessionProvider} from 'next-auth/react'
+import { SessionProvider } from 'next-auth/react'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { publicProvider } from 'wagmi/providers/public'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
@@ -36,9 +36,8 @@ import ChainContextProvider from 'context/ChainContextProvider'
 import ReferralContextProvider, {
   ReferralContext,
 } from 'context/ReferralContextProvider'
-import FortuneContextProvider from "../context/FortuneContextProvider";
-import { Analytics } from '@vercel/analytics/react';
-
+import FortuneContextProvider from '../context/FortuneContextProvider'
+import { Analytics } from '@vercel/analytics/react'
 
 //CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
 const inter = Inter({
@@ -49,7 +48,7 @@ export const NORMALIZE_ROYALTIES = process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES
   ? process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES === 'true'
   : false
 
-const projectId = '43f64cebd8e57e82652232682308e822';
+const projectId = '43f64cebd8e57e82652232682308e822'
 
 const WALLET_CONNECT_PROJECT_ID =
   process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || ''
@@ -77,17 +76,17 @@ const reservoirKitThemeOverrides = {
   font: inter.style.fontFamily,
   buttonTextColor: '#000',
   buttonTextHoverColor: '#000',
-  primaryColor: '#0420FF',
-  primaryHoverColor: '#0420FF',
+  primaryColor: '#9431D2',
+  primaryHoverColor: '#9431D2',
 }
 
 nProgress.configure({
   showSpinner: false,
 })
 
-Router.events.on("routeChangeStart", nProgress.start);
-Router.events.on("routeChangeError", nProgress.done);
-Router.events.on("routeChangeComplete", nProgress.done);
+Router.events.on('routeChangeStart', nProgress.start)
+Router.events.on('routeChangeError', nProgress.done)
+Router.events.on('routeChangeComplete', nProgress.done)
 
 function AppWrapper(props: AppProps & { baseUrl: string }) {
   return (
@@ -106,7 +105,7 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
   )
 }
 
-const color = '#0420FF'
+const color = '#9431D2'
 
 function MyApp({
   Component,
@@ -147,7 +146,7 @@ function MyApp({
           disablePoweredByReservoir: true,
           //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)
           // Note that this impacts orders created on your marketplace (offers/listings)
-          marketplaceFees: ["0xd55c6b0a208362b18beb178e1785cf91c4ce937a:100"]
+          marketplaceFees: ['0xd55c6b0a208362b18beb178e1785cf91c4ce937a:100'],
         }}
         theme={reservoirDarkTheme(reservoirKitThemeOverrides)}
       >

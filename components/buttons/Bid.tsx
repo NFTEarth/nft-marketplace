@@ -88,6 +88,12 @@ const Bid: FC<Props> = ({
         coinGeckoId: 'ethereum',
       },
       {
+        contract: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+        symbol: 'WMATIC',
+        decimals: 18,
+        coinGeckoId: 'wmatic',
+      },
+      {
         contract: '0x492Fa53b88614923937B7197C87E0F7F8EEb7B20',
         symbol: 'NFTE',
         decimals: 18,

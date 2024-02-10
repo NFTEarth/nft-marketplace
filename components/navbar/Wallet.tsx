@@ -77,7 +77,7 @@ const currencies = [
       id: polygon.id,
       name: polygon.name,
     },
-    coinGeckoId: 'matic-network',
+    coinGeckoId: 'polygon-pos',
   },
  
   /*{
@@ -111,14 +111,14 @@ const currencies = [
     coinGeckoId: 'nftearth',
   },*/
   {
-    address: '0x492Fa53b88614923937B7197C87E0F7F8EEb7B20',
-    symbol: 'NFTE',
+    contract: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
+    symbol: 'WMATIC',
     decimals: polygon.nativeCurrency.decimals,
     chain: {
       id: polygon.id,
       name: polygon.name,
     },
-    coinGeckoId: 'nftearth',
+    coinGeckoId: 'polygon-pos',
   },
   {
     address: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
@@ -129,6 +129,16 @@ const currencies = [
       name: polygon.name,
     },
     coinGeckoId: 'ethereum',
+  },
+  {
+    address: '0x492Fa53b88614923937B7197C87E0F7F8EEb7B20',
+    symbol: 'NFTE',
+    decimals: polygon.nativeCurrency.decimals,
+    chain: {
+      id: polygon.id,
+      name: polygon.name,
+    },
+    coinGeckoId: 'nftearth',
   },
 ]
 
@@ -327,7 +337,7 @@ const Wallet : FC<WalletProps> = ({ exp }) => {
                 justify="center"
               >
                 <CryptoCurrencyIcon
-                  address={currency.address}
+                  address={currency.address ?? ''}
                   chainId={currency.chain.id}
                   css={{ height: 24 }}
                 />

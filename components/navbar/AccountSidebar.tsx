@@ -181,7 +181,7 @@ export const AccountSidebar: FC = () => {
                         css={{
                           gap: 6,
                           p: '$3',
-                          color: '#79FFEB',
+                          color: '#75F5A5',
                           cursor: 'pointer',
                         }}
                       >
@@ -195,7 +195,7 @@ export const AccountSidebar: FC = () => {
                         css={{
                           gap: 6,
                           p: '$3',
-                          color: '#79FFEB',
+                          color: '#75F5A5',
                           cursor: 'pointer',
                         }}
                       >
@@ -209,7 +209,7 @@ export const AccountSidebar: FC = () => {
                         css={{
                           gap: 6,
                           p: '$3',
-                          color: '#79FFEB',
+                          color: '#75F5A5',
                           cursor: 'pointer',
                         }}
                       >
@@ -228,7 +228,7 @@ export const AccountSidebar: FC = () => {
                           cursor: 'pointer',
                         }}
                       >
-                        <FontAwesomeIcon icon={faGear} width={16} height={16} color="#79FFEB" />
+                        <FontAwesomeIcon icon={faGear} width={16} height={16} color="#75F5A5" />
                         <Text style="body1">Settings</Text>
                       </Flex>
                     </Link>

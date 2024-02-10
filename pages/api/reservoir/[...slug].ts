@@ -62,6 +62,9 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
         res.redirect('/icons/currency/no-padding-weth.png')
         return
       }
+    } else if (endpoint.includes('0x0000000000000000000000000000000000001010')) { 
+      res.redirect('/icons/currency/polygon-icon-dark.svg') 
+      return
     } else if (endpoint.includes('0x492Fa53b88614923937B7197C87E0F7F8EEb7B20')) { 
       res.redirect('/icons/currency/nfte.svg') 
       return

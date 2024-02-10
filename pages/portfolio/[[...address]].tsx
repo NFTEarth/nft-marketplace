@@ -1,5 +1,5 @@
 import { NextPage } from 'next'
-import {Text, Flex, Box, Button} from '../../components/primitives'
+import { Text, Flex, Box, Button } from '../../components/primitives'
 import Layout from 'components/Layout'
 import { useMediaQuery } from 'react-responsive'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
@@ -12,7 +12,7 @@ import {
   useUserCollections,
   useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'
-import {useENSResolver, useMounted, useProfile} from '../../hooks'
+import { useENSResolver, useMounted, useProfile } from '../../hooks'
 import { TokenTable, TokenTableRef } from 'components/portfolio/TokenTable'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import { MobileTokenFilters } from 'components/common/MobileTokenFilters'
@@ -20,8 +20,8 @@ import { TokenFilters } from 'components/common/TokenFilters'
 import { FilterButton } from 'components/common/FilterButton'
 import { ListingsTable } from 'components/portfolio/ListingsTable'
 import { OffersTable } from 'components/portfolio/OffersTable'
-import {faCopy, faGlobe, faWallet} from '@fortawesome/free-solid-svg-icons'
-import { faTwitter, faDiscord } from "@fortawesome/free-brands-svg-icons";
+import { faCopy, faGlobe, faWallet } from '@fortawesome/free-solid-svg-icons'
+import { faTwitter, faDiscord } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import ChainToggle from 'components/common/ChainToggle'
 import { Head } from 'components/Head'
@@ -41,7 +41,7 @@ import { ToastContext } from 'context/ToastContextProvider'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { Avatar } from 'components/primitives/Avatar'
 import CopyText from 'components/common/CopyText'
-import Link from "next/link";
+import Link from 'next/link'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -78,15 +78,12 @@ const IndexPage: NextPage = () => {
   const isOwner =
     !router.query.address || router.query.address[0] === accountAddress
 
-  const {
-    shortAddress,
-  } = useENSResolver(address)
+  const { shortAddress } = useENSResolver(address)
   const avatar = profile?.profileImage
   const banner = profile?.bannerImage
 
   let collectionQuery: Parameters<typeof useUserCollections>['1'] = {
     limit: 100,
-
   }
 
   const { chain } = useContext(ChainContext)
@@ -174,7 +171,7 @@ const IndexPage: NextPage = () => {
 
   return (
     <>
-      <Head title={`Profile - ${profile?.username || shortAddress}`}/>
+      <Head title={`Profile - ${profile?.username || shortAddress}`} />
       <Layout>
         <Flex
           direction="column"
@@ -203,56 +200,82 @@ const IndexPage: NextPage = () => {
                     css={{
                       p: '$4',
                       backgroundColor: '$secondary8',
-                      ...(banner ? {
-                        backgroundImage: `url(${banner})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                      } : {}),
+                      ...(banner
+                        ? {
+                            backgroundImage: `url(${banner})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                          }
+                        : {}),
                       borderRadius: 10,
                       content: '',
-                      height: '225px'
+                      height: '225px',
                     }}
                   >
                     <Flex justify="center" css={{ gap: 24, zIndex: 2 }}>
                       {profile?.twitter_id && (
-                        <Link target="_blank" href={`https://twitter.com/${profile?.twitter_username}`}>
-                          <FontAwesomeIcon icon={faTwitter} width={40} height={40}  style={{
-                            padding: 5,
-                            border: '1px #fff solid',
-                            borderRadius: 5,
-                          }} />
+                        <Link
+                          target="_blank"
+                          href={`https://twitter.com/${profile?.twitter_username}`}
+                        >
+                          <FontAwesomeIcon
+                            icon={faTwitter}
+                            width={40}
+                            height={40}
+                            style={{
+                              padding: 5,
+                              border: '1px #fff solid',
+                              borderRadius: 5,
+                            }}
+                          />
                         </Link>
                       )}
                       {profile?.discord_id && (
-                        <Link target="_blank" href={`https://discord.com/users/${profile?.discord_id}`}>
-                          <FontAwesomeIcon icon={faDiscord} width={40} height={40} style={{
-                            padding: 5,
-                            border: '1px #fff solid',
-                            borderRadius: 5,
-                          }} />
+                        <Link
+                          target="_blank"
+                          href={`https://discord.com/users/${profile?.discord_id}`}
+                        >
+                          <FontAwesomeIcon
+                            icon={faDiscord}
+                            width={40}
+                            height={40}
+                            style={{
+                              padding: 5,
+                              border: '1px #fff solid',
+                              borderRadius: 5,
+                            }}
+                          />
                         </Link>
                       )}
                       {profile?.website && (
                         <Link target="_blank" href={profile.website}>
-                          <FontAwesomeIcon icon={faGlobe} width={40} height={40} style={{
-                            padding: 5,
-                            border: '1px #fff solid',
-                            borderRadius: 5,
-                          }} />
+                          <FontAwesomeIcon
+                            icon={faGlobe}
+                            width={40}
+                            height={40}
+                            style={{
+                              padding: 5,
+                              border: '1px #fff solid',
+                              borderRadius: 5,
+                            }}
+                          />
                         </Link>
                       )}
                     </Flex>
                   </Flex>
                   <Flex direction="column" css={{ marginTop: -135, p: '$5' }}>
-                    <Flex justify="between"  css={{
-                      '@xs': {
-                        flexDirection: 'column'
-                      },
-                      '@lg': {
-                        flexDirection: 'row'
-                      },
-                      gap: 20
-                    }}>
+                    <Flex
+                      justify="between"
+                      css={{
+                        '@xs': {
+                          flexDirection: 'column',
+                        },
+                        '@lg': {
+                          flexDirection: 'row',
+                        },
+                        gap: 20,
+                      }}
+                    >
                       <Flex direction="column" css={{ gap: 20 }}>
                         {avatar ? (
                           <Avatar size="xxxl" corners="rounded" src={avatar} />
@@ -263,7 +286,11 @@ const IndexPage: NextPage = () => {
                             seed={jsNumberForAddress(address as string)}
                           />
                         )}
-                        <Flex align="center" justify="center" css={{ flex: 1, alignContent: 'space-between' }}>
+                        <Flex
+                          align="center"
+                          justify="center"
+                          css={{ flex: 1, alignContent: 'space-between' }}
+                        >
                           <Flex direction="column">
                             <Text style="h5">
                               {profile?.username || shortAddress}
@@ -289,7 +316,7 @@ const IndexPage: NextPage = () => {
                           </Flex>
                         </Flex>
                       </Flex>
-                      <Flex justify="end" align="end" css={{ flex: 1}}>
+                      <Flex justify="end" align="end" css={{ flex: 1 }}>
                         <Flex direction="column" align="end" css={{ gap: 20 }}>
                           <ChainToggle />
                         </Flex>
