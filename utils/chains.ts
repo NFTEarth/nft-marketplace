@@ -276,7 +276,7 @@ export const OFT_CHAINS: OFTChain[] = [
     darkIconUrl: '/icons/arbitrum-icon-light.svg',
     coingeckoNetworkId: 'arbitrum-one',
   },
-  {
+  /*{
     id: optimism.id,
     lzId: 111,
     name: optimism.name,
@@ -284,7 +284,7 @@ export const OFT_CHAINS: OFTChain[] = [
     lightIconUrl: '/icons/optimism-icon-dark.svg',
     darkIconUrl: '/icons/optimism-icon-light.svg',
     coingeckoNetworkId: 'optimistic-ethereum',
-  },
+  },*/
   {
     id: base.id,
     lzId: 184,
@@ -294,7 +294,7 @@ export const OFT_CHAINS: OFTChain[] = [
     darkIconUrl: '/icons/base-icon-light.svg',
     coingeckoNetworkId: 'base',
   },
-  {
+ /*{
     id: linea.id,
     lzId: 183,
     name: linea.name,
@@ -302,7 +302,7 @@ export const OFT_CHAINS: OFTChain[] = [
     lightIconUrl: '/icons/linea-icon-dark.svg',
     darkIconUrl: '/icons/linea-icon-light.svg',
     coingeckoNetworkId: 'linea',
-  },
+  },*/
   {
     id: mainnet.id,
     lzId: 101,
@@ -418,7 +418,7 @@ export default [
     collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_ARBITRUM_COMMUNITY,
   },
-  {
+  /*{{
     ...optimism,
     name: 'Optimism',
     lightIconUrl: '/icons/optimism-icon-dark.svg',
@@ -443,6 +443,19 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_LINEA_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_LINEA_COMMUNITY,
+  },*/
+  {
+    ...base,
+    name: 'Base',
+    lightIconUrl: '/icons/base-icon-dark.svg',
+    darkIconUrl: '/icons/polygon-icon-light.svg',
+    reservoirBaseUrl: 'https://api-base.reservoir.tools',
+    proxyApi: '/api/reservoir/base',
+    routePrefix: 'base',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'base',
+    collectionSetId: process.env.NEXT_PUBLIC_POLYGON_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_POLYGON_COMMUNITY,
   },
   {
     ...mainnet,
@@ -456,19 +469,6 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_ETH_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_ETH_COMMUNITY,
-  },
-  {
-    ...base,
-    name: 'Base',
-    lightIconUrl: '/icons/base-icon-dark.svg',
-    darkIconUrl: '/icons/polygon-icon-light.svg',
-    reservoirBaseUrl: 'https://api-base.reservoir.tools',
-    proxyApi: '/api/reservoir/base',
-    routePrefix: 'base',
-    apiKey: process.env.RESERVOIR_API_KEY,
-    coingeckoId: 'base',
-    collectionSetId: process.env.NEXT_PUBLIC_POLYGON_COLLECTION_SET_ID,
-    community: process.env.NEXT_PUBLIC_POLYGON_COMMUNITY,
   },
   /*{
      ...zora,

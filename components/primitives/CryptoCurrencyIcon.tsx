@@ -27,21 +27,11 @@ const CryptoCurrencyIcon: FC<Props> = ({
 
   const imageSrc = useMemo(() => {
     const isNFTE = address.toLowerCase() === tokenChain?.address.toLowerCase()
-    const isVENFTE = address.toLowerCase() === tokenChain?.veNFTE?.toLowerCase()
-    const isNFTELP = address.toLowerCase() === tokenChain?.LPNFTE?.toLowerCase()
+
 
     if (isNFTE) {
       return '/icons/currency/nfte.svg'
     }
-
-    if (isVENFTE) {
-      return '/icons/currency/venfte.svg'
-    }
-
-    if (isNFTELP) {
-      return '/icons/currency/nftelp.svg'
-    }
-
   
 
     return `${chain?.baseApiUrl}/redirect/currency/${address}/icon/v1`;

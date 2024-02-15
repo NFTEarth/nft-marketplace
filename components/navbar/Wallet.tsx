@@ -77,7 +77,7 @@ const currencies = [
       id: polygon.id,
       name: polygon.name,
     },
-    coinGeckoId: 'polygon-pos',
+    coinGeckoId: 'matic-network',
   },
  
   /*{
@@ -111,6 +111,16 @@ const currencies = [
     coinGeckoId: 'nftearth',
   },*/
   {
+    address: '0x492Fa53b88614923937B7197C87E0F7F8EEb7B20',
+    symbol: 'NFTE',
+    decimals: polygon.nativeCurrency.decimals,
+    chain: {
+      id: polygon.id,
+      name: polygon.name,
+    },
+    coinGeckoId: 'nftearth',
+  },
+  {
     contract: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
     symbol: 'WMATIC',
     decimals: polygon.nativeCurrency.decimals,
@@ -118,7 +128,7 @@ const currencies = [
       id: polygon.id,
       name: polygon.name,
     },
-    coinGeckoId: 'polygon-pos',
+    coinGeckoId: 'matic-network',
   },
   {
     address: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
@@ -129,16 +139,6 @@ const currencies = [
       name: polygon.name,
     },
     coinGeckoId: 'ethereum',
-  },
-  {
-    address: '0x492Fa53b88614923937B7197C87E0F7F8EEb7B20',
-    symbol: 'NFTE',
-    decimals: polygon.nativeCurrency.decimals,
-    chain: {
-      id: polygon.id,
-      name: polygon.name,
-    },
-    coinGeckoId: 'nftearth',
   },
 ]
 
@@ -313,10 +313,10 @@ const Wallet : FC<WalletProps> = ({ exp }) => {
         <Button
           css={{ width: '100%', justifyContent: 'center' }}
           onClick={() => {
-            window.open('https://www.sushi.com/swap', '_blank')
+            window.open('https://swap.defillama.com/?chain=polygon&from=0x0000000000000000000000000000000000000000&to=0x492fa53b88614923937b7197c87e0f7f8eeb7b20', '_blank')
           }}
         >
-          Swap Crypto
+          Swap Crypto Here
         </Button>
         {visibleCurrencies.map((currency, i) => {
           return (

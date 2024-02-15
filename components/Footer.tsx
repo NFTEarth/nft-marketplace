@@ -3,6 +3,7 @@ import { Box, Text, Flex, Anchor, Button } from './primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faDiscord, faTelegram, faTelegramPlane, faXTwitter} from '@fortawesome/free-brands-svg-icons'
 import {IconProp} from "@fortawesome/fontawesome-svg-core";
+import React from 'react';
 
 
 type SectionTitleProps = {
