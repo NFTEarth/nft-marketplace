@@ -329,7 +329,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               align="center"
             >
               <Image
-                src="/images/profile/maestro.png"
+                src="/images/profile/maestro.jpeg"
                 width={80}
                 height={80}
                 style={{
@@ -359,7 +359,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               align="center"
             >
               <Image
-                src="/images/profile/joey.png"
+                src="/images/profile/joey.jpeg"
                 width={80}
                 height={80}
                 style={{
