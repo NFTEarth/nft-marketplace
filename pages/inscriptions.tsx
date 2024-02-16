@@ -7,7 +7,6 @@ const Inscriptions = () => {
 
   const handleSubmit = (event: { preventDefault: () => void; }) => {
     event.preventDefault();
-    // Handle form submission here
     console.log(message);
   };
   

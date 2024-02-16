@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import Image from "next/legacy/image"
+import Image from 'next/legacy/image'
 import { Box, Button, Flex, Grid, Text } from './primitives'
 import { FC } from 'react'
-import { FaShoppingCart } from 'react-icons/fa';
+import { FaShoppingCart } from 'react-icons/fa'
 
 interface IProp {
   hideLink?: boolean
@@ -28,16 +28,19 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
         },
       }}
     >
-      <Box css={{
-        opacity: 0.5,
-        backgroundImage: 'linear-gradient(109.6deg, #000 11.2%, $primary9 91.1%)',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        bottom: 0,
-        right: 0,
-        content: ' ',
-      }}/>
+      <Box
+        css={{
+          opacity: 0.5,
+          backgroundImage:
+            'linear-gradient(109.6deg, #000 11.2%, $primary9 91.1%)',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          content: ' ',
+        }}
+      />
       <Grid
         css={{
           gap: 32,
@@ -48,18 +51,19 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
             flex: 0.5,
           },
           zIndex: 1,
-          position: 'relative'
+          position: 'relative',
         }}
       >
         <Flex align="center" css={{ gap: 20 }}>
           <Text
             style={{
               '@initial': 'h2',
-              '@lg': 'h1'
+              '@lg': 'h1',
             }}
             as="h1"
             css={{
-              color: '$whiteA12', lineHeight: 1
+              color: '$whiteA12',
+              lineHeight: 1,
             }}
           >
             NFTEarth
@@ -80,24 +84,46 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
             width: '100%',
             '@lg': { width: '50%' },
           }}
-        >
-       
-        </Text>
+        ></Text>
         {hideLink ?? (
           <Flex css={{ gap: 10 }}>
-           <Link href="https://swap.defillama.com/?chain=polygon&from=0x0000000000000000000000000000000000000000&to=0x492fa53b88614923937b7197c87e0f7f8eeb7b20" passHref legacyBehavior>
-          <Button
-          as="a"
-            color="primary"
-          size="large"
-          target="_blank"
-          rel="noopener noreferrer"
-          >
-          <FaShoppingCart />
-        Swap NFTE Tokens
-          </Button>
-          </Link>
-            
+            <Link
+              href="https://swap.defillama.com/?chain=polygon&from=0x0000000000000000000000000000000000000000&to=0x492fa53b88614923937b7197c87e0f7f8eeb7b20"
+              passHref
+              legacyBehavior
+            >
+              <Button
+                as="a"
+                color="primary"
+                size="large"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaShoppingCart />
+                Swap NFTE Tokens
+              </Button>
+              
+            </Link>
+          </Flex>
+        )}
+        {hideLink ?? (
+          <Flex css={{ gap: 10 }}>
+            <Link
+              href="https://nftearth.exchange/mint"
+              passHref
+              legacyBehavior
+            >
+              <Button
+                as="a"
+                color="primary"
+                size="large"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaShoppingCart />
+                Mint EarthCoin NFT
+              </Button>    
+            </Link>
           </Flex>
         )}
       </Grid>
