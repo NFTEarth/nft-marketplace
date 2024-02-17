@@ -142,7 +142,7 @@ const Navbar = () => {
             trigger={
               <NavItem>
                 <Flex as="span" align="center">
-                  {`Products`}
+                  {`More`}
                   <FontAwesomeIcon
                     icon={faChevronDown}
                     width={16}
@@ -161,6 +161,27 @@ const Navbar = () => {
               sideOffset: 35,
             }}
           >
+            <Link href="https://app.aragon.org/#/daos/polygon/0xc44c2e2714a4a9fb171ecc2ec7a472b692d66ac6/dashboard">
+              <DropdownMenuItem
+                css={{
+                  display: 'flex',
+                  py: '$3',
+                  width: '100%',
+                  alignItems: 'center',
+                  gap: 10,
+                }}
+              >
+                <Image
+                  src="/images/DAO_governance.png"
+                  width={20}
+                  height={20}
+                  objectFit="contain"
+                  alt="DAO Governance"
+                />
+                {`DAO Governance`}
+              </DropdownMenuItem>
+            </Link>
+
             <Link href="/inscriptions">
               <DropdownMenuItem
                 css={{

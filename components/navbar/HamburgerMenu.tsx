@@ -177,7 +177,7 @@ const HamburgerMenu = () => {
                   pt: '24px',
                 }}
               >
-                <Text style="subtitle1">Products</Text>
+                <Text style="subtitle1">More</Text>
                 <FontAwesomeIcon
                   icon={faChevronDown}
                   width={20}
@@ -196,6 +196,19 @@ const HamburgerMenu = () => {
                 px: '$4',
               }}
             >
+          <Link href={`https://app.aragon.org/#/daos/polygon/0xc44c2e2714a4a9fb171ecc2ec7a472b692d66ac6/dashboard`} legacyBehavior>
+            <Text
+              style="subtitle1"
+              css={{
+                borderBottom: '1px solid $gray4',
+                cursor: 'pointer',
+                pb: '$4',
+                pt: '24px',
+              }}
+            >
+              DAO Governance
+            </Text>
+          </Link>
               <Link href={`https://nftearth.exchange/inscriptions`} legacyBehavior>
             <Text
               style="subtitle1"
